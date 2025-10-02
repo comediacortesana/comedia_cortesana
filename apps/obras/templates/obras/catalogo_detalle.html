@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if catalogo_id == 'fuentesxi' %}FUENTES XI{% else %}CATCOM{% endif %} - Teatro Español del Siglo de Oro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, {% if catalogo_id == 'fuentesxi' %}#2c3e50 0%, #34495e 100%{% else %}#8e44ad 0%, #9b59b6 100%{% endif %});
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #2c3e50;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .catalogo-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .catalogo-title {
+            font-size: 2.5em;
+            color: {% if catalogo_id == 'fuentesxi' %}#2c3e50{% else %}#8e44ad{% endif %};
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .catalogo-subtitle {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .catalogo-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: {% if catalogo_id == 'fuentesxi' %}#2c3e50{% else %}#8e44ad{% endif %};
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: {% if catalogo_id == 'fuentesxi' %}#2c3e50{% else %}#8e44ad{% endif %};
+            box-shadow: 0 0 0 3px rgba({% if catalogo_id == 'fuentesxi' %}44, 62, 80{% else %}142, 68, 173{% endif %}, 0.1);
+        }
+
+        .search-btn {
+            background: {% if catalogo_id == 'fuentesxi' %}#2c3e50{% else %}#8e44ad{% endif %};
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: {% if catalogo_id == 'fuentesxi' %}#34495e{% else %}#9b59b6{% endif %};
+            transform: translateY(-2px);
+        }
+
+        .obras-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .obra-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border-left: 4px solid {% if catalogo_id == 'fuentesxi' %}#2c3e50{% else %}#8e44ad{% endif %};
+        }
+
+        .obra-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .obra-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .obra-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .obra-author {
+            color: #666;
+            font-style: italic;
+        }
+
+        .edit-btn {
+            background: {% if catalogo_id == 'fuentesxi' %}#2c3e50{% else %}#8e44ad{% endif %};
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: {% if catalogo_id == 'fuentesxi' %}#34495e{% else %}#9b59b6{% endif %};
+            transform: translateY(-2px);
+        }
+
+        .obra-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .obra-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .obra-stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .pagination a, .pagination span {
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .pagination .current {
+            background: rgba(255, 255, 255, 0.4);
+            font-weight: bold;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .obra-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .obra-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🎭 Teatro Español del Siglo de Oro</div>
+                <nav class="nav-links">
+                    <a href="/" class="nav-link">🏠 Inicio</a>
+                    <a href="/obras/catalogos/" class="nav-link">📚 Catálogos</a>
+                    <a href="/obras/catalogo/" class="nav-link">📖 Catálogo General</a>
+                    <a href="/admin/" class="nav-link">⚙️ Admin</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="catalogo-info">
+                <h1 class="catalogo-title">
+                    {% if catalogo_id == 'fuentesxi' %}
+                        📜 FUENTES XI
+                    {% else %}
+                        🌐 CATCOM
+                    {% endif %}
+                </h1>
+                <p class="catalogo-subtitle">
+                    {% if catalogo_id == 'fuentesxi' %}
+                        Comedias en Madrid: 1603-1709 - J.E. Varey & N.D. Shergold
+                    {% else %}
+                        Base de Datos CATCOM - Universidad de Valencia
+                    {% endif %}
+                </p>
+
+                <div class="catalogo-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.total_obras }}</div>
+                        <div class="stat-label">Obras</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.total_representaciones }}</div>
+                        <div class="stat-label">Representaciones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.autores_unicos }}</div>
+                        <div class="stat-label">Autores</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.tipos_obra }}</div>
+                        <div class="stat-label">Tipos de Obra</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-section">
+                <form method="GET" class="search-form">
+                    <input 
+                        type="text" 
+                        name="search" 
+                        placeholder="Buscar por título, autor o palabras clave..." 
+                        value="{{ search_actual }}"
+                        class="search-input"
+                    >
+                    <button type="submit" class="search-btn">🔍 Buscar</button>
+                    {% if search_actual %}
+                        <a href="{% url 'catalogo_detalle' catalogo_id %}" class="nav-link">❌ Limpiar</a>
+                    {% endif %}
+                </form>
+            </div>
+
+            {% if obras %}
+                <div class="obras-grid">
+                    {% for obra in obras %}
+                    <div class="obra-card">
+                        <div class="obra-header">
+                            <div>
+                                <h3 class="obra-title">{{ obra.titulo_limpio }}</h3>
+                                {% if obra.autor %}
+                                    <p class="obra-author">por {{ obra.autor.nombre }}</p>
+                                {% endif %}
+                            </div>
+                            <button class="edit-btn" onclick="editObra({{ obra.id }})">
+                                ✏️ Editar
+                            </button>
+                        </div>
+
+                        <div class="obra-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Tipo</span>
+                                <span class="detail-value">{{ obra.get_tipo_obra_display }}</span>
+                            </div>
+                            {% if obra.genero %}
+                            <div class="detail-item">
+                                <span class="detail-label">Género</span>
+                                <span class="detail-value">{{ obra.genero }}</span>
+                            </div>
+                            {% endif %}
+                            {% if obra.fecha_creacion_estimada %}
+                            <div class="detail-item">
+                                <span class="detail-label">Fecha</span>
+                                <span class="detail-value">{{ obra.fecha_creacion_estimada }}</span>
+                            </div>
+                            {% endif %}
+                            {% if obra.titulo_alternativo %}
+                            <div class="detail-item">
+                                <span class="detail-label">Título Alt.</span>
+                                <span class="detail-value">{{ obra.titulo_alternativo|truncatechars:50 }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="obra-stats">
+                            <div class="obra-stat">
+                                🎭 {{ obra.total_representaciones }} representaciones
+                            </div>
+                            {% if obra.versos %}
+                            <div class="obra-stat">
+                                📝 {{ obra.versos }} versos
+                            </div>
+                            {% endif %}
+                            {% if obra.actos %}
+                            <div class="obra-stat">
+                                🎬 {{ obra.actos }} actos
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if paginator.num_pages > 1 %}
+                <div class="pagination">
+                    {% if obras.has_previous %}
+                        <a href="?page=1{% if search_actual %}&search={{ search_actual }}{% endif %}">« Primera</a>
+                        <a href="?page={{ obras.previous_page_number }}{% if search_actual %}&search={{ search_actual }}{% endif %}">‹ Anterior</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Página {{ obras.number }} de {{ paginator.num_pages }}
+                    </span>
+
+                    {% if obras.has_next %}
+                        <a href="?page={{ obras.next_page_number }}{% if search_actual %}&search={{ search_actual }}{% endif %}">Siguiente ›</a>
+                        <a href="?page={{ paginator.num_pages }}{% if search_actual %}&search={{ search_actual }}{% endif %}">Última »</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+            {% else %}
+                <div class="no-results">
+                    {% if search_actual %}
+                        <h3>No se encontraron obras</h3>
+                        <p>No hay obras que coincidan con "{{ search_actual }}"</p>
+                    {% else %}
+                        <h3>No hay obras disponibles</h3>
+                        <p>Este catálogo no contiene obras en este momento.</p>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <script>
+        function editObra(obraId) {
+            // Redirigir al formulario de edición personalizado
+            window.location.href = `/obras/edit/${obraId}/`;
+        }
+    </script>
+</body>
+</html>

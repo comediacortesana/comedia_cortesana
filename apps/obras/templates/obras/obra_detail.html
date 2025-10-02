@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ obra.titulo }} - Teatro Español del Siglo de Oro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .back-link {
+            display: inline-block;
+            background: #34495e;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+        .obra-info {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #ffd700;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .info-card h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        .info-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #ccc;
+        }
+        .info-value {
+            color: white;
+        }
+        .fuente-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .fuente-fuentesxi {
+            background: #27ae60;
+            color: white;
+        }
+        .fuente-catcom {
+            background: #e67e22;
+            color: white;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section h2 {
+            color: #ffd700;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 10px;
+        }
+        .list-item {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+        }
+        .list-item h4 {
+            margin: 0 0 10px 0;
+            color: #ffd700;
+        }
+        .list-item p {
+            margin: 5px 0;
+            color: #ccc;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #ccc;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/obras/catalogo/" class="back-link">← Volver al catálogo</a>
+        
+        <div class="header">
+            <h1>🎭 {{ obra.titulo }}</h1>
+            <p>Detalles de la obra teatral</p>
+        </div>
+
+        <div class="obra-info">
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>📚 Información Básica</h3>
+                    <div class="info-item">
+                        <span class="info-label">Autor:</span>
+                        <span class="info-value">{{ obra.autor.nombre|default:"Desconocido" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Género:</span>
+                        <span class="info-value">{{ obra.genero|default:"No especificado" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tipo de obra:</span>
+                        <span class="info-value">{{ obra.tipo_obra|default:"No especificado" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Idioma:</span>
+                        <span class="info-value">{{ obra.idioma|default:"Español" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Actos:</span>
+                        <span class="info-value">{{ obra.actos|default:"No especificado" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Versos:</span>
+                        <span class="info-value">{{ obra.versos|default:"No especificado" }}</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>🔍 Origen y Clasificación</h3>
+                    <div class="info-item">
+                        <span class="info-label">Fuente principal:</span>
+                        <span class="fuente-badge fuente-{{ obra.fuente_principal|lower }}">
+                            {{ obra.fuente_principal }}
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tema:</span>
+                        <span class="info-value">{{ obra.tema|default:"No especificado" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Música conservada:</span>
+                        <span class="info-value">
+                            {% if obra.musica_conservada %}✅ Sí{% else %}❌ No{% endif %}
+                        </span>
+                    </div>
+                    {% if obra.compositor %}
+                    <div class="info-item">
+                        <span class="info-label">Compositor:</span>
+                        <span class="info-value">{{ obra.compositor }}</span>
+                    </div>
+                    {% endif %}
+                    {% if obra.mecenas %}
+                    <div class="info-item">
+                        <span class="info-label">Mecenas:</span>
+                        <span class="info-value">{{ obra.mecenas }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if obra.titulo_alternativo %}
+            <div class="info-card">
+                <h3>📝 Títulos Alternativos</h3>
+                <p>{{ obra.titulo_alternativo }}</p>
+            </div>
+            {% endif %}
+
+            {% if obra.edicion_principe %}
+            <div class="info-card">
+                <h3>📖 Edición Príncipe</h3>
+                <p>{{ obra.edicion_principe }}</p>
+            </div>
+            {% endif %}
+
+            {% if obra.notas_bibliograficas %}
+            <div class="info-card">
+                <h3>📚 Notas Bibliográficas</h3>
+                <p>{{ obra.notas_bibliograficas }}</p>
+            </div>
+            {% endif %}
+
+            {% if obra.notas %}
+            <div class="info-card">
+                <h3>📝 Notas Adicionales</h3>
+                <p>{{ obra.notas }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_manuscritos }}</div>
+                <div>Manuscritos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total_representaciones }}</div>
+                <div>Representaciones</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.lugares_unicos }}</div>
+                <div>Lugares únicos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.fechas_unicas }}</div>
+                <div>Fechas únicas</div>
+            </div>
+        </div>
+
+        {% if manuscritos %}
+        <div class="section">
+            <h2>📜 Manuscritos</h2>
+            {% for manuscrito in manuscritos %}
+            <div class="list-item">
+                <h4>📍 {{ manuscrito.ubicacion|default:"Ubicación no especificada" }}</h4>
+                {% if manuscrito.signatura %}
+                <p><strong>Signatura:</strong> {{ manuscrito.signatura }}</p>
+                {% endif %}
+                {% if manuscrito.url_digitalizacion %}
+                <p><strong>Digitalización:</strong> <a href="{{ manuscrito.url_digitalizacion }}" target="_blank" style="color: #3498db;">Ver enlace</a></p>
+                {% endif %}
+                {% if manuscrito.notas %}
+                <p><strong>Notas:</strong> {{ manuscrito.notas }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if representaciones %}
+        <div class="section">
+            <h2>🎪 Representaciones</h2>
+            {% for representacion in representaciones %}
+            <div class="list-item">
+                <h4>📅 {{ representacion.fecha_formateada|default:representacion.fecha|default:"Fecha no especificada" }}</h4>
+                {% if representacion.lugar %}
+                <p><strong>Lugar:</strong> {{ representacion.lugar.nombre }}</p>
+                {% endif %}
+                {% if representacion.compañia %}
+                <p><strong>Compañía:</strong> {{ representacion.compañia }}</p>
+                {% endif %}
+                {% if representacion.mecenas %}
+                <p><strong>Mecenas:</strong> {{ representacion.mecenas }}</p>
+                {% endif %}
+                {% if representacion.observaciones %}
+                <p><strong>Observaciones:</strong> {{ representacion.observaciones }}</p>
+                {% endif %}
+                {% if representacion.fuente %}
+                <p><strong>Fuente:</strong> <span class="fuente-badge fuente-{{ representacion.fuente|lower }}">{{ representacion.fuente }}</span></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if not manuscritos and not representaciones %}
+        <div class="empty-state">
+            <h3>📭 Sin datos adicionales</h3>
+            <p>No hay manuscritos ni representaciones registradas para esta obra.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

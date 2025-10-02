@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Obras - Teatro Español del Siglo de Oro</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .filters {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-weight: bold;
+            color: #ffd700;
+        }
+        .filter-group select,
+        .filter-group input {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+        .btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #3498db;
+        }
+        .btn-secondary:hover {
+            background: #2980b9;
+        }
+        .obras-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .obra-card {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .obra-card:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .obra-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        .obra-author {
+            color: #ccc;
+            margin-bottom: 10px;
+        }
+        .obra-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .fuente-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .fuente-fuentesxi {
+            background: #27ae60;
+            color: white;
+        }
+        .fuente-catcom {
+            background: #e67e22;
+            color: white;
+        }
+        .view-btn {
+            background: #9b59b6;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .view-btn:hover {
+            background: #8e44ad;
+            transform: translateY(-1px);
+        }
+        .back-link {
+            display: inline-block;
+            background: #34495e;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover {
+            background: #2c3e50;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 Catálogo de Obras</h1>
+            <p>Explora las obras teatrales del Siglo de Oro</p>
+        </div>
+
+        <a href="/" class="back-link">← Volver al inicio</a>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.total }}</div>
+                <div>Total Obras</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.fuentesxi }}</div>
+                <div>FUENTESXI</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.catcom }}</div>
+                <div>CATCOM</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ stats.ambas }}</div>
+                <div>Ambas Fuentes</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="fuente">Filtrar por fuente:</label>
+                <select name="fuente" id="fuente" onchange="applyFilters()">
+                    <option value="">Todas las fuentes</option>
+                    <option value="FUENTESXI" {% if fuente_actual == 'FUENTESXI' %}selected{% endif %}>FUENTESXI</option>
+                    <option value="CATCOM" {% if fuente_actual == 'CATCOM' %}selected{% endif %}>CATCOM</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="search">Buscar:</label>
+                <input type="text" name="search" id="search" placeholder="Título, autor..." value="{{ search_actual }}">
+            </div>
+            <button class="btn" onclick="applyFilters()">🔍 Buscar</button>
+            <button class="btn btn-secondary" onclick="clearFilters()">🗑️ Limpiar</button>
+        </div>
+
+        <div class="obras-grid">
+            {% for obra in obras %}
+            <div class="obra-card">
+                <div class="obra-title">{{ obra.titulo }}</div>
+                <div class="obra-author">👤 {{ obra.autor.nombre|default:"Autor desconocido" }}</div>
+                {% if obra.genero %}
+                <div style="color: #ccc; margin-bottom: 10px;">🎭 {{ obra.genero }}</div>
+                {% endif %}
+                {% if obra.tipo_obra %}
+                <div style="color: #ccc; margin-bottom: 10px;">📝 {{ obra.tipo_obra }}</div>
+                {% endif %}
+                <div class="obra-meta">
+                    <span class="fuente-badge fuente-{{ obra.fuente_principal|lower }}">
+                        {{ obra.fuente_principal }}
+                    </span>
+                    <a href="/obras/{{ obra.id }}/" class="view-btn">Ver detalles</a>
+                </div>
+            </div>
+            {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #ccc;">
+                <h3>No se encontraron obras</h3>
+                <p>Intenta ajustar los filtros de búsqueda</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function applyFilters() {
+            const fuente = document.getElementById('fuente').value;
+            const search = document.getElementById('search').value;
+            
+            let url = '/obras/catalogo/';
+            const params = new URLSearchParams();
+            
+            if (fuente) params.append('fuente', fuente);
+            if (search) params.append('search', search);
+            
+            if (params.toString()) {
+                url += '?' + params.toString();
+            }
+            
+            window.location.href = url;
+        }
+        
+        function clearFilters() {
+            document.getElementById('fuente').value = '';
+            document.getElementById('search').value = '';
+            window.location.href = '/obras/catalogo/';
+        }
+        
+        // Buscar al presionar Enter
+        document.getElementById('search').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                applyFilters();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar {{ obra.titulo_limpio }} - Teatro Español del Siglo de Oro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: #2c3e50;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .edit-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .edit-header {
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .edit-title {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .edit-subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .form-checkbox input {
+            transform: scale(1.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .obra-info {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .edit-container {
+                padding: 20px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">🎭 Teatro Español del Siglo de Oro</div>
+                <nav class="nav-links">
+                    <a href="/" class="nav-link">🏠 Inicio</a>
+                    <a href="/obras/catalogos/" class="nav-link">📚 Catálogos</a>
+                    <a href="/admin/" class="nav-link">⚙️ Admin</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="edit-container">
+                <div class="edit-header">
+                    <h1 class="edit-title">
+                        ✏️ Editar Obra
+                    </h1>
+                    <p class="edit-subtitle">{{ obra.titulo_limpio }}</p>
+                </div>
+
+                <div class="obra-info">
+                    <h3 style="margin-bottom: 15px; color: #1976d2;">📋 Información Actual</h3>
+                    <div class="info-item">
+                        <span class="info-label">ID:</span>
+                        <span class="info-value">{{ obra.id }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fuente:</span>
+                        <span class="info-value">{{ obra.get_fuente_principal_display }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Representaciones:</span>
+                        <span class="info-value">{{ obra.total_representaciones }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Origen de datos:</span>
+                        <span class="info-value">{{ obra.get_origen_datos_display }}</span>
+                    </div>
+                    {% if obra.pagina_pdf %}
+                    <div class="info-item">
+                        <span class="info-label">Página PDF:</span>
+                        <span class="info-value">
+                            <a href="{% url 'pagina_pdf' obra.pagina_pdf %}" target="_blank" style="color: #dc3545; text-decoration: none;">
+                                📄 Página {{ obra.pagina_pdf }}
+                            </a>
+                        </span>
+                    </div>
+                    {% endif %}
+                    <div class="info-item">
+                        <span class="info-label">Última actualización:</span>
+                        <span class="info-value">{{ obra.updated_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-grid">
+                        <!-- Información Básica -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                📖 Información Básica
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="titulo">Título Original</label>
+                                <input type="text" id="titulo" name="titulo" class="form-input" value="{{ obra.titulo }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="titulo_limpio">Título Normalizado</label>
+                                <input type="text" id="titulo_limpio" name="titulo_limpio" class="form-input" value="{{ obra.titulo_limpio }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="titulo_alternativo">Título Alternativo</label>
+                                <input type="text" id="titulo_alternativo" name="titulo_alternativo" class="form-input" value="{{ obra.titulo_alternativo }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="autor">Autor</label>
+                                <select id="autor" name="autor" class="form-select">
+                                    <option value="">-- Seleccionar autor --</option>
+                                    {% for autor in autores %}
+                                        <option value="{{ autor.id }}" {% if obra.autor and obra.autor.id == autor.id %}selected{% endif %}>
+                                            {{ autor.nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Clasificación -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                🏷️ Clasificación
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="tipo_obra">Tipo de Obra</label>
+                                <select id="tipo_obra" name="tipo_obra" class="form-select" required>
+                                    {% for value, label in tipo_obra_choices %}
+                                        <option value="{{ value }}" {% if obra.tipo_obra == value %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="genero">Género</label>
+                                <input type="text" id="genero" name="genero" class="form-input" value="{{ obra.genero }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="tema">Tema</label>
+                                <input type="text" id="tema" name="tema" class="form-input" value="{{ obra.tema }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="fecha_creacion_estimada">Fecha de Creación Estimada</label>
+                                <input type="text" id="fecha_creacion_estimada" name="fecha_creacion_estimada" class="form-input" value="{{ obra.fecha_creacion_estimada }}" placeholder="ej. 1605, c. 1610-1620">
+                            </div>
+                        </div>
+
+                        <!-- Estructura -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                📐 Estructura
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="versos">Número de Versos</label>
+                                <input type="number" id="versos" name="versos" class="form-input" value="{{ obra.versos }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="actos">Número de Actos</label>
+                                <input type="number" id="actos" name="actos" class="form-input" value="{{ obra.actos }}" min="1" max="10">
+                            </div>
+
+                            <div class="form-checkbox">
+                                <input type="checkbox" id="musica_conservada" name="musica_conservada" {% if obra.musica_conservada %}checked{% endif %}>
+                                <label for="musica_conservada">Música conservada</label>
+                            </div>
+
+                            {% if obra.musica_conservada %}
+                            <div class="form-group">
+                                <label class="form-label" for="compositor">Compositor</label>
+                                <input type="text" id="compositor" name="compositor" class="form-input" value="{{ obra.compositor }}">
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Contexto Histórico -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                🏛️ Contexto Histórico
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="mecenas">Mecenas/Patrocinador</label>
+                                <input type="text" id="mecenas" name="mecenas" class="form-input" value="{{ obra.mecenas }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="edicion_principe">Edición Príncipe</label>
+                                <textarea id="edicion_principe" name="edicion_principe" class="form-textarea" rows="3">{{ obra.edicion_principe }}</textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="notas_bibliograficas">Notas Bibliográficas</label>
+                                <textarea id="notas_bibliograficas" name="notas_bibliograficas" class="form-textarea" rows="4">{{ obra.notas_bibliograficas }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Fuente de Datos -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                📊 Fuente de Datos
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="origen_datos">Origen de Datos</label>
+                                <select id="origen_datos" name="origen_datos" class="form-select">
+                                    <option value="web" {% if obra.origen_datos == 'web' %}selected{% endif %}>Web</option>
+                                    <option value="pdf" {% if obra.origen_datos == 'pdf' %}selected{% endif %}>PDF</option>
+                                    <option value="manual" {% if obra.origen_datos == 'manual' %}selected{% endif %}>Manual</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="pagina_pdf">Página PDF</label>
+                                <input type="number" id="pagina_pdf" name="pagina_pdf" class="form-input" value="{{ obra.pagina_pdf }}" min="1" max="252">
+                                <small class="text-muted">Número de página del PDF FUENTES IX 1 donde aparece esta obra</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="texto_original_pdf">Texto Original del PDF</label>
+                                <textarea id="texto_original_pdf" name="texto_original_pdf" class="form-textarea" rows="4">{{ obra.texto_original_pdf }}</textarea>
+                                <small class="text-muted">Texto original extraído del PDF para esta obra</small>
+                            </div>
+                        </div>
+
+                        <!-- Notas Adicionales -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                📝 Notas Adicionales
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="notas">Notas</label>
+                                <textarea id="notas" name="notas" class="form-textarea" rows="6">{{ obra.notas }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            💾 Guardar Cambios
+                        </button>
+                        <a href="javascript:history.back()" class="btn btn-secondary">
+                            ↩️ Cancelar
+                        </a>
+                        <a href="/admin/obras/obra/{{ obra.id }}/delete/" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta obra?')">
+                            🗑️ Eliminar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Auto-actualizar el título normalizado cuando cambie el título original
+        document.getElementById('titulo').addEventListener('input', function() {
+            const tituloLimpio = document.getElementById('titulo_limpio');
+            if (!tituloLimpio.value) {
+                tituloLimpio.value = this.value;
+            }
+        });
+
+        // Mostrar campo de compositor si se marca música conservada
+        document.getElementById('musica_conservada').addEventListener('change', function() {
+            const compositorGroup = document.querySelector('#compositor').closest('.form-group');
+            if (this.checked) {
+                compositorGroup.style.display = 'block';
+            } else {
+                compositorGroup.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

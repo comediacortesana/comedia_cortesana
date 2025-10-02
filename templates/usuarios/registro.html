@@ -1,0 +1,356 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Registro - Teatro Español{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 500px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .register-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .register-header h1 {
+        color: #333;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    
+    .register-header p {
+        color: #666;
+        font-size: 0.9em;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+    }
+    
+    .checkbox-group label {
+        margin: 0;
+        font-size: 0.9em;
+        color: #666;
+    }
+    
+    .btn-register {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .register-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .register-links a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .register-links a:hover {
+        text-decoration: underline;
+    }
+    
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+    
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left-color: #dc3545;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left-color: #28a745;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border-left-color: #17a2b8;
+    }
+    
+    .password-requirements {
+        font-size: 0.8em;
+        color: #666;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-card">
+        <div class="register-header">
+            <h1>🎭 Teatro Español</h1>
+            <p>Crea tu cuenta para acceder al catálogo</p>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">Nombre</label>
+                    <input type="text" 
+                           id="first_name" 
+                           name="first_name" 
+                           class="form-control" 
+                           placeholder="Tu nombre"
+                           required
+                           value="{{ request.POST.first_name|default:'' }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="last_name">Apellidos</label>
+                    <input type="text" 
+                           id="last_name" 
+                           name="last_name" 
+                           class="form-control" 
+                           placeholder="Tus apellidos"
+                           required
+                           value="{{ request.POST.last_name|default:'' }}">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Nombre de usuario</label>
+                <input type="text" 
+                       id="username" 
+                       name="username" 
+                       class="form-control" 
+                       placeholder="nombre_usuario"
+                       required
+                       value="{{ request.POST.username|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" 
+                       id="email" 
+                       name="email" 
+                       class="form-control" 
+                       placeholder="tu@email.com"
+                       required
+                       value="{{ request.POST.email|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="institucion">Institución (opcional)</label>
+                <input type="text" 
+                       id="institucion" 
+                       name="institucion" 
+                       class="form-control" 
+                       placeholder="Universidad, centro de investigación..."
+                       value="{{ request.POST.institucion|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" 
+                       id="password" 
+                       name="password" 
+                       class="form-control" 
+                       placeholder="Mínimo 3 caracteres (desarrollo)"
+                       required>
+                <div class="password-requirements">
+                    <strong>Modo desarrollo:</strong> Mínimo 3 caracteres. En producción se requerirán contraseñas más seguras.
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password_confirm">Confirmar contraseña</label>
+                <input type="password" 
+                       id="password_confirm" 
+                       name="password_confirm" 
+                       class="form-control" 
+                       placeholder="Repite tu contraseña"
+                       required>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="es_investigador" name="es_investigador">
+                <label for="es_investigador">Soy investigador o académico</label>
+            </div>
+            
+            <button type="submit" class="btn-register">
+                Crear Cuenta
+            </button>
+        </form>
+        
+        <div class="register-links">
+            <p>¿Ya tienes cuenta? <a href="{% url 'usuarios:login' %}">Inicia sesión aquí</a></p>
+            <p><a href="{% url 'home' %}">← Volver al inicio</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-focus en el primer campo
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstNameField = document.getElementById('first_name');
+        if (firstNameField && !firstNameField.value) {
+            firstNameField.focus();
+        }
+    });
+    
+    // Validación del formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const password = document.getElementById('password').value;
+        const passwordConfirm = document.getElementById('password_confirm').value;
+        const email = document.getElementById('email').value;
+        const username = document.getElementById('username').value;
+        
+        // Validar campos requeridos
+        const requiredFields = ['first_name', 'last_name', 'username', 'email', 'password', 'password_confirm'];
+        for (let field of requiredFields) {
+            const input = document.getElementById(field);
+            if (!input.value.trim()) {
+                e.preventDefault();
+                alert(`Por favor, completa el campo: ${input.previousElementSibling.textContent}`);
+                input.focus();
+                return false;
+            }
+        }
+        
+        // Validar email
+        if (!email.includes('@') || !email.includes('.')) {
+            e.preventDefault();
+            alert('Por favor, ingresa un email válido.');
+            document.getElementById('email').focus();
+            return false;
+        }
+        
+        // Validar contraseñas
+        if (password !== passwordConfirm) {
+            e.preventDefault();
+            alert('Las contraseñas no coinciden.');
+            document.getElementById('password_confirm').focus();
+            return false;
+        }
+        
+        if (password.length < 3) {
+            e.preventDefault();
+            alert('La contraseña debe tener al menos 3 caracteres (modo desarrollo).');
+            document.getElementById('password').focus();
+            return false;
+        }
+        
+        // Validar nombre de usuario
+        if (username.length < 3) {
+            e.preventDefault();
+            alert('El nombre de usuario debe tener al menos 3 caracteres.');
+            document.getElementById('username').focus();
+            return false;
+        }
+    });
+    
+    // Validación en tiempo real de contraseñas
+    document.getElementById('password_confirm').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const passwordConfirm = this.value;
+        
+        if (passwordConfirm && password !== passwordConfirm) {
+            this.style.borderColor = '#dc3545';
+        } else {
+            this.style.borderColor = '#e1e5e9';
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,2051 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Editor {{ catalogo_id|upper }} - Teatro Español del Siglo de Oro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .editor-layout {
+        display: flex;
+        min-height: 100vh;
+        background: #f8f9fa;
+    }
+    
+    .sidebar {
+        width: 250px;
+        background: #2c3e50;
+        color: white;
+        padding: 1rem;
+        overflow-y: auto;
+        position: fixed;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .main-content {
+        margin-left: 250px;
+        flex: 1;
+        padding: 1rem;
+    }
+    
+    .sidebar-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .sidebar-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    
+    .sidebar-subtitle {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    .nav-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .nav-section-title {
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        opacity: 0.7;
+        margin-bottom: 0.5rem;
+        padding: 0 0.5rem;
+    }
+    
+    .nav-item {
+        display: block;
+        color: white;
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 0.3rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .nav-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .nav-item.active {
+        background: #3498db;
+        color: white;
+    }
+    
+    .nav-item i {
+        margin-right: 0.5rem;
+        width: 20px;
+    }
+    
+    .content-header {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+    
+    .content-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    
+    .content-subtitle {
+        color: #7f8c8d;
+        margin-bottom: 1rem;
+    }
+    
+    .search-container {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 300px;
+        padding: 0.8rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+    
+    .btn-primary {
+        background: #3498db;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        background: #2980b9;
+        transform: translateY(-2px);
+    }
+    
+    .content-body {
+        display: flex;
+        gap: 1.5rem;
+        height: calc(100vh - 180px);
+    }
+    
+    .obras-list {
+        flex: 0.8;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        min-width: 250px;
+    }
+    
+    .editor-panels {
+        display: flex;
+        gap: 1.5rem;
+        flex: 2.5;
+    }
+    
+    .form-panel {
+        flex: 1;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .pdf-pages-panel {
+        flex: 2;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        min-width: 500px;
+    }
+    
+    .pdf-pages-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .pdf-pages-body {
+        padding: 1rem;
+        height: calc(100% - 60px);
+        overflow-y: auto;
+    }
+    
+    .pdf-page-item {
+        margin-bottom: 1.5rem;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        background: white;
+    }
+    
+    .pdf-page-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+    }
+    
+    .pdf-page-image {
+        width: 100%;
+        height: 400px;
+        object-fit: contain;
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+    }
+    
+    .pdf-page-info {
+        padding: 1rem;
+        background: white;
+        border-top: 1px solid #f8f9fa;
+    }
+    
+    .pdf-page-number {
+        font-weight: bold;
+        color: #2c3e50;
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .pdf-page-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        line-height: 1.4;
+        max-height: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .no-pdf-pages {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+    }
+    
+    .no-pdf-pages i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .obras-list-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .obras-list-body {
+        height: calc(100% - 60px);
+        overflow-y: auto;
+    }
+    
+    .obra-item {
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .obra-item:hover {
+        background: #f8f9fa;
+    }
+    
+    .obra-item.active {
+        background: #e3f2fd;
+        border-left: 4px solid #3498db;
+    }
+    
+    .obra-item.selected {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+    
+    .obra-item.selected.active {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+    
+    .selection-checkbox {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        z-index: 10;
+    }
+    
+    .selection-controls {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .selection-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    
+    .selection-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .btn-sm {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+    
+    .btn-success:hover {
+        background: #218838;
+    }
+    
+    .btn-warning {
+        background: #ffc107;
+        color: #212529;
+    }
+    
+    .btn-warning:hover {
+        background: #e0a800;
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #5a6268;
+    }
+    
+    .comments-section {
+        display: none;
+    }
+    
+    .comments-section.active {
+        display: block;
+    }
+    
+    .comments-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: bold;
+        color: #2c3e50;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .comments-body {
+        padding: 1rem;
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+    
+    .comment-item {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .comment-item:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .comment-title {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    
+    .comment-meta {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+    
+    .comment-text {
+        font-size: 0.9rem;
+        color: #495057;
+        line-height: 1.4;
+        margin-bottom: 0.5rem;
+    }
+    
+    .comment-works {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+    
+    .comment-works .badge {
+        margin-right: 0.25rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .no-comments {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+    }
+    
+    .no-comments i {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .obra-title {
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.3rem;
+    }
+    
+    .obra-author {
+        color: #7f8c8d;
+        font-size: 0.9rem;
+    }
+    
+    .obra-type {
+        display: inline-block;
+        background: #e9ecef;
+        color: #495057;
+        padding: 0.2rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+    }
+    
+    .obra-extra {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 0.2rem;
+        font-style: italic;
+    }
+    
+    .form-panel-header {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-bottom: 1px solid #e9ecef;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+    
+    .form-panel-body {
+        padding: 1.5rem;
+        height: calc(100% - 60px);
+        overflow-y: auto;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    .form-control[readonly] {
+        background: #f8f9fa;
+        color: #6c757d;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
+    }
+    
+    .btn-success {
+        background: #27ae60;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-success:hover {
+        background: #229954;
+        transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+        background: #95a5a6;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+        background: #7f8c8d;
+        transform: translateY(-2px);
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: #7f8c8d;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #7f8c8d;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #3498db;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+    
+    @media (max-width: 768px) {
+        .sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .main-content {
+            margin-left: 0;
+        }
+        
+        .content-body {
+            flex-direction: column;
+            height: auto;
+        }
+        
+        .editor-panels {
+            flex-direction: column;
+        }
+        
+        .obras-list,
+        .form-panel,
+        .pdf-pages-panel {
+            height: 500px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">{{ catalogo_id|upper }}</div>
+            <div class="sidebar-subtitle">Editor de Catálogo</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">Navegación</div>
+            <a href="#" class="nav-item active" data-section="obras">
+                <i class="fas fa-book"></i> Obras
+            </a>
+            <a href="#" class="nav-item" data-section="autores">
+                <i class="fas fa-user"></i> Autores
+            </a>
+            <a href="#" class="nav-item" data-section="lugares">
+                <i class="fas fa-map-marker-alt"></i> Lugares
+            </a>
+            <a href="#" class="nav-item" data-section="representaciones">
+                <i class="fas fa-theater-masks"></i> Representaciones
+            </a>
+            <a href="#" class="nav-item" data-section="bibliografia">
+                <i class="fas fa-book-open"></i> Bibliografía
+            </a>
+            <a href="#" class="nav-item" data-section="comentarios">
+                <i class="fas fa-comments"></i> Mis Comentarios
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title">Herramientas</div>
+            <a href="#" class="nav-item" data-section="busqueda">
+                <i class="fas fa-search"></i> Búsqueda Avanzada
+            </a>
+            <a href="#" class="nav-item" data-section="estadisticas">
+                <i class="fas fa-chart-bar"></i> Estadísticas
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <a href="{% url 'editor' %}" class="nav-item">
+                <i class="fas fa-arrow-left"></i> Volver a Catálogos
+            </a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-header">
+            <h1 class="content-title">Editor {{ catalogo_id|upper }}</h1>
+            <p class="content-subtitle">Edita las obras del catálogo {{ fuente }}</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_obras }}</div>
+                    <div class="stat-label">Obras</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.total_representaciones }}</div>
+                    <div class="stat-label">Representaciones</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.autores_unicos }}</div>
+                    <div class="stat-label">Autores</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ stats.tipos_obra }}</div>
+                    <div class="stat-label">Tipos</div>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar obras por título, autor...">
+                <button class="btn btn-primary" id="searchBtn">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+                <button class="btn btn-secondary" id="clearBtn">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
+            </div>
+        </div>
+        
+        <div class="content-body">
+            <!-- Token CSRF -->
+            {% csrf_token %}
+            
+            <!-- Lista de Obras -->
+            <div class="obras-list">
+                <div class="obras-list-header" id="listHeader">
+                    Obras ({{ obras|length }})
+                </div>
+                <div class="selection-controls" id="selectionControls" style="display: none;">
+                    <div class="selection-info" id="selectionInfo">
+                        <span id="selectedCount">0</span> obras seleccionadas
+                    </div>
+                    <div class="selection-actions">
+                        <button class="btn-sm btn-success" id="addCommentBtn" onclick="openCommentModal()">
+                            <i class="fas fa-comment"></i> Comentar
+                        </button>
+                        <button class="btn-sm btn-warning" id="selectAllBtn" onclick="selectAllItems()">
+                            <i class="fas fa-check-square"></i> Seleccionar todo
+                        </button>
+                        <button class="btn-sm btn-secondary" id="clearSelectionBtn" onclick="clearSelection()">
+                            <i class="fas fa-times"></i> Limpiar
+                        </button>
+                    </div>
+                </div>
+                <div class="obras-list-body" id="obrasList">
+                    {% for obra in obras %}
+                    <div class="obra-item" data-obra-id="{{ obra.id }}" data-section="obras">
+                        <input type="checkbox" class="selection-checkbox" data-obra-id="{{ obra.id }}" onchange="toggleSelection(this)">
+                        <div class="obra-title">{{ obra.titulo_limpio|default:obra.titulo }}</div>
+                        <div class="obra-author">{{ obra.autor.nombre|default:"Autor desconocido" }}</div>
+                        <div class="obra-type">{{ obra.tipo_obra|default:"Sin clasificar" }}</div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-book"></i>
+                        <p>No se encontraron obras</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Paneles de Edición y PDF -->
+            <div class="editor-panels">
+                <!-- Panel de Formulario -->
+                <div class="form-panel">
+                    <div class="form-panel-header">
+                        <span id="formTitle">Selecciona una obra para editar</span>
+                    </div>
+                    <div class="form-panel-body" id="formPanel">
+                        <div class="empty-state">
+                            <i class="fas fa-edit"></i>
+                            <p>Selecciona una obra de la lista para comenzar a editar</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Panel de Páginas PDF -->
+                <div class="pdf-pages-panel">
+                    <div class="pdf-pages-header">
+                        <span id="pdfPagesTitle">Páginas PDF</span>
+                    </div>
+                    <div class="pdf-pages-body" id="pdfPagesPanel">
+                        <div class="no-pdf-pages">
+                            <i class="fas fa-file-pdf"></i>
+                            <p>Selecciona una obra para ver sus páginas PDF</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sección de Comentarios -->
+                <div class="comments-section" id="commentsSection">
+                    <div class="comments-header">
+                        <span>Mis Comentarios</span>
+                        <button class="btn-sm btn-primary" onclick="loadComments()">
+                            <i class="fas fa-refresh"></i> Actualizar
+                        </button>
+                    </div>
+                    <div class="comments-body" id="commentsBody">
+                        <div class="no-comments">
+                            <i class="fas fa-comments"></i>
+                            <p>No hay comentarios aún</p>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para comentarios -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentModalLabel">
+                    <i class="fas fa-comment"></i> Comentario sobre selección
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="commentTitle" class="form-label">Título del comentario</label>
+                    <input type="text" class="form-control" id="commentTitle" placeholder="Ej: Análisis de obras de Lope de Vega" autocomplete="off">
+                </div>
+                <div class="mb-3">
+                    <label for="commentText" class="form-label">Comentario</label>
+                    <textarea class="form-control" id="commentText" rows="6" placeholder="Escribe tu comentario aquí..." autocomplete="off"></textarea>
+                </div>
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="commentPublic">
+                        <label class="form-check-label" for="commentPublic">
+                            Hacer público (visible para otros usuarios)
+                        </label>
+                    </div>
+                </div>
+                <div class="alert alert-info" id="commentHelp">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Obras seleccionadas:</strong>
+                    <div id="selectedObrasList" class="mt-2"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="saveCommentBtn" onclick="saveComment()" aria-describedby="commentHelp">
+                    <i class="fas fa-save"></i> Guardar comentario
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const obrasList = document.getElementById('obrasList');
+    const formPanel = document.getElementById('formPanel');
+    const formTitle = document.getElementById('formTitle');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    
+    let currentObraId = null;
+    let currentSection = 'obras';
+    
+    // Cargar obra en el formulario
+    function loadObra(obraId) {
+        if (currentObraId === obraId) return;
+        
+        currentObraId = obraId;
+        
+        // Actualizar selección visual
+        document.querySelectorAll('.obra-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-obra-id="${obraId}"]`).classList.add('active');
+        
+        // Mostrar loading
+        formPanel.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando obra...</div>';
+        loadPdfPages(obraId);
+        
+        // Cargar datos de la obra
+        fetch(`/obras/editor/{{ catalogo_id }}/obra/${obraId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.obra) {
+                    renderForm(data.obra);
+                } else {
+                    formPanel.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar la obra</p></div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                formPanel.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar la obra</p></div>';
+            });
+    }
+    
+    // Cargar páginas PDF de una obra
+    function loadPdfPages(obraId) {
+        const pdfPagesPanel = document.getElementById('pdfPagesPanel');
+        const pdfPagesTitle = document.getElementById('pdfPagesTitle');
+        
+        // Mostrar loading
+        pdfPagesPanel.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando páginas PDF...</div>';
+        
+        // Cargar páginas PDF
+        fetch(`/obras/editor/{{ catalogo_id }}/obra/${obraId}/pdf-pages/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.pages && data.pages.length > 0) {
+                    renderPdfPages(data.pages);
+                    pdfPagesTitle.textContent = `Páginas PDF (${data.pages.length})`;
+                } else {
+                    pdfPagesPanel.innerHTML = `
+                        <div class="no-pdf-pages">
+                            <i class="fas fa-file-pdf"></i>
+                            <p>No hay páginas PDF asociadas a esta obra</p>
+                        </div>
+                    `;
+                    pdfPagesTitle.textContent = 'Páginas PDF';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                pdfPagesPanel.innerHTML = `
+                    <div class="no-pdf-pages">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error al cargar las páginas PDF</p>
+                    </div>
+                `;
+                pdfPagesTitle.textContent = 'Páginas PDF';
+            });
+    }
+    
+    // Renderizar páginas PDF
+    function renderPdfPages(pages) {
+        const pdfPagesPanel = document.getElementById('pdfPagesPanel');
+        
+        pdfPagesPanel.innerHTML = pages.map(page => `
+            <div class="pdf-page-item" data-page-number="${page.numero_pagina}" onclick="openPdfPageModal(${page.numero_pagina})">
+                <img src="${page.ruta_imagen_completa}" 
+                     alt="Página ${page.numero_pagina}" 
+                     class="pdf-page-image"
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbiBubyBkaXNwb25pYmxlPC90ZXh0Pjwvc3ZnPg=='">
+                <div class="pdf-page-info">
+                    <div class="pdf-page-number">Página ${page.numero_pagina}</div>
+                    <div class="pdf-page-text">${page.texto_extraido ? page.texto_extraido.substring(0, 100) + '...' : 'Sin texto extraído'}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Abrir modal de página PDF
+    function openPdfPageModal(pageNumber) {
+        // Crear modal dinámicamente
+        const modalHtml = `
+            <div class="modal fade" id="pdfPageModal" tabindex="-1" aria-labelledby="pdfPageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h5 class="modal-title" id="pdfPageModalLabel">
+                                <i class="fas fa-file-pdf text-danger"></i>
+                                Página ${pageNumber} - FUENTES IX 1
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-0">
+                            <div class="row g-0">
+                                <div class="col-lg-8">
+                                    <div class="p-3">
+                                        <div class="text-center">
+                                            <img src="/media/pdf_pages/page_${pageNumber.toString().padStart(3, '0')}.png" 
+                                                 alt="Página ${pageNumber}" 
+                                                 class="img-fluid shadow-sm"
+                                                 style="max-height: 70vh; width: auto;"
+                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                            <div style="display: none; text-align: center; padding: 2rem;">
+                                                <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted">Imagen no disponible</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 border-start">
+                                    <div class="p-3">
+                                        <h6>Información de la página</h6>
+                                        <p><strong>Número:</strong> ${pageNumber}</p>
+                                        <p><strong>Archivo:</strong> page_${pageNumber.toString().padStart(3, '0')}.png</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Remover modal existente si existe
+        const existingModal = document.getElementById('pdfPageModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Añadir nuevo modal al DOM
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        // Mostrar modal
+        const modal = new bootstrap.Modal(document.getElementById('pdfPageModal'));
+        modal.show();
+        
+        // Limpiar modal cuando se cierre
+        document.getElementById('pdfPageModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
+        });
+    }
+    
+    // Renderizar formulario
+    function renderForm(obra) {
+        formTitle.textContent = `Editando: ${obra.titulo_limpio || obra.titulo}`;
+        
+        formPanel.innerHTML = `
+            <form id="obraForm">
+                <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="titulo" value="${obra.titulo || ''}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Título Limpio</label>
+                    <input type="text" class="form-control" name="titulo_limpio" value="${obra.titulo_limpio || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Título Alternativo</label>
+                    <input type="text" class="form-control" name="titulo_alternativo" value="${obra.titulo_alternativo || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Autor</label>
+                    <select class="form-control" name="autor">
+                        <option value="">Seleccionar autor</option>
+                        {% for autor in autores %}
+                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de Obra</label>
+                    <select class="form-control" name="tipo_obra">
+                        <option value="">Seleccionar tipo</option>
+                        {% for choice in tipo_obra_choices %}
+                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Género</label>
+                    <input type="text" class="form-control" name="genero" value="${obra.genero || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tema</label>
+                    <input type="text" class="form-control" name="tema" value="${obra.tema || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha de Creación Estimada</label>
+                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Versos</label>
+                    <input type="number" class="form-control" name="versos" value="${obra.versos || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Actos</label>
+                    <input type="number" class="form-control" name="actos" value="${obra.actos || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''}>
+                        Música Conservada
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Compositor</label>
+                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mecenas</label>
+                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Edición Príncipe</label>
+                    <input type="text" class="form-control" name="edicion_principe" value="${obra.edicion_principe || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas Bibliográficas</label>
+                    <textarea class="form-control" name="notas_bibliograficas" rows="3">${obra.notas_bibliograficas || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas</label>
+                    <textarea class="form-control" name="notas" rows="3">${obra.notas || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Origen de Datos</label>
+                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Página PDF</label>
+                    <input type="number" class="form-control" name="pagina_pdf" value="${obra.pagina_pdf || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Texto Original PDF</label>
+                    <textarea class="form-control" name="texto_original_pdf" rows="5">${obra.texto_original_pdf || ''}</textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                </div>
+            </form>
+        `;
+        
+        // Añadir event listeners al formulario
+        document.getElementById('obraForm').addEventListener('submit', saveObra);
+        document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
+    }
+    
+    // Guardar obra
+    function saveObra(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        submitBtn.textContent = 'Guardando...';
+        submitBtn.disabled = true;
+        
+        fetch(`/obras/editor/{{ catalogo_id }}/obra/${currentObraId}/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || ''
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar mensaje de éxito
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success';
+                successMsg.innerHTML = `<i class="fas fa-check"></i> ${data.message}`;
+                formPanel.insertBefore(successMsg, formPanel.firstChild);
+                
+                // Actualizar la lista de obras
+                updateObraInList(data.obra);
+                
+                // Ocultar mensaje después de 3 segundos
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 3000);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al guardar la obra');
+        })
+        .finally(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    }
+    
+    // Cancelar edición
+    function cancelEdit() {
+        const sectionTitles = {
+            'obras': 'Obras',
+            'autores': 'Autores',
+            'lugares': 'Lugares',
+            'representaciones': 'Representaciones',
+            'bibliografia': 'Bibliografía'
+        };
+        
+        formPanel.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-edit"></i>
+                <p>Selecciona un ${sectionTitles[currentSection].toLowerCase()} de la lista para comenzar a editar</p>
+            </div>
+        `;
+        formTitle.textContent = `Selecciona un ${sectionTitles[currentSection].toLowerCase()} para editar`;
+        currentObraId = null;
+        
+        document.querySelectorAll('.obra-item').forEach(item => {
+            item.classList.remove('active');
+        });
+    }
+    
+    // Actualizar obra en la lista
+    function updateObraInList(obra) {
+        const obraItem = document.querySelector(`[data-obra-id="${obra.id}"]`);
+        if (obraItem) {
+            obraItem.querySelector('.obra-title').textContent = obra.titulo_limpio || obra.titulo;
+            obraItem.querySelector('.obra-author').textContent = obra.autor;
+            obraItem.querySelector('.obra-type').textContent = obra.tipo_obra || 'Sin clasificar';
+        }
+    }
+    
+    // Búsqueda
+    function searchObras() {
+        const query = searchInput.value.trim();
+        
+        if (query === '') {
+            // Recargar datos de la sección actual
+            loadSectionData(currentSection);
+            return;
+        }
+        
+        fetch(`/obras/editor/{{ catalogo_id }}/${currentSection}/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.items) {
+                    renderSectionList(data.items, currentSection);
+                    // Actualizar header con el total
+                    const sectionTitles = {
+                        'obras': 'Obras',
+                        'autores': 'Autores',
+                        'lugares': 'Lugares',
+                        'representaciones': 'Representaciones',
+                        'bibliografia': 'Bibliografía'
+                    };
+                    const listHeader = document.getElementById('listHeader');
+                    listHeader.textContent = `${sectionTitles[currentSection]} (${data.total})`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    
+    // Renderizar lista de obras
+    function renderObrasList(obras) {
+        if (obras.length === 0) {
+            obrasList.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron obras</p></div>';
+            return;
+        }
+        
+        obrasList.innerHTML = obras.map(obra => `
+            <div class="obra-item" data-obra-id="${obra.id}">
+                <div class="obra-title">${obra.titulo_limpio || obra.titulo}</div>
+                <div class="obra-author">${obra.autor}</div>
+                <div class="obra-type">${obra.tipo_obra || 'Sin clasificar'}</div>
+            </div>
+        `).join('');
+        
+        // Añadir event listeners a los nuevos elementos
+        document.querySelectorAll('.obra-item').forEach(item => {
+            item.addEventListener('click', () => {
+                loadObra(item.dataset.obraId);
+            });
+        });
+    }
+    
+    // Event listeners iniciales para obras (se añaden dinámicamente para otras secciones)
+    document.querySelectorAll('.obra-item[data-obra-id]').forEach(item => {
+        item.addEventListener('click', () => {
+            loadObra(item.dataset.obraId);
+        });
+    });
+    
+    searchBtn.addEventListener('click', searchObras);
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        loadSectionData(currentSection);
+    });
+    
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchObras();
+        }
+    });
+    
+    // Navegación lateral
+    document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Actualizar estado activo
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            item.classList.add('active');
+            
+            // Cambiar de sección
+            switchSection(item.dataset.section);
+        });
+    });
+    
+    // Función para cambiar de sección
+    function switchSection(section) {
+        const obrasList = document.getElementById('obrasList');
+        const formPanel = document.getElementById('formPanel');
+        const formTitle = document.getElementById('formTitle');
+        const searchInput = document.getElementById('searchInput');
+        const listHeader = document.getElementById('listHeader');
+        const pdfPagesPanel = document.getElementById('pdfPagesPanel');
+        const pdfPagesTitle = document.getElementById('pdfPagesTitle');
+        const editorPanels = document.querySelector('.editor-panels');
+        const commentsSection = document.getElementById('commentsSection');
+        
+        // Actualizar sección actual
+        currentSection = section;
+        currentObraId = null;
+        
+        // Mostrar/ocultar secciones según corresponda
+        if (section === 'comentarios') {
+            // Mostrar solo la sección de comentarios
+            editorPanels.style.display = 'none';
+            commentsSection.classList.add('active');
+            loadComments();
+            return;
+        } else {
+            // Mostrar los paneles del editor
+            editorPanels.style.display = 'flex';
+            commentsSection.classList.remove('active');
+        }
+        
+        // Actualizar título del panel
+        const sectionTitles = {
+            'obras': 'Obras',
+            'autores': 'Autores',
+            'lugares': 'Lugares',
+            'representaciones': 'Representaciones',
+            'bibliografia': 'Bibliografía'
+        };
+        
+        formTitle.textContent = `Selecciona un ${sectionTitles[section].toLowerCase()} para editar`;
+        
+        // Limpiar formulario
+        formPanel.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-edit"></i>
+                <p>Selecciona un ${sectionTitles[section].toLowerCase()} de la lista para comenzar a editar</p>
+            </div>
+        `;
+        
+        // Limpiar panel de PDF (solo para obras)
+        if (section === 'obras') {
+            pdfPagesPanel.innerHTML = `
+                <div class="no-pdf-pages">
+                    <i class="fas fa-file-pdf"></i>
+                    <p>Selecciona una obra para ver sus páginas PDF</p>
+                </div>
+            `;
+            pdfPagesTitle.textContent = 'Páginas PDF';
+        } else {
+            pdfPagesPanel.innerHTML = `
+                <div class="no-pdf-pages">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Las páginas PDF solo están disponibles para obras</p>
+                </div>
+            `;
+            pdfPagesTitle.textContent = 'Páginas PDF';
+        }
+        
+        // Actualizar placeholder de búsqueda
+        const searchPlaceholders = {
+            'obras': 'Buscar obras por título, autor...',
+            'autores': 'Buscar autores por nombre...',
+            'lugares': 'Buscar lugares por nombre, región...',
+            'representaciones': 'Buscar representaciones por obra, lugar...',
+            'bibliografia': 'Buscar referencias por título, autor...'
+        };
+        
+        searchInput.placeholder = searchPlaceholders[section];
+        
+        // Limpiar búsqueda
+        searchInput.value = '';
+        
+        // Cargar datos de la sección
+        loadSectionData(section);
+    }
+    
+    // Función para cargar datos de una sección
+    function loadSectionData(section) {
+        const obrasList = document.getElementById('obrasList');
+        const listHeader = document.getElementById('listHeader');
+        
+        console.log('Loading section data for:', section);
+        
+        // Mostrar loading
+        obrasList.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+        
+        // Cargar datos
+        fetch(`/obras/editor/{{ catalogo_id }}/${section}/`)
+            .then(response => {
+                console.log('Section response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Section data received:', data);
+                if (data.items) {
+                    renderSectionList(data.items, section);
+                    // Actualizar header con el total
+                    const sectionTitles = {
+                        'obras': 'Obras',
+                        'autores': 'Autores',
+                        'lugares': 'Lugares',
+                        'representaciones': 'Representaciones',
+                        'bibliografia': 'Bibliografía'
+                    };
+                    listHeader.textContent = `${sectionTitles[section]} (${data.total})`;
+                } else {
+                    console.error('No items in section response:', data);
+                    obrasList.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar los datos: No se encontraron elementos</p></div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading section:', error);
+                obrasList.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar los datos: ${error.message}</p></div>`;
+            });
+    }
+    
+    // Función para renderizar lista de sección
+    function renderSectionList(items, section) {
+        const obrasList = document.getElementById('obrasList');
+        
+        if (items.length === 0) {
+            obrasList.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron elementos</p></div>';
+            return;
+        }
+        
+        obrasList.innerHTML = items.map(item => `
+            <div class="obra-item" data-item-id="${item.id}" data-section="${section}">
+                <div class="obra-title">${item.titulo}</div>
+                <div class="obra-author">${item.subtitulo}</div>
+                <div class="obra-type">${item.tipo}</div>
+                ${item.extra ? `<div class="obra-extra">${item.extra}</div>` : ''}
+            </div>
+        `).join('');
+        
+        // Añadir event listeners a los nuevos elementos
+        document.querySelectorAll('.obra-item').forEach(item => {
+            item.addEventListener('click', () => {
+                loadItemForEdit(item.dataset.itemId, item.dataset.section);
+            });
+        });
+    }
+    
+    // Función para cargar elemento para edición
+    function loadItemForEdit(itemId, section) {
+        if (currentObraId === itemId && currentSection === section) return;
+        
+        currentObraId = itemId;
+        currentSection = section;
+        
+        // Actualizar selección visual
+        document.querySelectorAll('.obra-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-item-id="${itemId}"][data-section="${section}"]`).classList.add('active');
+        
+        // Mostrar loading
+        formPanel.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+        
+        // Cargar páginas PDF solo para obras
+        if (section === 'obras') {
+            loadPdfPages(itemId);
+        }
+        
+        // Cargar datos del elemento
+        fetch(`/obras/editor/{{ catalogo_id }}/${section}/${itemId}/`)
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Data received:', data);
+                // Para obras, el endpoint devuelve 'obra', para otras secciones devuelve 'item'
+                const itemData = data.item || data.obra;
+                if (itemData) {
+                    renderFormForSection(itemData, section);
+                } else {
+                    console.error('No item/obra in response:', data);
+                    formPanel.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar el elemento: No se encontró el elemento</p></div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading item:', error);
+                formPanel.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar el elemento: ${error.message}</p></div>`;
+            });
+    }
+    
+    // Función para renderizar formulario según la sección
+    function renderFormForSection(item, section) {
+        const sectionTitles = {
+            'obras': 'Obras',
+            'autores': 'Autores',
+            'lugares': 'Lugares',
+            'representaciones': 'Representaciones',
+            'bibliografia': 'Bibliografía'
+        };
+        
+        formTitle.textContent = `Editando: ${item.titulo || item.nombre || 'Elemento'}`;
+        
+        let formHTML = '';
+        
+        if (section === 'obras') {
+            // Formulario de obras (ya existente)
+            formHTML = renderObraForm(item);
+        } else if (section === 'autores') {
+            formHTML = `
+                <form id="itemForm">
+                    <div class="form-group">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" value="${item.nombre || ''}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" name="nombre_completo" value="${item.nombre_completo || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Época</label>
+                        <input type="text" class="form-control" name="epoca" value="${item.epoca || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        <input type="text" class="form-control" name="fecha_nacimiento" value="${item.fecha_nacimiento || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fecha de Muerte</label>
+                        <input type="text" class="form-control" name="fecha_muerte" value="${item.fecha_muerte || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Obras Principales</label>
+                        <textarea class="form-control" name="obras_principales" rows="3">${item.obras_principales || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Biografía</label>
+                        <textarea class="form-control" name="biografia" rows="5">${item.biografia || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notas</label>
+                        <textarea class="form-control" name="notas" rows="3">${item.notas || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            `;
+        } else if (section === 'lugares') {
+            formHTML = `
+                <form id="itemForm">
+                    <div class="form-group">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" value="${item.nombre || ''}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Región</label>
+                        <input type="text" class="form-control" name="region" value="${item.region || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">País</label>
+                        <input type="text" class="form-control" name="pais" value="${item.pais || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tipo de Lugar</label>
+                        <input type="text" class="form-control" name="tipo_lugar" value="${item.tipo_lugar || ''}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <input type="checkbox" name="es_capital" ${item.es_capital ? 'checked' : ''}>
+                            Es Capital
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Descripción</label>
+                        <textarea class="form-control" name="descripcion" rows="3">${item.descripcion || ''}</textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                    </div>
+                </form>
+            `;
+        } else {
+            formHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Formulario de edición para ${sectionTitles[section]} en desarrollo</p>
+                </div>
+            `;
+        }
+        
+        formPanel.innerHTML = formHTML;
+        
+        // Añadir event listeners al formulario
+        const form = document.getElementById('itemForm');
+        if (form) {
+            form.addEventListener('submit', (e) => saveItem(e, section));
+            const cancelBtn = document.getElementById('cancelBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', cancelEdit);
+            }
+        }
+    }
+    
+    // Función para renderizar formulario de obra (existente)
+    function renderObraForm(obra) {
+        return `
+            <form id="itemForm">
+                <div class="form-group">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="titulo" value="${obra.titulo || ''}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Título Limpio</label>
+                    <input type="text" class="form-control" name="titulo_limpio" value="${obra.titulo_limpio || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Título Alternativo</label>
+                    <input type="text" class="form-control" name="titulo_alternativo" value="${obra.titulo_alternativo || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Autor</label>
+                    <select class="form-control" name="autor">
+                        <option value="">Seleccionar autor</option>
+                        {% for autor in autores %}
+                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tipo de Obra</label>
+                    <select class="form-control" name="tipo_obra">
+                        <option value="">Seleccionar tipo</option>
+                        {% for choice in tipo_obra_choices %}
+                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Género</label>
+                    <input type="text" class="form-control" name="genero" value="${obra.genero || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tema</label>
+                    <input type="text" class="form-control" name="tema" value="${obra.tema || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Fecha de Creación Estimada</label>
+                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Versos</label>
+                    <input type="number" class="form-control" name="versos" value="${obra.versos || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Actos</label>
+                    <input type="number" class="form-control" name="actos" value="${obra.actos || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''}>
+                        Música Conservada
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Compositor</label>
+                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Mecenas</label>
+                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Edición Príncipe</label>
+                    <input type="text" class="form-control" name="edicion_principe" value="${obra.edicion_principe || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas Bibliográficas</label>
+                    <textarea class="form-control" name="notas_bibliograficas" rows="3">${obra.notas_bibliograficas || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Notas</label>
+                    <textarea class="form-control" name="notas" rows="3">${obra.notas || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Origen de Datos</label>
+                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Página PDF</label>
+                    <input type="number" class="form-control" name="pagina_pdf" value="${obra.pagina_pdf || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Texto Original PDF</label>
+                    <textarea class="form-control" name="texto_original_pdf" rows="5">${obra.texto_original_pdf || ''}</textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                </div>
+            </form>
+        `;
+    }
+    
+    // Función para guardar elemento
+    function saveItem(event, section) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        
+        submitBtn.textContent = 'Guardando...';
+        submitBtn.disabled = true;
+        
+        fetch(`/obras/editor/{{ catalogo_id }}/${section}/${currentObraId}/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Mostrar mensaje de éxito
+                const successMsg = document.createElement('div');
+                successMsg.className = 'alert alert-success';
+                successMsg.innerHTML = `<i class="fas fa-check"></i> ${data.message}`;
+                formPanel.insertBefore(successMsg, formPanel.firstChild);
+                
+                // Actualizar la lista
+                updateItemInList(data.item, section);
+                
+                // Ocultar mensaje después de 3 segundos
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 3000);
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al guardar el elemento');
+        })
+        .finally(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+    }
+    
+    // Función para actualizar elemento en la lista
+    function updateItemInList(item, section) {
+        const itemElement = document.querySelector(`[data-item-id="${item.id}"][data-section="${section}"]`);
+        if (itemElement) {
+            itemElement.querySelector('.obra-title').textContent = item.titulo || item.nombre;
+            if (section === 'obras') {
+                itemElement.querySelector('.obra-author').textContent = item.autor;
+                itemElement.querySelector('.obra-type').textContent = item.tipo_obra || 'Sin clasificar';
+            } else if (section === 'autores') {
+                itemElement.querySelector('.obra-author').textContent = item.nombre_completo || '';
+                itemElement.querySelector('.obra-type').textContent = item.epoca || 'Sin época';
+            } else if (section === 'lugares') {
+                itemElement.querySelector('.obra-author').textContent = `${item.region || ''}, ${item.pais || ''}`;
+                itemElement.querySelector('.obra-type').textContent = item.tipo_lugar || 'Sin tipo';
+            }
+        }
+    }
+});
+
+// Variables globales para selección múltiple
+let selectedObras = new Set();
+let allObras = [];
+
+// Función para alternar selección de una obra
+function toggleSelection(checkbox) {
+    const obraId = parseInt(checkbox.dataset.obraId);
+    const obraItem = checkbox.closest('.obra-item');
+    
+    if (checkbox.checked) {
+        selectedObras.add(obraId);
+        obraItem.classList.add('selected');
+    } else {
+        selectedObras.delete(obraId);
+        obraItem.classList.remove('selected');
+    }
+    
+    updateSelectionControls();
+}
+
+// Función para actualizar controles de selección
+function updateSelectionControls() {
+    const selectionControls = document.getElementById('selectionControls');
+    const selectedCount = document.getElementById('selectedCount');
+    const addCommentBtn = document.getElementById('addCommentBtn');
+    
+    if (selectedObras.size > 0) {
+        selectionControls.style.display = 'flex';
+        selectedCount.textContent = selectedObras.size;
+        addCommentBtn.disabled = false;
+    } else {
+        selectionControls.style.display = 'none';
+        addCommentBtn.disabled = true;
+    }
+}
+
+// Función para seleccionar todas las obras
+function selectAllItems() {
+    const checkboxes = document.querySelectorAll('.selection-checkbox');
+    checkboxes.forEach(checkbox => {
+        if (!checkbox.checked) {
+            checkbox.checked = true;
+            toggleSelection(checkbox);
+        }
+    });
+}
+
+// Función para limpiar selección
+function clearSelection() {
+    const checkboxes = document.querySelectorAll('.selection-checkbox');
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            checkbox.checked = false;
+            toggleSelection(checkbox);
+        }
+    });
+}
+
+// Función para abrir modal de comentarios
+function openCommentModal() {
+    if (selectedObras.size === 0) {
+        alert('Por favor selecciona al menos una obra para comentar.');
+        return;
+    }
+    
+    // Actualizar lista de obras seleccionadas en el modal
+    updateSelectedObrasList();
+    
+    // Mostrar modal
+    const modalElement = document.getElementById('commentModal');
+    const modal = new bootstrap.Modal(modalElement);
+    
+    // Event listeners para manejar el foco correctamente
+    modalElement.addEventListener('shown.bs.modal', function () {
+        // Enfocar el primer campo cuando se abre el modal
+        document.getElementById('commentTitle').focus();
+    });
+    
+    modalElement.addEventListener('hidden.bs.modal', function () {
+        // Limpiar el formulario cuando se cierra el modal
+        document.getElementById('commentTitle').value = '';
+        document.getElementById('commentText').value = '';
+        document.getElementById('commentPublic').checked = false;
+    });
+    
+    // Manejar tecla Escape para cerrar el modal
+    modalElement.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            const modal = bootstrap.Modal.getInstance(modalElement);
+            if (modal) {
+                modal.hide();
+            }
+        }
+    });
+    
+    modal.show();
+}
+
+// Función para actualizar lista de obras seleccionadas en el modal
+function updateSelectedObrasList() {
+    const selectedObrasList = document.getElementById('selectedObrasList');
+    const selectedItems = Array.from(selectedObras).map(obraId => {
+        const obraItem = document.querySelector(`[data-obra-id="${obraId}"]`);
+        const title = obraItem.querySelector('.obra-title').textContent;
+        const author = obraItem.querySelector('.obra-author').textContent;
+        return { id: obraId, title, author };
+    });
+    
+    selectedObrasList.innerHTML = selectedItems.map(item => 
+        `<div class="badge bg-primary me-1 mb-1">${item.title} - ${item.author}</div>`
+    ).join('');
+}
+
+// Función para guardar comentario
+function saveComment() {
+    const title = document.getElementById('commentTitle').value.trim();
+    const text = document.getElementById('commentText').value.trim();
+    const isPublic = document.getElementById('commentPublic').checked;
+    
+    if (!title) {
+        alert('Por favor ingresa un título para el comentario.');
+        return;
+    }
+    
+    if (!text) {
+        alert('Por favor ingresa el contenido del comentario.');
+        return;
+    }
+    
+    if (selectedObras.size === 0) {
+        alert('Por favor selecciona al menos una obra.');
+        return;
+    }
+    
+    // Preparar datos para enviar
+    const data = {
+        titulo: title,
+        comentario: text,
+        es_publico: isPublic,
+        obras_seleccionadas: Array.from(selectedObras),
+        catalogo: '{{ catalogo_id }}'
+    };
+    
+    // Enviar comentario
+    fetch('/obras/editor/{{ catalogo_id }}/comentario/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('Comentario guardado exitosamente.');
+            // Cerrar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('commentModal'));
+            if (modal) {
+                modal.hide();
+            }
+            // Limpiar selección
+            clearSelection();
+            // Recargar comentarios
+            loadComments();
+        } else {
+            alert('Error al guardar el comentario: ' + (result.error || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar el comentario. Por favor intenta de nuevo.');
+    });
+}
+
+// Función para cargar comentarios existentes
+function loadComments() {
+    const commentsBody = document.getElementById('commentsBody');
+    
+    // Mostrar loading
+    commentsBody.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando comentarios...</div>';
+    
+    fetch('/obras/editor/{{ catalogo_id }}/comentarios/')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.comentarios) {
+            renderComments(data.comentarios);
+        } else {
+            commentsBody.innerHTML = '<div class="no-comments"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar los comentarios</p></div>';
+        }
+    })
+    .catch(error => {
+        console.error('Error cargando comentarios:', error);
+        commentsBody.innerHTML = '<div class="no-comments"><i class="fas fa-exclamation-triangle"></i><p>Error al cargar los comentarios</p></div>';
+    });
+}
+
+// Función para renderizar comentarios
+function renderComments(comentarios) {
+    const commentsBody = document.getElementById('commentsBody');
+    
+    if (comentarios.length === 0) {
+        commentsBody.innerHTML = '<div class="no-comments"><i class="fas fa-comments"></i><p>No hay comentarios aún</p></div>';
+        return;
+    }
+    
+    const commentsHtml = comentarios.map(comentario => `
+        <div class="comment-item">
+            <div class="comment-title">${comentario.titulo}</div>
+            <div class="comment-meta">
+                ${comentario.fecha_creacion} • ${comentario.numero_obras} obra(s) • 
+                ${comentario.es_publico ? '<span class="badge bg-success">Público</span>' : '<span class="badge bg-secondary">Privado</span>'}
+            </div>
+            <div class="comment-text">${comentario.comentario}</div>
+            <div class="comment-works">
+                <strong>Obras:</strong><br>
+                ${comentario.obras_titulos.map(titulo => `<span class="badge bg-primary">${titulo}</span>`).join(' ')}
+            </div>
+        </div>
+    `).join('');
+    
+    commentsBody.innerHTML = commentsHtml;
+}
+
+// Cargar comentarios al inicializar
+loadComments();
+</script>
+{% endblock %}

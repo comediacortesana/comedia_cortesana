@@ -1,0 +1,249 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Editor de Catálogos - Teatro Español del Siglo de Oro{% endblock %}
+
+{% block extra_css %}
+<style>
+    .editor-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem 0;
+    }
+    
+    .catalog-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 3px solid transparent;
+    }
+    
+    .catalog-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: #667eea;
+    }
+    
+    .catalog-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        display: block;
+        text-align: center;
+    }
+    
+    .catalog-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+    
+    .catalog-subtitle {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .catalog-stats {
+        display: flex;
+        justify-content: space-around;
+        margin: 1.5rem 0;
+        padding: 1rem;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 10px;
+    }
+    
+    .stat-item {
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+    
+    .catalog-features {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+    }
+    
+    .catalog-features li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        color: #34495e;
+    }
+    
+    .catalog-features li:last-child {
+        border-bottom: none;
+    }
+    
+    .catalog-features li:before {
+        content: "✓ ";
+        color: #27ae60;
+        font-weight: bold;
+    }
+    
+    .edit-button {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        width: 100%;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+    }
+    
+    .edit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+    
+    .header-section {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: white;
+    }
+    
+    .header-title {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    .header-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+    
+    .back-button {
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: white;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <div class="container">
+        <a href="/" class="back-button">
+            <i class="fas fa-arrow-left"></i> Volver al inicio
+        </a>
+        
+        <div class="header-section">
+            <h1 class="header-title">🎭 Editor de Catálogos</h1>
+            <p class="header-subtitle">Selecciona el catálogo que deseas editar</p>
+        </div>
+        
+        <div class="row justify-content-center">
+            {% for catalogo in catalogos %}
+            <div class="col-lg-5 col-md-6 col-sm-12">
+                <div class="catalog-card" onclick="window.location.href='{% url 'editor_catalogo' catalogo.id %}'">
+                    <div class="catalog-icon">{{ catalogo.icono }}</div>
+                    <h2 class="catalog-title">{{ catalogo.nombre }}</h2>
+                    <p class="catalog-subtitle">{{ catalogo.titulo_completo }}</p>
+                    <p class="text-muted text-center mb-3">{{ catalogo.descripcion }}</p>
+                    
+                    <div class="catalog-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ catalogo.obras_count }}</div>
+                            <div class="stat-label">Obras</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ catalogo.tipo }}</div>
+                            <div class="stat-label">Fuente</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ catalogo.fecha_publicacion }}</div>
+                            <div class="stat-label">Año</div>
+                        </div>
+                    </div>
+                    
+                    <ul class="catalog-features">
+                        {% for caracteristica in catalogo.caracteristicas %}
+                        <li>{{ caracteristica }}</li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <a href="{% url 'editor_catalogo' catalogo.id %}" class="edit-button">
+                        <i class="fas fa-edit"></i> Editar Catálogo
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-8">
+                <div class="catalog-card text-center">
+                    <h3>📊 Estadísticas Generales</h3>
+                    <div class="catalog-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.total }}</div>
+                            <div class="stat-label">Total Obras</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.fuentesxi }}</div>
+                            <div class="stat-label">FUENTESXI</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">{{ stats.catcom }}</div>
+                            <div class="stat-label">CATCOM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Añadir efectos de hover adicionales
+    document.querySelectorAll('.catalog-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+</script>
+{% endblock %}

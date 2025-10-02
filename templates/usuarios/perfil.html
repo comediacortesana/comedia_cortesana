@@ -1,0 +1,423 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Mi Perfil - Teatro Español{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e1e5e9;
+    }
+    
+    .profile-header h1 {
+        color: #333;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+    
+    .profile-header p {
+        color: #666;
+        font-size: 1.1em;
+    }
+    
+    .profile-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3em;
+        color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+        padding: 25px;
+        background: #f8f9fa;
+        border-radius: 15px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .form-section h3 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.3em;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        color: #666;
+    }
+    
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .checkbox-group input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+    }
+    
+    .checkbox-group label {
+        margin: 0;
+        font-size: 0.9em;
+        color: #666;
+    }
+    
+    .btn-save {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-right: 15px;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-secondary:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+    }
+    
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+    
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left-color: #dc3545;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left-color: #28a745;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border-left-color: #17a2b8;
+    }
+    
+    .profile-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 0.9em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <div class="profile-avatar">
+            {% if usuario.avatar %}
+                <img src="{{ usuario.avatar.url }}" alt="Avatar" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+            {% else %}
+                {{ usuario.first_name|first|default:usuario.username|first|upper }}
+            {% endif %}
+        </div>
+        <h1>Mi Perfil</h1>
+        <p>Gestiona tu información personal y configuración</p>
+    </div>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="profile-stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ usuario.fecha_registro|date:"d/m/Y" }}</div>
+            <div class="stat-label">Miembro desde</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ usuario.last_login|date:"d/m/Y"|default:"Nunca" }}</div>
+            <div class="stat-label">Último acceso</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{% if usuario.es_investigador %}Sí{% else %}No{% endif %}</div>
+            <div class="stat-label">Investigador</div>
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <h3>📝 Información Personal</h3>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">Nombre</label>
+                    <input type="text" 
+                           id="first_name" 
+                           name="first_name" 
+                           class="form-control" 
+                           value="{{ usuario.first_name }}"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="last_name">Apellidos</label>
+                    <input type="text" 
+                           id="last_name" 
+                           name="last_name" 
+                           class="form-control" 
+                           value="{{ usuario.last_name }}"
+                           required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" 
+                       id="email" 
+                       name="email" 
+                       class="form-control" 
+                       value="{{ usuario.email }}"
+                       required>
+            </div>
+            
+            <div class="form-group">
+                <label for="institucion">Institución</label>
+                <input type="text" 
+                       id="institucion" 
+                       name="institucion" 
+                       class="form-control" 
+                       value="{{ usuario.institucion }}"
+                       placeholder="Universidad, centro de investigación...">
+            </div>
+            
+            <div class="form-group">
+                <label for="biografia">Biografía</label>
+                <textarea id="biografia" 
+                          name="biografia" 
+                          class="form-control" 
+                          placeholder="Cuéntanos sobre ti...">{{ usuario.biografia }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>🔬 Información Profesional</h3>
+            
+            <div class="form-group">
+                <label for="especialidades">Especialidades de investigación</label>
+                <textarea id="especialidades" 
+                          name="especialidades" 
+                          class="form-control" 
+                          placeholder="Teatro del Siglo de Oro, Literatura española...">{{ perfil.especialidades }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="intereses">Intereses de investigación</label>
+                <textarea id="intereses" 
+                          name="intereses" 
+                          class="form-control" 
+                          placeholder="Autores favoritos, temas de interés...">{{ perfil.intereses }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="publicaciones">Publicaciones relevantes</label>
+                <textarea id="publicaciones" 
+                          name="publicaciones" 
+                          class="form-control" 
+                          placeholder="Libros, artículos, ponencias...">{{ perfil.publicaciones }}</textarea>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h3>🔒 Configuración de Privacidad</h3>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" 
+                       id="perfil_publico" 
+                       name="perfil_publico" 
+                       {% if perfil.perfil_publico %}checked{% endif %}>
+                <label for="perfil_publico">Hacer mi perfil público</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" 
+                       id="mostrar_email" 
+                       name="mostrar_email" 
+                       {% if perfil.mostrar_email %}checked{% endif %}>
+                <label for="mostrar_email">Mostrar mi email en el perfil público</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" 
+                       id="mostrar_institucion" 
+                       name="mostrar_institucion" 
+                       {% if perfil.mostrar_institucion %}checked{% endif %}>
+                <label for="mostrar_institucion">Mostrar mi institución en el perfil público</label>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn-save">
+                💾 Guardar Cambios
+            </button>
+            <a href="{% url 'home' %}" class="btn-secondary">
+                🏠 Volver al Inicio
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-guardado de borrador (opcional)
+    let autoSaveTimeout;
+    
+    function autoSave() {
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(function() {
+            // Aquí podrías implementar auto-guardado
+            console.log('Auto-guardado de borrador...');
+        }, 30000); // 30 segundos
+    }
+    
+    // Activar auto-guardado en campos de texto
+    document.querySelectorAll('input, textarea').forEach(function(field) {
+        field.addEventListener('input', autoSave);
+    });
+    
+    // Validación del formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const email = document.getElementById('email').value;
+        const firstName = document.getElementById('first_name').value;
+        const lastName = document.getElementById('last_name').value;
+        
+        if (!email || !email.includes('@')) {
+            e.preventDefault();
+            alert('Por favor, ingresa un email válido.');
+            document.getElementById('email').focus();
+            return false;
+        }
+        
+        if (!firstName.trim() || !lastName.trim()) {
+            e.preventDefault();
+            alert('Por favor, completa tu nombre y apellidos.');
+            return false;
+        }
+    });
+</script>
+{% endblock %}

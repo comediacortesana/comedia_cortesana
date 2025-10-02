@@ -1,0 +1,214 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - Teatro Español{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+    
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 400px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .login-header h1 {
+        color: #333;
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+    
+    .login-header p {
+        color: #666;
+        font-size: 0.9em;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: 500;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+    
+    .btn-login {
+        width: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .login-links {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .login-links a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    
+    .login-links a:hover {
+        text-decoration: underline;
+    }
+    
+    .alert {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        border-left: 4px solid;
+    }
+    
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left-color: #dc3545;
+    }
+    
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left-color: #28a745;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border-left-color: #17a2b8;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>🎭 Teatro Español</h1>
+            <p>Inicia sesión para acceder al catálogo</p>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="login_field">Usuario o correo electrónico</label>
+                <input type="text" 
+                       id="login_field" 
+                       name="login_field" 
+                       class="form-control" 
+                       placeholder="usuario o tu@email.com"
+                       required
+                       value="{{ request.POST.login_field|default:'' }}">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" 
+                       id="password" 
+                       name="password" 
+                       class="form-control" 
+                       placeholder="Tu contraseña"
+                       required>
+            </div>
+            
+            <button type="submit" class="btn-login">
+                Iniciar Sesión
+            </button>
+        </form>
+        
+        <div class="login-links">
+            <p>¿No tienes cuenta? <a href="{% url 'usuarios:registro' %}">Regístrate aquí</a></p>
+            <p><a href="{% url 'home' %}">← Volver al inicio</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-focus en el primer campo
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginField = document.getElementById('login_field');
+        if (loginField && !loginField.value) {
+            loginField.focus();
+        }
+    });
+    
+    // Validación del formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const loginField = document.getElementById('login_field').value;
+        const password = document.getElementById('password').value;
+        
+        if (!loginField || !password) {
+            e.preventDefault();
+            alert('Por favor, completa todos los campos.');
+            return false;
+        }
+        
+        // Validación básica: debe tener al menos 3 caracteres
+        if (loginField.length < 3) {
+            e.preventDefault();
+            alert('El usuario/email debe tener al menos 3 caracteres.');
+            return false;
+        }
+    });
+</script>
+{% endblock %}
