@@ -21,6 +21,10 @@ urlpatterns = [
     path('editor/<str:catalogo_id>/comentarios/', views.get_comments_ajax, name='get_comments_ajax'),
     path('editor/<str:catalogo_id>/<str:section>/', views.get_section_data_ajax, name='get_section_data_ajax'),
     path('editor/<str:catalogo_id>/<str:section>/<int:item_id>/', views.edit_item_ajax, name='edit_item_ajax'),
+    # Rutas para comentarios en perfiles de obra
+    path('<int:obra_id>/comentario/', views.save_obra_comment, name='save_obra_comment'),
+    path('<int:obra_id>/comentarios/', views.get_obra_comments, name='get_obra_comments'),
+    path('comentario/<int:comentario_id>/eliminar/', views.delete_comment, name='delete_comment'),
     # Rutas existentes (mantenidas para compatibilidad)
     path('catalogos/', views.catalogos_view, name='catalogos'),
     path('catalogos/<str:catalogo_id>/', views.catalogo_detalle_view, name='catalogo_detalle'),

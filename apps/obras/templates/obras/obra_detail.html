@@ -611,6 +611,80 @@
             <p>No hay manuscritos ni representaciones registradas para esta obra.</p>
         </div>
         {% endif %}
+
+        <!-- SECCIÓN DE COMENTARIOS -->
+        {% if user.is_authenticated %}
+        <div class="section">
+            <h2>💬 Comentarios</h2>
+            
+            <!-- Formulario para nuevo comentario -->
+            <div class="info-card" style="margin-bottom: 20px;">
+                <h3>✍️ Agregar Comentario</h3>
+                <form id="commentForm" style="margin-top: 15px;">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; color: var(--warm-red-dark); margin-bottom: 8px;">
+                            Título del comentario:
+                        </label>
+                        <input type="text" 
+                               id="commentTitle" 
+                               name="titulo"
+                               class="editable-input" 
+                               placeholder="Ej: Análisis temático, Observación histórica..."
+                               required
+                               style="width: 100%;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; font-weight: 600; color: var(--warm-red-dark); margin-bottom: 8px;">
+                            Comentario:
+                        </label>
+                        <textarea id="commentText" 
+                                  name="comentario"
+                                  class="editable-textarea" 
+                                  placeholder="Comparte tus observaciones, análisis o descubrimientos sobre esta obra..."
+                                  required
+                                  style="min-height: 120px;"></textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" 
+                                   id="commentPublic" 
+                                   name="es_publico"
+                                   style="margin-right: 8px;">
+                            <span style="color: var(--text-dark);">
+                                <strong>Hacer público</strong> (visible para todos los usuarios en la página de inicio)
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="save-btn">
+                            💾 Publicar Comentario
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="document.getElementById('commentForm').reset()">
+                            🔄 Limpiar
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Lista de comentarios de esta obra -->
+            <div id="commentsContainer">
+                <!-- Los comentarios se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+        {% else %}
+        <div class="section">
+            <div class="info-card" style="text-align: center;">
+                <h3>💬 Comentarios</h3>
+                <p style="color: var(--text-medium); margin: 15px 0;">
+                    <a href="/usuarios/login/" style="color: var(--warm-red); font-weight: 600;">Inicia sesión</a> 
+                    para ver y agregar comentarios sobre esta obra.
+                </p>
+            </div>
+        </div>
+        {% endif %}
     </div>
 
     {% if user.is_authenticated %}
@@ -859,6 +933,139 @@
         editBtn.addEventListener('click', enableEditMode);
         cancelBtn.addEventListener('click', () => disableEditMode(true));
         saveBtn.addEventListener('click', saveChanges);
+        
+        // =================== SISTEMA DE COMENTARIOS ===================
+        
+        // Función para cargar comentarios de esta obra
+        async function loadObraComments() {
+            try {
+                const response = await fetch(`/obras/{{ obra.id }}/comentarios/`);
+                const data = await response.json();
+                
+                const container = document.getElementById('commentsContainer');
+                
+                if (data.success && data.comentarios && data.comentarios.length > 0) {
+                    container.innerHTML = data.comentarios.map(comentario => `
+                        <div class="list-item">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <h4 style="margin: 0;">
+                                    ${comentario.titulo}
+                                </h4>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    ${comentario.es_publico 
+                                        ? '<span class="fuente-badge" style="background: #27ae60;">Público</span>' 
+                                        : '<span class="fuente-badge" style="background: #95a5a6;">Privado</span>'}
+                                    ${comentario.es_mio 
+                                        ? '<button onclick="deleteComment(' + comentario.id + ')" class="cancel-btn" style="padding: 4px 8px; font-size: 0.75rem;">🗑️ Eliminar</button>' 
+                                        : ''}
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);">
+                                <span style="color: var(--warm-red-dark); font-weight: 600;">👤 ${comentario.usuario}</span>
+                                <span style="color: var(--text-medium); font-size: 0.85rem; margin-left: 10px;">📅 ${comentario.fecha_creacion}</span>
+                            </div>
+                            <p style="color: var(--text-dark); line-height: 1.6; white-space: pre-wrap;">${comentario.comentario}</p>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <h3>📝 Sin comentarios aún</h3>
+                            <p>Sé el primero en comentar esta obra.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error cargando comentarios:', error);
+                document.getElementById('commentsContainer').innerHTML = `
+                    <div class="empty-state">
+                        <h3>⚠️ Error al cargar comentarios</h3>
+                        <p>Por favor, intenta recargar la página.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Función para guardar un comentario
+        async function saveObraComment(event) {
+            event.preventDefault();
+            
+            const titulo = document.getElementById('commentTitle').value.trim();
+            const comentario = document.getElementById('commentText').value.trim();
+            const esPublico = document.getElementById('commentPublic').checked;
+            
+            if (!titulo || !comentario) {
+                showFeedback('❌ Por favor completa todos los campos', false);
+                return;
+            }
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+            
+            try {
+                const response = await fetch(`/obras/{{ obra.id }}/comentario/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        titulo: titulo,
+                        comentario: comentario,
+                        es_publico: esPublico
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showFeedback('✅ Comentario publicado exitosamente', true);
+                    document.getElementById('commentForm').reset();
+                    loadObraComments(); // Recargar comentarios
+                } else {
+                    showFeedback('❌ ' + (data.error || 'Error al publicar el comentario'), false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showFeedback('❌ Error al publicar el comentario. Por favor, intenta de nuevo.', false);
+            }
+        }
+        
+        // Función para eliminar un comentario
+        async function deleteComment(comentarioId) {
+            if (!confirm('¿Estás seguro de que deseas eliminar este comentario?')) {
+                return;
+            }
+            
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+            
+            try {
+                const response = await fetch(`/obras/comentario/${comentarioId}/eliminar/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showFeedback('✅ Comentario eliminado', true);
+                    loadObraComments();
+                } else {
+                    showFeedback('❌ ' + (data.error || 'Error al eliminar el comentario'), false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showFeedback('❌ Error al eliminar el comentario', false);
+            }
+        }
+        
+        // Inicializar sistema de comentarios
+        document.getElementById('commentForm').addEventListener('submit', saveObraComment);
+        loadObraComments();
+        
+        // Hacer la función deleteComment global para que pueda ser llamada desde el HTML
+        window.deleteComment = deleteComment;
     </script>
     {% endif %}
 </body>

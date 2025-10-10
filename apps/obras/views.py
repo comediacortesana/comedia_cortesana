@@ -1738,3 +1738,156 @@ def get_comments_ajax(request, catalogo_id):
             'success': False,
             'error': f'Error al cargar los comentarios: {str(e)}'
         })
+
+
+@require_http_methods(["POST"])
+def save_obra_comment(request, obra_id):
+    """Vista para guardar un comentario sobre una obra específica"""
+    try:
+        import json
+        
+        # Verificar autenticación
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'success': False,
+                'error': 'Usuario no autenticado'
+            }, status=401)
+        
+        # Obtener la obra
+        obra = get_object_or_404(Obra, id=obra_id)
+        
+        # Obtener datos del request
+        data = json.loads(request.body)
+        
+        titulo = data.get('titulo', '').strip()
+        comentario = data.get('comentario', '').strip()
+        es_publico = data.get('es_publico', False)
+        
+        # Validar datos
+        if not titulo:
+            return JsonResponse({
+                'success': False,
+                'error': 'El título es obligatorio'
+            })
+        
+        if not comentario:
+            return JsonResponse({
+                'success': False,
+                'error': 'El comentario es obligatorio'
+            })
+        
+        # Determinar el catálogo según la fuente de la obra
+        catalogo = 'fuentesxi' if obra.fuente_principal == 'FUENTESXI' else 'catcom'
+        
+        # Crear comentario
+        comentario_obj = ComentarioUsuario.objects.create(
+            usuario=request.user,
+            catalogo=catalogo,
+            titulo=titulo,
+            comentario=comentario,
+            es_publico=es_publico
+        )
+        
+        # Asociar la obra
+        comentario_obj.obras_seleccionadas.add(obra)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Comentario guardado exitosamente',
+            'comentario_id': comentario_obj.id
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Datos JSON inválidos'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al guardar el comentario: {str(e)}'
+        })
+
+
+@require_http_methods(["GET"])
+def get_obra_comments(request, obra_id):
+    """Vista para obtener comentarios de una obra específica"""
+    try:
+        # Verificar autenticación
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'success': False,
+                'error': 'Usuario no autenticado'
+            }, status=401)
+        
+        # Obtener la obra
+        obra = get_object_or_404(Obra, id=obra_id)
+        
+        # Obtener comentarios de esta obra
+        # Si el usuario es el autor, mostrar todos sus comentarios (públicos y privados)
+        # También mostrar comentarios públicos de otros usuarios
+        comentarios = ComentarioUsuario.objects.filter(
+            obras_seleccionadas=obra
+        ).filter(
+            Q(usuario=request.user) | Q(es_publico=True)
+        ).select_related('usuario').order_by('-fecha_creacion')
+        
+        # Serializar comentarios
+        comentarios_data = []
+        for comentario in comentarios:
+            comentarios_data.append({
+                'id': comentario.id,
+                'titulo': comentario.titulo,
+                'comentario': comentario.comentario,
+                'fecha_creacion': comentario.fecha_creacion.strftime('%d/%m/%Y %H:%M'),
+                'es_publico': comentario.es_publico,
+                'usuario': comentario.usuario.get_full_name() or comentario.usuario.username,
+                'es_mio': comentario.usuario == request.user
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'comentarios': comentarios_data
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al cargar los comentarios: {str(e)}'
+        })
+
+
+@require_http_methods(["POST"])
+def delete_comment(request, comentario_id):
+    """Vista para eliminar un comentario"""
+    try:
+        # Verificar autenticación
+        if not request.user.is_authenticated:
+            return JsonResponse({
+                'success': False,
+                'error': 'Usuario no autenticado'
+            }, status=401)
+        
+        # Obtener el comentario
+        comentario = get_object_or_404(ComentarioUsuario, id=comentario_id)
+        
+        # Verificar que el usuario sea el autor del comentario
+        if comentario.usuario != request.user:
+            return JsonResponse({
+                'success': False,
+                'error': 'No tienes permiso para eliminar este comentario'
+            }, status=403)
+        
+        # Eliminar el comentario
+        comentario.delete()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Comentario eliminado exitosamente'
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al eliminar el comentario: {str(e)}'
+        })

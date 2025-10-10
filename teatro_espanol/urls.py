@@ -24,6 +24,12 @@ from django.views.decorators.http import require_http_methods
 @require_http_methods(["GET"])
 def home_view(request):
     """Vista de inicio que muestra información del proyecto"""
+    # Obtener comentarios recientes
+    from apps.obras.models import ComentarioUsuario
+    comentarios_recientes = ComentarioUsuario.objects.filter(
+        es_publico=True
+    ).select_related('usuario').prefetch_related('obras_seleccionadas').order_by('-fecha_creacion')[:5]
+    
     # Información del usuario autenticado - MINIMALISTA
     user_info = ""
     if request.user.is_authenticated:
@@ -42,6 +48,64 @@ def home_view(request):
                 <div>
                     <a href="/usuarios/login/" style="color: var(--warm-red); text-decoration: none; margin-right: 15px; font-size: 0.8rem;">Iniciar Sesión</a>
                     <a href="/usuarios/registro/" style="color: var(--warm-red); text-decoration: none; font-size: 0.8rem;">Registrarse</a>
+                </div>
+            </div>
+        """
+    
+    # Construir HTML de comentarios
+    comentarios_html = ""
+    if comentarios_recientes:
+        comentarios_html = """
+            <div class="comentarios-section">
+                <h2 class="nav-title">💬 Comentarios Recientes de la Comunidad</h2>
+        """
+        for comentario in comentarios_recientes:
+            obras_count = comentario.obras_seleccionadas.count()
+            fecha = comentario.fecha_creacion.strftime('%d/%m/%Y %H:%M')
+            username = comentario.usuario.get_full_name() or comentario.usuario.username
+            
+            # Truncar comentario si es muy largo
+            comentario_text = comentario.comentario
+            if len(comentario_text) > 200:
+                comentario_text = comentario_text[:200] + "..."
+            
+            # Obtener las obras asociadas con sus enlaces
+            obras_enlaces = []
+            for obra in comentario.obras_seleccionadas.all():
+                obras_enlaces.append(f'<a href="/obras/{obra.id}/" class="obra-link">{obra.titulo_limpio or obra.titulo}</a>')
+            
+            obras_html = ', '.join(obras_enlaces) if obras_enlaces else 'Sin obras asociadas'
+            
+            comentarios_html += f"""
+                <div class="comentario-card">
+                    <div class="comentario-header">
+                        <div class="comentario-user">
+                            <span class="user-icon">👤</span>
+                            <strong>{username}</strong>
+                        </div>
+                        <div class="comentario-fecha">{fecha}</div>
+                    </div>
+                    <div class="comentario-titulo">{comentario.titulo}</div>
+                    <div class="comentario-texto">{comentario_text}</div>
+                    <div class="comentario-footer">
+                        <div class="obras-asociadas">
+                            <span class="obras-label">📚 Obras:</span>
+                            <div class="obras-links">{obras_html}</div>
+                        </div>
+                        <span class="comentario-badge">🗂️ {comentario.catalogo.upper()}</span>
+                    </div>
+                </div>
+            """
+        
+        comentarios_html += "</div>"
+    else:
+        comentarios_html = """
+            <div class="comentarios-section">
+                <h2 class="nav-title">💬 Comentarios de la Comunidad</h2>
+                <div class="empty-comentarios">
+                    <p style="text-align: center; color: var(--text-medium); padding: 30px;">
+                        📝 Aún no hay comentarios públicos. ¡Sé el primero en compartir tus descubrimientos!
+                    </p>
                 </div>
             </div>
         """
@@ -277,6 +341,130 @@ def home_view(request):
                 line-height: 1.4;
             }}
             
+            /* COMENTARIOS SECTION */
+            .comentarios-section {{
+                margin: 30px 0;
+            }}
+            
+            .comentario-card {{
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                border-left: 4px solid var(--warm-red);
+                margin: 15px 0;
+                box-shadow: 0 2px 8px rgba(193, 119, 103, 0.1);
+                transition: all 0.3s ease;
+            }}
+            
+            .comentario-card:hover {{
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(193, 119, 103, 0.15);
+            }}
+            
+            .comentario-header {{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid var(--border-color);
+            }}
+            
+            .comentario-user {{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--warm-red-dark);
+                font-weight: 600;
+            }}
+            
+            .user-icon {{
+                font-size: 1.2rem;
+            }}
+            
+            .comentario-fecha {{
+                font-size: 0.75rem;
+                color: var(--text-medium);
+            }}
+            
+            .comentario-titulo {{
+                font-size: 1rem;
+                font-weight: 600;
+                color: var(--text-dark);
+                margin-bottom: 10px;
+            }}
+            
+            .comentario-texto {{
+                font-size: 0.9rem;
+                color: var(--text-medium);
+                line-height: 1.5;
+                margin-bottom: 12px;
+            }}
+            
+            .comentario-footer {{
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: flex-start;
+            }}
+            
+            .obras-asociadas {{
+                flex: 1;
+                min-width: 0;
+            }}
+            
+            .obras-label {{
+                font-size: 0.75rem;
+                color: var(--warm-red-dark);
+                font-weight: 600;
+                display: block;
+                margin-bottom: 4px;
+            }}
+            
+            .obras-links {{
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+                font-size: 0.75rem;
+            }}
+            
+            .obra-link {{
+                color: var(--warm-red);
+                text-decoration: none;
+                padding: 2px 6px;
+                background: var(--beige-light);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                transition: all 0.2s ease;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 200px;
+            }}
+            
+            .obra-link:hover {{
+                background: var(--warm-red);
+                color: white;
+                transform: translateY(-1px);
+                box-shadow: 0 2px 4px rgba(193, 119, 103, 0.3);
+            }}
+            
+            .comentario-badge {{
+                background: var(--beige-light);
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                color: var(--warm-red-dark);
+                border: 1px solid var(--border-color);
+                flex-shrink: 0;
+            }}
+            
+            .empty-comentarios {{
+                background: white;
+                border-radius: 10px;
+                border: 2px dashed var(--border-color);
+            }}
+            
             /* RESPONSIVE */
             @media (max-width: 768px) {{
                 .container {{
@@ -305,6 +493,33 @@ def home_view(request):
                 
                 .main-title {{
                     font-size: 1.5rem;
+                }}
+                
+                .comentario-header {{
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }}
+                
+                .comentario-fecha {{
+                    font-size: 0.7rem;
+                }}
+                
+                .comentario-footer {{
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                }}
+                
+                .obras-links {{
+                    flex-direction: column;
+                    gap: 6px;
+                }}
+                
+                .obra-link {{
+                    max-width: 100%;
+                    display: block;
+                    text-align: center;
                 }}
             }}
         </style>
@@ -373,6 +588,9 @@ def home_view(request):
                     </a>
                 </div>
             </div>
+
+            <!-- COMENTARIOS DE LA COMUNIDAD -->
+            {comentarios_html}
 
             <!-- ADMINISTRACIÓN -->
             <div class="admin-section">
