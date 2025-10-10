@@ -172,6 +172,8 @@ def obra_edit_ajax(request, catalogo_id, obra_id):
             obra.actos = request.POST.get('actos') or None
             obra.musica_conservada = request.POST.get('musica_conservada') == 'on'
             obra.compositor = request.POST.get('compositor', obra.compositor)
+            obra.bibliotecas_musica = request.POST.get('bibliotecas_musica', obra.bibliotecas_musica)
+            obra.bibliografia_musica = request.POST.get('bibliografia_musica', obra.bibliografia_musica)
             obra.mecenas = request.POST.get('mecenas', obra.mecenas)
             obra.edicion_principe = request.POST.get('edicion_principe', obra.edicion_principe)
             obra.notas_bibliograficas = request.POST.get('notas_bibliograficas', obra.notas_bibliograficas)
@@ -226,6 +228,8 @@ def obra_edit_ajax(request, catalogo_id, obra_id):
             'actos': obra.actos,
             'musica_conservada': obra.musica_conservada,
             'compositor': obra.compositor,
+            'bibliotecas_musica': obra.bibliotecas_musica,
+            'bibliografia_musica': obra.bibliografia_musica,
             'mecenas': obra.mecenas,
             'edicion_principe': obra.edicion_principe,
             'notas_bibliograficas': obra.notas_bibliograficas,
@@ -331,6 +335,237 @@ def obra_pdf_pages_ajax(request, catalogo_id, obra_id):
                     'ruta_imagen_completa': pagina.ruta_imagen_completa,
                     'part_file': pagina.part_file,
                 })
+        
+        # Eliminar duplicados y ordenar por número de página
+        paginas_unicas = []
+        numeros_vistos = set()
+        
+        for pagina in paginas:
+            if pagina['numero_pagina'] not in numeros_vistos:
+                paginas_unicas.append(pagina)
+                numeros_vistos.add(pagina['numero_pagina'])
+        
+        paginas_unicas.sort(key=lambda x: x['numero_pagina'])
+        
+        return JsonResponse({
+            'success': True,
+            'pages': paginas_unicas,
+            'total': len(paginas_unicas)
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Error al cargar las páginas PDF: {str(e)}',
+            'pages': []
+        })
+
+@require_http_methods(["GET"])
+def section_pdf_pages_ajax(request, catalogo_id, section, item_id):
+    """Vista AJAX para obtener las páginas PDF asociadas a cualquier elemento de cualquier sección"""
+    try:
+        paginas = []
+        
+        if section == 'obras':
+            # Para obras, usar la lógica existente
+            obra = get_object_or_404(Obra, id=item_id)
+            
+            # Si la obra tiene una página PDF específica
+            if obra.pagina_pdf:
+                try:
+                    pagina = PaginaPDF.objects.get(numero_pagina=obra.pagina_pdf)
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+                except PaginaPDF.DoesNotExist:
+                    pass
+            
+            # Buscar páginas adicionales que contengan el título de la obra
+            if obra.titulo_limpio:
+                paginas_adicionales = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=obra.titulo_limpio
+                ).exclude(numero_pagina=obra.pagina_pdf if obra.pagina_pdf else 0)
+                
+                for pagina in paginas_adicionales:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+            
+            # Si no hay páginas específicas, buscar por título alternativo
+            if not paginas and obra.titulo_alternativo:
+                paginas_alternativas = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=obra.titulo_alternativo
+                )
+                
+                for pagina in paginas_alternativas:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+        
+        elif section == 'autores':
+            # Para autores, buscar páginas que contengan el nombre del autor
+            from apps.autores.models import Autor
+            autor = get_object_or_404(Autor, id=item_id)
+            
+            if autor.nombre:
+                paginas_autor = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=autor.nombre
+                )
+                
+                for pagina in paginas_autor:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+            
+            # También buscar por nombre completo si es diferente
+            if autor.nombre_completo and autor.nombre_completo != autor.nombre:
+                paginas_nombre_completo = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=autor.nombre_completo
+                )
+                
+                for pagina in paginas_nombre_completo:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+        
+        elif section == 'lugares':
+            # Para lugares, buscar páginas que contengan el nombre del lugar
+            from apps.lugares.models import Lugar
+            lugar = get_object_or_404(Lugar, id=item_id)
+            
+            if lugar.nombre:
+                paginas_lugar = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=lugar.nombre
+                )
+                
+                for pagina in paginas_lugar:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+            
+            # También buscar por región si es diferente
+            if lugar.region and lugar.region != lugar.nombre:
+                paginas_region = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=lugar.region
+                )
+                
+                for pagina in paginas_region:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+        
+        elif section == 'representaciones':
+            # Para representaciones, buscar páginas relacionadas con la obra y lugar
+            from apps.representaciones.models import Representacion
+            representacion = get_object_or_404(Representacion, id=item_id)
+            
+            # Buscar por obra
+            if representacion.obra and representacion.obra.titulo_limpio:
+                paginas_obra = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=representacion.obra.titulo_limpio
+                )
+                
+                for pagina in paginas_obra:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+            
+            # Buscar por lugar
+            if representacion.lugar and representacion.lugar.nombre:
+                paginas_lugar = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=representacion.lugar.nombre
+                )
+                
+                for pagina in paginas_lugar:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+            
+            # Buscar por compañía
+            if representacion.compañia:
+                paginas_compañia = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=representacion.compañia
+                )
+                
+                for pagina in paginas_compañia:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+        
+        elif section == 'bibliografia':
+            # Para bibliografía, buscar páginas que contengan el título o autor
+            from apps.bibliografia.models import ReferenciaBibliografica
+            referencia = get_object_or_404(ReferenciaBibliografica, id=item_id)
+            
+            # Buscar por título
+            if referencia.titulo:
+                paginas_titulo = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=referencia.titulo
+                )
+                
+                for pagina in paginas_titulo:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
+            
+            # Buscar por autor
+            if referencia.autor:
+                paginas_autor = PaginaPDF.objects.filter(
+                    texto_extraido__icontains=referencia.autor
+                )
+                
+                for pagina in paginas_autor:
+                    paginas.append({
+                        'numero_pagina': pagina.numero_pagina,
+                        'texto_extraido': pagina.texto_extraido,
+                        'archivo_imagen': pagina.archivo_imagen,
+                        'ruta_imagen_completa': pagina.ruta_imagen_completa,
+                        'part_file': pagina.part_file,
+                    })
         
         # Eliminar duplicados y ordenar por número de página
         paginas_unicas = []
@@ -839,23 +1074,41 @@ def catalogo_detalle_view(request, catalogo_id):
     return render(request, 'obras/catalogo_detalle.html', context)
 
 def catalogo_view(request):
-    """Vista del catálogo de obras con filtros por fuente (mantenida para compatibilidad)"""
+    """Vista del catálogo de obras con filtros avanzados y campos principales destacados"""
     fuente = request.GET.get('fuente', '')
     search = request.GET.get('search', '')
+    tipo = request.GET.get('tipo', '')
+    musica = request.GET.get('musica', '')
     
-    obras = Obra.objects.all()
+    # Obtener obras con sus representaciones para mostrar información completa
+    obras = Obra.objects.select_related('autor').prefetch_related('representaciones__lugar').all()
     
     # Filtrar por fuente
     if fuente:
         obras = obras.filter(fuente_principal=fuente)
     
-    # Buscar por texto
+    # Filtrar por tipo de obra
+    if tipo:
+        obras = obras.filter(tipo_obra=tipo)
+    
+    # Filtrar por música conservada
+    if musica == 'true':
+        obras = obras.filter(musica_conservada=True)
+    elif musica == 'false':
+        obras = obras.filter(musica_conservada=False)
+    
+    # Buscar por texto (incluyendo campos principales)
     if search:
         obras = obras.filter(
             Q(titulo__icontains=search) |
             Q(titulo_limpio__icontains=search) |
-            Q(autor__nombre__icontains=search)
-        )
+            Q(autor__nombre__icontains=search) |
+            Q(tipo_obra__icontains=search) |
+            Q(fecha_creacion_estimada__icontains=search) |
+            Q(mecenas__icontains=search) |
+            Q(representaciones__compañia__icontains=search) |
+            Q(representaciones__lugar__nombre__icontains=search)
+        ).distinct()
     
     # Estadísticas
     stats = {
@@ -869,6 +1122,8 @@ def catalogo_view(request):
         'obras': obras.order_by('titulo')[:100],  # Limitar a 100 para rendimiento
         'fuente_actual': fuente,
         'search_actual': search,
+        'tipo_actual': tipo,
+        'musica_actual': musica,
         'stats': stats,
     }
     
@@ -892,6 +1147,8 @@ def obra_edit_view(request, obra_id):
         obra.actos = request.POST.get('actos') or None
         obra.musica_conservada = request.POST.get('musica_conservada') == 'on'
         obra.compositor = request.POST.get('compositor', obra.compositor)
+        obra.bibliotecas_musica = request.POST.get('bibliotecas_musica', obra.bibliotecas_musica)
+        obra.bibliografia_musica = request.POST.get('bibliografia_musica', obra.bibliografia_musica)
         obra.mecenas = request.POST.get('mecenas', obra.mecenas)
         obra.edicion_principe = request.POST.get('edicion_principe', obra.edicion_principe)
         obra.notas_bibliograficas = request.POST.get('notas_bibliograficas', obra.notas_bibliograficas)
@@ -1295,7 +1552,7 @@ def save_comment_ajax(request, catalogo_id):
         titulo = data.get('titulo', '').strip()
         comentario = data.get('comentario', '').strip()
         es_publico = data.get('es_publico', False)
-        obras_seleccionadas = data.get('obras_seleccionadas', [])
+        elementos_seleccionados = data.get('elementos_seleccionados', [])
         
         # Validar datos
         if not titulo:
@@ -1310,18 +1567,34 @@ def save_comment_ajax(request, catalogo_id):
                 'error': 'El comentario es obligatorio'
             })
         
-        if not obras_seleccionadas:
+        if not elementos_seleccionados:
             return JsonResponse({
                 'success': False,
-                'error': 'Debe seleccionar al menos una obra'
+                'error': 'Debe seleccionar al menos un elemento'
             })
         
-        # Verificar que las obras existen
-        obras = Obra.objects.filter(id__in=obras_seleccionadas)
-        if obras.count() != len(obras_seleccionadas):
+        # Verificar que los elementos existen
+        obras_ids = []
+        for elemento in elementos_seleccionados:
+            section = elemento.get('section')
+            item_id = elemento.get('item_id')
+            
+            if section == 'obras':
+                try:
+                    obra = Obra.objects.get(id=item_id)
+                    obras_ids.append(obra.id)
+                except Obra.DoesNotExist:
+                    return JsonResponse({
+                        'success': False,
+                        'error': f'La obra con ID {item_id} no existe'
+                    })
+            # Para otras secciones, por ahora solo asociamos con obras
+            # En el futuro se puede extender para manejar otros tipos de elementos
+        
+        if not obras_ids:
             return JsonResponse({
                 'success': False,
-                'error': 'Algunas obras seleccionadas no existen'
+                'error': 'No se encontraron obras válidas para asociar'
             })
         
         # Crear comentario
@@ -1334,6 +1607,7 @@ def save_comment_ajax(request, catalogo_id):
         )
         
         # Asociar obras seleccionadas
+        obras = Obra.objects.filter(id__in=obras_ids)
         comentario_obj.obras_seleccionadas.set(obras)
         
         return JsonResponse({

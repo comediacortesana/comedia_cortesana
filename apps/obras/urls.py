@@ -15,6 +15,7 @@ urlpatterns = [
     path('editor/<str:catalogo_id>/', views.editor_catalogo_view, name='editor_catalogo'),
     path('editor/<str:catalogo_id>/obra/<int:obra_id>/', views.obra_edit_ajax, name='obra_edit_ajax'),
     path('editor/<str:catalogo_id>/obra/<int:obra_id>/pdf-pages/', views.obra_pdf_pages_ajax, name='obra_pdf_pages_ajax'),
+    path('editor/<str:catalogo_id>/<str:section>/<int:item_id>/pdf-pages/', views.section_pdf_pages_ajax, name='section_pdf_pages_ajax'),
     path('editor/busqueda/', views.busqueda_obras_ajax, name='busqueda_obras_ajax'),
     path('editor/<str:catalogo_id>/comentario/', views.save_comment_ajax, name='save_comment_ajax'),
     path('editor/<str:catalogo_id>/comentarios/', views.get_comments_ajax, name='get_comments_ajax'),

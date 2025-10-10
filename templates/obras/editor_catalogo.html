@@ -5,15 +5,27 @@
 
 {% block extra_css %}
 <style>
+    /* Colores principales */
+    :root {
+        --beige-bg: #F5E6D3;
+        --beige-light: #FAF3E9;
+        --warm-red: #C17767;
+        --warm-red-dark: #A55E4F;
+        --warm-red-light: #D98B7A;
+        --text-dark: #4A3428;
+        --text-medium: #7A6552;
+        --border-color: #E0D4C4;
+    }
+
     .editor-layout {
         display: flex;
         min-height: 100vh;
-        background: #f8f9fa;
+        background: var(--beige-bg);
     }
     
     .sidebar {
         width: 250px;
-        background: #2c3e50;
+        background: var(--warm-red-dark);
         color: white;
         padding: 1rem;
         overflow-y: auto;
@@ -22,6 +34,7 @@
         left: 0;
         top: 0;
         z-index: 1000;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.15);
     }
     
     .main-content {
@@ -79,7 +92,7 @@
     }
     
     .nav-item.active {
-        background: #3498db;
+        background: var(--warm-red-light);
         color: white;
     }
     
@@ -89,22 +102,25 @@
     }
     
     .content-header {
-        background: white;
+        background: var(--beige-light);
         padding: 1.5rem;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        border: 2px solid var(--warm-red);
+        box-shadow: 0 4px 12px rgba(161, 94, 79, 0.15);
         margin-bottom: 1.5rem;
     }
     
     .content-title {
         font-size: 1.8rem;
         font-weight: bold;
-        color: #2c3e50;
+        color: var(--warm-red-dark);
         margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .content-subtitle {
-        color: #7f8c8d;
+        color: var(--text-medium);
         margin-bottom: 1rem;
     }
     
@@ -119,18 +135,21 @@
         flex: 1;
         min-width: 300px;
         padding: 0.8rem;
-        border: 2px solid #e9ecef;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
         font-size: 1rem;
+        background: white;
+        color: var(--text-dark);
     }
     
     .search-input:focus {
         outline: none;
-        border-color: #3498db;
+        border-color: var(--warm-red);
+        box-shadow: 0 0 0 3px rgba(193, 119, 103, 0.1);
     }
     
     .btn-primary {
-        background: #3498db;
+        background: var(--warm-red);
         border: none;
         padding: 0.8rem 1.5rem;
         border-radius: 8px;
@@ -140,8 +159,9 @@
     }
     
     .btn-primary:hover {
-        background: #2980b9;
+        background: var(--warm-red-dark);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(161, 94, 79, 0.3);
     }
     
     .content-body {
@@ -152,9 +172,10 @@
     
     .obras-list {
         flex: 0.8;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background: var(--beige-light);
+        border-radius: 12px;
+        border: 2px solid var(--warm-red);
+        box-shadow: 0 4px 12px rgba(161, 94, 79, 0.15);
         overflow: hidden;
         min-width: 250px;
     }
@@ -167,27 +188,29 @@
     
     .form-panel {
         flex: 1;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background: var(--beige-light);
+        border-radius: 12px;
+        border: 2px solid var(--warm-red);
+        box-shadow: 0 4px 12px rgba(161, 94, 79, 0.15);
         overflow: hidden;
     }
     
     .pdf-pages-panel {
         flex: 2;
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        background: var(--beige-light);
+        border-radius: 12px;
+        border: 2px solid var(--warm-red);
+        box-shadow: 0 4px 12px rgba(161, 94, 79, 0.15);
         overflow: hidden;
         min-width: 500px;
     }
     
     .pdf-pages-header {
-        background: #f8f9fa;
+        background: var(--warm-red);
         padding: 1rem;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 2px solid var(--warm-red-dark);
         font-weight: bold;
-        color: #2c3e50;
+        color: white;
     }
     
     .pdf-pages-body {
@@ -254,33 +277,38 @@
     }
     
     .obras-list-header {
-        background: #f8f9fa;
-        padding: 1rem;
-        border-bottom: 1px solid #e9ecef;
+        background: var(--warm-red);
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid var(--warm-red-dark);
         font-weight: bold;
-        color: #2c3e50;
+        color: white;
+        font-size: 0.9rem;
     }
     
     .obras-list-body {
-        height: calc(100% - 60px);
+        height: calc(100% - 50px);
         overflow-y: auto;
+        background: white;
     }
     
     .obra-item {
         padding: 1rem;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 1px solid var(--border-color);
         cursor: pointer;
         transition: all 0.3s ease;
         position: relative;
+        background: white;
     }
     
     .obra-item:hover {
-        background: #f8f9fa;
+        background: var(--beige-light);
+        border-left: 3px solid var(--warm-red-light);
     }
     
     .obra-item.active {
-        background: #e3f2fd;
-        border-left: 4px solid #3498db;
+        background: #FFF5ED;
+        border-left: 4px solid var(--warm-red);
+        box-shadow: inset 0 0 8px rgba(193, 119, 103, 0.1);
     }
     
     .obra-item.selected {
@@ -305,31 +333,40 @@
     
     .selection-controls {
         background: #f8f9fa;
-        padding: 1rem;
+        padding: 0.5rem 0.75rem;
         border-bottom: 1px solid #e9ecef;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 1rem;
+        gap: 0.75rem;
     }
     
     .selection-info {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         color: #6c757d;
+        font-weight: 500;
     }
     
     .selection-actions {
         display: flex;
-        gap: 0.5rem;
+        gap: 0.3rem;
     }
     
     .btn-sm {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+        border-radius: 3px;
         border: none;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    
+    .btn-sm i {
+        font-size: 0.65rem;
+        margin-right: 0.25rem;
     }
     
     .btn-success {
@@ -441,23 +478,24 @@
     
     .obra-title {
         font-weight: bold;
-        color: #2c3e50;
+        color: var(--warm-red-dark);
         margin-bottom: 0.3rem;
     }
     
     .obra-author {
-        color: #7f8c8d;
+        color: var(--text-medium);
         font-size: 0.9rem;
     }
     
     .obra-type {
         display: inline-block;
-        background: #e9ecef;
-        color: #495057;
+        background: var(--warm-red-light);
+        color: white;
         padding: 0.2rem 0.5rem;
         border-radius: 4px;
         font-size: 0.8rem;
         margin-top: 0.3rem;
+        font-weight: 500;
     }
     
     .obra-extra {
@@ -468,48 +506,79 @@
     }
     
     .form-panel-header {
-        background: #f8f9fa;
+        background: var(--warm-red);
         padding: 1rem;
-        border-bottom: 1px solid #e9ecef;
+        border-bottom: 2px solid var(--warm-red-dark);
         font-weight: bold;
-        color: #2c3e50;
+        color: white;
     }
     
     .form-panel-body {
         padding: 1.5rem;
         height: calc(100% - 60px);
         overflow-y: auto;
+        background: white;
     }
     
+    /* CAMPOS PRINCIPALES DESTACADOS */
     .form-group {
         margin-bottom: 1.5rem;
+    }
+    
+    .form-group.campo-principal {
+        background: #FFF9F5;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--warm-red);
+        box-shadow: 0 2px 6px rgba(193, 119, 103, 0.1);
     }
     
     .form-label {
         display: block;
         font-weight: bold;
-        color: #2c3e50;
+        color: var(--text-dark);
         margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .form-group.campo-principal .form-label {
+        color: var(--warm-red-dark);
+        font-size: 0.95rem;
+    }
+    
+    .form-group.campo-principal .form-label::after {
+        content: " *";
+        color: var(--warm-red);
+        font-weight: bold;
     }
     
     .form-control {
         width: 100%;
         padding: 0.8rem;
-        border: 2px solid #e9ecef;
+        border: 2px solid var(--border-color);
         border-radius: 8px;
         font-size: 1rem;
         transition: all 0.3s ease;
+        background: white;
+        color: var(--text-dark);
+    }
+    
+    .form-group.campo-principal .form-control {
+        border-color: var(--warm-red-light);
+        font-weight: 500;
     }
     
     .form-control:focus {
         outline: none;
-        border-color: #3498db;
-        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        border-color: var(--warm-red);
+        box-shadow: 0 0 0 3px rgba(193, 119, 103, 0.1);
     }
     
     .form-control[readonly] {
-        background: #f8f9fa;
-        color: #6c757d;
+        background: var(--beige-light);
+        color: var(--text-medium);
     }
     
     .form-actions {
@@ -522,22 +591,25 @@
     }
     
     .btn-success {
-        background: #27ae60;
+        background: var(--warm-red);
         border: none;
         padding: 0.8rem 1.5rem;
         border-radius: 8px;
         color: white;
         font-weight: bold;
         transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .btn-success:hover {
-        background: #229954;
+        background: var(--warm-red-dark);
         transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(161, 94, 79, 0.3);
     }
     
     .btn-secondary {
-        background: #95a5a6;
+        background: var(--text-medium);
         border: none;
         padding: 0.8rem 1.5rem;
         border-radius: 8px;
@@ -547,7 +619,7 @@
     }
     
     .btn-secondary:hover {
-        background: #7f8c8d;
+        background: var(--text-dark);
         transform: translateY(-2px);
     }
     
@@ -577,21 +649,31 @@
     }
     
     .stat-card {
-        background: #f8f9fa;
+        background: white;
         padding: 1rem;
         border-radius: 8px;
         text-align: center;
+        border: 2px solid var(--warm-red-light);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(193, 119, 103, 0.2);
     }
     
     .stat-number {
-        font-size: 1.5rem;
+        font-size: 1.8rem;
         font-weight: bold;
-        color: #3498db;
+        color: var(--warm-red-dark);
     }
     
     .stat-label {
         font-size: 0.9rem;
-        color: #7f8c8d;
+        color: var(--text-medium);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 0.3rem;
     }
     
     @media (max-width: 768px) {
@@ -721,7 +803,7 @@
                 </div>
                 <div class="selection-controls" id="selectionControls" style="display: none;">
                     <div class="selection-info" id="selectionInfo">
-                        <span id="selectedCount">0</span> obras seleccionadas
+                        <span id="selectedCount">0</span> elementos seleccionados
                     </div>
                     <div class="selection-actions">
                         <button class="btn-sm btn-success" id="addCommentBtn" onclick="openCommentModal()">
@@ -830,7 +912,7 @@
                 </div>
                 <div class="alert alert-info" id="commentHelp">
                     <i class="fas fa-info-circle"></i>
-                    <strong>Obras seleccionadas:</strong>
+                    <strong>Elementos seleccionados:</strong>
                     <div id="selectedObrasList" class="mt-2"></div>
                 </div>
             </div>
@@ -911,6 +993,43 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="no-pdf-pages">
                             <i class="fas fa-file-pdf"></i>
                             <p>No hay páginas PDF asociadas a esta obra</p>
+                        </div>
+                    `;
+                    pdfPagesTitle.textContent = 'Páginas PDF';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                pdfPagesPanel.innerHTML = `
+                    <div class="no-pdf-pages">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error al cargar las páginas PDF</p>
+                    </div>
+                `;
+                pdfPagesTitle.textContent = 'Páginas PDF';
+            });
+    }
+    
+    // Cargar páginas PDF para cualquier sección
+    function loadPdfPagesForSection(itemId, section) {
+        const pdfPagesPanel = document.getElementById('pdfPagesPanel');
+        const pdfPagesTitle = document.getElementById('pdfPagesTitle');
+        
+        // Mostrar loading
+        pdfPagesPanel.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando páginas PDF...</div>';
+        
+        // Cargar páginas PDF según la sección
+        fetch(`/obras/editor/{{ catalogo_id }}/${section}/${itemId}/pdf-pages/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.pages && data.pages.length > 0) {
+                    renderPdfPages(data.pages);
+                    pdfPagesTitle.textContent = `Páginas PDF (${data.pages.length})`;
+                } else {
+                    pdfPagesPanel.innerHTML = `
+                        <div class="no-pdf-pages">
+                            <i class="fas fa-file-pdf"></i>
+                            <p>No hay páginas PDF asociadas a este elemento</p>
                         </div>
                     `;
                     pdfPagesTitle.textContent = 'Páginas PDF';
@@ -1016,10 +1135,66 @@ document.addEventListener('DOMContentLoaded', function() {
         
         formPanel.innerHTML = `
             <form id="obraForm">
-                <div class="form-group">
-                    <label class="form-label">Título</label>
+                <!-- SECCIÓN CAMPOS PRINCIPALES -->
+                <h5 style="color: var(--warm-red-dark); text-transform: uppercase; margin-bottom: 1rem; border-bottom: 2px solid var(--warm-red); padding-bottom: 0.5rem;">
+                    <i class="fas fa-star"></i> Campos Principales
+                </h5>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Obra (Título)</label>
                     <input type="text" class="form-control" name="titulo" value="${obra.titulo || ''}" required>
                 </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Autor o Atribución</label>
+                    <select class="form-control" name="autor">
+                        <option value="">Seleccionar autor</option>
+                        {% for autor in autores %}
+                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Tipo (Comedia, Loa, Entremés...)</label>
+                    <select class="form-control" name="tipo_obra">
+                        <option value="">Seleccionar tipo</option>
+                        {% for choice in tipo_obra_choices %}
+                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Fecha de Creación</label>
+                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}" placeholder="Ej: 1630">
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Mecenas</label>
+                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}" placeholder="Patrocinador o mecenas">
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Música</label>
+                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem;">
+                        <label style="margin: 0; text-transform: none; font-weight: normal;">
+                            <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''} style="margin-right: 0.5rem;">
+                            Música Conservada
+                        </label>
+                    </div>
+                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}" placeholder="Compositor (si aplica)">
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Fuente de Información</label>
+                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
+                </div>
+                
+                <!-- SECCIÓN INFORMACIÓN ADICIONAL -->
+                <h5 style="color: var(--text-dark); text-transform: uppercase; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                    Información Adicional
+                </h5>
                 
                 <div class="form-group">
                     <label class="form-label">Título Limpio</label>
@@ -1029,26 +1204,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-group">
                     <label class="form-label">Título Alternativo</label>
                     <input type="text" class="form-control" name="titulo_alternativo" value="${obra.titulo_alternativo || ''}">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Autor</label>
-                    <select class="form-control" name="autor">
-                        <option value="">Seleccionar autor</option>
-                        {% for autor in autores %}
-                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tipo de Obra</label>
-                    <select class="form-control" name="tipo_obra">
-                        <option value="">Seleccionar tipo</option>
-                        {% for choice in tipo_obra_choices %}
-                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
-                        {% endfor %}
-                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -1062,11 +1217,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Fecha de Creación Estimada</label>
-                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}">
-                </div>
-                
-                <div class="form-group">
                     <label class="form-label">Versos</label>
                     <input type="number" class="form-control" name="versos" value="${obra.versos || ''}">
                 </div>
@@ -1077,25 +1227,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">
-                        <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''}>
-                        Música Conservada
-                    </label>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Compositor</label>
-                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mecenas</label>
-                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}">
-                </div>
-                
-                <div class="form-group">
                     <label class="form-label">Edición Príncipe</label>
                     <input type="text" class="form-control" name="edicion_principe" value="${obra.edicion_principe || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Bibliotecas con Música</label>
+                    <textarea class="form-control" name="bibliotecas_musica" rows="2">${obra.bibliotecas_musica || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Bibliografía Música</label>
+                    <textarea class="form-control" name="bibliografia_musica" rows="2">${obra.bibliografia_musica || ''}</textarea>
                 </div>
                 
                 <div class="form-group">
@@ -1106,11 +1249,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-group">
                     <label class="form-label">Notas</label>
                     <textarea class="form-control" name="notas" rows="3">${obra.notas || ''}</textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Origen de Datos</label>
-                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
                 </div>
                 
                 <div class="form-group">
@@ -1353,24 +1491,14 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Limpiar panel de PDF (solo para obras)
-        if (section === 'obras') {
-            pdfPagesPanel.innerHTML = `
-                <div class="no-pdf-pages">
-                    <i class="fas fa-file-pdf"></i>
-                    <p>Selecciona una obra para ver sus páginas PDF</p>
-                </div>
-            `;
-            pdfPagesTitle.textContent = 'Páginas PDF';
-        } else {
-            pdfPagesPanel.innerHTML = `
-                <div class="no-pdf-pages">
-                    <i class="fas fa-info-circle"></i>
-                    <p>Las páginas PDF solo están disponibles para obras</p>
-                </div>
-            `;
-            pdfPagesTitle.textContent = 'Páginas PDF';
-        }
+        // Limpiar panel de PDF para todas las secciones
+        pdfPagesPanel.innerHTML = `
+            <div class="no-pdf-pages">
+                <i class="fas fa-file-pdf"></i>
+                <p>Selecciona un elemento para ver sus páginas PDF</p>
+            </div>
+        `;
+        pdfPagesTitle.textContent = 'Páginas PDF';
         
         // Actualizar placeholder de búsqueda
         const searchPlaceholders = {
@@ -1444,6 +1572,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         obrasList.innerHTML = items.map(item => `
             <div class="obra-item" data-item-id="${item.id}" data-section="${section}">
+                <input type="checkbox" class="selection-checkbox" data-item-id="${item.id}" data-section="${section}" onchange="toggleSelection(this)">
                 <div class="obra-title">${item.titulo}</div>
                 <div class="obra-author">${item.subtitulo}</div>
                 <div class="obra-type">${item.tipo}</div>
@@ -1475,10 +1604,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Mostrar loading
         formPanel.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
         
-        // Cargar páginas PDF solo para obras
-        if (section === 'obras') {
-            loadPdfPages(itemId);
-        }
+        // Cargar páginas PDF para todas las secciones
+        loadPdfPagesForSection(itemId, section);
         
         // Cargar datos del elemento
         fetch(`/obras/editor/{{ catalogo_id }}/${section}/${itemId}/`)
@@ -1639,10 +1766,66 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderObraForm(obra) {
         return `
             <form id="itemForm">
-                <div class="form-group">
-                    <label class="form-label">Título</label>
+                <!-- SECCIÓN CAMPOS PRINCIPALES -->
+                <h5 style="color: var(--warm-red-dark); text-transform: uppercase; margin-bottom: 1rem; border-bottom: 2px solid var(--warm-red); padding-bottom: 0.5rem;">
+                    <i class="fas fa-star"></i> Campos Principales
+                </h5>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Obra (Título)</label>
                     <input type="text" class="form-control" name="titulo" value="${obra.titulo || ''}" required>
                 </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Autor o Atribución</label>
+                    <select class="form-control" name="autor">
+                        <option value="">Seleccionar autor</option>
+                        {% for autor in autores %}
+                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Tipo (Comedia, Loa, Entremés...)</label>
+                    <select class="form-control" name="tipo_obra">
+                        <option value="">Seleccionar tipo</option>
+                        {% for choice in tipo_obra_choices %}
+                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Fecha de Creación</label>
+                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}" placeholder="Ej: 1630">
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Mecenas</label>
+                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}" placeholder="Patrocinador o mecenas">
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Música</label>
+                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem;">
+                        <label style="margin: 0; text-transform: none; font-weight: normal;">
+                            <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''} style="margin-right: 0.5rem;">
+                            Música Conservada
+                        </label>
+                    </div>
+                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}" placeholder="Compositor (si aplica)">
+                </div>
+                
+                <div class="form-group campo-principal">
+                    <label class="form-label">Fuente de Información</label>
+                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
+                </div>
+                
+                <!-- SECCIÓN INFORMACIÓN ADICIONAL -->
+                <h5 style="color: var(--text-dark); text-transform: uppercase; margin: 2rem 0 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">
+                    Información Adicional
+                </h5>
                 
                 <div class="form-group">
                     <label class="form-label">Título Limpio</label>
@@ -1652,26 +1835,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-group">
                     <label class="form-label">Título Alternativo</label>
                     <input type="text" class="form-control" name="titulo_alternativo" value="${obra.titulo_alternativo || ''}">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Autor</label>
-                    <select class="form-control" name="autor">
-                        <option value="">Seleccionar autor</option>
-                        {% for autor in autores %}
-                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tipo de Obra</label>
-                    <select class="form-control" name="tipo_obra">
-                        <option value="">Seleccionar tipo</option>
-                        {% for choice in tipo_obra_choices %}
-                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
-                        {% endfor %}
-                    </select>
                 </div>
                 
                 <div class="form-group">
@@ -1685,11 +1848,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">Fecha de Creación Estimada</label>
-                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}">
-                </div>
-                
-                <div class="form-group">
                     <label class="form-label">Versos</label>
                     <input type="number" class="form-control" name="versos" value="${obra.versos || ''}">
                 </div>
@@ -1700,25 +1858,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="form-group">
-                    <label class="form-label">
-                        <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''}>
-                        Música Conservada
-                    </label>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Compositor</label>
-                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Mecenas</label>
-                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}">
-                </div>
-                
-                <div class="form-group">
                     <label class="form-label">Edición Príncipe</label>
                     <input type="text" class="form-control" name="edicion_principe" value="${obra.edicion_principe || ''}">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Bibliotecas con Música</label>
+                    <textarea class="form-control" name="bibliotecas_musica" rows="2">${obra.bibliotecas_musica || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Bibliografía Música</label>
+                    <textarea class="form-control" name="bibliografia_musica" rows="2">${obra.bibliografia_musica || ''}</textarea>
                 </div>
                 
                 <div class="form-group">
@@ -1729,11 +1880,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-group">
                     <label class="form-label">Notas</label>
                     <textarea class="form-control" name="notas" rows="3">${obra.notas || ''}</textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Origen de Datos</label>
-                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
                 </div>
                 
                 <div class="form-group">
@@ -1825,17 +1971,21 @@ document.addEventListener('DOMContentLoaded', function() {
 let selectedObras = new Set();
 let allObras = [];
 
-// Función para alternar selección de una obra
+// Función para alternar selección de un elemento
 function toggleSelection(checkbox) {
-    const obraId = parseInt(checkbox.dataset.obraId);
-    const obraItem = checkbox.closest('.obra-item');
+    const itemId = parseInt(checkbox.dataset.itemId || checkbox.dataset.obraId);
+    const section = checkbox.dataset.section || 'obras';
+    const itemElement = checkbox.closest('.obra-item');
+    
+    // Crear una clave única para el elemento (sección + id)
+    const itemKey = `${section}_${itemId}`;
     
     if (checkbox.checked) {
-        selectedObras.add(obraId);
-        obraItem.classList.add('selected');
+        selectedObras.add(itemKey);
+        itemElement.classList.add('selected');
     } else {
-        selectedObras.delete(obraId);
-        obraItem.classList.remove('selected');
+        selectedObras.delete(itemKey);
+        itemElement.classList.remove('selected');
     }
     
     updateSelectionControls();
@@ -1919,18 +2069,24 @@ function openCommentModal() {
     modal.show();
 }
 
-// Función para actualizar lista de obras seleccionadas en el modal
+// Función para actualizar lista de elementos seleccionados en el modal
 function updateSelectedObrasList() {
     const selectedObrasList = document.getElementById('selectedObrasList');
-    const selectedItems = Array.from(selectedObras).map(obraId => {
-        const obraItem = document.querySelector(`[data-obra-id="${obraId}"]`);
-        const title = obraItem.querySelector('.obra-title').textContent;
-        const author = obraItem.querySelector('.obra-author').textContent;
-        return { id: obraId, title, author };
-    });
+    const selectedItems = Array.from(selectedObras).map(itemKey => {
+        const [section, itemId] = itemKey.split('_');
+        const itemElement = document.querySelector(`[data-item-id="${itemId}"][data-section="${section}"]`) || 
+                           document.querySelector(`[data-obra-id="${itemId}"]`);
+        
+        if (itemElement) {
+            const title = itemElement.querySelector('.obra-title').textContent;
+            const subtitle = itemElement.querySelector('.obra-author').textContent;
+            return { id: itemId, section, title, subtitle };
+        }
+        return null;
+    }).filter(item => item !== null);
     
     selectedObrasList.innerHTML = selectedItems.map(item => 
-        `<div class="badge bg-primary me-1 mb-1">${item.title} - ${item.author}</div>`
+        `<div class="badge bg-primary me-1 mb-1">${item.title} - ${item.subtitle}</div>`
     ).join('');
 }
 
@@ -1951,16 +2107,21 @@ function saveComment() {
     }
     
     if (selectedObras.size === 0) {
-        alert('Por favor selecciona al menos una obra.');
+        alert('Por favor selecciona al menos un elemento.');
         return;
     }
     
     // Preparar datos para enviar
+    const selectedItems = Array.from(selectedObras).map(itemKey => {
+        const [section, itemId] = itemKey.split('_');
+        return { section, item_id: parseInt(itemId) };
+    });
+    
     const data = {
         titulo: title,
         comentario: text,
         es_publico: isPublic,
-        obras_seleccionadas: Array.from(selectedObras),
+        elementos_seleccionados: selectedItems,
         catalogo: '{{ catalogo_id }}'
     };
     
