@@ -18,3 +18,5 @@ urlpatterns = [
     path('api/cambio-password/', views.api_cambio_password, name='api_cambio_password'),
     path('api/sesiones/', views.api_sesiones, name='api_sesiones'),
 ]
+
+

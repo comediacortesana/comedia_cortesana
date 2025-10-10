@@ -190,3 +190,5 @@ if __name__ == '__main__':
     print("   Contraseña: teatro123")
     print("   URL: http://127.0.0.1:8000/admin/")
     print("   Login: http://127.0.0.1:8000/usuarios/login/")
+
+

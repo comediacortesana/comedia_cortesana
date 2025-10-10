@@ -76,3 +76,5 @@ class SesionUsuarioAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         # No permitir agregar sesiones manualmente
         return False
+
+

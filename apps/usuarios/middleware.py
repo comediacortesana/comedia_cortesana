@@ -164,3 +164,5 @@ class TimeoutMiddleware(MiddlewareMixin):
                 logger.error(f"Error verificando timeout de sesión: {e}")
         
         return None
+
+

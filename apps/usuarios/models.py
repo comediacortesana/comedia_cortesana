@@ -81,3 +81,5 @@ class SesionUsuario(models.Model):
     
     def __str__(self):
         return f"Sesión de {self.usuario.username} - {self.fecha_inicio.strftime('%d/%m/%Y %H:%M')}"
+
+
