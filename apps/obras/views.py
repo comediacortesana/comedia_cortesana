@@ -120,30 +120,105 @@ def editor_catalogo_view(request, catalogo_id):
     # Obtener datos para el editor
     obras = Obra.objects.filter(fuente_principal=fuente).order_by('titulo_limpio')
     
+    # Importar modelos y funciones necesarias
+    from apps.autores.models import Autor
+    from apps.lugares.models import Lugar
+    from apps.representaciones.models import Representacion
+    from apps.bibliografia.models import ReferenciaBibliografica
+    from django.db.models import Count as DjangoCount
+    
     # Estadísticas del catálogo
     stats = {
         'total_obras': obras.count(),
         'total_representaciones': sum(obra.total_representaciones for obra in obras),
         'autores_unicos': obras.values('autor').distinct().count(),
         'tipos_obra': obras.values('tipo_obra').distinct().count(),
+        'con_musica': obras.filter(musica_conservada=True).count(),
+        'sin_musica': obras.filter(musica_conservada=False).count(),
     }
     
     # Obtener opciones para los selects
-    from apps.autores.models import Autor
-    from apps.lugares.models import Lugar
-    from apps.representaciones.models import Representacion
-    from apps.bibliografia.models import ReferenciaBibliografica
     
     autores = Autor.objects.all().order_by('nombre')
     lugares = Lugar.objects.all().order_by('nombre')
     representaciones = Representacion.objects.filter(obra__fuente_principal=fuente).order_by('-fecha_formateada')
     bibliografia = ReferenciaBibliografica.objects.filter(obra__fuente_principal=fuente).order_by('autor')
     
+    # Obtener autores que tienen obras en este catálogo
+    autores_con_obras = Autor.objects.filter(
+        obras__fuente_principal=fuente
+    ).annotate(
+        num_obras=DjangoCount('obras')
+    ).order_by('nombre').distinct()
+    
+    # Obtener tipos de obra únicos CON CONTADOR
+    tipos_obra_con_count = Obra.objects.exclude(
+        tipo_obra__isnull=True
+    ).exclude(
+        tipo_obra=''
+    ).values('tipo_obra').annotate(
+        total=DjangoCount('id')
+    ).order_by('tipo_obra')
+    
+    # Obtener géneros únicos CON CONTADOR
+    generos_con_count = Obra.objects.exclude(
+        genero__isnull=True
+    ).exclude(
+        genero=''
+    ).values('genero').annotate(
+        total=DjangoCount('id')
+    ).order_by('genero')
+    
+    # Obtener compositores únicos CON CONTADOR
+    compositores_con_count = Obra.objects.exclude(
+        compositor__isnull=True
+    ).exclude(
+        compositor=''
+    ).values('compositor').annotate(
+        total=DjangoCount('id')
+    ).order_by('compositor')
+    
+    # Obtener mecenas únicos CON CONTADOR
+    mecenas_con_count = Obra.objects.exclude(
+        mecenas__isnull=True
+    ).exclude(
+        mecenas=''
+    ).values('mecenas').annotate(
+        total=DjangoCount('id')
+    ).order_by('mecenas')
+    
+    # Obtener lugares únicos CON CONTADOR de obras que tienen representaciones
+    lugares_con_count = Lugar.objects.annotate(
+        total=DjangoCount('representaciones__obra', distinct=True)
+    ).filter(total__gt=0).order_by('nombre')
+    
+    # Si no hay representaciones, mostrar todos los lugares disponibles
+    if not lugares_con_count.exists():
+        lugares_con_count = Lugar.objects.annotate(
+            total=DjangoCount('id')
+        ).order_by('nombre')
+    
+    # Obtener compañías únicas de representaciones CON CONTADOR
+    companias_con_count = Representacion.objects.exclude(
+        compañia__isnull=True
+    ).exclude(
+        compañia=''
+    ).values('compañia').annotate(
+        total=DjangoCount('id')
+    ).order_by('compañia')
+    
     context = {
         'catalogo_id': catalogo_id,
         'fuente': fuente,
         'obras': obras,  # Mostrar todas las obras
         'autores': autores,
+        'autores_con_obras': autores_con_obras,
+        'tipos_obra_con_count': tipos_obra_con_count,
+        'generos_con_count': generos_con_count,
+        'compositores_con_count': compositores_con_count,
+        'mecenas_con_count': mecenas_con_count,
+        'lugares_con_count': lugares_con_count,
+        'companias_con_count': companias_con_count,
         'lugares': lugares,
         'representaciones': representaciones,
         'bibliografia': bibliografia,
@@ -267,7 +342,7 @@ def busqueda_obras_ajax(request):
         )
     
     obras_data = []
-    for obra in obras[:50]:  # Limitar resultados
+    for obra in obras:  # Sin límite - se manejarán todos los resultados
         obras_data.append({
             'id': obra.id,
             'titulo': obra.titulo,
@@ -280,6 +355,82 @@ def busqueda_obras_ajax(request):
     return JsonResponse({
         'obras': obras_data,
         'total': obras.count()
+    })
+
+@require_http_methods(["GET"])
+def count_obras_ajax(request, catalogo_id):
+    """Vista AJAX para contar obras según filtros (sin devolver los datos)"""
+    fuente_map = {
+        'fuentesxi': 'FUENTESXI',
+        'catcom': 'CATCOM'
+    }
+    
+    if catalogo_id not in fuente_map:
+        return JsonResponse({'error': 'Catálogo no válido'})
+    
+    fuente = fuente_map[catalogo_id]
+    obras = Obra.objects.filter(fuente_principal=fuente)
+    
+    # Aplicar filtros
+    query = request.GET.get('q', '').strip()
+    autor_id = request.GET.get('autor', '').strip()
+    tipo_obra = request.GET.get('tipo', '').strip()
+    genero = request.GET.get('genero', '').strip()
+    musica = request.GET.get('musica', '').strip()
+    compositor = request.GET.get('compositor', '').strip()
+    lugar_id = request.GET.get('lugar', '').strip()
+    mecenas = request.GET.get('mecenas', '').strip()
+    compania = request.GET.get('compania', '').strip()
+    
+    if query:
+        obras = obras.filter(
+            Q(titulo__icontains=query) |
+            Q(titulo_limpio__icontains=query) |
+            Q(autor__nombre__icontains=query) |
+            Q(titulo_alternativo__icontains=query)
+        )
+    
+    if autor_id:
+        obras = obras.filter(autor_id=autor_id)
+    
+    if tipo_obra:
+        obras = obras.filter(tipo_obra=tipo_obra)
+    
+    if genero:
+        obras = obras.filter(genero__icontains=genero)
+    
+    if musica == 'true':
+        obras = obras.filter(musica_conservada=True)
+    elif musica == 'false':
+        obras = obras.filter(musica_conservada=False)
+    
+    if compositor:
+        obras = obras.filter(compositor__icontains=compositor)
+    
+    if lugar_id:
+        # Filtrar por obras que tengan representaciones en ese lugar
+        obras = obras.filter(representaciones__lugar_id=lugar_id).distinct()
+    
+    if mecenas:
+        obras = obras.filter(mecenas__icontains=mecenas)
+    
+    if compania:
+        # Filtrar por obras que tengan representaciones de esa compañía
+        obras = obras.filter(representaciones__compañia__icontains=compania).distinct()
+    
+    return JsonResponse({
+        'count': obras.count(),
+        'filters_applied': {
+            'query': query != '',
+            'autor': autor_id != '',
+            'tipo': tipo_obra != '',
+            'genero': genero != '',
+            'musica': musica != '',
+            'compositor': compositor != '',
+            'lugar': lugar_id != '',
+            'mecenas': mecenas != '',
+            'compania': compania != ''
+        }
     })
 
 @require_http_methods(["GET"])
@@ -607,6 +758,8 @@ def get_section_data_ajax(request, catalogo_id, section):
     if section == 'obras':
         from .models import Obra
         items = Obra.objects.filter(fuente_principal=fuente)
+        
+        # Aplicar filtros de búsqueda de texto
         if query:
             items = items.filter(
                 Q(titulo__icontains=query) |
@@ -615,8 +768,46 @@ def get_section_data_ajax(request, catalogo_id, section):
                 Q(titulo_alternativo__icontains=query)
             )
         
+        # Aplicar filtros dropdown
+        autor_id = request.GET.get('autor', '')
+        tipo_obra = request.GET.get('tipo', '')
+        genero = request.GET.get('genero', '')
+        musica = request.GET.get('musica', '')
+        compositor = request.GET.get('compositor', '')
+        lugar_id = request.GET.get('lugar', '')
+        mecenas = request.GET.get('mecenas', '')
+        compania = request.GET.get('compania', '')
+        
+        if autor_id:
+            items = items.filter(autor_id=autor_id)
+        
+        if tipo_obra:
+            items = items.filter(tipo_obra=tipo_obra)
+        
+        if genero:
+            items = items.filter(genero__icontains=genero)
+        
+        if musica == 'true':
+            items = items.filter(musica_conservada=True)
+        elif musica == 'false':
+            items = items.filter(musica_conservada=False)
+        
+        if compositor:
+            items = items.filter(compositor__icontains=compositor)
+        
+        if lugar_id:
+            # Filtrar por obras que tengan representaciones en ese lugar
+            items = items.filter(representaciones__lugar_id=lugar_id).distinct()
+        
+        if mecenas:
+            items = items.filter(mecenas__icontains=mecenas)
+        
+        if compania:
+            # Filtrar por obras que tengan representaciones de esa compañía
+            items = items.filter(representaciones__compañia__icontains=compania).distinct()
+        
         data = []
-        for item in items[:50]:
+        for item in items:  # Sin límite - mostrar todos los resultados filtrados
             data.append({
                 'id': item.id,
                 'titulo': item.titulo_limpio or item.titulo,
@@ -1142,28 +1333,51 @@ def catalogo_detalle_view(request, catalogo_id):
     return render(request, 'obras/catalogo_detalle.html', context)
 
 def catalogo_view(request):
-    """Vista del catálogo de obras con filtros avanzados y campos principales destacados"""
+    """🔍 BUSCADOR/CATÁLOGO PÚBLICO - Vista del catálogo con filtros avanzados"""
+    # Obtener parámetros de filtros
     fuente = request.GET.get('fuente', '')
     search = request.GET.get('search', '')
     tipo = request.GET.get('tipo', '')
     musica = request.GET.get('musica', '')
+    autor_id = request.GET.get('autor', '')
+    compositor = request.GET.get('compositor', '')
+    genero = request.GET.get('genero', '')
+    lugar_id = request.GET.get('lugar', '')
+    mecenas = request.GET.get('mecenas', '')
+    compania = request.GET.get('compania', '')
     
     # Obtener obras con sus representaciones para mostrar información completa
     obras = Obra.objects.select_related('autor').prefetch_related('representaciones__lugar').all()
     
-    # Filtrar por fuente
+    # Aplicar filtros
     if fuente:
         obras = obras.filter(fuente_principal=fuente)
     
-    # Filtrar por tipo de obra
     if tipo:
         obras = obras.filter(tipo_obra=tipo)
     
-    # Filtrar por música conservada
     if musica == 'true':
         obras = obras.filter(musica_conservada=True)
     elif musica == 'false':
         obras = obras.filter(musica_conservada=False)
+    
+    if autor_id:
+        obras = obras.filter(autor_id=autor_id)
+    
+    if compositor:
+        obras = obras.filter(compositor__icontains=compositor)
+    
+    if genero:
+        obras = obras.filter(genero__icontains=genero)
+    
+    if lugar_id:
+        obras = obras.filter(representaciones__lugar_id=lugar_id).distinct()
+    
+    if mecenas:
+        obras = obras.filter(mecenas__icontains=mecenas)
+    
+    if compania:
+        obras = obras.filter(representaciones__compañia__icontains=compania).distinct()
     
     # Buscar por texto (incluyendo campos principales)
     if search:
@@ -1178,24 +1392,185 @@ def catalogo_view(request):
             Q(representaciones__lugar__nombre__icontains=search)
         ).distinct()
     
-    # Estadísticas
+    # Estadísticas generales
     stats = {
         'total': Obra.objects.count(),
         'fuentesxi': Obra.objects.filter(fuente_principal='FUENTESXI').count(),
         'catcom': Obra.objects.filter(fuente_principal='CATCOM').count(),
         'ambas': Obra.objects.filter(fuente_principal__in=['FUENTESXI', 'CATCOM']).count(),
+        'con_musica': Obra.objects.filter(musica_conservada=True).count(),
+        'sin_musica': Obra.objects.filter(musica_conservada=False).count(),
     }
     
+    # Obtener opciones para los dropdowns
+    from apps.autores.models import Autor
+    from apps.lugares.models import Lugar
+    from apps.representaciones.models import Representacion
+    from django.db.models import Count as DjangoCount
+    
+    # Obtener autores CON CONTADOR
+    autores_con_obras = Autor.objects.annotate(
+        num_obras=DjangoCount('obras')
+    ).filter(num_obras__gt=0).order_by('nombre')
+    
+    # tipo_obra ahora se muestra como "Género" (comedia, auto, zarzuela...)
+    generos_principales_con_count = Obra.objects.exclude(
+        tipo_obra__isnull=True
+    ).exclude(
+        tipo_obra=''
+    ).values('tipo_obra').annotate(
+        total=DjangoCount('id')
+    ).order_by('tipo_obra')
+    
+    # genero ahora se muestra como "Subgénero" 
+    subgeneros_con_count = Obra.objects.exclude(
+        genero__isnull=True
+    ).exclude(
+        genero=''
+    ).values('genero').annotate(
+        total=DjangoCount('id')
+    ).order_by('genero')
+    
+    # Nuevo campo subgenero para clasificaciones más específicas
+    subgeneros_especificos_con_count = Obra.objects.exclude(
+        subgenero__isnull=True
+    ).exclude(
+        subgenero=''
+    ).values('subgenero').annotate(
+        total=DjangoCount('id')
+    ).order_by('subgenero')
+    
+    # Obtener compositores únicos CON CONTADOR
+    compositores_con_count = Obra.objects.exclude(
+        compositor__isnull=True
+    ).exclude(
+        compositor=''
+    ).values('compositor').annotate(
+        total=DjangoCount('id')
+    ).order_by('compositor')
+    
+    # Obtener mecenas únicos CON CONTADOR
+    mecenas_con_count = Obra.objects.exclude(
+        mecenas__isnull=True
+    ).exclude(
+        mecenas=''
+    ).values('mecenas').annotate(
+        total=DjangoCount('id')
+    ).order_by('mecenas')
+    
+    # Obtener lugares CON CONTADOR de obras que tienen representaciones
+    lugares_con_count = Lugar.objects.annotate(
+        total=DjangoCount('representaciones__obra', distinct=True)
+    ).order_by('nombre')
+    
+    # Obtener compañías únicas CON CONTADOR
+    companias_con_count = Representacion.objects.exclude(
+        compañia__isnull=True
+    ).exclude(
+        compañia=''
+    ).values('compañia').annotate(
+        total=DjangoCount('id')
+    ).order_by('compañia')
+    
     context = {
-        'obras': obras.order_by('titulo')[:100],  # Limitar a 100 para rendimiento
+        'obras': obras.order_by('titulo'),  # Sin límite - usar filtros para controlar resultados
         'fuente_actual': fuente,
         'search_actual': search,
         'tipo_actual': tipo,
         'musica_actual': musica,
+        'autor_actual': autor_id,
+        'compositor_actual': compositor,
+        'genero_actual': genero,
+        'lugar_actual': lugar_id,
+        'mecenas_actual': mecenas,
+        'compania_actual': compania,
         'stats': stats,
+        'autores_con_obras': autores_con_obras,
+        'generos_principales_con_count': generos_principales_con_count,  # tipo_obra mostrado como "Género"
+        'subgeneros_con_count': subgeneros_con_count,  # genero mostrado como "Subgénero"
+        'subgeneros_especificos_con_count': subgeneros_especificos_con_count,  # Nuevo campo
+        'compositores_con_count': compositores_con_count,
+        'mecenas_con_count': mecenas_con_count,
+        'lugares_con_count': lugares_con_count,
+        'companias_con_count': companias_con_count,
     }
     
     return render(request, 'obras/catalogo.html', context)
+
+@require_http_methods(["GET"])
+def catalogo_count_ajax(request):
+    """🔍 BUSCADOR - Endpoint AJAX para contar obras según filtros (contador dinámico)"""
+    # Obtener parámetros de filtros
+    fuente = request.GET.get('fuente', '').strip()
+    search = request.GET.get('search', '').strip()
+    tipo = request.GET.get('tipo', '').strip()
+    musica = request.GET.get('musica', '').strip()
+    autor_id = request.GET.get('autor', '').strip()
+    compositor = request.GET.get('compositor', '').strip()
+    genero = request.GET.get('genero', '').strip()
+    lugar_id = request.GET.get('lugar', '').strip()
+    mecenas = request.GET.get('mecenas', '').strip()
+    compania = request.GET.get('compania', '').strip()
+    
+    # Aplicar filtros
+    obras = Obra.objects.all()
+    
+    if fuente:
+        obras = obras.filter(fuente_principal=fuente)
+    
+    if tipo:
+        obras = obras.filter(tipo_obra=tipo)
+    
+    if musica == 'true':
+        obras = obras.filter(musica_conservada=True)
+    elif musica == 'false':
+        obras = obras.filter(musica_conservada=False)
+    
+    if autor_id:
+        obras = obras.filter(autor_id=autor_id)
+    
+    if compositor:
+        obras = obras.filter(compositor__icontains=compositor)
+    
+    if genero:
+        obras = obras.filter(genero__icontains=genero)
+    
+    if lugar_id:
+        obras = obras.filter(representaciones__lugar_id=lugar_id).distinct()
+    
+    if mecenas:
+        obras = obras.filter(mecenas__icontains=mecenas)
+    
+    if compania:
+        obras = obras.filter(representaciones__compañia__icontains=compania).distinct()
+    
+    if search:
+        obras = obras.filter(
+            Q(titulo__icontains=search) |
+            Q(titulo_limpio__icontains=search) |
+            Q(autor__nombre__icontains=search) |
+            Q(tipo_obra__icontains=search) |
+            Q(fecha_creacion_estimada__icontains=search) |
+            Q(mecenas__icontains=search) |
+            Q(representaciones__compañia__icontains=search) |
+            Q(representaciones__lugar__nombre__icontains=search)
+        ).distinct()
+    
+    return JsonResponse({
+        'count': obras.count(),
+        'filters_applied': {
+            'fuente': fuente != '',
+            'search': search != '',
+            'tipo': tipo != '',
+            'musica': musica != '',
+            'autor': autor_id != '',
+            'compositor': compositor != '',
+            'genero': genero != '',
+            'lugar': lugar_id != '',
+            'mecenas': mecenas != '',
+            'compania': compania != ''
+        }
+    })
 
 @require_http_methods(["GET", "POST"])
 def obra_edit_view(request, obra_id):
@@ -1620,6 +1995,7 @@ def save_comment_ajax(request, catalogo_id):
         titulo = data.get('titulo', '').strip()
         comentario = data.get('comentario', '').strip()
         es_publico = data.get('es_publico', False)
+        etiqueta_ia = data.get('etiqueta_ia', False)
         elementos_seleccionados = data.get('elementos_seleccionados', [])
         
         # Validar datos
@@ -1671,7 +2047,8 @@ def save_comment_ajax(request, catalogo_id):
             catalogo=catalogo_id,
             titulo=titulo,
             comentario=comentario,
-            es_publico=es_publico
+            es_publico=es_publico,
+            etiqueta_ia=etiqueta_ia
         )
         
         # Asociar obras seleccionadas
@@ -1762,6 +2139,7 @@ def save_obra_comment(request, obra_id):
         titulo = data.get('titulo', '').strip()
         comentario = data.get('comentario', '').strip()
         es_publico = data.get('es_publico', False)
+        etiqueta_ia = data.get('etiqueta_ia', False)
         
         # Validar datos
         if not titulo:
@@ -1785,7 +2163,8 @@ def save_obra_comment(request, obra_id):
             catalogo=catalogo,
             titulo=titulo,
             comentario=comentario,
-            es_publico=es_publico
+            es_publico=es_publico,
+            etiqueta_ia=etiqueta_ia
         )
         
         # Asociar la obra
@@ -1891,3 +2270,99 @@ def delete_comment(request, comentario_id):
             'success': False,
             'error': f'Error al eliminar el comentario: {str(e)}'
         })
+
+
+@require_http_methods(["GET"])
+def exportar_comentarios_ia(request):
+    """🤖 Exporta comentarios etiquetados para IA como archivo TXT"""
+    from django.http import HttpResponse
+    from datetime import datetime
+    
+    # Verificar autenticación (opcional - puedes hacerlo público si quieres)
+    if not request.user.is_authenticated:
+        return HttpResponse('No autorizado', status=401)
+    
+    # Obtener parámetros opcionales
+    catalogo = request.GET.get('catalogo', '')  # 'fuentesxi', 'catcom', o vacío para todos
+    usuario_id = request.GET.get('usuario', '')  # Filtrar por usuario específico
+    
+    # Obtener comentarios con etiqueta IA
+    comentarios = ComentarioUsuario.objects.filter(
+        etiqueta_ia=True
+    ).select_related('usuario').prefetch_related('obras_seleccionadas__autor').order_by('-fecha_creacion')
+    
+    # Filtros opcionales
+    if catalogo:
+        comentarios = comentarios.filter(catalogo=catalogo)
+    
+    if usuario_id:
+        comentarios = comentarios.filter(usuario_id=usuario_id)
+    
+    # Generar contenido del archivo TXT
+    contenido = f"EXPORTACIÓN DE COMENTARIOS PARA IA\n"
+    contenido += f"Fecha de exportación: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    contenido += f"Total de comentarios: {comentarios.count()}\n"
+    contenido += "="*70 + "\n\n"
+    
+    for comentario in comentarios:
+        contenido += comentario.exportar_para_ia()
+    
+    # Crear respuesta HTTP con el archivo
+    response = HttpResponse(contenido, content_type='text/plain; charset=utf-8')
+    
+    # Nombre del archivo con timestamp
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    filename = f"comentarios_ia_{catalogo if catalogo else 'todos'}_{timestamp}.txt"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    return response
+
+
+@require_http_methods(["GET"])
+def exportar_todos_comentarios(request):
+    """📥 Exporta TODOS los comentarios públicos como archivo TXT"""
+    from django.http import HttpResponse
+    from datetime import datetime
+    
+    # Obtener parámetros opcionales
+    catalogo = request.GET.get('catalogo', '')  # 'fuentesxi', 'catcom', o vacío para todos
+    usuario_id = request.GET.get('usuario', '')  # Filtrar por usuario específico
+    
+    # Obtener todos los comentarios públicos (o todos si es admin)
+    if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+        # Admins pueden exportar todos los comentarios (públicos y privados)
+        comentarios = ComentarioUsuario.objects.all()
+    else:
+        # Usuarios normales solo ven comentarios públicos
+        comentarios = ComentarioUsuario.objects.filter(es_publico=True)
+    
+    comentarios = comentarios.select_related('usuario').prefetch_related('obras_seleccionadas__autor').order_by('-fecha_creacion')
+    
+    # Filtros opcionales
+    if catalogo:
+        comentarios = comentarios.filter(catalogo=catalogo)
+    
+    if usuario_id:
+        comentarios = comentarios.filter(usuario_id=usuario_id)
+    
+    # Generar contenido del archivo TXT
+    contenido = f"EXPORTACIÓN DE COMENTARIOS PÚBLICOS\n"
+    contenido += f"Fecha de exportación: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
+    contenido += f"Total de comentarios: {comentarios.count()}\n"
+    if catalogo:
+        contenido += f"Catálogo filtrado: {catalogo.upper()}\n"
+    contenido += "="*70 + "\n\n"
+    
+    for comentario in comentarios:
+        contenido += comentario.exportar_para_ia()
+    
+    # Crear respuesta HTTP con el archivo
+    response = HttpResponse(contenido, content_type='text/plain; charset=utf-8')
+    
+    # Nombre del archivo con timestamp
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    tipo = 'todos' if not catalogo else catalogo
+    filename = f"comentarios_{tipo}_{timestamp}.txt"
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    return response

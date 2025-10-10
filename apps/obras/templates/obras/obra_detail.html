@@ -656,6 +656,19 @@
                                 <strong>Hacer público</strong> (visible para todos los usuarios en la página de inicio)
                             </span>
                         </label>
+                        
+                        <label style="display: flex; align-items: center; cursor: pointer; margin-top: 10px;">
+                            <input type="checkbox" 
+                                   id="commentAI" 
+                                   name="etiqueta_ia"
+                                   style="margin-right: 8px;">
+                            <span style="color: var(--text-dark);">
+                                <strong>🤖 Etiquetar para IA</strong> (exportar para análisis con inteligencia artificial)
+                            </span>
+                        </label>
+                        <small style="display: block; margin-left: 28px; color: var(--text-medium); margin-top: 4px;">
+                            Los comentarios marcados se pueden exportar como archivo de texto para procesamiento con IA
+                        </small>
                     </div>
                     
                     <div style="display: flex; gap: 10px;">
@@ -993,6 +1006,7 @@
             const titulo = document.getElementById('commentTitle').value.trim();
             const comentario = document.getElementById('commentText').value.trim();
             const esPublico = document.getElementById('commentPublic').checked;
+            const etiquetaIA = document.getElementById('commentAI').checked;
             
             if (!titulo || !comentario) {
                 showFeedback('❌ Por favor completa todos los campos', false);
@@ -1011,7 +1025,8 @@
                     body: JSON.stringify({
                         titulo: titulo,
                         comentario: comentario,
-                        es_publico: esPublico
+                        es_publico: esPublico,
+                        etiqueta_ia: etiquetaIA
                     })
                 });
                 

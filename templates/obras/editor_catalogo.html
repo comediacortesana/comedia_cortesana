@@ -971,12 +971,70 @@
                 </div>
             </div>
             
-            <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" placeholder="Buscar obras por título, autor...">
-                <button class="btn btn-primary" id="searchBtn">
-                    <i class="fas fa-search"></i> Buscar
+            <div class="search-container" style="flex-wrap: wrap; gap: 0.5rem;">
+                <!-- Fila 1: Búsqueda y Autor -->
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar por título, autor..." style="flex: 2; min-width: 200px;">
+                
+                <select class="search-input" id="filterAutor" style="flex: 1; min-width: 150px;">
+                    <option value="">📚 Todos los autores</option>
+                    {% for autor in autores_con_obras %}
+                    <option value="{{ autor.id }}">{{ autor.nombre }} ({{ autor.num_obras }})</option>
+                    {% endfor %}
+                </select>
+                
+                <select class="search-input" id="filterTipo" style="flex: 0.8; min-width: 120px;">
+                    <option value="">🎭 Todos los tipos</option>
+                    {% for tipo in tipos_obra_con_count %}
+                    <option value="{{ tipo.tipo_obra }}">{{ tipo.tipo_obra|title }} ({{ tipo.total }})</option>
+                    {% endfor %}
+                </select>
+                
+                <select class="search-input" id="filterGenero" style="flex: 0.8; min-width: 120px;">
+                    <option value="">🎪 Todos los géneros</option>
+                    {% for genero in generos_con_count %}
+                    <option value="{{ genero.genero }}">{{ genero.genero|title }} ({{ genero.total }})</option>
+                    {% endfor %}
+                </select>
+                
+                <!-- Fila 2: Filtros adicionales -->
+                <select class="search-input" id="filterMusica" style="flex: 0.7; min-width: 130px;">
+                    <option value="">🎵 Música (Todas)</option>
+                    <option value="true">Con música ({{ stats.con_musica }})</option>
+                    <option value="false">Sin música ({{ stats.sin_musica }})</option>
+                </select>
+                
+                <select class="search-input" id="filterCompositor" style="flex: 0.9; min-width: 140px;">
+                    <option value="">🎼 Todos los compositores</option>
+                    {% for comp in compositores_con_count %}
+                    <option value="{{ comp.compositor }}">{{ comp.compositor|truncatewords:3 }} ({{ comp.total }})</option>
+                    {% endfor %}
+                </select>
+                
+                <select class="search-input" id="filterLugar" style="flex: 0.8; min-width: 120px;">
+                    <option value="">📍 Todos los lugares</option>
+                    {% for lugar in lugares_con_count %}
+                    <option value="{{ lugar.id }}">{{ lugar.nombre }} ({{ lugar.total }})</option>
+                    {% endfor %}
+                </select>
+                
+                <select class="search-input" id="filterMecenas" style="flex: 0.8; min-width: 120px;" {% if not mecenas_con_count %}disabled title="No hay datos de mecenas"{% endif %}>
+                    <option value="">👑 Todos los mecenas</option>
+                    {% for mecenas in mecenas_con_count %}
+                    <option value="{{ mecenas.mecenas }}">{{ mecenas.mecenas|truncatewords:2 }} ({{ mecenas.total }})</option>
+                    {% endfor %}
+                </select>
+                
+                <select class="search-input" id="filterCompania" style="flex: 0.8; min-width: 120px;" {% if not companias_con_count %}disabled title="No hay representaciones importadas"{% endif %}>
+                    <option value="">🎪 Todas las compañías</option>
+                    {% for compania in companias_con_count %}
+                    <option value="{{ compania.compañia }}">{{ compania.compañia|truncatewords:3 }} ({{ compania.total }})</option>
+                    {% endfor %}
+                </select>
+                
+                <button class="btn btn-primary" id="searchBtn" title="Ejecutar búsqueda con los filtros seleccionados" style="min-width: 150px;">
+                    <i class="fas fa-search"></i> <span id="searchBtnText">Buscar (<span id="resultCount">{{ stats.total_obras }}</span>)</span>
                 </button>
-                <button class="btn btn-secondary" id="clearBtn">
+                <button class="btn btn-secondary" id="clearBtn" title="Limpiar todos los filtros" style="min-width: 100px;">
                     <i class="fas fa-times"></i> Limpiar
                 </button>
             </div>
@@ -1059,9 +1117,16 @@
                 <div class="comments-section" id="commentsSection">
                     <div class="comments-header">
                         <span>Mis Comentarios</span>
-                        <button class="btn-sm btn-primary" onclick="loadComments()">
-                            <i class="fas fa-refresh"></i> Actualizar
-                        </button>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="/obras/comentarios/exportar-ia/?catalogo={{ catalogo_id }}" 
+                               class="btn-sm btn-success" 
+                               title="Descargar comentarios etiquetados para IA">
+                                <i class="fas fa-robot"></i> Exportar IA
+                            </a>
+                            <button class="btn-sm btn-primary" onclick="loadComments()">
+                                <i class="fas fa-refresh"></i> Actualizar
+                            </button>
+                        </div>
                     </div>
                     <div class="comments-body" id="commentsBody">
                         <div class="no-comments">
@@ -1099,8 +1164,17 @@
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="commentPublic">
                         <label class="form-check-label" for="commentPublic">
-                            Hacer público (visible para otros usuarios)
+                            <strong>Hacer público</strong> (visible para otros usuarios)
                         </label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="checkbox" id="commentAI">
+                        <label class="form-check-label" for="commentAI">
+                            <strong>🤖 Etiquetar para IA</strong> (exportar para análisis con inteligencia artificial)
+                        </label>
+                        <small class="form-text text-muted d-block ms-4">
+                            Los comentarios marcados se pueden exportar como archivo de texto para procesamiento con IA
+                        </small>
                     </div>
                 </div>
                 <div class="alert alert-info" id="commentHelp">
@@ -1131,8 +1205,68 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchBtn = document.getElementById('searchBtn');
     const clearBtn = document.getElementById('clearBtn');
     
+    // Elementos de filtros
+    const filterAutor = document.getElementById('filterAutor');
+    const filterTipo = document.getElementById('filterTipo');
+    const filterGenero = document.getElementById('filterGenero');
+    const filterMusica = document.getElementById('filterMusica');
+    const filterCompositor = document.getElementById('filterCompositor');
+    const filterLugar = document.getElementById('filterLugar');
+    const filterMecenas = document.getElementById('filterMecenas');
+    const filterCompania = document.getElementById('filterCompania');
+    const resultCount = document.getElementById('resultCount');
+    
     let currentObraId = null;
     let currentSection = 'obras';
+    
+    // Función para actualizar el contador dinámicamente
+    function updateResultCount() {
+        const params = new URLSearchParams({
+            q: searchInput.value.trim(),
+            autor: filterAutor.value,
+            tipo: filterTipo.value,
+            genero: filterGenero.value,
+            musica: filterMusica.value,
+            compositor: filterCompositor.value,
+            lugar: filterLugar.value,
+            mecenas: filterMecenas.value,
+            compania: filterCompania.value
+        });
+        
+        fetch(`/obras/editor/{{ catalogo_id }}/count/?${params}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.count !== undefined) {
+                    resultCount.textContent = data.count;
+                    
+                    // Destacar botón si hay filtros activos
+                    const hasFilters = searchInput.value.trim() || filterAutor.value || 
+                                     filterTipo.value || filterGenero.value || filterMusica.value ||
+                                     filterCompositor.value || filterLugar.value || filterMecenas.value ||
+                                     filterCompania.value;
+                    
+                    if (hasFilters) {
+                        searchBtn.style.backgroundColor = '#D98B7A';  // Destacar cuando hay filtros
+                    } else {
+                        searchBtn.style.backgroundColor = '';  // Color normal
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error actualizando contador:', error);
+            });
+    }
+    
+    // Actualizar contador cuando cambien los filtros
+    searchInput.addEventListener('input', updateResultCount);
+    filterAutor.addEventListener('change', updateResultCount);
+    filterTipo.addEventListener('change', updateResultCount);
+    filterGenero.addEventListener('change', updateResultCount);
+    filterMusica.addEventListener('change', updateResultCount);
+    filterCompositor.addEventListener('change', updateResultCount);
+    filterLugar.addEventListener('change', updateResultCount);
+    filterMecenas.addEventListener('change', updateResultCount);
+    filterCompania.addEventListener('change', updateResultCount);
     
     // Cargar obra en el formulario
     function loadObra(obraId) {
@@ -1557,17 +1691,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Búsqueda
+    // Búsqueda con filtros
     function searchObras() {
         const query = searchInput.value.trim();
+        const autor = filterAutor.value;
+        const tipo = filterTipo.value;
+        const genero = filterGenero.value;
+        const musica = filterMusica.value;
+        const compositor = filterCompositor.value;
+        const lugar = filterLugar.value;
+        const mecenas = filterMecenas.value;
+        const compania = filterCompania.value;
         
-        if (query === '') {
-            // Recargar datos de la sección actual
+        // Construir params con filtros
+        const params = new URLSearchParams();
+        if (query) params.append('q', query);
+        if (autor) params.append('autor', autor);
+        if (tipo) params.append('tipo', tipo);
+        if (genero) params.append('genero', genero);
+        if (musica) params.append('musica', musica);
+        if (compositor) params.append('compositor', compositor);
+        if (lugar) params.append('lugar', lugar);
+        if (mecenas) params.append('mecenas', mecenas);
+        if (compania) params.append('compania', compania);
+        
+        // Si no hay filtros, recargar todos los datos
+        if (!params.toString()) {
             loadSectionData(currentSection);
             return;
         }
         
-        fetch(`/obras/editor/{{ catalogo_id }}/${currentSection}/?q=${encodeURIComponent(query)}`)
+        fetch(`/obras/editor/{{ catalogo_id }}/${currentSection}/?${params}`)
             .then(response => response.json())
             .then(data => {
                 if (data.items) {
@@ -1621,7 +1775,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     searchBtn.addEventListener('click', searchObras);
     clearBtn.addEventListener('click', () => {
+        // Limpiar todos los filtros
         searchInput.value = '';
+        filterAutor.value = '';
+        filterTipo.value = '';
+        filterGenero.value = '';
+        filterMusica.value = '';
+        filterCompositor.value = '';
+        filterLugar.value = '';
+        filterMecenas.value = '';
+        filterCompania.value = '';
+        
+        // Actualizar contador
+        updateResultCount();
+        
+        // Recargar datos
         loadSectionData(currentSection);
     });
     
@@ -2261,6 +2429,7 @@ function openCommentModal() {
         document.getElementById('commentTitle').value = '';
         document.getElementById('commentText').value = '';
         document.getElementById('commentPublic').checked = false;
+        document.getElementById('commentAI').checked = false;
     });
     
     // Manejar tecla Escape para cerrar el modal
@@ -2328,6 +2497,7 @@ function saveComment() {
         titulo: title,
         comentario: text,
         es_publico: isPublic,
+        etiqueta_ia: document.getElementById('commentAI').checked,
         elementos_seleccionados: selectedItems,
         catalogo: '{{ catalogo_id }}'
     };

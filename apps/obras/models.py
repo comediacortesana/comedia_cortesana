@@ -61,6 +61,11 @@ class Obra(models.Model):
         blank=True, 
         help_text="Género específico"
     )
+    subgenero = models.CharField(
+        max_length=100, 
+        blank=True, 
+        help_text="Subgénero o clasificación más específica"
+    )
     edicion_principe = models.TextField(
         blank=True, 
         help_text="Información sobre la edición príncipe"
@@ -374,6 +379,10 @@ class ComentarioUsuario(models.Model):
         default=False,
         help_text="Si el comentario es visible para otros usuarios"
     )
+    etiqueta_ia = models.BooleanField(
+        default=False,
+        help_text="Marcar para exportar y usar con IA en análisis de catálogos"
+    )
 
     class Meta:
         app_label = 'obras'
@@ -393,3 +402,31 @@ class ComentarioUsuario(models.Model):
     def obras_titulos(self):
         """Retorna una lista de títulos de las obras seleccionadas"""
         return [obra.titulo_limpio for obra in self.obras_seleccionadas.all()]
+    
+    def exportar_para_ia(self):
+        """Exporta el comentario en formato texto para IA"""
+        obras = self.obras_seleccionadas.all()
+        
+        texto = f"=== COMENTARIO #{self.id} ===\n"
+        texto += f"Título: {self.titulo}\n"
+        texto += f"Usuario: {self.usuario.get_full_name() or self.usuario.username}\n"
+        texto += f"Catálogo: {self.catalogo}\n"
+        texto += f"Fecha: {self.fecha_creacion.strftime('%Y-%m-%d %H:%M')}\n"
+        texto += f"Obras seleccionadas: {obras.count()}\n\n"
+        
+        texto += "--- OBRAS ---\n"
+        for obra in obras:
+            texto += f"\nID: {obra.id}\n"
+            texto += f"Título: {obra.titulo_limpio or obra.titulo}\n"
+            texto += f"Autor: {obra.autor.nombre if obra.autor else 'Desconocido'}\n"
+            texto += f"Género: {obra.tipo_obra or 'N/A'}\n"
+            if obra.genero:
+                texto += f"Subgénero: {obra.genero}\n"
+            if obra.fecha_creacion_estimada:
+                texto += f"Fecha: {obra.fecha_creacion_estimada}\n"
+        
+        texto += f"\n--- COMENTARIO DEL INVESTIGADOR ---\n"
+        texto += f"{self.comentario}\n"
+        texto += "\n" + "="*50 + "\n\n"
+        
+        return texto

@@ -273,6 +273,114 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(74, 52, 40, 0.3);
         }
+        
+        /* ===== BOTÓN DE BÚSQUEDA CON CONTADOR DESTACADO ===== */
+        .btn-search-with-counter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 10px 16px;
+            min-width: 220px;
+            position: relative;
+            overflow: visible;
+        }
+        
+        .search-btn-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+        
+        .btn-text {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+        
+        .search-counter-badge {
+            background: white;
+            color: var(--warm-red-dark);
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 70px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            border: 3px solid var(--warm-red-dark);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .search-counter-badge #resultCount {
+            font-size: 2.2rem;
+            line-height: 1;
+            display: block;
+            font-weight: 900;
+            color: var(--warm-red-dark);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .counter-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-medium);
+            margin-top: 2px;
+            font-weight: 600;
+        }
+        
+        .btn-search-with-counter:hover .search-counter-badge {
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(193, 119, 103, 0.5);
+            border-color: #FFD700;
+            background: #FFFEF0;
+        }
+        
+        .btn-search-with-counter:hover .search-counter-badge #resultCount {
+            color: #D98B7A;
+        }
+        
+        /* Animación cuando cambia el contador */
+        @keyframes counterPulse {
+            0% { 
+                transform: scale(1); 
+                background: white;
+            }
+            50% { 
+                transform: scale(1.25); 
+                background: #FFE5D9;
+                box-shadow: 0 0 25px rgba(217, 139, 122, 0.6);
+            }
+            100% { 
+                transform: scale(1); 
+                background: white;
+            }
+        }
+        
+        .search-counter-badge.updated {
+            animation: counterPulse 0.6s ease;
+        }
+        
+        /* Destacar cuando hay filtros activos */
+        .btn-search-with-counter.has-filters {
+            background: linear-gradient(135deg, #D98B7A 0%, var(--warm-red) 100%);
+            box-shadow: 0 6px 20px rgba(217, 139, 122, 0.5);
+        }
+        
+        .btn-search-with-counter.has-filters .search-counter-badge {
+            background: #FFF9F5;
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-search-with-counter.has-filters .search-counter-badge #resultCount {
+            color: #C17767;
+        }
+        
         .obras-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -554,10 +662,11 @@
                 
                 <!-- Filtros rápidos -->
                 <div class="search-filters">
+                    <!-- Fila 1: Filtros principales -->
                     <div class="filter-row">
                         <div class="filter-group">
-                            <label for="fuente">Fuente:</label>
-                            <select name="fuente" id="fuente" onchange="applyFilters()">
+                            <label for="fuente">📚 Fuente:</label>
+                            <select name="fuente" id="fuente" onchange="updateCount()">
                                 <option value="">Todas</option>
                                 <option value="FUENTESXI" {% if fuente_actual == 'FUENTESXI' %}selected{% endif %}>FUENTESXI</option>
                                 <option value="CATCOM" {% if fuente_actual == 'CATCOM' %}selected{% endif %}>CATCOM</option>
@@ -565,26 +674,101 @@
                         </div>
                         
                         <div class="filter-group">
-                            <label for="tipo">Tipo:</label>
-                            <select name="tipo" id="tipo" onchange="applyFilters()">
-                                <option value="">Todos</option>
-                                <option value="comedia" {% if tipo_actual == 'comedia' %}selected{% endif %}>Comedia</option>
-                                <option value="auto" {% if tipo_actual == 'auto' %}selected{% endif %}>Auto sacramental</option>
-                                <option value="zarzuela" {% if tipo_actual == 'zarzuela' %}selected{% endif %}>Zarzuela</option>
-                                <option value="entremes" {% if tipo_actual == 'entremes' %}selected{% endif %}>Entremés</option>
-                                <option value="tragedia" {% if tipo_actual == 'tragedia' %}selected{% endif %}>Tragedia</option>
-                                <option value="loa" {% if tipo_actual == 'loa' %}selected{% endif %}>Loa</option>
-                                <option value="sainete" {% if tipo_actual == 'sainete' %}selected{% endif %}>Sainete</option>
-                                <option value="baile" {% if tipo_actual == 'baile' %}selected{% endif %}>Baile</option>
+                            <label for="autor">👤 Autor:</label>
+                            <select name="autor" id="autor" onchange="updateCount()">
+                                <option value="">Todos los autores</option>
+                                {% for autor in autores_con_obras %}
+                                <option value="{{ autor.id }}" {% if autor_actual == autor.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ autor.nombre }} ({{ autor.num_obras }})
+                                </option>
+                                {% endfor %}
                             </select>
                         </div>
                         
                         <div class="filter-group">
-                            <label for="musica">Música:</label>
-                            <select name="musica" id="musica" onchange="applyFilters()">
+                            <label for="tipo">🎭 Género:</label>
+                            <select name="tipo" id="tipo" onchange="updateCount()">
+                                <option value="">Todos los géneros</option>
+                                {% for genero in generos_principales_con_count %}
+                                <option value="{{ genero.tipo_obra }}" {% if tipo_actual == genero.tipo_obra %}selected{% endif %}>
+                                    {{ genero.tipo_obra|title }} ({{ genero.total }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Fila 2: Filtros adicionales -->
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="genero">🎪 Subgénero:</label>
+                            <select name="genero" id="genero" onchange="updateCount()">
+                                <option value="">Todos los subgéneros</option>
+                                {% for subgenero in subgeneros_con_count %}
+                                <option value="{{ subgenero.genero }}" {% if genero_actual == subgenero.genero %}selected{% endif %}>
+                                    {{ subgenero.genero|title }} ({{ subgenero.total }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="musica">🎵 Música:</label>
+                            <select name="musica" id="musica" onchange="updateCount()">
                                 <option value="">Todas</option>
-                                <option value="true" {% if musica_actual == 'true' %}selected{% endif %}>Conservada</option>
-                                <option value="false" {% if musica_actual == 'false' %}selected{% endif %}>No conservada</option>
+                                <option value="true" {% if musica_actual == 'true' %}selected{% endif %}>Con música ({{ stats.con_musica }})</option>
+                                <option value="false" {% if musica_actual == 'false' %}selected{% endif %}>Sin música ({{ stats.sin_musica }})</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="compositor">🎼 Compositor:</label>
+                            <select name="compositor" id="compositor" onchange="updateCount()">
+                                <option value="">Todos</option>
+                                {% for comp in compositores_con_count %}
+                                <option value="{{ comp.compositor }}" {% if compositor_actual == comp.compositor %}selected{% endif %}>
+                                    {{ comp.compositor|truncatewords:3 }} ({{ comp.total }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Fila 3: Más filtros -->
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="lugar">📍 Lugar:</label>
+                            <select name="lugar" id="lugar" onchange="updateCount()">
+                                <option value="">Todos</option>
+                                {% for lugar in lugares_con_count %}
+                                <option value="{{ lugar.id }}" {% if lugar_actual == lugar.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ lugar.nombre }} ({{ lugar.total }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="mecenas">👑 Mecenas:</label>
+                            <select name="mecenas" id="mecenas" onchange="updateCount()" {% if not mecenas_con_count %}disabled title="No hay datos"{% endif %}>
+                                <option value="">Todos</option>
+                                {% for mecenas in mecenas_con_count %}
+                                <option value="{{ mecenas.mecenas }}" {% if mecenas_actual == mecenas.mecenas %}selected{% endif %}>
+                                    {{ mecenas.mecenas|truncatewords:2 }} ({{ mecenas.total }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="compania">🎪 Compañía:</label>
+                            <select name="compania" id="compania" onchange="updateCount()" {% if not companias_con_count %}disabled title="Sin datos"{% endif %}>
+                                <option value="">Todas</option>
+                                {% for compania in companias_con_count %}
+                                <option value="{{ compania.compañia }}" {% if compania_actual == compania.compañia %}selected{% endif %}>
+                                    {{ compania.compañia|truncatewords:3 }} ({{ compania.total }})
+                                </option>
+                                {% endfor %}
                             </select>
                         </div>
                     </div>
@@ -592,8 +776,15 @@
                 
                 <!-- Acciones -->
                 <div class="search-actions">
-                    <button class="btn btn-primary" onclick="applyFilters()">
-                        <span class="btn-icon">🔍</span> Buscar
+                    <button class="btn btn-primary btn-search-with-counter" id="searchBtn" onclick="applyFilters()">
+                        <div class="search-btn-content">
+                            <span class="btn-icon">🔍</span>
+                            <span class="btn-text">BUSCAR</span>
+                        </div>
+                        <div class="search-counter-badge" id="resultCountBadge">
+                            <span id="resultCount">{{ stats.total }}</span>
+                            <span class="counter-label">obras</span>
+                        </div>
                     </button>
                     <button class="btn btn-secondary" onclick="clearFilters()">
                         <span class="btn-icon">🗑️</span> Limpiar
@@ -635,9 +826,16 @@
                     </div>
                     
                     <div class="campo-principal">
-                        <div class="campo-label">📝 TIPO</div>
+                        <div class="campo-label">🎭 GÉNERO</div>
                         <div class="campo-valor">{{ obra.tipo_obra|default:"Sin clasificar" }}</div>
                     </div>
+                    
+                    {% if obra.genero %}
+                    <div class="campo-principal">
+                        <div class="campo-label">🎪 SUBGÉNERO</div>
+                        <div class="campo-valor">{{ obra.genero }}</div>
+                    </div>
+                    {% endif %}
                     
                     <div class="campo-principal">
                         <div class="campo-label">📍 LUGAR</div>
@@ -705,11 +903,71 @@
     </div>
 
     <script>
+        // 🔍 BUSCADOR PÚBLICO - Contador dinámico con animación
+        function updateCount() {
+            const params = new URLSearchParams({
+                fuente: document.getElementById('fuente').value,
+                search: document.getElementById('search').value,
+                tipo: document.getElementById('tipo').value,
+                musica: document.getElementById('musica').value,
+                autor: document.getElementById('autor').value,
+                compositor: document.getElementById('compositor').value,
+                genero: document.getElementById('genero').value,
+                lugar: document.getElementById('lugar').value,
+                mecenas: document.getElementById('mecenas').value,
+                compania: document.getElementById('compania').value
+            });
+            
+            fetch(`/obras/catalogo/count/?${params}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.count !== undefined) {
+                        const countElement = document.getElementById('resultCount');
+                        const badge = document.getElementById('resultCountBadge');
+                        const searchBtn = document.getElementById('searchBtn');
+                        
+                        // Verificar si el contador cambió
+                        const oldCount = countElement.textContent;
+                        const newCount = data.count.toString();
+                        
+                        if (oldCount !== newCount) {
+                            // Actualizar contador con animación
+                            countElement.textContent = newCount;
+                            badge.classList.add('updated');
+                            
+                            // Remover clase de animación después de que termine
+                            setTimeout(() => {
+                                badge.classList.remove('updated');
+                            }, 600);
+                        }
+                        
+                        // Destacar botón si hay filtros activos
+                        const hasFilters = params.get('fuente') || params.get('search') || params.get('tipo') || 
+                                         params.get('musica') || params.get('autor') || params.get('compositor') ||
+                                         params.get('genero') || params.get('lugar') || params.get('mecenas') ||
+                                         params.get('compania');
+                        
+                        if (hasFilters) {
+                            searchBtn.classList.add('has-filters');
+                        } else {
+                            searchBtn.classList.remove('has-filters');
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
         function applyFilters() {
             const fuente = document.getElementById('fuente').value;
             const search = document.getElementById('search').value;
             const tipo = document.getElementById('tipo').value;
             const musica = document.getElementById('musica').value;
+            const autor = document.getElementById('autor').value;
+            const compositor = document.getElementById('compositor').value;
+            const genero = document.getElementById('genero').value;
+            const lugar = document.getElementById('lugar').value;
+            const mecenas = document.getElementById('mecenas').value;
+            const compania = document.getElementById('compania').value;
             
             let url = '/obras/catalogo/';
             const params = new URLSearchParams();
@@ -718,6 +976,12 @@
             if (search) params.append('search', search);
             if (tipo) params.append('tipo', tipo);
             if (musica) params.append('musica', musica);
+            if (autor) params.append('autor', autor);
+            if (compositor) params.append('compositor', compositor);
+            if (genero) params.append('genero', genero);
+            if (lugar) params.append('lugar', lugar);
+            if (mecenas) params.append('mecenas', mecenas);
+            if (compania) params.append('compania', compania);
             
             if (params.toString()) {
                 url += '?' + params.toString();
@@ -731,6 +995,13 @@
             document.getElementById('search').value = '';
             document.getElementById('tipo').value = '';
             document.getElementById('musica').value = '';
+            document.getElementById('autor').value = '';
+            document.getElementById('compositor').value = '';
+            document.getElementById('genero').value = '';
+            document.getElementById('lugar').value = '';
+            document.getElementById('mecenas').value = '';
+            document.getElementById('compania').value = '';
+            updateCount();
             window.location.href = '/obras/catalogo/';
         }
         
@@ -738,21 +1009,14 @@
             alert('Búsqueda avanzada en desarrollo. Por ahora puedes usar los filtros disponibles.');
         }
         
-        // Buscar al presionar Enter
+        // Event listeners
         document.getElementById('search').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 applyFilters();
             }
         });
         
-        // Auto-búsqueda al cambiar filtros
-        document.getElementById('tipo').addEventListener('change', function() {
-            applyFilters();
-        });
-        
-        document.getElementById('musica').addEventListener('change', function() {
-            applyFilters();
-        });
+        document.getElementById('search').addEventListener('input', updateCount);
     </script>
 </body>
 </html>

@@ -55,9 +55,23 @@ def home_view(request):
     # Construir HTML de comentarios
     comentarios_html = ""
     if comentarios_recientes:
-        comentarios_html = """
+        # Contar comentarios públicos y con etiqueta IA
+        total_publicos = ComentarioUsuario.objects.filter(es_publico=True).count()
+        total_ia = ComentarioUsuario.objects.filter(etiqueta_ia=True).count()
+        
+        comentarios_html = f"""
             <div class="comentarios-section">
-                <h2 class="nav-title">💬 Comentarios Recientes de la Comunidad</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="nav-title" style="margin: 0;">💬 Comentarios de la Comunidad</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="/obras/comentarios/exportar-todos/" class="admin-btn" style="font-size: 0.8rem; padding: 8px 16px;">
+                            📥 Descargar Todos ({total_publicos})
+                        </a>
+                        <a href="/obras/comentarios/exportar-ia/" class="admin-btn" style="font-size: 0.8rem; padding: 8px 16px; background: #27ae60;">
+                            🤖 Descargar IA ({total_ia})
+                        </a>
+                    </div>
+                </div>
         """
         for comentario in comentarios_recientes:
             obras_count = comentario.obras_seleccionadas.count()
@@ -99,9 +113,23 @@ def home_view(request):
         
         comentarios_html += "</div>"
     else:
-        comentarios_html = """
+        # Contar comentarios aunque no haya públicos
+        total_publicos = ComentarioUsuario.objects.filter(es_publico=True).count()
+        total_ia = ComentarioUsuario.objects.filter(etiqueta_ia=True).count()
+        
+        comentarios_html = f"""
             <div class="comentarios-section">
-                <h2 class="nav-title">💬 Comentarios de la Comunidad</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="nav-title" style="margin: 0;">💬 Comentarios de la Comunidad</h2>
+                    <div style="display: flex; gap: 10px;">
+                        <a href="/obras/comentarios/exportar-todos/" class="admin-btn" style="font-size: 0.8rem; padding: 8px 16px;">
+                            📥 Descargar Todos ({total_publicos})
+                        </a>
+                        <a href="/obras/comentarios/exportar-ia/" class="admin-btn" style="font-size: 0.8rem; padding: 8px 16px; background: #27ae60;">
+                            🤖 Descargar IA ({total_ia})
+                        </a>
+                    </div>
+                </div>
                 <div class="empty-comentarios">
                     <p style="text-align: center; color: var(--text-medium); padding: 30px;">
                         📝 Aún no hay comentarios públicos. ¡Sé el primero en compartir tus descubrimientos!

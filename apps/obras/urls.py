@@ -17,6 +17,7 @@ urlpatterns = [
     path('editor/<str:catalogo_id>/obra/<int:obra_id>/pdf-pages/', views.obra_pdf_pages_ajax, name='obra_pdf_pages_ajax'),
     path('editor/<str:catalogo_id>/<str:section>/<int:item_id>/pdf-pages/', views.section_pdf_pages_ajax, name='section_pdf_pages_ajax'),
     path('editor/busqueda/', views.busqueda_obras_ajax, name='busqueda_obras_ajax'),
+    path('editor/<str:catalogo_id>/count/', views.count_obras_ajax, name='count_obras_ajax'),
     path('editor/<str:catalogo_id>/comentario/', views.save_comment_ajax, name='save_comment_ajax'),
     path('editor/<str:catalogo_id>/comentarios/', views.get_comments_ajax, name='get_comments_ajax'),
     path('editor/<str:catalogo_id>/<str:section>/', views.get_section_data_ajax, name='get_section_data_ajax'),
@@ -25,10 +26,14 @@ urlpatterns = [
     path('<int:obra_id>/comentario/', views.save_obra_comment, name='save_obra_comment'),
     path('<int:obra_id>/comentarios/', views.get_obra_comments, name='get_obra_comments'),
     path('comentario/<int:comentario_id>/eliminar/', views.delete_comment, name='delete_comment'),
+    # Exportar comentarios
+    path('comentarios/exportar-ia/', views.exportar_comentarios_ia, name='exportar_comentarios_ia'),
+    path('comentarios/exportar-todos/', views.exportar_todos_comentarios, name='exportar_todos_comentarios'),
     # Rutas existentes (mantenidas para compatibilidad)
     path('catalogos/', views.catalogos_view, name='catalogos'),
     path('catalogos/<str:catalogo_id>/', views.catalogo_detalle_view, name='catalogo_detalle'),
-    path('catalogo/', views.catalogo_view, name='catalogo'),
+    path('catalogo/', views.catalogo_view, name='catalogo'),  # 🔍 BUSCADOR PÚBLICO
+    path('catalogo/count/', views.catalogo_count_ajax, name='catalogo_count_ajax'),  # Contador para buscador
     path('edit/<int:obra_id>/', views.obra_edit_view, name='obra_edit'),
     path('<int:obra_id>/', views.obra_detail_view, name='obra_detail'),
     path('pagina-pdf/<int:numero_pagina>/', views.pagina_pdf_view, name='pagina_pdf'),
