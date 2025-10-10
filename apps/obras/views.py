@@ -940,13 +940,80 @@ def edit_item_ajax(request, catalogo_id, section, item_id):
         return JsonResponse({'error': 'Sección no válida'})
 
 # Mantener las vistas existentes para compatibilidad
+@require_http_methods(["GET", "POST"])
 def obra_detail_view(request, obra_id):
-    """Vista detallada de una obra específica"""
+    """Vista detallada de una obra específica con capacidad de edición"""
     obra = get_object_or_404(Obra, id=obra_id)
+    
+    # Manejar POST para guardar cambios (solo para usuarios autenticados)
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            # Actualizar campos editables
+            if 'titulo' in request.POST:
+                obra.titulo = request.POST.get('titulo', obra.titulo)
+            if 'titulo_limpio' in request.POST:
+                obra.titulo_limpio = request.POST.get('titulo_limpio', obra.titulo_limpio)
+            if 'titulo_alternativo' in request.POST:
+                obra.titulo_alternativo = request.POST.get('titulo_alternativo', obra.titulo_alternativo)
+            
+            # Actualizar autor si se proporciona
+            if 'autor' in request.POST:
+                autor_id = request.POST.get('autor')
+                if autor_id:
+                    from apps.autores.models import Autor
+                    try:
+                        autor = Autor.objects.get(id=autor_id)
+                        obra.autor = autor
+                    except Autor.DoesNotExist:
+                        pass
+                else:
+                    obra.autor = None
+            
+            if 'genero' in request.POST:
+                obra.genero = request.POST.get('genero', obra.genero)
+            if 'tipo_obra' in request.POST:
+                obra.tipo_obra = request.POST.get('tipo_obra', obra.tipo_obra)
+            if 'idioma' in request.POST:
+                obra.idioma = request.POST.get('idioma', obra.idioma)
+            if 'actos' in request.POST:
+                actos = request.POST.get('actos')
+                obra.actos = int(actos) if actos else None
+            if 'versos' in request.POST:
+                versos = request.POST.get('versos')
+                obra.versos = int(versos) if versos else None
+            if 'fecha_creacion_estimada' in request.POST:
+                obra.fecha_creacion_estimada = request.POST.get('fecha_creacion_estimada', obra.fecha_creacion_estimada)
+            if 'tema' in request.POST:
+                obra.tema = request.POST.get('tema', obra.tema)
+            if 'musica_conservada' in request.POST:
+                obra.musica_conservada = request.POST.get('musica_conservada') == 'on'
+            if 'compositor' in request.POST:
+                obra.compositor = request.POST.get('compositor', obra.compositor)
+            if 'mecenas' in request.POST:
+                obra.mecenas = request.POST.get('mecenas', obra.mecenas)
+            if 'bibliotecas_musica' in request.POST:
+                obra.bibliotecas_musica = request.POST.get('bibliotecas_musica', obra.bibliotecas_musica)
+            if 'edicion_principe' in request.POST:
+                obra.edicion_principe = request.POST.get('edicion_principe', obra.edicion_principe)
+            if 'notas_bibliograficas' in request.POST:
+                obra.notas_bibliograficas = request.POST.get('notas_bibliograficas', obra.notas_bibliograficas)
+            if 'notas' in request.POST:
+                obra.notas = request.POST.get('notas', obra.notas)
+            
+            obra.save()
+            messages.success(request, f'Obra "{obra.titulo_limpio}" actualizada correctamente.')
+            return redirect('obra_detail', obra_id=obra.id)
+            
+        except Exception as e:
+            messages.error(request, f'Error al actualizar la obra: {str(e)}')
     
     # Obtener datos relacionados
     manuscritos = obra.manuscritos.all()
     representaciones = obra.representaciones.all().order_by('fecha_formateada')
+    
+    # Obtener todos los autores para el dropdown
+    from apps.autores.models import Autor
+    autores = Autor.objects.all().order_by('nombre')
     
     # Estadísticas de la obra
     stats = {
@@ -961,6 +1028,7 @@ def obra_detail_view(request, obra_id):
         'manuscritos': manuscritos,
         'representaciones': representaciones,
         'stats': stats,
+        'autores': autores,
     }
     
     return render(request, 'obras/obra_detail.html', context)

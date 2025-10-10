@@ -246,6 +246,140 @@
             margin-bottom: 10px;
         }
         
+        /* BOTONES DE EDICIÓN */
+        .edit-btn, .save-btn, .cancel-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .edit-btn {
+            background: var(--warm-red);
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background: var(--warm-red-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(193, 119, 103, 0.3);
+        }
+        
+        .save-btn {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .save-btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+        }
+        
+        .cancel-btn {
+            background: var(--text-medium);
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background: var(--text-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 52, 40, 0.3);
+        }
+        
+        /* CAMPOS EDITABLES */
+        .editable {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .editable:hover {
+            background: rgba(193, 119, 103, 0.1);
+        }
+        
+        .editing-mode .editable {
+            background: white;
+            border: 2px solid var(--warm-red);
+            cursor: text;
+        }
+        
+        .editable-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid var(--warm-red);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            color: var(--text-dark);
+            background: white;
+        }
+        
+        .editable-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 8px;
+            border: 2px solid var(--warm-red);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            color: var(--text-dark);
+            background: white;
+            resize: vertical;
+        }
+        
+        .editable-select {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid var(--warm-red);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: inherit;
+            color: var(--text-dark);
+            background: white;
+            cursor: pointer;
+        }
+        
+        /* MENSAJES DE FEEDBACK */
+        .feedback-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .feedback-success {
+            background: #27ae60;
+            color: white;
+        }
+        
+        .feedback-error {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .container {
@@ -291,10 +425,18 @@
 </head>
 <body>
     <div class="container">
+        {% csrf_token %}
         <!-- BARRA SUPERIOR MINIMALISTA -->
         <div class="top-bar">
             <a href="/obras/catalogo/" class="back-link">← Volver al catálogo</a>
-            <div class="obra-id">ID: {{ obra.id }}</div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                {% if user.is_authenticated %}
+                <button id="editBtn" class="edit-btn">✏️ Editar</button>
+                <button id="saveBtn" class="save-btn" style="display: none;">💾 Guardar</button>
+                <button id="cancelBtn" class="cancel-btn" style="display: none;">❌ Cancelar</button>
+                {% endif %}
+                <div class="obra-id">ID: {{ obra.id }}</div>
+            </div>
         </div>
         
         <div class="header">
@@ -307,28 +449,40 @@
                 <div class="info-card">
                     <h3>📚 Información Básica</h3>
                     <div class="info-item">
+                        <span class="info-label">Título:</span>
+                        <span class="info-value editable" data-field="titulo" data-type="text">{{ obra.titulo }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Título Limpio:</span>
+                        <span class="info-value editable" data-field="titulo_limpio" data-type="text">{{ obra.titulo_limpio }}</span>
+                    </div>
+                    <div class="info-item">
                         <span class="info-label">Autor:</span>
-                        <span class="info-value">{{ obra.autor.nombre|default:"Desconocido" }}</span>
+                        <span class="info-value editable" data-field="autor" data-type="autor-select" data-autor-id="{{ obra.autor.id|default:'' }}">{{ obra.autor.nombre|default:"Desconocido" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Género:</span>
-                        <span class="info-value">{{ obra.genero|default:"No especificado" }}</span>
+                        <span class="info-value editable" data-field="genero" data-type="text">{{ obra.genero|default:"No especificado" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Tipo de obra:</span>
-                        <span class="info-value">{{ obra.tipo_obra|default:"No especificado" }}</span>
+                        <span class="info-value editable" data-field="tipo_obra" data-type="select">{{ obra.tipo_obra|default:"No especificado" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Idioma:</span>
-                        <span class="info-value">{{ obra.idioma|default:"Español" }}</span>
+                        <span class="info-value editable" data-field="idioma" data-type="text">{{ obra.idioma|default:"Español" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Actos:</span>
-                        <span class="info-value">{{ obra.actos|default:"No especificado" }}</span>
+                        <span class="info-value editable" data-field="actos" data-type="number">{{ obra.actos|default:"No especificado" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Versos:</span>
-                        <span class="info-value">{{ obra.versos|default:"No especificado" }}</span>
+                        <span class="info-value editable" data-field="versos" data-type="number">{{ obra.versos|default:"No especificado" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha creación:</span>
+                        <span class="info-value editable" data-field="fecha_creacion_estimada" data-type="text">{{ obra.fecha_creacion_estimada|default:"No especificada" }}</span>
                     </div>
                 </div>
 
@@ -342,56 +496,48 @@
                     </div>
                     <div class="info-item">
                         <span class="info-label">Tema:</span>
-                        <span class="info-value">{{ obra.tema|default:"No especificado" }}</span>
+                        <span class="info-value editable" data-field="tema" data-type="text">{{ obra.tema|default:"No especificado" }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Música conservada:</span>
-                        <span class="info-value">
+                        <span class="info-value editable" data-field="musica_conservada" data-type="checkbox">
                             {% if obra.musica_conservada %}✅ Sí{% else %}❌ No{% endif %}
                         </span>
                     </div>
-                    {% if obra.compositor %}
                     <div class="info-item">
                         <span class="info-label">Compositor:</span>
-                        <span class="info-value">{{ obra.compositor }}</span>
+                        <span class="info-value editable" data-field="compositor" data-type="text">{{ obra.compositor|default:"No especificado" }}</span>
                     </div>
-                    {% endif %}
-                    {% if obra.mecenas %}
                     <div class="info-item">
                         <span class="info-label">Mecenas:</span>
-                        <span class="info-value">{{ obra.mecenas }}</span>
+                        <span class="info-value editable" data-field="mecenas" data-type="text">{{ obra.mecenas|default:"No especificado" }}</span>
                     </div>
-                    {% endif %}
+                    <div class="info-item">
+                        <span class="info-label">Bibliotecas música:</span>
+                        <span class="info-value editable" data-field="bibliotecas_musica" data-type="text">{{ obra.bibliotecas_musica|default:"No especificado" }}</span>
+                    </div>
                 </div>
             </div>
 
-            {% if obra.titulo_alternativo %}
             <div class="info-card">
                 <h3>📝 Títulos Alternativos</h3>
-                <p>{{ obra.titulo_alternativo }}</p>
+                <p class="editable" data-field="titulo_alternativo" data-type="textarea">{{ obra.titulo_alternativo|default:"No especificado" }}</p>
             </div>
-            {% endif %}
 
-            {% if obra.edicion_principe %}
             <div class="info-card">
                 <h3>📖 Edición Príncipe</h3>
-                <p>{{ obra.edicion_principe }}</p>
+                <p class="editable" data-field="edicion_principe" data-type="textarea">{{ obra.edicion_principe|default:"No especificado" }}</p>
             </div>
-            {% endif %}
 
-            {% if obra.notas_bibliograficas %}
             <div class="info-card">
                 <h3>📚 Notas Bibliográficas</h3>
-                <p>{{ obra.notas_bibliograficas }}</p>
+                <p class="editable" data-field="notas_bibliograficas" data-type="textarea">{{ obra.notas_bibliograficas|default:"No especificado" }}</p>
             </div>
-            {% endif %}
 
-            {% if obra.notas %}
             <div class="info-card">
                 <h3>📝 Notas Adicionales</h3>
-                <p>{{ obra.notas }}</p>
+                <p class="editable" data-field="notas" data-type="textarea">{{ obra.notas|default:"No especificado" }}</p>
             </div>
-            {% endif %}
         </div>
 
         <div class="stats">
@@ -466,5 +612,254 @@
         </div>
         {% endif %}
     </div>
+
+    {% if user.is_authenticated %}
+    <script>
+        // Estado de edición
+        let isEditMode = false;
+        let originalValues = {};
+        
+        // Elementos
+        const editBtn = document.getElementById('editBtn');
+        const saveBtn = document.getElementById('saveBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const editableFields = document.querySelectorAll('.editable');
+        const container = document.querySelector('.container');
+        
+        // Tipos de obra disponibles
+        const tipoObraOptions = [
+            'comedia', 'auto', 'zarzuela', 'entremes', 'tragedia', 
+            'loa', 'sainete', 'baile', 'otro'
+        ];
+        
+        // Autores disponibles
+        const autoresDisponibles = [
+            {% for autor in autores %}
+            { id: {{ autor.id }}, nombre: "{{ autor.nombre|escapejs }}" }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
+        
+        // Función para mostrar mensajes de feedback
+        function showFeedback(message, isSuccess = true) {
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = `feedback-message feedback-${isSuccess ? 'success' : 'error'}`;
+            feedbackDiv.textContent = message;
+            document.body.appendChild(feedbackDiv);
+            
+            setTimeout(() => {
+                feedbackDiv.remove();
+            }, 3000);
+        }
+        
+        // Función para activar modo edición
+        function enableEditMode() {
+            isEditMode = true;
+            container.classList.add('editing-mode');
+            editBtn.style.display = 'none';
+            saveBtn.style.display = 'inline-block';
+            cancelBtn.style.display = 'inline-block';
+            
+            // Convertir campos editables en inputs
+            editableFields.forEach(field => {
+                const fieldName = field.dataset.field;
+                const fieldType = field.dataset.type;
+                const currentValue = field.textContent.trim();
+                
+                // Guardar valor original
+                originalValues[fieldName] = currentValue;
+                
+                // Crear el elemento de edición apropiado
+                let editElement;
+                
+                if (fieldType === 'textarea') {
+                    editElement = document.createElement('textarea');
+                    editElement.className = 'editable-textarea';
+                    editElement.value = currentValue === 'No especificado' ? '' : currentValue;
+                } else if (fieldType === 'select') {
+                    editElement = document.createElement('select');
+                    editElement.className = 'editable-select';
+                    
+                    tipoObraOptions.forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option;
+                        optionElement.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+                        if (option === currentValue.toLowerCase()) {
+                            optionElement.selected = true;
+                        }
+                        editElement.appendChild(optionElement);
+                    });
+                } else if (fieldType === 'autor-select') {
+                    editElement = document.createElement('select');
+                    editElement.className = 'editable-select';
+                    
+                    // Obtener el ID del autor actual del atributo data
+                    const currentAutorId = field.dataset.autorId;
+                    
+                    // Agregar opción vacía
+                    const emptyOption = document.createElement('option');
+                    emptyOption.value = '';
+                    emptyOption.textContent = 'Seleccionar autor...';
+                    if (!currentAutorId) {
+                        emptyOption.selected = true;
+                    }
+                    editElement.appendChild(emptyOption);
+                    
+                    // Agregar todos los autores
+                    autoresDisponibles.forEach(autor => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = autor.id;
+                        optionElement.textContent = autor.nombre;
+                        if (autor.id == currentAutorId) {
+                            optionElement.selected = true;
+                        }
+                        editElement.appendChild(optionElement);
+                    });
+                } else if (fieldType === 'checkbox') {
+                    editElement = document.createElement('input');
+                    editElement.type = 'checkbox';
+                    editElement.checked = currentValue.includes('✅');
+                    editElement.style.width = 'auto';
+                } else if (fieldType === 'number') {
+                    editElement = document.createElement('input');
+                    editElement.type = 'number';
+                    editElement.className = 'editable-input';
+                    editElement.value = currentValue === 'No especificado' ? '' : currentValue;
+                } else {
+                    editElement = document.createElement('input');
+                    editElement.type = 'text';
+                    editElement.className = 'editable-input';
+                    editElement.value = currentValue === 'No especificado' ? '' : currentValue;
+                }
+                
+                editElement.dataset.field = fieldName;
+                editElement.dataset.type = fieldType;
+                
+                // Reemplazar el span/p con el elemento de edición
+                field.replaceWith(editElement);
+            });
+        }
+        
+        // Función para desactivar modo edición
+        function disableEditMode(restore = false) {
+            isEditMode = false;
+            container.classList.remove('editing-mode');
+            editBtn.style.display = 'inline-block';
+            saveBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            
+            // Restaurar campos editables
+            const editInputs = document.querySelectorAll('.editable-input, .editable-textarea, .editable-select, input[type="checkbox"]');
+            editInputs.forEach(input => {
+                const fieldName = input.dataset.field;
+                const fieldType = input.dataset.type;
+                let value;
+                let autorId = null;
+                
+                if (fieldType === 'checkbox') {
+                    value = input.checked ? '✅ Sí' : '❌ No';
+                } else if (fieldType === 'autor-select') {
+                    // Para autor, obtener el nombre del autor seleccionado
+                    const selectedAutorId = input.value;
+                    if (selectedAutorId) {
+                        const selectedAutor = autoresDisponibles.find(a => a.id == selectedAutorId);
+                        value = selectedAutor ? selectedAutor.nombre : 'Desconocido';
+                        autorId = selectedAutorId;
+                    } else {
+                        value = 'Desconocido';
+                    }
+                } else {
+                    value = input.value.trim() || 'No especificado';
+                }
+                
+                // Si estamos restaurando, usar el valor original
+                if (restore && originalValues[fieldName]) {
+                    value = originalValues[fieldName];
+                    // Para autor, también restaurar el ID original
+                    if (fieldType === 'autor-select') {
+                        // Buscar el autor por nombre para obtener su ID
+                        const originalAutor = autoresDisponibles.find(a => a.nombre === value);
+                        if (originalAutor) {
+                            autorId = originalAutor.id;
+                        }
+                    }
+                }
+                
+                // Crear el elemento apropiado (span o p)
+                const displayElement = fieldType === 'textarea' 
+                    ? document.createElement('p') 
+                    : document.createElement('span');
+                    
+                displayElement.className = fieldType === 'textarea' ? 'editable' : 'info-value editable';
+                displayElement.dataset.field = fieldName;
+                displayElement.dataset.type = fieldType;
+                displayElement.textContent = value;
+                
+                // Si es autor, guardar el ID
+                if (fieldType === 'autor-select' && autorId) {
+                    displayElement.dataset.autorId = autorId;
+                }
+                
+                input.replaceWith(displayElement);
+            });
+            
+            originalValues = {};
+        }
+        
+        // Función para guardar cambios
+        async function saveChanges() {
+            const formData = new FormData();
+            
+            // Recopilar todos los valores editados
+            const editInputs = document.querySelectorAll('.editable-input, .editable-textarea, .editable-select, input[type="checkbox"]');
+            editInputs.forEach(input => {
+                const fieldName = input.dataset.field;
+                let value;
+                
+                if (input.type === 'checkbox') {
+                    value = input.checked ? 'on' : '';
+                } else {
+                    value = input.value.trim();
+                }
+                
+                formData.append(fieldName, value);
+            });
+            
+            // Agregar CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || 
+                             '{{ csrf_token }}';
+            formData.append('csrfmiddlewaretoken', csrfToken);
+            
+            try {
+                const response = await fetch(window.location.pathname, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    }
+                });
+                
+                if (response.ok) {
+                    disableEditMode(false);
+                    showFeedback('✅ Cambios guardados exitosamente', true);
+                    
+                    // Recargar la página después de 1 segundo para mostrar los cambios
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    throw new Error('Error al guardar los cambios');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showFeedback('❌ Error al guardar los cambios. Por favor, intenta de nuevo.', false);
+            }
+        }
+        
+        // Event listeners
+        editBtn.addEventListener('click', enableEditMode);
+        cancelBtn.addEventListener('click', () => disableEditMode(true));
+        saveBtn.addEventListener('click', saveChanges);
+    </script>
+    {% endif %}
 </body>
 </html>

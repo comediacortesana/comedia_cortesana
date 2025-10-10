@@ -166,28 +166,29 @@
     
     .content-body {
         display: flex;
-        gap: 1.5rem;
+        gap: 1rem;
         height: calc(100vh - 180px);
     }
     
     .obras-list {
-        flex: 0.8;
+        flex: 0.7;
         background: var(--beige-light);
         border-radius: 12px;
         border: 2px solid var(--warm-red);
         box-shadow: 0 4px 12px rgba(161, 94, 79, 0.15);
         overflow: hidden;
-        min-width: 250px;
+        min-width: 220px;
+        max-width: 280px;
     }
     
     .editor-panels {
         display: flex;
-        gap: 1.5rem;
-        flex: 2.5;
+        gap: 1rem;
+        flex: 2.3;
     }
     
     .form-panel {
-        flex: 1;
+        flex: 1.2;
         background: var(--beige-light);
         border-radius: 12px;
         border: 2px solid var(--warm-red);
@@ -196,13 +197,54 @@
     }
     
     .pdf-pages-panel {
-        flex: 2;
+        flex: 1;
         background: var(--beige-light);
         border-radius: 12px;
         border: 2px solid var(--warm-red);
         box-shadow: 0 4px 12px rgba(161, 94, 79, 0.15);
         overflow: hidden;
-        min-width: 500px;
+        min-width: 300px;
+        max-width: 400px;
+        position: relative;
+    }
+    
+    .pdf-panel-collapse-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: var(--warm-red-light);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.8rem;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s ease;
+    }
+    
+    .pdf-panel-collapse-btn:hover {
+        background: var(--warm-red);
+    }
+    
+    .pdf-pages-panel.collapsed {
+        flex: 0.1;
+        min-width: 60px;
+        max-width: 60px;
+    }
+    
+    .pdf-pages-panel.collapsed .pdf-pages-header,
+    .pdf-pages-panel.collapsed .pdf-pages-body {
+        display: none;
+    }
+    
+    .pdf-pages-panel.collapsed .pdf-panel-collapse-btn {
+        position: fixed;
+        top: 50%;
+        right: 1rem;
+        transform: translateY(-50%) rotate(90deg);
+        writing-mode: vertical-rl;
+        padding: 0.5rem 0.3rem;
     }
     
     .pdf-pages-header {
@@ -522,15 +564,29 @@
     
     /* CAMPOS PRINCIPALES DESTACADOS */
     .form-group {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
     
     .form-group.campo-principal {
         background: #FFF9F5;
-        padding: 1rem;
+        padding: 0.8rem;
         border-radius: 8px;
         border-left: 4px solid var(--warm-red);
         box-shadow: 0 2px 6px rgba(193, 119, 103, 0.1);
+    }
+    
+    .form-group.compact {
+        margin-bottom: 0.8rem;
+    }
+    
+    .form-group.compact .form-label {
+        margin-bottom: 0.3rem;
+        font-size: 0.8rem;
+    }
+    
+    .form-group.compact .form-control {
+        padding: 0.6rem;
+        font-size: 0.9rem;
     }
     
     .form-label {
@@ -585,9 +641,62 @@
         display: flex;
         gap: 1rem;
         justify-content: flex-end;
-        margin-top: 2rem;
+        margin-top: 1.5rem;
         padding-top: 1rem;
         border-top: 1px solid #e9ecef;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    
+    .form-section {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-section.collapsible .form-section-header {
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease;
+    }
+    
+    .form-section.collapsible .form-section-header:hover {
+        background: rgba(193, 119, 103, 0.1);
+    }
+    
+    .form-section.collapsible .form-section-header::after {
+        content: '▼';
+        float: right;
+        transition: transform 0.3s ease;
+    }
+    
+    .form-section.collapsible.collapsed .form-section-header::after {
+        transform: rotate(-90deg);
+    }
+    
+    .form-section.collapsible.collapsed .form-section-content {
+        display: none;
+    }
+    
+    .form-section-header {
+        background: var(--beige-light);
+        padding: 0.8rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-weight: bold;
+        color: var(--warm-red-dark);
+        border-left: 4px solid var(--warm-red);
+    }
+    
+    .form-section-content {
+        padding-left: 0.5rem;
     }
     
     .btn-success {
@@ -676,6 +785,22 @@
         margin-top: 0.3rem;
     }
     
+    @media (max-width: 1200px) {
+        .pdf-pages-panel {
+            min-width: 250px;
+            max-width: 300px;
+        }
+        
+        .form-row {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-row .form-group {
+            margin-bottom: 0.5rem;
+        }
+    }
+    
     @media (max-width: 768px) {
         .sidebar {
             transform: translateX(-100%);
@@ -693,16 +818,78 @@
         .content-body {
             flex-direction: column;
             height: auto;
+            gap: 1rem;
         }
         
         .editor-panels {
             flex-direction: column;
+            gap: 1rem;
         }
         
-        .obras-list,
+        .obras-list {
+            max-width: none;
+            min-width: auto;
+        }
+        
         .form-panel,
         .pdf-pages-panel {
-            height: 500px;
+            min-width: auto;
+            max-width: none;
+        }
+        
+        .pdf-pages-panel.collapsed {
+            min-width: 60px;
+            max-width: 60px;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .stat-card {
+            padding: 0.5rem;
+        }
+        
+        .stat-number {
+            font-size: 1.4rem;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .content-header {
+            padding: 1rem;
+        }
+        
+        .search-container {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .search-input {
+            min-width: auto;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-section-header {
+            padding: 0.6rem;
+            font-size: 0.9rem;
+        }
+        
+        .form-group.compact .form-label {
+            font-size: 0.75rem;
+        }
+        
+        .form-group.compact .form-control {
+            padding: 0.5rem;
+            font-size: 0.85rem;
         }
     }
 </style>
@@ -850,7 +1037,10 @@
                 </div>
                 
                 <!-- Panel de Páginas PDF -->
-                <div class="pdf-pages-panel">
+                <div class="pdf-pages-panel" id="pdfPagesPanelContainer">
+                    <button class="pdf-panel-collapse-btn" onclick="togglePdfPanel()" title="Colapsar/Expandir panel PDF">
+                        <i class="fas fa-compress-alt"></i>
+                    </button>
                     <div class="pdf-pages-header">
                         <span id="pdfPagesTitle">Páginas PDF</span>
                     </div>
@@ -1136,59 +1326,65 @@ document.addEventListener('DOMContentLoaded', function() {
         formPanel.innerHTML = `
             <form id="obraForm">
                 <!-- SECCIÓN CAMPOS PRINCIPALES -->
-                <h5 style="color: var(--warm-red-dark); text-transform: uppercase; margin-bottom: 1rem; border-bottom: 2px solid var(--warm-red); padding-bottom: 0.5rem;">
-                    <i class="fas fa-star"></i> Campos Principales
-                </h5>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Obra (Título)</label>
-                    <input type="text" class="form-control" name="titulo" value="${obra.titulo || ''}" required>
-                </div>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Autor o Atribución</label>
-                    <select class="form-control" name="autor">
-                        <option value="">Seleccionar autor</option>
-                        {% for autor in autores %}
-                        <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Tipo (Comedia, Loa, Entremés...)</label>
-                    <select class="form-control" name="tipo_obra">
-                        <option value="">Seleccionar tipo</option>
-                        {% for choice in tipo_obra_choices %}
-                        <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Fecha de Creación</label>
-                    <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}" placeholder="Ej: 1630">
-                </div>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Mecenas</label>
-                    <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}" placeholder="Patrocinador o mecenas">
-                </div>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Música</label>
-                    <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem;">
-                        <label style="margin: 0; text-transform: none; font-weight: normal;">
-                            <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''} style="margin-right: 0.5rem;">
-                            Música Conservada
-                        </label>
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-star"></i> Campos Principales
                     </div>
-                    <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}" placeholder="Compositor (si aplica)">
-                </div>
-                
-                <div class="form-group campo-principal">
-                    <label class="form-label">Fuente de Información</label>
-                    <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
+                    <div class="form-section-content">
+                        <div class="form-row">
+                            <div class="form-group campo-principal">
+                                <label class="form-label">Obra (Título)</label>
+                                <input type="text" class="form-control" name="titulo" value="${obra.titulo || ''}" required>
+                            </div>
+                            <div class="form-group campo-principal">
+                                <label class="form-label">Autor o Atribución</label>
+                                <select class="form-control" name="autor">
+                                    <option value="">Seleccionar autor</option>
+                                    {% for autor in autores %}
+                                    <option value="{{ autor.id }}" ${obra.autor_id == {{ autor.id }} ? 'selected' : ''}>{{ autor.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group campo-principal">
+                                <label class="form-label">Tipo (Comedia, Loa, Entremés...)</label>
+                                <select class="form-control" name="tipo_obra">
+                                    <option value="">Seleccionar tipo</option>
+                                    {% for choice in tipo_obra_choices %}
+                                    <option value="{{ choice.0 }}" ${obra.tipo_obra == '{{ choice.0 }}' ? 'selected' : ''}>{{ choice.1 }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group campo-principal">
+                                <label class="form-label">Fecha de Creación</label>
+                                <input type="text" class="form-control" name="fecha_creacion_estimada" value="${obra.fecha_creacion_estimada || ''}" placeholder="Ej: 1630">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group campo-principal">
+                                <label class="form-label">Mecenas</label>
+                                <input type="text" class="form-control" name="mecenas" value="${obra.mecenas || ''}" placeholder="Patrocinador o mecenas">
+                            </div>
+                            <div class="form-group campo-principal">
+                                <label class="form-label">Música</label>
+                                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.3rem;">
+                                    <label style="margin: 0; text-transform: none; font-weight: normal; font-size: 0.9rem;">
+                                        <input type="checkbox" name="musica_conservada" ${obra.musica_conservada ? 'checked' : ''} style="margin-right: 0.3rem;">
+                                        Música Conservada
+                                    </label>
+                                </div>
+                                <input type="text" class="form-control" name="compositor" value="${obra.compositor || ''}" placeholder="Compositor (si aplica)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group campo-principal">
+                            <label class="form-label">Fuente de Información</label>
+                            <input type="text" class="form-control" name="origen_datos" value="${obra.origen_datos || ''}" readonly>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- SECCIÓN INFORMACIÓN ADICIONAL -->
@@ -1271,6 +1467,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Añadir event listeners al formulario
         document.getElementById('obraForm').addEventListener('submit', saveObra);
         document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
+        
+        // Inicializar secciones colapsables
+        initFormSections();
     }
     
     // Guardar obra
@@ -1760,6 +1959,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelBtn.addEventListener('click', cancelEdit);
             }
         }
+        
+        // Inicializar secciones colapsables
+        initFormSections();
     }
     
     // Función para renderizar formulario de obra (existente)
@@ -1767,9 +1969,11 @@ document.addEventListener('DOMContentLoaded', function() {
         return `
             <form id="itemForm">
                 <!-- SECCIÓN CAMPOS PRINCIPALES -->
-                <h5 style="color: var(--warm-red-dark); text-transform: uppercase; margin-bottom: 1rem; border-bottom: 2px solid var(--warm-red); padding-bottom: 0.5rem;">
-                    <i class="fas fa-star"></i> Campos Principales
-                </h5>
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <i class="fas fa-star"></i> Campos Principales
+                    </div>
+                    <div class="form-section-content">
                 
                 <div class="form-group campo-principal">
                     <label class="form-label">Obra (Título)</label>
@@ -2208,5 +2412,45 @@ function renderComments(comentarios) {
 
 // Cargar comentarios al inicializar
 loadComments();
+
+// Función para colapsar/expandir el panel de PDF
+function togglePdfPanel() {
+    const panel = document.getElementById('pdfPagesPanelContainer');
+    const btn = panel.querySelector('.pdf-panel-collapse-btn');
+    const icon = btn.querySelector('i');
+    
+    if (panel.classList.contains('collapsed')) {
+        panel.classList.remove('collapsed');
+        icon.className = 'fas fa-compress-alt';
+        btn.title = 'Colapsar panel PDF';
+    } else {
+        panel.classList.add('collapsed');
+        icon.className = 'fas fa-expand-alt';
+        btn.title = 'Expandir panel PDF';
+    }
+}
+
+// Función para colapsar/expandir secciones del formulario
+function toggleFormSection(header) {
+    const section = header.closest('.form-section');
+    const content = section.querySelector('.form-section-content');
+    
+    if (section.classList.contains('collapsed')) {
+        section.classList.remove('collapsed');
+        content.style.display = 'block';
+    } else {
+        section.classList.add('collapsed');
+        content.style.display = 'none';
+    }
+}
+
+// Función para colapsar automáticamente la sección de información adicional al cargar
+function initFormSections() {
+    const additionalSection = document.querySelector('.form-section.collapsible');
+    if (additionalSection) {
+        additionalSection.classList.add('collapsed');
+        additionalSection.querySelector('.form-section-content').style.display = 'none';
+    }
+}
 </script>
 {% endblock %}
