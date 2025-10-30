@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .filters-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .results-section {
+            margin-top: 20px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .results-count {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .results-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .results-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .results-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+        
+        .results-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+            font-size: 16px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .badge-fuentesxi {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-catcom {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .badge-ambas {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Teatro Español del Siglo de Oro</h1>
+        <p class="subtitle">Filtro de obras, autores, representaciones y lugares</p>
+        
+        <!-- Sección de Filtros -->
+        <div class="filters-section">
+            <div class="filters-title">🔍 Filtros de Búsqueda</div>
+            
+            <div class="filters-grid">
+                <!-- Filtros de Obra -->
+                <div class="filter-group">
+                    <label for="titulo">Título de la obra</label>
+                    <input type="text" id="titulo" placeholder="Buscar por título...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tipo_obra">Tipo de obra</label>
+                    <select id="tipo_obra">
+                        <option value="">Todos</option>
+                        <option value="comedia">Comedia</option>
+                        <option value="auto">Auto sacramental</option>
+                        <option value="zarzuela">Zarzuela</option>
+                        <option value="entremes">Entremés</option>
+                        <option value="tragedia">Tragedia</option>
+                        <option value="loa">Loa</option>
+                        <option value="sainete">Sainete</option>
+                        <option value="baile">Baile</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fuente">Fuente de datos</label>
+                    <select id="fuente">
+                        <option value="">Todas</option>
+                        <option value="FUENTESXI">FUENTES XI</option>
+                        <option value="CATCOM">CATCOM</option>
+                        <option value="AMBAS">Ambas</option>
+                    </select>
+                </div>
+                
+                <!-- Filtros de Autor -->
+                <div class="filter-group">
+                    <label for="autor">Autor</label>
+                    <input type="text" id="autor" placeholder="Nombre del autor...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="epoca">Época</label>
+                    <input type="text" id="epoca" placeholder="Ej: Siglo de Oro">
+                </div>
+                
+                <!-- Filtros de Lugar -->
+                <div class="filter-group">
+                    <label for="lugar">Lugar</label>
+                    <input type="text" id="lugar" placeholder="Ciudad o lugar...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tipo_lugar">Tipo de lugar</label>
+                    <select id="tipo_lugar">
+                        <option value="">Todos</option>
+                        <option value="palacio">Palacio</option>
+                        <option value="corral">Corral de comedias</option>
+                        <option value="iglesia">Iglesia</option>
+                        <option value="plaza">Plaza pública</option>
+                        <option value="teatro">Teatro</option>
+                        <option value="casa">Casa particular</option>
+                        <option value="universidad">Universidad</option>
+                        <option value="convento">Convento</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="region">Región</label>
+                    <input type="text" id="region" placeholder="Región o provincia...">
+                </div>
+                
+                <!-- Filtros de Representación -->
+                <div class="filter-group">
+                    <label for="compania">Compañía teatral</label>
+                    <input type="text" id="compania" placeholder="Nombre de compañía...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fecha_desde">Fecha desde</label>
+                    <input type="text" id="fecha_desde" placeholder="Ej: 1600">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fecha_hasta">Fecha hasta</label>
+                    <input type="text" id="fecha_hasta" placeholder="Ej: 1700">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="mecenas">Mecenas</label>
+                    <input type="text" id="mecenas" placeholder="Nombre del mecenas...">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
+                <button class="btn-secondary" onclick="limpiarFiltros()">Limpiar Todo</button>
+            </div>
+        </div>
+        
+        <!-- Sección de Resultados -->
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    <span id="total-results">0</span> resultados encontrados
+                </div>
+            </div>
+            
+            <div id="results-container">
+                <div class="no-results">
+                    Configure los filtros y haga clic en "Aplicar Filtros" para ver los resultados
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Datos de ejemplo (en producción, estos vendrían de la API de Django)
+        let datosEjemplo = [
+            {
+                id: 1,
+                titulo: "La vida es sueño",
+                autor: "Calderón de la Barca",
+                tipo_obra: "comedia",
+                fuente: "FUENTESXI",
+                epoca: "Siglo de Oro",
+                lugar: "Madrid",
+                tipo_lugar: "corral",
+                region: "Madrid",
+                compania: "Compañía Real",
+                fecha: "1635",
+                mecenas: "Felipe IV"
+            },
+            {
+                id: 2,
+                titulo: "El perro del hortelano",
+                autor: "Lope de Vega",
+                tipo_obra: "comedia",
+                fuente: "CATCOM",
+                epoca: "Siglo de Oro",
+                lugar: "Toledo",
+                tipo_lugar: "palacio",
+                region: "Castilla-La Mancha",
+                compania: "Compañía de Toledo",
+                fecha: "1618",
+                mecenas: "Duque de Osuna"
+            },
+            {
+                id: 3,
+                titulo: "Don Juan Tenorio",
+                autor: "Tirso de Molina",
+                tipo_obra: "comedia",
+                fuente: "AMBAS",
+                epoca: "Siglo de Oro",
+                lugar: "Sevilla",
+                tipo_lugar: "teatro",
+                region: "Andalucía",
+                compania: "Compañía de la Cruz",
+                fecha: "1630",
+                mecenas: ""
+            }
+        ];
+        
+        let datosOriginales = [...datosEjemplo];
+        let datosFiltrados = [...datosEjemplo];
+        
+        // Función para aplicar filtros
+        function aplicarFiltros() {
+            datosFiltrados = datosOriginales.filter(obra => {
+                // Filtro de título
+                const titulo = document.getElementById('titulo').value.toLowerCase();
+                if (titulo && !obra.titulo.toLowerCase().includes(titulo)) return false;
+                
+                // Filtro de tipo de obra
+                const tipoObra = document.getElementById('tipo_obra').value;
+                if (tipoObra && obra.tipo_obra !== tipoObra) return false;
+                
+                // Filtro de fuente
+                const fuente = document.getElementById('fuente').value;
+                if (fuente && obra.fuente !== fuente) return false;
+                
+                // Filtro de autor
+                const autor = document.getElementById('autor').value.toLowerCase();
+                if (autor && !obra.autor.toLowerCase().includes(autor)) return false;
+                
+                // Filtro de época
+                const epoca = document.getElementById('epoca').value.toLowerCase();
+                if (epoca && !obra.epoca.toLowerCase().includes(epoca)) return false;
+                
+                // Filtro de lugar
+                const lugar = document.getElementById('lugar').value.toLowerCase();
+                if (lugar && !obra.lugar.toLowerCase().includes(lugar)) return false;
+                
+                // Filtro de tipo de lugar
+                const tipoLugar = document.getElementById('tipo_lugar').value;
+                if (tipoLugar && obra.tipo_lugar !== tipoLugar) return false;
+                
+                // Filtro de región
+                const region = document.getElementById('region').value.toLowerCase();
+                if (region && !obra.region.toLowerCase().includes(region)) return false;
+                
+                // Filtro de compañía
+                const compania = document.getElementById('compania').value.toLowerCase();
+                if (compania && !obra.compania.toLowerCase().includes(compania)) return false;
+                
+                // Filtro de fecha desde
+                const fechaDesde = document.getElementById('fecha_desde').value;
+                if (fechaDesde && parseInt(obra.fecha) < parseInt(fechaDesde)) return false;
+                
+                // Filtro de fecha hasta
+                const fechaHasta = document.getElementById('fecha_hasta').value;
+                if (fechaHasta && parseInt(obra.fecha) > parseInt(fechaHasta)) return false;
+                
+                // Filtro de mecenas
+                const mecenas = document.getElementById('mecenas').value.toLowerCase();
+                if (mecenas && !obra.mecenas.toLowerCase().includes(mecenas)) return false;
+                
+                return true;
+            });
+            
+            mostrarResultados();
+        }
+        
+        // Función para mostrar resultados
+        function mostrarResultados() {
+            const container = document.getElementById('results-container');
+            const totalResults = document.getElementById('total-results');
+            
+            totalResults.textContent = datosFiltrados.length;
+            
+            if (datosFiltrados.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron resultados con los filtros seleccionados</div>';
+                return;
+            }
+            
+            let html = '<table class="results-table">';
+            html += '<thead><tr>';
+            html += '<th>ID</th>';
+            html += '<th>Título</th>';
+            html += '<th>Autor</th>';
+            html += '<th>Tipo</th>';
+            html += '<th>Fuente</th>';
+            html += '<th>Lugar</th>';
+            html += '<th>Fecha</th>';
+            html += '<th>Compañía</th>';
+            html += '</tr></thead>';
+            html += '<tbody>';
+            
+            datosFiltrados.forEach(obra => {
+                html += '<tr>';
+                html += `<td>${obra.id}</td>`;
+                html += `<td><strong>${obra.titulo}</strong></td>`;
+                html += `<td>${obra.autor}</td>`;
+                html += `<td>${obra.tipo_obra}</td>`;
+                html += `<td><span class="badge badge-${obra.fuente.toLowerCase()}">${obra.fuente}</span></td>`;
+                html += `<td>${obra.lugar}, ${obra.region}</td>`;
+                html += `<td>${obra.fecha}</td>`;
+                html += `<td>${obra.compania}</td>`;
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // Función para limpiar filtros
+        function limpiarFiltros() {
+            document.getElementById('titulo').value = '';
+            document.getElementById('tipo_obra').value = '';
+            document.getElementById('fuente').value = '';
+            document.getElementById('autor').value = '';
+            document.getElementById('epoca').value = '';
+            document.getElementById('lugar').value = '';
+            document.getElementById('tipo_lugar').value = '';
+            document.getElementById('region').value = '';
+            document.getElementById('compania').value = '';
+            document.getElementById('fecha_desde').value = '';
+            document.getElementById('fecha_hasta').value = '';
+            document.getElementById('mecenas').value = '';
+            
+            datosFiltrados = [...datosOriginales];
+            mostrarResultados();
+        }
+        
+        // Cargar datos iniciales
+        window.onload = function() {
+            mostrarResultados();
+        };
+    </script>
+</body>
+</html>
+
