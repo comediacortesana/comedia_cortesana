@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .filters-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #229954;
+        }
+        
+        .btn-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+        
+        .results-section {
+            margin-top: 20px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .results-count {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .results-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .results-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .results-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+        
+        .results-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+            font-size: 16px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .badge-fuentesxi {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-catcom {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .badge-ambas {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        /* Sistema de Comentarios */
+        .feedback-section {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        
+        .feedback-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .feedback-description {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .feedback-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+        }
+        
+        .feedback-info {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .feedback-info strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #856404;
+        }
+        
+        .feedback-info ul {
+            margin-left: 20px;
+            color: #666;
+            font-size: 13px;
+        }
+        
+        .active-filters-display {
+            background: #e8f5e9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+        
+        .active-filters-display strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #2e7d32;
+        }
+        
+        .filter-tag {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            margin: 3px;
+            font-size: 12px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #3498db;
+        }
+        
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Teatro Español del Siglo de Oro</h1>
+        <p class="subtitle">Filtro de obras con sistema de feedback para investigadores</p>
+        
+        <!-- Sección de Filtros -->
+        <div class="filters-section">
+            <div class="filters-title">🔍 Filtros de Búsqueda</div>
+            
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label for="titulo">Título de la obra</label>
+                    <input type="text" id="titulo" placeholder="Buscar por título...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tipo_obra">Tipo de obra</label>
+                    <select id="tipo_obra">
+                        <option value="">Todos</option>
+                        <option value="comedia">Comedia</option>
+                        <option value="auto">Auto sacramental</option>
+                        <option value="zarzuela">Zarzuela</option>
+                        <option value="entremes">Entremés</option>
+                        <option value="tragedia">Tragedia</option>
+                        <option value="loa">Loa</option>
+                        <option value="sainete">Sainete</option>
+                        <option value="baile">Baile</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fuente">Fuente de datos</label>
+                    <select id="fuente">
+                        <option value="">Todas</option>
+                        <option value="FUENTESXI">FUENTES XI</option>
+                        <option value="CATCOM">CATCOM</option>
+                        <option value="AMBAS">Ambas</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="autor">Autor</label>
+                    <input type="text" id="autor" placeholder="Nombre del autor...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="epoca">Época</label>
+                    <input type="text" id="epoca" placeholder="Ej: Siglo de Oro">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="lugar">Lugar</label>
+                    <input type="text" id="lugar" placeholder="Ciudad o lugar...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tipo_lugar">Tipo de lugar</label>
+                    <select id="tipo_lugar">
+                        <option value="">Todos</option>
+                        <option value="palacio">Palacio</option>
+                        <option value="corral">Corral de comedias</option>
+                        <option value="iglesia">Iglesia</option>
+                        <option value="plaza">Plaza pública</option>
+                        <option value="teatro">Teatro</option>
+                        <option value="casa">Casa particular</option>
+                        <option value="universidad">Universidad</option>
+                        <option value="convento">Convento</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="region">Región</label>
+                    <input type="text" id="region" placeholder="Región o provincia...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="compania">Compañía teatral</label>
+                    <input type="text" id="compania" placeholder="Nombre de compañía...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fecha_desde">Fecha desde</label>
+                    <input type="text" id="fecha_desde" placeholder="Ej: 1600">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fecha_hasta">Fecha hasta</label>
+                    <input type="text" id="fecha_hasta" placeholder="Ej: 1700">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="mecenas">Mecenas</label>
+                    <input type="text" id="mecenas" placeholder="Nombre del mecenas...">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="aplicarFiltros()">🔍 Aplicar Filtros</button>
+                <button class="btn-secondary" onclick="limpiarFiltros()">🗑️ Limpiar Todo</button>
+            </div>
+        </div>
+        
+        <!-- Sección de Resultados -->
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    <span id="total-results">0</span> resultados encontrados
+                </div>
+            </div>
+            
+            <div id="results-container">
+                <div class="loading">Cargando datos desde GitHub...</div>
+            </div>
+        </div>
+        
+        <!-- Sección de Feedback/Comentarios -->
+        <div class="feedback-section">
+            <div class="feedback-title">💬 Sistema de Feedback para Investigadores</div>
+            <div class="feedback-description">
+                <strong>¿Encontraste algo interesante o necesitas mejoras?</strong><br>
+                Escribe tu comentario abajo y descarga un archivo con tu búsqueda actual. 
+                Esto nos ayuda a replicar exactamente lo que buscas y mejorar el sistema.
+            </div>
+            
+            <!-- Filtros activos -->
+            <div id="active-filters-display" class="active-filters-display" style="display: none;">
+                <strong>📋 Filtros activos en tu búsqueda:</strong>
+                <div id="filter-tags"></div>
+            </div>
+            
+            <!-- Área de comentario -->
+            <label for="feedback-comment" style="display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 600; color: #856404;">
+                Tu comentario o sugerencia:
+            </label>
+            <textarea 
+                id="feedback-comment" 
+                class="feedback-textarea" 
+                placeholder="Ejemplo: 'Me gustaría que el sistema extrajera también información sobre los actores de cada obra' o 'Encontré que todas las obras de Lope en Toledo son del periodo 1610-1620, sería útil ver esta estadística automáticamente'"
+            ></textarea>
+            
+            <div class="feedback-info">
+                <strong>📦 El archivo exportado incluirá:</strong>
+                <ul>
+                    <li>Todos los filtros que aplicaste</li>
+                    <li>Los resultados que obtuviste (obras encontradas)</li>
+                    <li>Tu comentario o sugerencia</li>
+                    <li>Fecha y hora de la búsqueda</li>
+                </ul>
+            </div>
+            
+            <div class="button-group" style="margin-top: 15px;">
+                <button class="btn-success" onclick="exportarComentario()">
+                    📥 Descargar Búsqueda + Comentario (JSON)
+                </button>
+                <button class="btn-warning" onclick="exportarComentarioTexto()">
+                    📄 Descargar como Texto Legible
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables globales
+        let datosOriginales = [];
+        let datosFiltrados = [];
+        let metadata = {};
+        
+        // Cargar datos desde el JSON del repositorio
+        async function cargarDatos() {
+            try {
+                const response = await fetch('datos_obras.json');
+                if (!response.ok) {
+                    throw new Error('No se pudo cargar el archivo JSON');
+                }
+                const data = await response.json();
+                metadata = data.metadata || {};
+                datosOriginales = data.obras || [];
+                datosFiltrados = [...datosOriginales];
+                mostrarResultados();
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                document.getElementById('results-container').innerHTML = 
+                    '<div class="error">⚠️ Error cargando datos. Asegúrate de que el archivo datos_obras.json está en el mismo directorio.</div>';
+            }
+        }
+        
+        // Función para obtener filtros activos
+        function obtenerFiltrosActivos() {
+            const filtros = {};
+            
+            const titulo = document.getElementById('titulo').value;
+            if (titulo) filtros.titulo = titulo;
+            
+            const tipoObra = document.getElementById('tipo_obra').value;
+            if (tipoObra) filtros.tipo_obra = tipoObra;
+            
+            const fuente = document.getElementById('fuente').value;
+            if (fuente) filtros.fuente = fuente;
+            
+            const autor = document.getElementById('autor').value;
+            if (autor) filtros.autor = autor;
+            
+            const epoca = document.getElementById('epoca').value;
+            if (epoca) filtros.epoca = epoca;
+            
+            const lugar = document.getElementById('lugar').value;
+            if (lugar) filtros.lugar = lugar;
+            
+            const tipoLugar = document.getElementById('tipo_lugar').value;
+            if (tipoLugar) filtros.tipo_lugar = tipoLugar;
+            
+            const region = document.getElementById('region').value;
+            if (region) filtros.region = region;
+            
+            const compania = document.getElementById('compania').value;
+            if (compania) filtros.compania = compania;
+            
+            const fechaDesde = document.getElementById('fecha_desde').value;
+            if (fechaDesde) filtros.fecha_desde = fechaDesde;
+            
+            const fechaHasta = document.getElementById('fecha_hasta').value;
+            if (fechaHasta) filtros.fecha_hasta = fechaHasta;
+            
+            const mecenas = document.getElementById('mecenas').value;
+            if (mecenas) filtros.mecenas = mecenas;
+            
+            return filtros;
+        }
+        
+        // Mostrar filtros activos
+        function mostrarFiltrosActivos() {
+            const filtros = obtenerFiltrosActivos();
+            const display = document.getElementById('active-filters-display');
+            const tagsContainer = document.getElementById('filter-tags');
+            
+            if (Object.keys(filtros).length > 0) {
+                display.style.display = 'block';
+                tagsContainer.innerHTML = '';
+                
+                for (const [key, value] of Object.entries(filtros)) {
+                    const tag = document.createElement('span');
+                    tag.className = 'filter-tag';
+                    tag.textContent = `${key}: ${value}`;
+                    tagsContainer.appendChild(tag);
+                }
+            } else {
+                display.style.display = 'none';
+            }
+        }
+        
+        // Función para aplicar filtros
+        function aplicarFiltros() {
+            const filtros = obtenerFiltrosActivos();
+            
+            datosFiltrados = datosOriginales.filter(obra => {
+                // Filtro de título
+                if (filtros.titulo && !obra.titulo.toLowerCase().includes(filtros.titulo.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de tipo de obra
+                if (filtros.tipo_obra && obra.tipo_obra !== filtros.tipo_obra) {
+                    return false;
+                }
+                
+                // Filtro de fuente
+                if (filtros.fuente && obra.fuente !== filtros.fuente) {
+                    return false;
+                }
+                
+                // Filtro de autor
+                if (filtros.autor && !obra.autor.toLowerCase().includes(filtros.autor.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de época
+                if (filtros.epoca && !obra.epoca.toLowerCase().includes(filtros.epoca.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de lugar
+                if (filtros.lugar && !obra.lugar.toLowerCase().includes(filtros.lugar.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de tipo de lugar
+                if (filtros.tipo_lugar && obra.tipo_lugar !== filtros.tipo_lugar) {
+                    return false;
+                }
+                
+                // Filtro de región
+                if (filtros.region && !obra.region.toLowerCase().includes(filtros.region.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de compañía
+                if (filtros.compania && !obra.compania.toLowerCase().includes(filtros.compania.toLowerCase())) {
+                    return false;
+                }
+                
+                // Filtro de fecha desde
+                if (filtros.fecha_desde && parseInt(obra.fecha_creacion) < parseInt(filtros.fecha_desde)) {
+                    return false;
+                }
+                
+                // Filtro de fecha hasta
+                if (filtros.fecha_hasta && parseInt(obra.fecha_creacion) > parseInt(filtros.fecha_hasta)) {
+                    return false;
+                }
+                
+                // Filtro de mecenas
+                if (filtros.mecenas && !obra.mecenas.toLowerCase().includes(filtros.mecenas.toLowerCase())) {
+                    return false;
+                }
+                
+                return true;
+            });
+            
+            mostrarResultados();
+            mostrarFiltrosActivos();
+        }
+        
+        // Función para mostrar resultados
+        function mostrarResultados() {
+            const container = document.getElementById('results-container');
+            const totalResults = document.getElementById('total-results');
+            
+            totalResults.textContent = datosFiltrados.length;
+            
+            if (datosFiltrados.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron resultados con los filtros seleccionados</div>';
+                return;
+            }
+            
+            let html = '<table class="results-table">';
+            html += '<thead><tr>';
+            html += '<th>ID</th>';
+            html += '<th>Título</th>';
+            html += '<th>Autor</th>';
+            html += '<th>Tipo</th>';
+            html += '<th>Fuente</th>';
+            html += '<th>Lugar</th>';
+            html += '<th>Fecha</th>';
+            html += '<th>Compañía</th>';
+            html += '</tr></thead>';
+            html += '<tbody>';
+            
+            datosFiltrados.forEach(obra => {
+                html += '<tr>';
+                html += `<td>${obra.id}</td>`;
+                html += `<td><strong>${obra.titulo}</strong></td>`;
+                html += `<td>${obra.autor}</td>`;
+                html += `<td>${obra.tipo_obra}</td>`;
+                html += `<td><span class="badge badge-${obra.fuente.toLowerCase()}">${obra.fuente}</span></td>`;
+                html += `<td>${obra.lugar}, ${obra.region}</td>`;
+                html += `<td>${obra.fecha_creacion}</td>`;
+                html += `<td>${obra.compania || '-'}</td>`;
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // Función para limpiar filtros
+        function limpiarFiltros() {
+            document.getElementById('titulo').value = '';
+            document.getElementById('tipo_obra').value = '';
+            document.getElementById('fuente').value = '';
+            document.getElementById('autor').value = '';
+            document.getElementById('epoca').value = '';
+            document.getElementById('lugar').value = '';
+            document.getElementById('tipo_lugar').value = '';
+            document.getElementById('region').value = '';
+            document.getElementById('compania').value = '';
+            document.getElementById('fecha_desde').value = '';
+            document.getElementById('fecha_hasta').value = '';
+            document.getElementById('mecenas').value = '';
+            
+            datosFiltrados = [...datosOriginales];
+            mostrarResultados();
+            mostrarFiltrosActivos();
+        }
+        
+        // Función para exportar comentario como JSON
+        function exportarComentario() {
+            const comentario = document.getElementById('feedback-comment').value;
+            
+            if (!comentario.trim()) {
+                alert('Por favor, escribe un comentario antes de exportar.');
+                return;
+            }
+            
+            const exportData = {
+                metadata: {
+                    fecha_exportacion: new Date().toISOString(),
+                    fecha_legible: new Date().toLocaleString('es-ES'),
+                    version_sistema: metadata.version || '1.0',
+                    total_obras_base_datos: datosOriginales.length
+                },
+                filtros_aplicados: obtenerFiltrosActivos(),
+                estadisticas_busqueda: {
+                    total_resultados: datosFiltrados.length,
+                    porcentaje_del_total: ((datosFiltrados.length / datosOriginales.length) * 100).toFixed(2) + '%'
+                },
+                resultados_obtenidos: datosFiltrados.map(obra => ({
+                    id: obra.id,
+                    titulo: obra.titulo,
+                    autor: obra.autor,
+                    tipo_obra: obra.tipo_obra,
+                    fuente: obra.fuente,
+                    fecha_creacion: obra.fecha_creacion,
+                    lugar: obra.lugar,
+                    region: obra.region
+                })),
+                comentario_investigador: comentario
+            };
+            
+            // Crear archivo para descargar
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `feedback_teatro_${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Archivo descargado correctamente. ¡Gracias por tu feedback!');
+        }
+        
+        // Función para exportar como texto legible
+        function exportarComentarioTexto() {
+            const comentario = document.getElementById('feedback-comment').value;
+            
+            if (!comentario.trim()) {
+                alert('Por favor, escribe un comentario antes de exportar.');
+                return;
+            }
+            
+            const filtros = obtenerFiltrosActivos();
+            
+            let texto = '=' . repeat(80) + '\n';
+            texto += 'FEEDBACK DE INVESTIGADOR - TEATRO ESPAÑOL DEL SIGLO DE ORO\n';
+            texto += '='.repeat(80) + '\n\n';
+            
+            texto += `Fecha: ${new Date().toLocaleString('es-ES')}\n`;
+            texto += `Total de obras en sistema: ${datosOriginales.length}\n`;
+            texto += `Resultados encontrados: ${datosFiltrados.length}\n\n`;
+            
+            texto += '-'.repeat(80) + '\n';
+            texto += 'FILTROS APLICADOS\n';
+            texto += '-'.repeat(80) + '\n';
+            
+            if (Object.keys(filtros).length > 0) {
+                for (const [key, value] of Object.entries(filtros)) {
+                    texto += `  • ${key}: ${value}\n`;
+                }
+            } else {
+                texto += '  (Sin filtros aplicados)\n';
+            }
+            
+            texto += '\n' + '-'.repeat(80) + '\n';
+            texto += 'RESULTADOS OBTENIDOS (' + datosFiltrados.length + ' obras)\n';
+            texto += '-'.repeat(80) + '\n\n';
+            
+            datosFiltrados.forEach((obra, index) => {
+                texto += `${index + 1}. ${obra.titulo}\n`;
+                texto += `   Autor: ${obra.autor}\n`;
+                texto += `   Tipo: ${obra.tipo_obra} | Fuente: ${obra.fuente}\n`;
+                texto += `   Lugar: ${obra.lugar}, ${obra.region}\n`;
+                texto += `   Fecha: ${obra.fecha_creacion}\n\n`;
+            });
+            
+            texto += '='.repeat(80) + '\n';
+            texto += 'COMENTARIO DEL INVESTIGADOR\n';
+            texto += '='.repeat(80) + '\n\n';
+            texto += comentario + '\n\n';
+            texto += '='.repeat(80) + '\n';
+            
+            // Crear archivo para descargar
+            const blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `feedback_teatro_${Date.now()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Archivo de texto descargado correctamente. ¡Gracias por tu feedback!');
+        }
+        
+        // Cargar datos al iniciar
+        window.onload = function() {
+            cargarDatos();
+        };
+    </script>
+</body>
+</html>
+
