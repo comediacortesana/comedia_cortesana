@@ -25,8 +25,8 @@
 const CONFIG = {
   // Configuración de GitHub
   github: {
-    owner: 'comediacortesana',        // usuario/organización de GitHub
-    repo: 'comedia_cortesana',         // nombre del repositorio
+    owner: 'comediacortesana',              // ej: 'ivansimo'
+    repo: 'comedia_cortesana',        // nombre del repositorio
     token: '',                         // MEJOR: usar getGitHubToken()
     branch: 'main'                     // rama donde hacer push
   },
@@ -44,7 +44,7 @@ const CONFIG = {
   paths: {
     csv: 'obras_completas.csv',       // en la raíz del repositorio
     json: 'datos_obras.json',         // en la raíz del repositorio
-    exportBoth: true                   // ⭐ true = exportar CSV y JSON (necesario para el HTML)
+    exportBoth: false                  // true = exportar CSV y JSON
   },
   
   // Opciones avanzadas
@@ -143,108 +143,10 @@ function processSheet(spreadsheet, sheetName) {
   
   log(`✅ ${data.length} filas leídas`, 'INFO');
   
-  // Si exportBoth está activado, exportar ambos formatos
-  if (CONFIG.paths.exportBoth) {
-    log('📤 Exportando ambos formatos: CSV y JSON', 'INFO');
-    
-    const results = [];
-    let hasAnyChanges = false;
-    
-    // 1. Exportar CSV
-    const csvContent = convertToCSV(data);
-    const csvPath = CONFIG.paths.csv || getFilePath(sheetName, 'csv');
-    
-    let csvHasChanges = true;
-    if (CONFIG.options.checkForChanges) {
-      csvHasChanges = checkForChanges(csvContent, csvPath);
-      if (!csvHasChanges) {
-        log('✅ CSV: No hay cambios. Skip push.', 'INFO');
-      } else {
-        log('🔄 CSV: Cambios detectados. Haciendo push...', 'INFO');
-        hasAnyChanges = true;
-      }
-    } else {
-      hasAnyChanges = true;
-    }
-    
-    // Preparar archivos para push conjunto
-    const filesToPush = [];
-    
-    if (csvHasChanges) {
-      filesToPush.push({
-        path: csvPath,
-        content: csvContent,
-        format: 'CSV'
-      });
-    }
-    
-    // 2. Exportar JSON (con metadata para HTML)
-    const jsonContent = convertToJSON(data, true);
-    const jsonPath = CONFIG.paths.json || getFilePath(sheetName, 'json');
-    
-    let jsonHasChanges = true;
-    if (CONFIG.options.checkForChanges) {
-      jsonHasChanges = checkForChanges(jsonContent, jsonPath);
-      if (!jsonHasChanges) {
-        log('✅ JSON: No hay cambios. Skip push.', 'INFO');
-      } else {
-        log('🔄 JSON: Cambios detectados.', 'INFO');
-        hasAnyChanges = true;
-      }
-    } else {
-      hasAnyChanges = true;
-    }
-    
-    if (jsonHasChanges) {
-      filesToPush.push({
-        path: jsonPath,
-        content: jsonContent,
-        format: 'JSON'
-      });
-    }
-    
-    // Si hay archivos para subir, hacer push conjunto en un solo commit
-    if (filesToPush.length > 0) {
-      log(`📤 Subiendo ${filesToPush.length} archivo(s) en un solo commit...`, 'INFO');
-      const pushResult = pushMultipleFilesToGitHub(filesToPush, sheetName);
-      
-      filesToPush.forEach(file => {
-        results.push({
-          format: file.format,
-          path: file.path,
-          commit: pushResult.commit.sha
-        });
-      });
-    } else {
-      // Ningún archivo tiene cambios
-      if (!csvHasChanges) {
-        results.push({ format: 'CSV', path: csvPath, status: 'no_changes' });
-      }
-      if (!jsonHasChanges) {
-        results.push({ format: 'JSON', path: jsonPath, status: 'no_changes' });
-      }
-    }
-    
-    // Si no hay cambios en ninguno, retornar no_changes
-    if (!hasAnyChanges) {
-      return { 
-        sheet: sheetName, 
-        status: 'no_changes', 
-        formats: results 
-      };
-    }
-    
-    return {
-      sheet: sheetName,
-      status: 'success',
-      formats: results
-    };
-  }
-  
-  // Si exportBoth está desactivado, exportar solo el formato configurado
+  // Convertir a formato deseado
   const format = CONFIG.sheets.exportFormat;
   const content = format === 'json' 
-    ? convertToJSON(data, true)  // Siempre incluir metadata para HTML
+    ? convertToJSON(data) 
     : convertToCSV(data);
   
   // Determinar ruta del archivo
@@ -333,18 +235,10 @@ function convertToCSV(data) {
 
 /**
  * Convierte datos a formato JSON
- * Si es para datos_obras.json, incluye metadata para el HTML
  */
-function convertToJSON(data, includeMetadata) {
-  // Valor por defecto si no se especifica
-  if (includeMetadata === undefined) {
-    includeMetadata = true;
-  }
-  
+function convertToJSON(data) {
   if (data.length === 0) {
-    return includeMetadata 
-      ? JSON.stringify({ metadata: {}, obras: [] }, null, 2)
-      : JSON.stringify([]);
+    return JSON.stringify([]);
   }
   
   // Primera fila = encabezados
@@ -354,7 +248,7 @@ function convertToJSON(data, includeMetadata) {
   const rows = data.slice(1);
   
   // Convertir a array de objetos
-  const obras = rows.map(row => {
+  const jsonData = rows.map(row => {
     const obj = {};
     
     headers.forEach((header, index) => {
@@ -381,37 +275,8 @@ function convertToJSON(data, includeMetadata) {
     return obj;
   });
   
-  // Si includeMetadata es true, crear estructura para HTML
-  if (includeMetadata) {
-    const now = new Date();
-    const fecha = Utilities.formatDate(now, 'GMT-5', 'yyyy-MM-dd');
-    const fechaCompleta = now.toISOString();
-    
-    // Extraer fuentes únicas si hay columna 'fuente'
-    const fuentes = [];
-    obras.forEach(obra => {
-      if (obra.fuente && !fuentes.includes(obra.fuente)) {
-        fuentes.push(obra.fuente);
-      }
-    });
-    
-    const resultado = {
-      metadata: {
-        version: '1.0',
-        fecha_actualizacion: fecha,
-        fecha_completa: fechaCompleta,
-        total_obras: obras.length,
-        fuentes: fuentes.length > 0 ? fuentes : ['AMBAS', 'CATCOM', 'FUENTESXI'],
-        descripcion: 'Obras del teatro español del Siglo de Oro - Base de datos DELIA'
-      },
-      obras: obras
-    };
-    
-    return JSON.stringify(resultado, null, 2);
-  }
-  
-  // Si no incluye metadata, retornar array simple
-  return JSON.stringify(obras, null, 2);
+  // Exportar con indentación para legibilidad (o sin ella para tamaño)
+  return JSON.stringify(jsonData, null, 2);
 }
 
 // ============================================================================
@@ -503,201 +368,6 @@ function getFileFromGitHub(filePath) {
   return Utilities.newBlob(
     Utilities.base64Decode(data.content)
   ).getDataAsString();
-}
-
-/**
- * Sube múltiples archivos en un solo commit usando la API de Git de GitHub
- */
-function pushMultipleFilesToGitHub(files, sheetName) {
-  const token = getGitHubToken();
-  const baseUrl = `https://api.github.com/repos/${CONFIG.github.owner}/${CONFIG.github.repo}`;
-  
-  try {
-    // 1. Obtener referencia de la rama
-    const refUrl = `${baseUrl}/git/refs/heads/${CONFIG.github.branch}`;
-    const refResponse = UrlFetchApp.fetch(refUrl, {
-      method: 'get',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-    
-    if (refResponse.getResponseCode() !== 200) {
-      throw new Error(`No se pudo obtener la referencia de la rama: ${refResponse.getResponseCode()}`);
-    }
-    
-    const refData = JSON.parse(refResponse.getContentText());
-    const baseCommitSha = refData.object.sha;
-    
-    // 2. Obtener commit base y su árbol
-    const commitUrl = `${baseUrl}/git/commits/${baseCommitSha}`;
-    const commitResponse = UrlFetchApp.fetch(commitUrl, {
-      method: 'get',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-    
-    const baseCommit = JSON.parse(commitResponse.getContentText());
-    const baseTreeSha = baseCommit.tree.sha;
-    
-    // 3. Obtener árbol base
-    const treeUrl = `${baseUrl}/git/trees/${baseTreeSha}?recursive=1`;
-    const treeResponse = UrlFetchApp.fetch(treeUrl, {
-      method: 'get',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    });
-    
-    const baseTree = JSON.parse(treeResponse.getContentText());
-    
-    // 4. Crear blobs para cada archivo y construir el árbol
-    const tree = [];
-    const existingPaths = {};
-    
-    // Primero, agregar todos los archivos existentes (excepto los que vamos a actualizar)
-    baseTree.tree.forEach(item => {
-      if (item.type === 'blob') {
-        const fileToUpdate = files.find(f => f.path === item.path);
-        if (!fileToUpdate) {
-          // Mantener archivo existente
-          tree.push({
-            path: item.path,
-            mode: item.mode,
-            type: item.type,
-            sha: item.sha
-          });
-          existingPaths[item.path] = true;
-        }
-      }
-    });
-    
-    // 5. Crear blobs para los archivos nuevos/actualizados
-    files.forEach(file => {
-      const contentBase64 = Utilities.base64Encode(file.content);
-      
-      // Crear blob
-      const blobUrl = `${baseUrl}/git/blobs`;
-      const blobResponse = UrlFetchApp.fetch(blobUrl, {
-        method: 'post',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Content-Type': 'application/json'
-        },
-        payload: JSON.stringify({
-          content: contentBase64,
-          encoding: 'base64'
-        })
-      });
-      
-      if (blobResponse.getResponseCode() !== 201) {
-        throw new Error(`Error creando blob para ${file.path}: ${blobResponse.getContentText()}`);
-      }
-      
-      const blobData = JSON.parse(blobResponse.getContentText());
-      
-      // Agregar al árbol
-      tree.push({
-        path: file.path,
-        mode: '100644',
-        type: 'blob',
-        sha: blobData.sha
-      });
-    });
-    
-    // 6. Crear nuevo árbol
-    const newTreeUrl = `${baseUrl}/git/trees`;
-    const newTreeResponse = UrlFetchApp.fetch(newTreeUrl, {
-      method: 'post',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        base_tree: baseTreeSha,
-        tree: tree
-      })
-    });
-    
-    if (newTreeResponse.getResponseCode() !== 201) {
-      throw new Error(`Error creando árbol: ${newTreeResponse.getContentText()}`);
-    }
-    
-    const newTreeData = JSON.parse(newTreeResponse.getContentText());
-    
-    // 7. Crear commit
-    const date = Utilities.formatDate(
-      new Date(),
-      'GMT-5',
-      'yyyy-MM-dd HH:mm:ss'
-    );
-    
-    const fileNames = files.map(f => f.format).join(' y ');
-    const commitMessage = `Actualización automática desde Google Sheets
-
-Hoja: ${sheetName}
-Fecha: ${date}
-Archivos: ${fileNames}
-
-[Automated sync via Apps Script]`;
-    
-    const commitUrl = `${baseUrl}/git/commits`;
-    const commitResponse = UrlFetchApp.fetch(commitUrl, {
-      method: 'post',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        message: commitMessage,
-        tree: newTreeData.sha,
-        parents: [baseCommitSha]
-      })
-    });
-    
-    if (commitResponse.getResponseCode() !== 201) {
-      throw new Error(`Error creando commit: ${commitResponse.getContentText()}`);
-    }
-    
-    const commitData = JSON.parse(commitResponse.getContentText());
-    
-    // 8. Actualizar referencia de la rama
-    const updateRefUrl = `${baseUrl}/git/refs/heads/${CONFIG.github.branch}`;
-    const updateRefResponse = UrlFetchApp.fetch(updateRefUrl, {
-      method: 'patch',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      payload: JSON.stringify({
-        sha: commitData.sha
-      })
-    });
-    
-    if (updateRefResponse.getResponseCode() !== 200) {
-      throw new Error(`Error actualizando referencia: ${updateRefResponse.getContentText()}`);
-    }
-    
-    log(`✅ Push exitoso (${files.length} archivo(s)) en un solo commit: ${commitData.sha}`, 'INFO');
-    
-    return {
-      commit: {
-        sha: commitData.sha
-      }
-    };
-    
-  } catch (error) {
-    log(`❌ Error en push múltiple: ${error.message}`, 'ERROR');
-    throw error;
-  }
 }
 
 /**
@@ -832,8 +502,6 @@ function getGitHubToken() {
 /**
  * Guarda el token de GitHub de forma segura
  * Ejecuta esta función UNA VEZ para guardar el token
- * 
- * MÉTODO 1: Con diálogo (puede quedarse colgado si se ejecuta desde el editor)
  */
 function setGitHubToken() {
   const ui = SpreadsheetApp.getUi();
@@ -855,34 +523,6 @@ function setGitHubToken() {
     PropertiesService.getScriptProperties().setProperty('GITHUB_TOKEN', token);
     ui.alert('✅ Token guardado exitosamente de forma segura.\n\nYa puedes ejecutar syncToGitHub().');
   }
-}
-
-/**
- * MÉTODO 2: Función alternativa que acepta el token directamente
- * ⭐ USAR ESTA SI setGitHubToken() se queda colgado
- * 
- * INSTRUCCIONES:
- * 1. Reemplaza 'TU_TOKEN_AQUI' con tu token real
- * 2. Ejecuta la función
- * 3. Verifica en los logs que diga "✅ Token guardado"
- * 4. ¡Listo! Ya puedes borrar el token del código
- */
-function setupToken() {
-  const token = 'TU_TOKEN_AQUI';  // ⚠️ PEGA TU TOKEN AQUÍ (ej: ghp_xxxxxxxxxxxx)
-  
-  if (!token || token === 'TU_TOKEN_AQUI') {
-    Logger.log('❌ Error: Debes reemplazar TU_TOKEN_AQUI con tu token real');
-    return;
-  }
-  
-  if (!token.startsWith('ghp_') && !token.startsWith('github_pat_')) {
-    Logger.log('❌ Error: Token inválido. Debe empezar con "ghp_" o "github_pat_"');
-    return;
-  }
-  
-  PropertiesService.getScriptProperties().setProperty('GITHUB_TOKEN', token);
-  Logger.log('✅ Token guardado exitosamente de forma segura');
-  Logger.log('✅ Ya puedes ejecutar syncToGitHub()');
 }
 
 /**

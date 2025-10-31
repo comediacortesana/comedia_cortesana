@@ -76,10 +76,10 @@ const ADVANCED_CONFIG = {
   multiSheet: {
     enabled: false,
     mappings: {
-      'Obras Completas': 'filtro_basico/obras_completas.csv',
-      'Autores': 'filtro_basico/autores.csv',
-      'Lugares': 'filtro_basico/lugares.csv',
-      'Representaciones': 'filtro_basico/representaciones.csv'
+      'Obras Completas': 'obras_completas.csv',
+      'Autores': 'autores.csv',
+      'Lugares': 'lugares.csv',
+      'Representaciones': 'representaciones.csv'
     }
   }
 };

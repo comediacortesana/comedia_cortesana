@@ -34,9 +34,20 @@ Sincroniza automáticamente tus Google Sheets con GitHub sin servidores, 100% gr
    - Validación, backups, notificaciones
    - Para usuarios avanzados
 
+6. **[GUIA_PASO_A_PASO_APPS_SCRIPT.md](./GUIA_PASO_A_PASO_APPS_SCRIPT.md)** 🆕 ⭐
+   - **Guía DETALLADA paso a paso**
+   - Instrucciones EXPLÍCITAS con capturas visuales
+   - Cómo acceder a Apps Script en Google Workspace
+   - **Ideal para principiantes**
+
 ---
 
 ## ⚡ Setup Rápido (5 pasos)
+
+**🆕 ¿Primera vez con Apps Script?**  
+👉 Sigue la **[GUIA_PASO_A_PASO_APPS_SCRIPT.md](./GUIA_PASO_A_PASO_APPS_SCRIPT.md)** con instrucciones detalladas
+
+**Si ya conoces Apps Script:**
 
 ### 1. Copiar Script
 

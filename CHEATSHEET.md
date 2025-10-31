@@ -370,10 +370,11 @@ filtro_basico/
 ## 🎓 Orden de Lectura
 
 1. **[SHEETS_GITHUB_SYNC_README.md](./SHEETS_GITHUB_SYNC_README.md)** - Empieza aquí
-2. **[AUTOMATIZACION_SHEETS_GITHUB.md](./AUTOMATIZACION_SHEETS_GITHUB.md)** - Guía paso a paso
-3. **[CONFIGURACION_EJEMPLOS.md](./CONFIGURACION_EJEMPLOS.md)** - Busca tu caso de uso
-4. **[CHEATSHEET.md](./CHEATSHEET.md)** - Referencia rápida (este archivo)
-5. **[FAQ_TROUBLESHOOTING.md](./FAQ_TROUBLESHOOTING.md)** - Solo si hay problemas
+2. **[GUIA_PASO_A_PASO_APPS_SCRIPT.md](./GUIA_PASO_A_PASO_APPS_SCRIPT.md)** - 🆕 Guía DETALLADA (principiantes)
+3. **[AUTOMATIZACION_SHEETS_GITHUB.md](./AUTOMATIZACION_SHEETS_GITHUB.md)** - Guía paso a paso
+4. **[CONFIGURACION_EJEMPLOS.md](./CONFIGURACION_EJEMPLOS.md)** - Busca tu caso de uso
+5. **[CHEATSHEET.md](./CHEATSHEET.md)** - Referencia rápida (este archivo)
+6. **[FAQ_TROUBLESHOOTING.md](./FAQ_TROUBLESHOOTING.md)** - Solo si hay problemas
 
 ---
 

@@ -236,6 +236,7 @@ Sincroniza automáticamente Google Sheets con GitHub sin servidores, **100% grat
 | Archivo | Descripción |
 |---------|-------------|
 | **[SHEETS_GITHUB_SYNC_README.md](./SHEETS_GITHUB_SYNC_README.md)** | 🎯 README principal - **EMPIEZA AQUÍ** |
+| **[GUIA_PASO_A_PASO_APPS_SCRIPT.md](./GUIA_PASO_A_PASO_APPS_SCRIPT.md)** | 📖 **Guía DETALLADA paso a paso** ⭐ NUEVA |
 | **[AUTOMATIZACION_SHEETS_GITHUB.md](./AUTOMATIZACION_SHEETS_GITHUB.md)** | 📚 Guía completa paso a paso |
 | **[CONFIGURACION_EJEMPLOS.md](./CONFIGURACION_EJEMPLOS.md)** | 📝 6 ejemplos de configuración reales |
 | **[FAQ_TROUBLESHOOTING.md](./FAQ_TROUBLESHOOTING.md)** | ❓ Solución a problemas + FAQ |

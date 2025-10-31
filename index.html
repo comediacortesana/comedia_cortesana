@@ -493,14 +493,46 @@
         // Cargar datos desde el JSON del repositorio
         async function cargarDatos() {
             try {
+                console.log('🔍 Intentando cargar datos_obras.json...');
                 const response = await fetch('datos_obras.json');
+                
+                console.log('📡 Respuesta recibida:', response.status, response.statusText);
+                
                 if (!response.ok) {
-                    throw new Error('No se pudo cargar el archivo JSON');
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
+                
                 const data = await response.json();
-                metadata = data.metadata || {};
-                datosOriginales = data.obras || [];
+                console.log('✅ JSON parseado correctamente');
+                console.log('📊 Estructura de datos:', {
+                    tieneMetadata: !!data.metadata,
+                    tieneObras: !!data.obras,
+                    esArray: Array.isArray(data),
+                    totalObras: data.obras ? data.obras.length : (Array.isArray(data) ? data.length : 0)
+                });
+                
+                // Manejar ambos formatos: {metadata, obras} o array directo
+                if (data.metadata && data.obras) {
+                    // Formato nuevo con metadata
+                    metadata = data.metadata;
+                    datosOriginales = data.obras;
+                } else if (Array.isArray(data)) {
+                    // Formato antiguo: array directo
+                    console.warn('⚠️ JSON en formato antiguo (array directo). Se recomienda usar formato con metadata.');
+                    metadata = { total_obras: data.length };
+                    datosOriginales = data;
+                } else {
+                    throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
+                }
+                
                 datosFiltrados = [...datosOriginales];
+                
+                console.log(`✅ ${datosOriginales.length} obras cargadas`);
+                
+                if (datosOriginales.length === 0) {
+                    throw new Error('El archivo JSON está vacío o no contiene obras');
+                }
+                
                 mostrarResultados();
                 
                 // Actualizar subtítulo con info de metadata
@@ -509,11 +541,24 @@
                         `Filtro de obras, autores, representaciones y lugares - ${metadata.total_obras} obras en la base de datos`;
                 }
             } catch (error) {
-                console.error('Error cargando datos:', error);
-                document.getElementById('results-container').innerHTML = 
-                    '<div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 4px; margin: 10px 0;">' +
-                    '⚠️ Error cargando datos. Asegúrate de que el archivo datos_obras.json está en el mismo directorio.' +
-                    '</div>';
+                console.error('❌ Error cargando datos:', error);
+                const errorHtml = `
+                    <div style="background: #ffebee; color: #c62828; padding: 20px; border-radius: 4px; margin: 10px 0; border-left: 4px solid #c62828;">
+                        <h3 style="margin-top: 0;">⚠️ Error cargando datos</h3>
+                        <p><strong>Error:</strong> ${error.message}</p>
+                        <p><strong>Acciones sugeridas:</strong></p>
+                        <ul style="margin: 10px 0; padding-left: 20px;">
+                            <li>Verifica que el archivo <code>datos_obras.json</code> existe en la raíz del repositorio</li>
+                            <li>Abre la consola del navegador (F12) para ver más detalles</li>
+                            <li>Verifica que el formato del JSON es correcto: <code>{metadata: {}, obras: []}</code></li>
+                            <li>Si acabas de actualizar el archivo, espera unos segundos para que GitHub Pages se actualice</li>
+                        </ul>
+                        <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                            URL intentada: <code>${window.location.href}datos_obras.json</code>
+                        </p>
+                    </div>
+                `;
+                document.getElementById('results-container').innerHTML = errorHtml;
             }
         }
         
