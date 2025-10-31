@@ -215,3 +215,64 @@ El JavaScript espera datos en este formato:
 - La búsqueda de texto es case-insensitive
 - Los filtros de fecha funcionan con años (formato numérico)
 
+---
+
+## 🔄 Automatización: Google Sheets → GitHub
+
+### 🚀 Nueva Funcionalidad: Sincronización Automática
+
+Sincroniza automáticamente Google Sheets con GitHub sin servidores, **100% gratuito**.
+
+**Características:**
+- ✅ Detección inteligente de cambios
+- ✅ Exportación automática a CSV/JSON
+- ✅ Push automático a GitHub
+- ✅ Triggers configurables
+- ✅ Backups en Google Drive
+- ✅ Notificaciones (Slack/Discord/Email)
+
+### 📚 Documentación Completa
+
+| Archivo | Descripción |
+|---------|-------------|
+| **[SHEETS_GITHUB_SYNC_README.md](./SHEETS_GITHUB_SYNC_README.md)** | 🎯 README principal - **EMPIEZA AQUÍ** |
+| **[AUTOMATIZACION_SHEETS_GITHUB.md](./AUTOMATIZACION_SHEETS_GITHUB.md)** | 📚 Guía completa paso a paso |
+| **[CONFIGURACION_EJEMPLOS.md](./CONFIGURACION_EJEMPLOS.md)** | 📝 6 ejemplos de configuración reales |
+| **[FAQ_TROUBLESHOOTING.md](./FAQ_TROUBLESHOOTING.md)** | ❓ Solución a problemas + FAQ |
+| **[sheets-github-sync.gs](./sheets-github-sync.gs)** | 💻 Script principal para Apps Script |
+| **[sheets-github-sync-advanced.gs](./sheets-github-sync-advanced.gs)** | 🚀 Script avanzado con extras |
+
+### ⚡ Setup Rápido (5 minutos)
+
+1. **Copiar script:** `sheets-github-sync.gs` → Apps Script
+2. **Configurar:** owner, repo, token, paths
+3. **Token GitHub:** https://github.com/settings/tokens (scope: `repo`)
+4. **Guardar token:** Ejecutar `setGitHubToken()`
+5. **Probar:** Ejecutar `syncToGitHub()`
+6. **Automatizar:** Trigger cada hora
+
+**Ver guía completa:** [AUTOMATIZACION_SHEETS_GITHUB.md](./AUTOMATIZACION_SHEETS_GITHUB.md)
+
+### 🎯 Casos de Uso
+
+- **Edición colaborativa:** Investigadores editan → Sync automático cada hora
+- **Backup diario:** Guarda en Drive + GitHub cada medianoche
+- **Tiempo real:** Push inmediato tras edición (con debounce)
+- **Múltiples hojas:** Obras, Autores, Lugares → archivos separados
+
+**Ver ejemplos completos:** [CONFIGURACION_EJEMPLOS.md](./CONFIGURACION_EJEMPLOS.md)
+
+### 💡 Workflow Automatizado
+
+```
+Google Sheets (edición) 
+    → Apps Script (cada hora)
+    → Detección de cambios
+    → Push a GitHub (si hay cambios)
+    → GitHub Pages actualizado
+    → ¡Usuarios ven cambios!
+```
+
+**Gratis, sin servidores, automático. 🎉**
+
+

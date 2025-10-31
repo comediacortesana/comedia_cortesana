@@ -451,6 +451,7 @@
             <div class="button-group">
                 <button class="btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
                 <button class="btn-secondary" onclick="limpiarFiltros()">Limpiar Todo</button>
+                <button class="btn-success" onclick="exportarCSV()">📊 Exportar a CSV</button>
             </div>
         </div>
         
@@ -816,6 +817,110 @@
                 cerrarModal();
             }
         });
+        
+        // Función para exportar a CSV
+        function exportarCSV() {
+            if (datosFiltrados.length === 0) {
+                alert('No hay datos para exportar. Aplica filtros o carga los datos primero.');
+                return;
+            }
+            
+            // Función helper para escapar valores CSV
+            function escaparCSV(valor) {
+                if (valor === null || valor === undefined) return '';
+                const str = String(valor);
+                // Si contiene coma, comillas o saltos de línea, envolver en comillas
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            // Definir TODAS las columnas (35 campos de obra + 6 de autor)
+            const columnas = [
+                // Básicos
+                'id', 'titulo', 'titulo_original', 'titulo_alternativo',
+                // Autor
+                'autor_nombre', 'autor_nombre_completo', 'autor_fecha_nacimiento', 
+                'autor_fecha_muerte', 'autor_epoca', 'autor_biografia',
+                // Clasificación
+                'tipo_obra', 'genero', 'subgenero', 'tema',
+                // Fuentes
+                'fuente', 'origen_datos', 'pagina_pdf',
+                // Estructura
+                'actos', 'versos', 'idioma',
+                // Fechas
+                'fecha_creacion',
+                // Música
+                'musica_conservada', 'compositor', 'bibliotecas_musica', 'bibliografia_musica',
+                // Mecenazgo
+                'mecenas',
+                // Bibliografía
+                'edicion_principe', 'notas_bibliograficas', 'manuscritos_conocidos', 'ediciones_conocidas',
+                // Notas
+                'notas', 'observaciones',
+                // Representaciones
+                'total_representaciones',
+                // Legacy
+                'lugar', 'region', 'tipo_lugar', 'compania', 'director_compañia'
+            ];
+            
+            // Encabezados en español legibles
+            const encabezados = [
+                'ID', 'Título', 'Título Original', 'Títulos Alternativos',
+                'Autor', 'Autor Nombre Completo', 'Autor Nacimiento', 
+                'Autor Muerte', 'Autor Época', 'Autor Biografía',
+                'Tipo de Obra', 'Género', 'Subgénero', 'Tema',
+                'Fuente', 'Origen Datos', 'Página PDF',
+                'Actos', 'Versos', 'Idioma',
+                'Fecha Creación',
+                'Música Conservada', 'Compositor', 'Bibliotecas Música', 'Bibliografía Música',
+                'Mecenas',
+                'Edición Príncipe', 'Notas Bibliográficas', 'Manuscritos Conocidos', 'Ediciones Conocidas',
+                'Notas', 'Observaciones',
+                'Total Representaciones',
+                'Lugar (1ra rep)', 'Región (1ra rep)', 'Tipo Lugar (1ra rep)', 'Compañía (1ra rep)', 'Director (1ra rep)'
+            ];
+            
+            // Crear CSV
+            let csv = encabezados.join(',') + '\n';
+            
+            datosFiltrados.forEach(obra => {
+                const fila = [];
+                const autor = obra.autor || {};
+                
+                columnas.forEach(col => {
+                    let valor = '';
+                    
+                    // Campos de autor
+                    if (col.startsWith('autor_')) {
+                        const autorCampo = col.replace('autor_', '');
+                        valor = autor[autorCampo] || '';
+                    } else if (col === 'musica_conservada') {
+                        valor = obra[col] ? 'Sí' : 'No';
+                    } else {
+                        valor = obra[col] || '';
+                    }
+                    
+                    fila.push(escaparCSV(valor));
+                });
+                
+                csv += fila.join(',') + '\n';
+            });
+            
+            // Descargar archivo
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `teatro_espanol_${Date.now()}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert(`✅ CSV exportado con ${datosFiltrados.length} obras.\n\n💡 Ahora puedes:\n1. Subir a Google Sheets\n2. Editar colaborativamente\n3. Descargar como CSV\n4. Re-importar a Django`);
+        }
         
         // Cargar datos iniciales
         window.onload = function() {

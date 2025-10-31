@@ -465,3 +465,4 @@ automáticamente el promedio de años entre obras del mismo autor y mecenas."
 ¡Este sistema convierte a tus investigadores en **beta testers activos** y 
 generadores de **requisitos basados en uso real**! 🎭
 
+

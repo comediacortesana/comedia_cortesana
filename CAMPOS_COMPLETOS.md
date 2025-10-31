@@ -293,3 +293,4 @@ Investigador abre obra → Ve modal → Comenta:
 - 6 de Autor  
 - 23 de Representación (cuando existan)
 
+

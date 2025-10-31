@@ -278,3 +278,4 @@ El sitio funciona perfectamente con la URL de GitHub mientras tanto.
 Simplemente haz click en **"Remove"** junto a `comediacortesana.es` y usa:  
 `https://thygolem.github.io/comedia_cortesana/` ✅
 
+
