@@ -565,70 +565,106 @@
         // Función para aplicar filtros
         function aplicarFiltros() {
             datosFiltrados = datosOriginales.filter(obra => {
+                // Función helper para obtener valor de campo con diferentes nombres
+                function getField(obra, ...names) {
+                    for (const name of names) {
+                        if (obra[name] !== undefined && obra[name] !== null && obra[name] !== '') {
+                            return obra[name];
+                        }
+                    }
+                    return null;
+                }
+                
                 // Filtro de título
                 const titulo = document.getElementById('titulo').value.toLowerCase();
-                if (titulo && obra.titulo && !obra.titulo.toString().toLowerCase().includes(titulo)) return false;
+                if (titulo) {
+                    const obraTitulo = getField(obra, 'titulo', 'T?tulo', 'Título');
+                    if (!obraTitulo || !obraTitulo.toString().toLowerCase().includes(titulo)) return false;
+                }
                 
                 // Filtro de tipo de obra
                 const tipoObra = document.getElementById('tipo_obra').value;
-                if (tipoObra && obra.tipo_obra !== tipoObra) return false;
+                if (tipoObra) {
+                    const obraTipo = getField(obra, 'tipo_obra', 'Tipo de Obra');
+                    if (!obraTipo || obraTipo !== tipoObra) return false;
+                }
                 
                 // Filtro de fuente
                 const fuente = document.getElementById('fuente').value;
-                if (fuente && obra.fuente !== fuente) return false;
+                if (fuente) {
+                    const obraFuente = getField(obra, 'fuente', 'Fuente Principal', 'Fuente');
+                    if (!obraFuente || obraFuente !== fuente) return false;
+                }
                 
                 // Filtro de autor (puede ser string, objeto, null o undefined)
                 const autor = document.getElementById('autor').value.toLowerCase();
                 if (autor) {
+                    const obraAutor = getField(obra, 'Autor', 'autor');
                     let autorNombre = '';
-                    if (obra.autor) {
-                        if (typeof obra.autor === 'string') {
-                            autorNombre = obra.autor;
-                        } else if (typeof obra.autor === 'object' && obra.autor.nombre) {
-                            autorNombre = obra.autor.nombre;
+                    if (obraAutor) {
+                        if (typeof obraAutor === 'string') {
+                            autorNombre = obraAutor;
+                        } else if (typeof obraAutor === 'object' && obraAutor.nombre) {
+                            autorNombre = obraAutor.nombre;
                         }
                     }
-                    if (!autorNombre.toLowerCase().includes(autor)) return false;
+                    if (!autorNombre || !autorNombre.toString().toLowerCase().includes(autor)) return false;
                 }
                 
                 // Filtro de época
                 const epoca = document.getElementById('epoca').value.toLowerCase();
                 if (epoca) {
+                    const obraAutor = getField(obra, 'Autor', 'autor');
                     let epocaObra = '';
-                    if (obra.autor && typeof obra.autor === 'object' && obra.autor.epoca) {
-                        epocaObra = obra.autor.epoca;
+                    if (obraAutor && typeof obraAutor === 'object' && obraAutor !== null) {
+                        epocaObra = obraAutor.epoca || obraAutor['?poca'] || obraAutor['Época'] || '';
                     }
-                    if (!epocaObra.toLowerCase().includes(epoca)) return false;
+                    if (!epocaObra || !epocaObra.toString().toLowerCase().includes(epoca)) return false;
                 }
                 
                 // Filtro de lugar
                 const lugar = document.getElementById('lugar').value.toLowerCase();
-                if (lugar && obra.lugar && !obra.lugar.toString().toLowerCase().includes(lugar)) return false;
+                if (lugar) {
+                    const obraLugar = getField(obra, 'lugar', 'Lugar');
+                    if (!obraLugar || !obraLugar.toString().toLowerCase().includes(lugar)) return false;
+                }
                 
                 // Filtro de tipo de lugar
                 const tipoLugar = document.getElementById('tipo_lugar').value;
-                if (tipoLugar && obra.tipo_lugar !== tipoLugar) return false;
+                if (tipoLugar) {
+                    const obraTipoLugar = getField(obra, 'tipo_lugar', 'Tipo de Lugar', 'Tipo Lugar');
+                    if (!obraTipoLugar || obraTipoLugar !== tipoLugar) return false;
+                }
                 
                 // Filtro de región
                 const region = document.getElementById('region').value.toLowerCase();
-                if (region && obra.region && !obra.region.toString().toLowerCase().includes(region)) return false;
+                if (region) {
+                    const obraRegion = getField(obra, 'region', 'Región', 'Región');
+                    if (!obraRegion || !obraRegion.toString().toLowerCase().includes(region)) return false;
+                }
                 
                 // Filtro de compañía
                 const compania = document.getElementById('compania').value.toLowerCase();
-                if (compania && obra.compania && !obra.compania.toString().toLowerCase().includes(compania)) return false;
+                if (compania) {
+                    const obraCompania = getField(obra, 'compania', 'Compañía', 'Compañía');
+                    if (!obraCompania || !obraCompania.toString().toLowerCase().includes(compania)) return false;
+                }
                 
                 // Filtro de fecha desde
                 const fechaDesde = document.getElementById('fecha_desde').value;
-                const fechaObra = obra.fecha_creacion || obra.fecha || '';
-                if (fechaDesde && fechaObra && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
+                const fechaObra = getField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '';
+                if (fechaDesde && fechaObra && !isNaN(parseInt(fechaObra)) && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
                 
                 // Filtro de fecha hasta
                 const fechaHasta = document.getElementById('fecha_hasta').value;
-                if (fechaHasta && fechaObra && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
+                if (fechaHasta && fechaObra && !isNaN(parseInt(fechaObra)) && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
                 
                 // Filtro de mecenas
                 const mecenas = document.getElementById('mecenas').value.toLowerCase();
-                if (mecenas && obra.mecenas && !obra.mecenas.toString().toLowerCase().includes(mecenas)) return false;
+                if (mecenas) {
+                    const obraMecenas = getField(obra, 'mecenas', 'Mecenas');
+                    if (!obraMecenas || !obraMecenas.toString().toLowerCase().includes(mecenas)) return false;
+                }
                 
                 return true;
             });
@@ -662,25 +698,53 @@
             html += '<tbody>';
             
             datosFiltrados.forEach((obra, index) => {
+                // Validación defensiva: asegurar que obra existe
+                if (!obra) {
+                    console.warn('Obra undefined en índice:', index);
+                    return;
+                }
+                
                 // Manejar autor de forma segura (puede ser string, objeto, null o undefined)
+                // También puede venir como "Autor" (string) desde Google Sheets
                 let autorNombre = 'Anónimo';
-                if (obra.autor) {
-                    if (typeof obra.autor === 'string') {
-                        autorNombre = obra.autor;
-                    } else if (typeof obra.autor === 'object' && obra.autor.nombre) {
-                        autorNombre = obra.autor.nombre;
+                try {
+                    const autor = obra.autor || obra.Autor;
+                    if (autor) {
+                        if (typeof autor === 'string') {
+                            autorNombre = autor;
+                        } else if (typeof autor === 'object' && autor !== null) {
+                            // Verificar que nombre existe antes de acceder
+                            autorNombre = (autor.nombre && typeof autor.nombre === 'string') 
+                                ? autor.nombre 
+                                : 'Anónimo';
+                        }
                     }
+                } catch (e) {
+                    console.warn('Error procesando autor:', e, obra);
+                    autorNombre = 'Anónimo';
+                }
+                
+                // Función helper para obtener campo con múltiples variantes de nombre
+                function getObraField(obra, ...fieldNames) {
+                    for (const name of fieldNames) {
+                        const value = obra[name];
+                        if (value !== undefined && value !== null && value !== '') {
+                            return value;
+                        }
+                    }
+                    return null;
                 }
                 
                 // Validar otros campos con valores por defecto
-                const id = obra.id || '-';
-                const titulo = obra.titulo || 'Sin título';
-                const tipoObra = obra.tipo_obra || '-';
-                const fuente = obra.fuente || 'DESCONOCIDA';
-                const lugar = obra.lugar || '';
-                const region = obra.region || '';
-                const fecha = obra.fecha_creacion || obra.fecha || '-';
-                const compania = obra.compania || '-';
+                // Manejar diferentes nombres de campos (mayúsculas/minúsculas, espacios)
+                const id = getObraField(obra, 'id', 'ID') || '-';
+                const titulo = getObraField(obra, 'titulo', 'Título', 'T?tulo') || 'Sin título';
+                const tipoObra = getObraField(obra, 'tipo_obra', 'Tipo de Obra') || '-';
+                const fuente = getObraField(obra, 'fuente', 'Fuente Principal', 'Fuente') || 'DESCONOCIDA';
+                const lugar = getObraField(obra, 'lugar', 'Lugar') || '';
+                const region = getObraField(obra, 'region', 'Región') || '';
+                const fecha = getObraField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '-';
+                const compania = getObraField(obra, 'compania', 'Compañía') || '';
                 
                 // Clase CSS para fuente (con validación)
                 const fuenteClass = fuente ? fuente.toLowerCase() : 'desconocida';
