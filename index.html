@@ -567,7 +567,7 @@
             datosFiltrados = datosOriginales.filter(obra => {
                 // Filtro de título
                 const titulo = document.getElementById('titulo').value.toLowerCase();
-                if (titulo && !obra.titulo.toLowerCase().includes(titulo)) return false;
+                if (titulo && obra.titulo && !obra.titulo.toString().toLowerCase().includes(titulo)) return false;
                 
                 // Filtro de tipo de obra
                 const tipoObra = document.getElementById('tipo_obra').value;
@@ -577,19 +577,33 @@
                 const fuente = document.getElementById('fuente').value;
                 if (fuente && obra.fuente !== fuente) return false;
                 
-                // Filtro de autor (ahora es objeto)
+                // Filtro de autor (puede ser string, objeto, null o undefined)
                 const autor = document.getElementById('autor').value.toLowerCase();
-                const autorNombre = typeof obra.autor === 'string' ? obra.autor : (obra.autor.nombre || '');
-                if (autor && !autorNombre.toLowerCase().includes(autor)) return false;
+                if (autor) {
+                    let autorNombre = '';
+                    if (obra.autor) {
+                        if (typeof obra.autor === 'string') {
+                            autorNombre = obra.autor;
+                        } else if (typeof obra.autor === 'object' && obra.autor.nombre) {
+                            autorNombre = obra.autor.nombre;
+                        }
+                    }
+                    if (!autorNombre.toLowerCase().includes(autor)) return false;
+                }
                 
                 // Filtro de época
                 const epoca = document.getElementById('epoca').value.toLowerCase();
-                const epocaObra = typeof obra.autor === 'string' ? '' : (obra.autor.epoca || '');
-                if (epoca && !epocaObra.toLowerCase().includes(epoca)) return false;
+                if (epoca) {
+                    let epocaObra = '';
+                    if (obra.autor && typeof obra.autor === 'object' && obra.autor.epoca) {
+                        epocaObra = obra.autor.epoca;
+                    }
+                    if (!epocaObra.toLowerCase().includes(epoca)) return false;
+                }
                 
                 // Filtro de lugar
                 const lugar = document.getElementById('lugar').value.toLowerCase();
-                if (lugar && !obra.lugar.toLowerCase().includes(lugar)) return false;
+                if (lugar && obra.lugar && !obra.lugar.toString().toLowerCase().includes(lugar)) return false;
                 
                 // Filtro de tipo de lugar
                 const tipoLugar = document.getElementById('tipo_lugar').value;
@@ -597,24 +611,24 @@
                 
                 // Filtro de región
                 const region = document.getElementById('region').value.toLowerCase();
-                if (region && !obra.region.toLowerCase().includes(region)) return false;
+                if (region && obra.region && !obra.region.toString().toLowerCase().includes(region)) return false;
                 
                 // Filtro de compañía
                 const compania = document.getElementById('compania').value.toLowerCase();
-                if (compania && !obra.compania.toLowerCase().includes(compania)) return false;
+                if (compania && obra.compania && !obra.compania.toString().toLowerCase().includes(compania)) return false;
                 
                 // Filtro de fecha desde
                 const fechaDesde = document.getElementById('fecha_desde').value;
                 const fechaObra = obra.fecha_creacion || obra.fecha || '';
-                if (fechaDesde && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
+                if (fechaDesde && fechaObra && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
                 
                 // Filtro de fecha hasta
                 const fechaHasta = document.getElementById('fecha_hasta').value;
-                if (fechaHasta && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
+                if (fechaHasta && fechaObra && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
                 
                 // Filtro de mecenas
                 const mecenas = document.getElementById('mecenas').value.toLowerCase();
-                if (mecenas && !obra.mecenas.toLowerCase().includes(mecenas)) return false;
+                if (mecenas && obra.mecenas && !obra.mecenas.toString().toLowerCase().includes(mecenas)) return false;
                 
                 return true;
             });
@@ -648,18 +662,38 @@
             html += '<tbody>';
             
             datosFiltrados.forEach((obra, index) => {
-                // Manejar autor (puede ser string u objeto)
-                const autorNombre = typeof obra.autor === 'string' ? obra.autor : (obra.autor.nombre || 'Anónimo');
+                // Manejar autor de forma segura (puede ser string, objeto, null o undefined)
+                let autorNombre = 'Anónimo';
+                if (obra.autor) {
+                    if (typeof obra.autor === 'string') {
+                        autorNombre = obra.autor;
+                    } else if (typeof obra.autor === 'object' && obra.autor.nombre) {
+                        autorNombre = obra.autor.nombre;
+                    }
+                }
+                
+                // Validar otros campos con valores por defecto
+                const id = obra.id || '-';
+                const titulo = obra.titulo || 'Sin título';
+                const tipoObra = obra.tipo_obra || '-';
+                const fuente = obra.fuente || 'DESCONOCIDA';
+                const lugar = obra.lugar || '';
+                const region = obra.region || '';
+                const fecha = obra.fecha_creacion || obra.fecha || '-';
+                const compania = obra.compania || '-';
+                
+                // Clase CSS para fuente (con validación)
+                const fuenteClass = fuente ? fuente.toLowerCase() : 'desconocida';
                 
                 html += `<tr onclick="mostrarDetalleObra(${index})">`;
-                html += `<td>${obra.id}</td>`;
-                html += `<td><strong>${obra.titulo}</strong></td>`;
+                html += `<td>${id}</td>`;
+                html += `<td><strong>${titulo}</strong></td>`;
                 html += `<td>${autorNombre}</td>`;
-                html += `<td>${obra.tipo_obra}</td>`;
-                html += `<td><span class="badge badge-${obra.fuente.toLowerCase()}">${obra.fuente}</span></td>`;
-                html += `<td>${obra.lugar || '-'}${obra.region ? ', ' + obra.region : ''}</td>`;
-                html += `<td>${obra.fecha_creacion || obra.fecha || '-'}</td>`;
-                html += `<td>${obra.compania || '-'}</td>`;
+                html += `<td>${tipoObra}</td>`;
+                html += `<td><span class="badge badge-${fuenteClass}">${fuente}</span></td>`;
+                html += `<td>${lugar}${region ? (lugar ? ', ' : '') + region : ''}</td>`;
+                html += `<td>${fecha}</td>`;
+                html += `<td>${compania}</td>`;
                 html += '</tr>';
             });
             
@@ -733,7 +767,15 @@
             html += '<div class="field-section">';
             html += '<div class="section-title">✍️ Información del Autor</div>';
             html += '<div class="field-grid">';
-            const autor = obra.autor || {};
+            // Manejar autor de forma segura (puede ser string, objeto, null o undefined)
+            let autor = {};
+            if (obra.autor) {
+                if (typeof obra.autor === 'string') {
+                    autor = { nombre: obra.autor };
+                } else if (typeof obra.autor === 'object') {
+                    autor = obra.autor;
+                }
+            }
             html += renderField('Nombre del Autor', autor.nombre || 'Anónimo', '👤');
             html += renderField('Nombre Completo', autor.nombre_completo, '📛');
             html += renderField('Fecha de Nacimiento', autor.fecha_nacimiento, '🎂');
