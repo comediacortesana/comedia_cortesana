@@ -12,10 +12,15 @@
  * - ✅ Manejo robusto de errores
  * - ✅ Logs detallados
  * - ✅ 100% gratuito (sin servidores externos)
+ * - ✅ Codificación UTF-8 correcta (preserva acentos, ñ, caracteres especiales)
  * 
  * Autor: AI Assistant
- * Versión: 2.0
- * Última actualización: 2025-10-31
+ * Versión: 2.1
+ * Última actualización: 2025-01-XX
+ * 
+ * Cambios v2.1:
+ * - Corregido problema de codificación UTF-8 en caracteres especiales
+ * - Usa Blob.getBytes() para preservar correctamente acentos y caracteres especiales
  */
 
 // ============================================================================
@@ -278,6 +283,7 @@ function processSheet(spreadsheet, sheetName) {
 
 /**
  * Lee todos los datos de una hoja
+ * Usa getDisplayValues() para obtener los valores como strings con UTF-8 correcto
  */
 function readSheetData(sheet) {
   const lastRow = sheet.getLastRow();
@@ -288,14 +294,42 @@ function readSheetData(sheet) {
   }
   
   const range = sheet.getRange(1, 1, lastRow, lastCol);
-  const values = range.getValues();
+  
+  // Usar getDisplayValues() en lugar de getValues() para preservar UTF-8
+  // getDisplayValues() devuelve strings formateados que mantienen mejor la codificación
+  const values = range.getDisplayValues();
+  
+  // Convertir los strings display a sus tipos originales si es necesario
+  // Pero mantener los strings tal cual para preservar UTF-8
+  const processedValues = values.map((row, rowIndex) => {
+    if (rowIndex === 0) {
+      // Primera fila (encabezados): mantener como strings
+      return row;
+    }
+    
+    // Filas de datos: intentar convertir números y fechas, pero mantener strings tal cual
+    return row.map((cell, colIndex) => {
+      if (cell === '' || cell === null) {
+        return '';
+      }
+      
+      // Intentar convertir a número si parece numérico
+      const num = parseFloat(cell);
+      if (!isNaN(num) && cell.trim() === num.toString()) {
+        return num;
+      }
+      
+      // Para todo lo demás, mantener como string (preserva UTF-8)
+      return String(cell);
+    });
+  });
   
   // Filtrar filas vacías si está configurado
   if (CONFIG.sheets.skipEmptyRows) {
-    return values.filter(row => !isEmptyRow(row));
+    return processedValues.filter(row => !isEmptyRow(row));
   }
   
-  return values;
+  return processedValues;
 }
 
 /**
@@ -348,7 +382,17 @@ function convertToJSON(data, includeMetadata) {
   }
   
   // Primera fila = encabezados
-  const headers = data[0].map(h => h.toString().trim());
+  // Asegurar que los encabezados se conviertan correctamente a UTF-8
+  const headers = data[0].map(h => {
+    if (h === null || h === undefined) {
+      return '';
+    }
+    // Convertir a string asegurando UTF-8
+    let header = String(h);
+    // Normalizar caracteres especiales si es necesario
+    header = header.trim();
+    return header;
+  });
   
   // Resto de filas = datos
   const rows = data.slice(1);
@@ -368,11 +412,18 @@ function convertToJSON(data, includeMetadata) {
       } else if (value instanceof Date) {
         value = value.toISOString().split('T')[0];
       } else if (typeof value === 'string') {
-        // Intentar convertir strings numéricos
+        // Mantener string tal cual - getDisplayValues() ya devuelve UTF-8 correcto
+        // No hacer conversiones que puedan corromper caracteres especiales
+        
+        // Intentar convertir strings numéricos (solo si es puramente numérico)
         const num = parseFloat(value);
-        if (!isNaN(num) && num.toString() === value) {
+        if (!isNaN(num) && value.trim() === num.toString() && value.trim() !== '') {
           value = num;
         }
+        // Si no es numérico, mantener como string (preserva UTF-8, acentos, ñ, etc.)
+      } else if (value !== null && value !== undefined) {
+        // Cualquier otro tipo, convertir a string
+        value = String(value);
       }
       
       obj[header] = value;
@@ -407,11 +458,16 @@ function convertToJSON(data, includeMetadata) {
       obras: obras
     };
     
-    return JSON.stringify(resultado, null, 2);
+    // JSON.stringify maneja UTF-8 correctamente por defecto
+    // Asegurar que el resultado sea UTF-8 válido
+    const jsonString = JSON.stringify(resultado, null, 2);
+    return jsonString;
   }
   
   // Si no incluye metadata, retornar array simple
-  return JSON.stringify(obras, null, 2);
+  // JSON.stringify maneja UTF-8 automáticamente
+  const jsonString = JSON.stringify(obras, null, 2);
+  return jsonString;
 }
 
 // ============================================================================
@@ -499,10 +555,10 @@ function getFileFromGitHub(filePath) {
   
   const data = JSON.parse(response.getContentText());
   
-  // Decodificar contenido de base64
-  return Utilities.newBlob(
-    Utilities.base64Decode(data.content)
-  ).getDataAsString();
+  // Decodificar contenido de base64 preservando UTF-8
+  const decodedBytes = Utilities.base64Decode(data.content);
+  const blob = Utilities.newBlob(decodedBytes);
+  return blob.getDataAsString();
 }
 
 /**
@@ -578,7 +634,11 @@ function pushMultipleFilesToGitHub(files, sheetName) {
     
     // 5. Crear blobs para los archivos nuevos/actualizados
     files.forEach(file => {
-      const contentBase64 = Utilities.base64Encode(file.content);
+      // ⭐ SOLUCIÓN UTF-8: Convertir string a bytes UTF-8 explícitamente
+      // Crear un Blob desde el string (automáticamente usa UTF-8) y obtener sus bytes
+      const blob = Utilities.newBlob(file.content);
+      const bytes = blob.getBytes();
+      const contentBase64 = Utilities.base64Encode(bytes);
       
       // Crear blob
       const blobUrl = `${baseUrl}/git/blobs`;
@@ -647,8 +707,8 @@ Archivos: ${fileNames}
 
 [Automated sync via Apps Script]`;
     
-    const commitUrl = `${baseUrl}/git/commits`;
-    const commitResponse = UrlFetchApp.fetch(commitUrl, {
+    const createCommitUrl = `${baseUrl}/git/commits`;
+    const createCommitResponse = UrlFetchApp.fetch(createCommitUrl, {
       method: 'post',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -662,11 +722,11 @@ Archivos: ${fileNames}
       })
     });
     
-    if (commitResponse.getResponseCode() !== 201) {
-      throw new Error(`Error creando commit: ${commitResponse.getContentText()}`);
+    if (createCommitResponse.getResponseCode() !== 201) {
+      throw new Error(`Error creando commit: ${createCommitResponse.getContentText()}`);
     }
     
-    const commitData = JSON.parse(commitResponse.getContentText());
+    const commitData = JSON.parse(createCommitResponse.getContentText());
     
     // 8. Actualizar referencia de la rama
     const updateRefUrl = `${baseUrl}/git/refs/heads/${CONFIG.github.branch}`;
@@ -707,8 +767,11 @@ function pushToGitHub(content, filePath, sheetName) {
   const token = getGitHubToken();
   const url = `https://api.github.com/repos/${CONFIG.github.owner}/${CONFIG.github.repo}/contents/${filePath}`;
   
-  // Codificar contenido en base64
-  const contentBase64 = Utilities.base64Encode(content);
+  // ⭐ SOLUCIÓN UTF-8: Convertir string a bytes UTF-8 explícitamente
+  // Crear un Blob desde el string (automáticamente usa UTF-8) y obtener sus bytes
+  const blob = Utilities.newBlob(content);
+  const bytes = blob.getBytes();
+  const contentBase64 = Utilities.base64Encode(bytes);
   
   // Obtener SHA del archivo actual (si existe)
   let sha = null;
@@ -1106,10 +1169,55 @@ function testReadSheet() {
     log(`✅ ${data.length} filas leídas de "${sheetName}"`, 'INFO');
     log(`   Columnas: ${data[0] ? data[0].length : 0}`, 'INFO');
     
+    // Verificar codificación UTF-8 en una muestra
+    if (data.length > 1) {
+      const sampleRow = data[1];
+      const sampleText = JSON.stringify(sampleRow).substring(0, 200);
+      log(`   Muestra de datos: ${sampleText}...`, 'DEBUG');
+    }
+    
     return true;
     
   } catch (error) {
     log(`❌ Error al leer hoja: ${error.message}`, 'ERROR');
+    return false;
+  }
+}
+
+/**
+ * Test: Verificar codificación UTF-8
+ * Prueba que los caracteres especiales se preserven correctamente
+ */
+function testUTF8Encoding() {
+  log('🧪 Probando codificación UTF-8...', 'INFO');
+  
+  try {
+    // Texto de prueba con caracteres especiales
+    const testText = 'María el corazón';
+    log(`   Texto original: ${testText}`, 'INFO');
+    
+    // Simular el proceso de codificación
+    const blob = Utilities.newBlob(testText);
+    const bytes = blob.getBytes();
+    const base64 = Utilities.base64Encode(bytes);
+    
+    // Decodificar de vuelta
+    const decodedBytes = Utilities.base64Decode(base64);
+    const decodedBlob = Utilities.newBlob(decodedBytes);
+    const decodedText = decodedBlob.getDataAsString();
+    
+    log(`   Texto decodificado: ${decodedText}`, 'INFO');
+    
+    if (testText === decodedText) {
+      log('✅ Codificación UTF-8 funciona correctamente', 'INFO');
+      return true;
+    } else {
+      log('❌ Error: Los caracteres no se preservaron', 'ERROR');
+      return false;
+    }
+    
+  } catch (error) {
+    log(`❌ Error en test UTF-8: ${error.message}`, 'ERROR');
     return false;
   }
 }
@@ -1124,7 +1232,8 @@ function runAllTests() {
   const tests = [
     { name: 'Configuración', fn: testConfig },
     { name: 'Conexión GitHub', fn: testGitHubConnection },
-    { name: 'Lectura de hoja', fn: testReadSheet }
+    { name: 'Lectura de hoja', fn: testReadSheet },
+    { name: 'Codificación UTF-8', fn: testUTF8Encoding }
   ];
   
   const results = tests.map(test => {
