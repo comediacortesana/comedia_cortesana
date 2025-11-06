@@ -441,6 +441,7 @@
             <div id="user-ui" style="display: none;">
                 <span>👤 <strong id="user-name">Usuario</strong></span>
                 <button onclick="logout()" style="margin-left: 10px; padding: 8px 15px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Salir</button>
+                <!-- Botón admin se añadirá aquí dinámicamente -->
             </div>
         </div>
         
@@ -590,21 +591,177 @@
         const SUPABASE_URL = 'https://kyxxpoewwjixbpcezays.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5eHhwb2V3d2ppeGJwY2V6YXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MjAzMDksImV4cCI6MjA3Nzk5NjMwOX0.sIw7flVHQ00r3VwrhU7tvohVzKpb7LGtXVzG43FAP10';
         
-        // Inicializar cliente Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Inicializar cliente Supabase con configuración de persistencia
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true,
+                storage: window.localStorage
+            }
+        });
+        
+        // Verificar que Supabase se inicializó correctamente
+        if (!supabase) {
+            console.error('❌ Error: No se pudo inicializar Supabase');
+        } else {
+            console.log('✅ Supabase inicializado correctamente');
+        }
         
         // Estado de autenticación
         let usuarioActual = null;
         let esAdmin = false;
+        let logoutExplicito = false; // Bandera para saber si el usuario hizo logout explícitamente
+        
+        // IMPORTANTE: Registrar onAuthStateChange INMEDIATAMENTE después de inicializar Supabase
+        // Esto asegura que capture el evento INITIAL_SESSION
+        let sesionVerificada = false;
+        
+        // Forzar verificación inicial de sesión después de registrar el listener
+        setTimeout(async () => {
+            try {
+                console.log('🔍 Forzando verificación inicial de sesión...');
+                
+                // Primero verificar localStorage directamente como fallback
+                // PERO solo si no hubo logout explícito (guardado en sessionStorage)
+                const logoutExplicitoGuardado = sessionStorage.getItem('logout_explicito');
+                if (logoutExplicitoGuardado === 'true') {
+                    console.log('🚫 Logout explícito detectado, no restaurando sesión de localStorage');
+                    sessionStorage.removeItem('logout_explicito'); // Limpiar después de usar
+                    mostrarUILogin();
+                    sesionVerificada = true;
+                    return;
+                }
+                
+                // Supabase guarda la sesión con una clave específica
+                const supabaseKeys = Object.keys(localStorage).filter(key => 
+                    key.startsWith('sb-') && key.includes('auth-token')
+                );
+                
+                console.log('🔑 Claves de Supabase en localStorage:', supabaseKeys);
+                
+                if (supabaseKeys.length > 0) {
+                    const storageKey = supabaseKeys[0];
+                    const storedSession = localStorage.getItem(storageKey);
+                    
+                    if (storedSession) {
+                        try {
+                            const sessionData = JSON.parse(storedSession);
+                            console.log('📦 Sesión encontrada en localStorage');
+                            
+                            // Verificar si la sesión tiene los datos necesarios
+                            if (sessionData && (sessionData.access_token || sessionData.session)) {
+                                const session = sessionData.session || sessionData;
+                                
+                                if (session.user) {
+                                    console.log('✅ Usando sesión de localStorage:', session.user.email);
+                                    usuarioActual = session.user;
+                                    await mostrarUIUsuario();
+                                    sesionVerificada = true;
+                                    return;
+                                }
+                            }
+                        } catch (e) {
+                            console.warn('⚠️ Error parseando sesión de localStorage:', e);
+                        }
+                    }
+                }
+                
+                // Si no hay en localStorage, intentar getSession con timeout
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), 1000)
+                );
+                
+                const sessionPromise = supabase.auth.getSession();
+                
+                const { data: { session }, error } = await Promise.race([
+                    sessionPromise,
+                    timeoutPromise
+                ]).catch(err => {
+                    console.warn('⚠️ Timeout en verificación forzada:', err.message);
+                    return { data: { session: null }, error: err };
+                });
+                
+                if (error) {
+                    console.warn('⚠️ Error obteniendo sesión inicial:', error.message || error);
+                    mostrarUILogin();
+                    sesionVerificada = true;
+                } else if (session) {
+                    console.log('✅ Sesión encontrada al forzar verificación:', session.user.email);
+                    usuarioActual = session.user;
+                    await mostrarUIUsuario();
+                    sesionVerificada = true;
+                } else {
+                    console.log('❌ No hay sesión al forzar verificación');
+                    mostrarUILogin();
+                    sesionVerificada = true;
+                }
+            } catch (err) {
+                console.error('❌ Error forzando verificación:', err);
+                mostrarUILogin();
+                sesionVerificada = true;
+            }
+        }, 100);
+        
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('🔄 Cambio de estado de auth:', event, session ? `Usuario: ${session.user.email}` : 'Sin sesión');
+            sesionVerificada = true;
+            
+            try {
+                if (event === 'SIGNED_IN' && session) {
+                    console.log('✅ Usuario inició sesión:', session.user.email);
+                    usuarioActual = session.user;
+                    await mostrarUIUsuario();
+                } else if (event === 'SIGNED_OUT') {
+                    console.log('👋 Usuario cerró sesión');
+                    usuarioActual = null;
+                    esAdmin = false;
+                    mostrarUILogin();
+                } else if (event === 'TOKEN_REFRESHED' && session) {
+                    console.log('🔄 Token refrescado');
+                    usuarioActual = session.user;
+                    await mostrarUIUsuario();
+                } else if (event === 'USER_UPDATED' && session) {
+                    console.log('👤 Usuario actualizado');
+                    usuarioActual = session.user;
+                    await mostrarUIUsuario();
+                } else if (event === 'INITIAL_SESSION') {
+                    console.log('📋 Sesión inicial detectada');
+                    if (session) {
+                        console.log('✅ Hay sesión guardada:', session.user.email);
+                        usuarioActual = session.user;
+                        await mostrarUIUsuario();
+                    } else {
+                        console.log('❌ No hay sesión guardada');
+                        mostrarUILogin();
+                    }
+                }
+            } catch (error) {
+                console.error('❌ Error en onAuthStateChange:', error);
+                mostrarUILogin();
+            }
+        });
+        
+        console.log('👂 Listener de onAuthStateChange registrado');
+        
+        // Timeout de seguridad: si después de 3 segundos no hay evento INITIAL_SESSION, mostrar login
+        setTimeout(() => {
+            if (!sesionVerificada && !usuarioActual) {
+                console.warn('⚠️ No se recibió INITIAL_SESSION después de 3 segundos, mostrando login por defecto');
+                mostrarUILogin();
+            }
+        }, 3000);
         
         // Verificar si el usuario es admin
         async function verificarEsAdmin() {
             if (!usuarioActual) {
+                console.log('❌ No hay usuario actual');
                 esAdmin = false;
                 return false;
             }
             
             try {
+                console.log('🔍 Verificando si es admin para usuario:', usuarioActual.id);
                 const { data, error } = await supabase
                     .from('perfiles_usuarios')
                     .select('rol')
@@ -612,15 +769,17 @@
                     .maybeSingle();
                 
                 if (error) {
-                    console.error('Error verificando admin:', error);
+                    console.error('❌ Error verificando admin:', error);
                     esAdmin = false;
                     return false;
                 }
                 
+                console.log('📊 Datos del perfil:', data);
                 esAdmin = data && data.rol === 'admin';
+                console.log('✅ Es admin?', esAdmin);
                 return esAdmin;
             } catch (error) {
-                console.error('Error en verificarEsAdmin:', error);
+                console.error('❌ Error en verificarEsAdmin:', error);
                 esAdmin = false;
                 return false;
             }
@@ -630,28 +789,64 @@
         // FUNCIONES DE AUTENTICACIÓN
         // ============================================================================
         
-        // Verificar sesión al cargar
+        // Verificar sesión al cargar (solo como fallback, onAuthStateChange es el principal)
         async function verificarSesion() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                usuarioActual = session.user;
-                await mostrarUIUsuario();
-            } else {
-                mostrarUILogin();
+            // Si ya hay un usuario actual (establecido por onAuthStateChange), no hacer nada
+            if (usuarioActual) {
+                console.log('✅ Ya hay usuario actual, saltando verificarSesion');
+                return;
+            }
+            
+            try {
+                console.log('🔐 Verificando sesión (fallback)...');
+                
+                // Verificar que supabase esté disponible
+                if (!supabase || !supabase.auth) {
+                    console.error('❌ Supabase no está disponible');
+                    if (!usuarioActual) {
+                        mostrarUILogin();
+                    }
+                    return;
+                }
+                
+                // Intentar getSession con timeout muy corto (1 segundo)
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), 1000)
+                );
+                
+                try {
+                    const { data: { session }, error } = await Promise.race([
+                        supabase.auth.getSession(),
+                        timeoutPromise
+                    ]);
+                    
+                    if (error) {
+                        console.warn('⚠️ Error obteniendo sesión:', error.message);
+                        return;
+                    }
+                    
+                    if (session && !usuarioActual) {
+                        console.log('✅ Sesión encontrada (fallback):', session.user.email);
+                        usuarioActual = session.user;
+                        await mostrarUIUsuario();
+                    } else if (!session && !usuarioActual) {
+                        console.log('❌ No hay sesión activa');
+                        mostrarUILogin();
+                    }
+                } catch (timeoutError) {
+                    console.warn('⚠️ getSession timeout (normal, onAuthStateChange manejará la sesión)');
+                    // No hacer nada, onAuthStateChange ya habrá manejado la sesión
+                }
+            } catch (error) {
+                console.error('❌ Error en verificarSesion:', error);
+                if (!usuarioActual) {
+                    mostrarUILogin();
+                }
             }
         }
         
-        // Escuchar cambios de autenticación
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN') {
-                usuarioActual = session.user;
-                await mostrarUIUsuario();
-            } else if (event === 'SIGNED_OUT') {
-                usuarioActual = null;
-                esAdmin = false;
-                mostrarUILogin();
-            }
-        });
+        // Escuchar cambios de autenticación (método principal y más confiable)
+        // NOTA: El listener ya está registrado arriba, esta sección es solo para referencia
         
         // Login con email/password
         async function login(email, password) {
@@ -776,9 +971,82 @@
         
         // Logout
         async function logout() {
-            await supabase.auth.signOut();
-            usuarioActual = null;
-            mostrarUILogin();
+            console.log('🚪 Cerrando sesión...');
+            logoutExplicito = true; // Marcar que el usuario hizo logout explícitamente
+            sessionStorage.setItem('logout_explicito', 'true'); // Guardar en sessionStorage para que persista al recargar
+            
+            try {
+                // Limpiar localStorage primero para evitar que se restaure la sesión
+                const supabaseKeys = Object.keys(localStorage).filter(key => 
+                    key.startsWith('sb-') && key.includes('auth-token')
+                );
+                
+                console.log('🗑️ Limpiando claves de localStorage:', supabaseKeys);
+                supabaseKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                });
+                
+                // También limpiar otras posibles claves de Supabase
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('sb-')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                
+                // Añadir timeout para evitar que se cuelgue
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout en logout')), 3000)
+                );
+                
+                const signOutPromise = supabase.auth.signOut();
+                
+                const { error } = await Promise.race([
+                    signOutPromise,
+                    timeoutPromise
+                ]).catch(err => {
+                    console.warn('⚠️ Timeout en logout:', err.message);
+                    // Aunque haya timeout, ya limpiamos localStorage
+                    return { error: null };
+                });
+                
+                if (error) {
+                    console.error('❌ Error al cerrar sesión:', error);
+                    // Ya limpiamos localStorage, así que continuar
+                } else {
+                    console.log('✅ Sesión cerrada exitosamente');
+                }
+                
+                // Siempre forzar el logout localmente
+                usuarioActual = null;
+                esAdmin = false;
+                mostrarUILogin();
+                
+                // Verificar que se limpió
+                const remainingKeys = Object.keys(localStorage).filter(key => 
+                    key.startsWith('sb-') && key.includes('auth-token')
+                );
+                if (remainingKeys.length > 0) {
+                    console.warn('⚠️ Aún quedan claves de Supabase en localStorage:', remainingKeys);
+                    // Limpiarlas de nuevo
+                    remainingKeys.forEach(key => localStorage.removeItem(key));
+                }
+                
+            } catch (error) {
+                console.error('❌ Error en logout:', error);
+                // Forzar logout localmente incluso si hay error
+                usuarioActual = null;
+                esAdmin = false;
+                
+                // Limpiar localStorage de todas formas
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('sb-')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                
+                mostrarUILogin();
+                alert('Sesión cerrada. Si hay problemas, recarga la página.');
+            }
         }
         
         // Crear perfil de usuario
@@ -841,14 +1109,47 @@
         
         // Funciones de UI
         async function mostrarUIUsuario() {
-            document.getElementById('login-ui').style.display = 'none';
-            document.getElementById('user-ui').style.display = 'block';
-            await cargarPerfilUsuario();
-            await verificarEsAdmin();
-            if (esAdmin) {
-                mostrarBotonAdmin();
-            } else {
-                ocultarBotonAdmin();
+            try {
+                console.log('👤 Mostrando UI de usuario...');
+                const loginUI = document.getElementById('login-ui');
+                const userUI = document.getElementById('user-ui');
+                
+                if (!loginUI || !userUI) {
+                    console.error('❌ No se encontraron los elementos UI');
+                    return;
+                }
+                
+                loginUI.style.display = 'none';
+                userUI.style.display = 'block';
+                
+                console.log('📋 Cargando perfil de usuario...');
+                await cargarPerfilUsuario().catch(err => {
+                    console.error('⚠️ Error cargando perfil (continuando):', err);
+                });
+                
+                console.log('🔍 Verificando si es admin...');
+                const esAdminResultado = await verificarEsAdmin().catch(err => {
+                    console.error('⚠️ Error verificando admin (continuando):', err);
+                    return false;
+                });
+                
+                console.log('🔐 Resultado de verificarEsAdmin:', esAdminResultado);
+                console.log('🔐 Variable esAdmin:', esAdmin);
+                
+                if (esAdmin) {
+                    console.log('✅ Mostrando botón admin');
+                    mostrarBotonAdmin();
+                } else {
+                    console.log('❌ Ocultando botón admin (no es admin)');
+                    ocultarBotonAdmin();
+                }
+            } catch (error) {
+                console.error('❌ Error en mostrarUIUsuario:', error);
+                // Asegurar que al menos se muestre algo
+                const userUI = document.getElementById('user-ui');
+                if (userUI) {
+                    userUI.style.display = 'block';
+                }
             }
         }
         
@@ -1852,8 +2153,23 @@
         
         // Cargar datos iniciales
         window.onload = function() {
-            verificarSesion(); // Verificar sesión primero
+            console.log('🚀 Iniciando aplicación...');
+            console.log('🌐 URL actual:', window.location.href);
+            console.log('📦 Supabase disponible:', typeof window.supabase !== 'undefined');
+            
+            // Mostrar login por defecto inmediatamente (se actualizará si hay sesión)
+            mostrarUILogin();
+            
+            // Cargar datos inmediatamente (no depende de la sesión)
             cargarDatos();
+            
+            // Verificar sesión después de un pequeño delay (solo como fallback)
+            // onAuthStateChange se ejecutará automáticamente y manejará la sesión
+            setTimeout(() => {
+                verificarSesion().catch(error => {
+                    console.warn('⚠️ Error en verificarSesion (no crítico):', error);
+                });
+            }, 500); // Delay más largo para dar tiempo a onAuthStateChange
         };
     </script>
 </body>
