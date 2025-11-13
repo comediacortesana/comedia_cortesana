@@ -1,6 +1,38 @@
-# Filtro Básico - Teatro Español del Siglo de Oro
+# 🎭 Sistema Completo - Teatro Español del Siglo de Oro
 
-Este directorio contiene un `index.html` básico y funcional para filtrar los datos del proyecto DELIA_DJANGO.
+Aplicación web completa para filtrar y explorar obras del teatro español del Siglo de Oro, desplegada en **GitHub Pages** con integración de **Google Sheets** y **Supabase**.
+
+## 🌐 Aplicación en Vivo
+
+**URL:** https://comediacortesana.github.io/comedia_cortesana/
+
+## 🏗️ Arquitectura del Sistema
+
+El sistema está compuesto por:
+
+1. **Frontend HTML estático** (`index.html`) que lee datos desde `datos_obras.json`
+2. **Despliegue en GitHub Pages** (gratuito, automático)
+3. **Automatización Google Sheets → GitHub** mediante Apps Script
+4. **Autenticación y usuarios** con Supabase
+5. **Exportación a CSV** para edición colaborativa
+
+### 📊 Flujo de Datos
+
+```
+Google Sheets (edición colaborativa)
+    ↓ [Apps Script - cada hora]
+GitHub Repository (datos_obras.json)
+    ↓ [GitHub Pages - automático]
+Aplicación Web (index.html)
+    ↓ [Supabase]
+Autenticación y gestión de usuarios
+```
+
+## 📁 Archivos Principales
+
+- **`index.html`** - Aplicación principal con filtros, autenticación y exportación
+- **`datos_obras.json`** - Datos de obras en formato JSON (actualizado automáticamente desde Google Sheets)
+- **`obras_completas.csv`** - Exportación CSV de los datos (para referencia)
 
 ## 📋 Campos Disponibles para Filtrado
 
@@ -68,89 +100,72 @@ Este directorio contiene un `index.html` básico y funcional para filtrar los da
 | `obra` | ForeignKey | Relación con modelo Obra |
 | `lugar` | ForeignKey | Relación con modelo Lugar |
 
-## 🔌 Integración con Django API
+## 📥 Carga de Datos
 
-### Opción 1: Usar el API REST existente
+### Implementación Actual
 
-Si tu proyecto Django tiene Django REST Framework configurado, puedes conectar el HTML a la API:
-
-```javascript
-// Reemplazar datosEjemplo con llamada a la API
-fetch('/api/obras/?format=json')
-    .then(response => response.json())
-    .then(data => {
-        datosOriginales = data.results || data;
-        datosFiltrados = [...datosOriginales];
-        mostrarResultados();
-    });
-```
-
-### Opción 2: Crear una vista Django que sirva este HTML
-
-En `apps/obras/views.py`:
-
-```python
-from django.shortcuts import render
-from django.http import JsonResponse
-from .models import Obra
-
-def filtro_basico(request):
-    return render(request, 'filtro_basico/index.html')
-
-def api_obras_filtradas(request):
-    obras = Obra.objects.select_related('autor').prefetch_related('representaciones__lugar')
-    
-    # Aplicar filtros según request.GET
-    if request.GET.get('titulo'):
-        obras = obras.filter(titulo_limpio__icontains=request.GET.get('titulo'))
-    
-    if request.GET.get('tipo_obra'):
-        obras = obras.filter(tipo_obra=request.GET.get('tipo_obra'))
-    
-    if request.GET.get('fuente'):
-        obras = obras.filter(fuente_principal=request.GET.get('fuente'))
-    
-    # ... más filtros
-    
-    data = [{
-        'id': obra.id,
-        'titulo': obra.titulo_limpio,
-        'autor': obra.autor.nombre if obra.autor else '',
-        'tipo_obra': obra.tipo_obra,
-        'fuente': obra.fuente_principal,
-        # ... más campos
-    } for obra in obras[:100]]  # Limitar a 100 resultados
-    
-    return JsonResponse(data, safe=False)
-```
-
-En `apps/obras/urls.py`:
-
-```python
-urlpatterns = [
-    path('filtro-basico/', filtro_basico, name='filtro_basico'),
-    path('api/obras-filtradas/', api_obras_filtradas, name='api_obras_filtradas'),
-]
-```
-
-### Opción 3: Cargar datos desde un archivo JSON estático
-
-```bash
-# Exportar datos desde Django
-python manage.py dumpdata obras.Obra --indent 2 > filtro_basico/obras.json
-```
-
-Luego en el HTML:
+El `index.html` carga datos automáticamente desde `datos_obras.json` al iniciar:
 
 ```javascript
-fetch('obras.json')
-    .then(response => response.json())
-    .then(data => {
+// Función cargarDatos() en index.html
+async function cargarDatos() {
+    const response = await fetch('datos_obras.json');
+    const data = await response.json();
+    
+    // Soporta dos formatos:
+    // 1. {metadata: {}, obras: []} - Formato recomendado
+    // 2. [] - Array directo (formato antiguo)
+    
+    if (data.metadata && data.obras) {
+        metadata = data.metadata;
+        datosOriginales = data.obras;
+    } else if (Array.isArray(data)) {
         datosOriginales = data;
-        datosFiltrados = [...datosOriginales];
-        mostrarResultados();
-    });
+    }
+    
+    datosFiltrados = [...datosOriginales];
+    mostrarResultados();
+}
 ```
+
+### Formato del JSON
+
+El archivo `datos_obras.json` debe tener este formato:
+
+```json
+{
+  "metadata": {
+    "total_obras": 150,
+    "fecha_exportacion": "2025-01-15",
+    "version": "1.0"
+  },
+  "obras": [
+    {
+      "id": 1,
+      "titulo": "La vida es sueño",
+      "autor": "Calderón de la Barca",
+      "tipo_obra": "comedia",
+      "fuente": "FUENTESXI",
+      "epoca": "Siglo de Oro",
+      "lugar": "Madrid",
+      "tipo_lugar": "corral",
+      "region": "Madrid",
+      "compania": "Compañía Real",
+      "fecha": "1635",
+      "mecenas": "Felipe IV"
+    }
+  ]
+}
+```
+
+### Exportación a CSV
+
+La aplicación permite exportar los resultados filtrados a CSV:
+
+- **Función:** `exportarCSV()` en `index.html`
+- **Uso:** Botón "📊 Exportar a CSV" en la interfaz
+- **Formato:** CSV estándar con todos los campos de las obras filtradas
+- **Propósito:** Edición colaborativa en Google Sheets o Excel
 
 ## 🎨 Personalización
 
@@ -161,15 +176,43 @@ El archivo HTML es completamente autónomo y puede ser personalizado:
 3. **Tabla de resultados**: Modificar columnas en `mostrarResultados()`
 4. **Datos de ejemplo**: Reemplazar `datosEjemplo` con datos reales
 
-## 🚀 Uso
+## 🚀 Despliegue en GitHub Pages
 
-1. **Desarrollo local**: Abrir directamente `index.html` en un navegador
-2. **Producción**: Copiar a `static/` o `templates/` según necesites
-3. **Con servidor Django**: 
-   ```bash
-   python manage.py runserver
-   # Visitar http://localhost:8000/obras/filtro-basico/
-   ```
+### Estado Actual
+
+✅ **Aplicación desplegada en:** https://comediacortesana.github.io/comedia_cortesana/
+
+### Cómo Funciona
+
+1. **Repositorio GitHub:** Los archivos están en el repositorio `comedia_cortesana`
+2. **GitHub Pages:** Configurado para servir desde la rama `main`
+3. **Actualización automática:** Cada push a `main` actualiza la aplicación en 1-2 minutos
+4. **Sin servidor:** Todo es estático, 100% gratuito
+
+### Desarrollo Local
+
+```bash
+# Clonar repositorio
+git clone https://github.com/comediacortesana/comedia_cortesana.git
+cd comedia_cortesana
+
+# Abrir index.html en navegador
+# O usar un servidor local:
+python -m http.server 8000
+# Visitar http://localhost:8000/index.html
+```
+
+### Actualizar Datos
+
+```bash
+# 1. Actualizar datos_obras.json (manual o desde Google Sheets)
+# 2. Commit y push
+git add datos_obras.json
+git commit -m "Actualizar datos de obras"
+git push origin main
+
+# 3. GitHub Pages se actualiza automáticamente en 1-2 minutos
+```
 
 ## 📊 Ejemplo de Estructura de Datos
 
@@ -208,12 +251,53 @@ El JavaScript espera datos en este formato:
 - ✅ Rango de fechas (desde - hasta)
 - ✅ Mecenas (búsqueda parcial)
 
+## 🔐 Autenticación con Supabase
+
+### Integración Actual
+
+El `index.html` incluye autenticación completa con Supabase:
+
+- ✅ **Registro de usuarios** con email y contraseña
+- ✅ **Inicio de sesión** con email/contraseña o enlace mágico
+- ✅ **Recuperación de contraseña**
+- ✅ **Gestión de sesión** persistente
+- ✅ **Panel de administración** para gestionar usuarios y roles
+
+### Configuración
+
+```javascript
+// En index.html (línea ~591)
+const SUPABASE_URL = 'https://kyxxpoewwjixbpcezays.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+```
+
+### Documentación Supabase
+
+| Archivo | Descripción |
+|---------|-------------|
+| **[GUIA_SUPABASE_PASO_A_PASO.md](./GUIA_SUPABASE_PASO_A_PASO.md)** | 📖 Guía completa de configuración |
+| **[CHECKLIST_SUPABASE.md](./CHECKLIST_SUPABASE.md)** | ✅ Checklist de configuración |
+| **[supabase_schema.sql](./supabase_schema.sql)** | 🗄️ Esquema de base de datos |
+| **[supabase_frontend_code.js](./supabase_frontend_code.js)** | 💻 Código de ejemplo frontend |
+| **[supabase_apps_script_code.gs](./supabase_apps_script_code.gs)** | 📊 Código de ejemplo Apps Script |
+
+### Funcionalidades de Usuario
+
+- **Usuarios registrados:** Pueden acceder a funcionalidades adicionales
+- **Administradores:** Panel de gestión de usuarios y roles
+- **Sesión persistente:** La sesión se mantiene entre recargas
+- **Seguridad:** Autenticación gestionada por Supabase (gratis hasta 50,000 usuarios/mes)
+
+---
+
 ## 📝 Notas
 
-- El HTML incluye 3 obras de ejemplo para demostración
+- Los datos se cargan desde `datos_obras.json` al iniciar la aplicación
 - Los filtros funcionan de manera acumulativa (AND logic)
 - La búsqueda de texto es case-insensitive
 - Los filtros de fecha funcionan con años (formato numérico)
+- El CSV se usa solo para exportar, no para cargar datos
 
 ---
 
@@ -276,4 +360,48 @@ Google Sheets (edición)
 
 **Gratis, sin servidores, automático. 🎉**
 
+---
+
+## 📚 Documentación Adicional
+
+### Guías Completas Disponibles
+
+| Documento | Descripción |
+|-----------|-------------|
+| **[README_COMPLETO.md](./README_COMPLETO.md)** | 📖 Documentación completa del sistema |
+| **[GITHUB_PAGES_TUTORIAL.md](./GITHUB_PAGES_TUTORIAL.md)** | 🚀 Tutorial de GitHub Pages |
+| **[SISTEMA_FEEDBACK.md](./SISTEMA_FEEDBACK.md)** | 💬 Sistema de feedback para investigadores |
+| **[INSTRUCCIONES_PUBLICACION.md](./INSTRUCCIONES_PUBLICACION.md)** | 📝 Instrucciones de publicación |
+| **[CONFIGURAR_DOMINIO_PERSONALIZADO.md](./CONFIGURAR_DOMINIO_PERSONALIZADO.md)** | 🌐 Configurar dominio personalizado |
+
+### Resumen del Sistema Completo
+
+✅ **Frontend:** HTML estático con JavaScript vanilla  
+✅ **Datos:** JSON (`datos_obras.json`) cargado automáticamente  
+✅ **Despliegue:** GitHub Pages (gratuito)  
+✅ **Automatización:** Google Sheets → GitHub (Apps Script)  
+✅ **Usuarios:** Supabase (autenticación y gestión)  
+✅ **Exportación:** CSV para edición colaborativa  
+
+**URL de producción:** https://comediacortesana.github.io/comedia_cortesana/
+
+---
+
+## 🔄 Workflow Completo
+
+```
+1. Investigadores editan en Google Sheets
+   ↓
+2. Apps Script detecta cambios (cada hora)
+   ↓
+3. Apps Script actualiza datos_obras.json en GitHub
+   ↓
+4. GitHub Pages actualiza automáticamente (1-2 min)
+   ↓
+5. Usuarios ven datos actualizados en la web
+   ↓
+6. Usuarios pueden exportar a CSV para más ediciones
+```
+
+**Todo automático, gratuito y sin servidores. 🎉**
 
