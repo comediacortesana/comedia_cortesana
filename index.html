@@ -2908,48 +2908,105 @@
             }
         }
         
+        // Función helper para timeout de promesas
+        function timeoutPromise(promise, ms, errorMessage = 'Timeout') {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error(errorMessage)), ms)
+                )
+            ]);
+        }
+
         // Cargar datos desde Supabase (fuente principal) o JSON (fallback)
         async function cargarDatos() {
+            const inicioTiempo = Date.now();
             let datosCargados = false;
             
             try {
                 // INTENTO 1: Cargar desde Supabase (fuente principal)
                 try {
                     console.log('🔍 Intentando cargar datos desde Supabase...');
+                    console.log('⏱️ Inicio carga:', new Date().toISOString());
                     
-                    // Cargar todas las obras con paginación
+                    // Cargar todas las obras con paginación y timeout
                     let todasLasObras = [];
                     let offset = 0;
                     const pageSize = 1000;
                     let hayMasDatos = true;
+                    const timeoutMs = 30000; // 30 segundos por página
+                    const maxIntentos = 3;
                     
                     while (hayMasDatos) {
-                        const { data: obrasSupabase, error: errorSupabase } = await supabase
-                            .from('obras')
-                            .select('*')
-                            .order('id', { ascending: true })
-                            .range(offset, offset + pageSize - 1);
+                        let intento = 0;
+                        let paginaCargada = false;
+                        const numeroPagina = Math.floor(offset / pageSize) + 1;
                         
-                        if (errorSupabase) {
-                            throw errorSupabase;
-                        }
-                        
-                        if (obrasSupabase && obrasSupabase.length > 0) {
-                            todasLasObras = todasLasObras.concat(obrasSupabase);
-                            offset += pageSize;
-                            
-                            // Si recibimos menos de pageSize, no hay más datos
-                            if (obrasSupabase.length < pageSize) {
-                                hayMasDatos = false;
+                        // Reintentar hasta maxIntentos veces
+                        while (!paginaCargada && intento < maxIntentos) {
+                            intento++;
+                            if (intento > 1) {
+                                console.log(`🔄 Reintentando página ${numeroPagina} (intento ${intento}/${maxIntentos})...`);
+                            } else {
+                                console.log(`📄 Cargando página ${numeroPagina} (offset: ${offset})...`);
                             }
-                        } else {
-                            hayMasDatos = false;
+                            
+                            try {
+                                const queryPromise = supabase
+                                    .from('obras')
+                                    .select('*')
+                                    .order('id', { ascending: true })
+                                    .range(offset, offset + pageSize - 1);
+                                
+                                const { data: obrasSupabase, error: errorSupabase } = await timeoutPromise(
+                                    queryPromise,
+                                    timeoutMs,
+                                    `Timeout cargando página ${numeroPagina} después de ${timeoutMs}ms`
+                                );
+                                
+                                if (errorSupabase) {
+                                    throw errorSupabase;
+                                }
+                                
+                                if (obrasSupabase && obrasSupabase.length > 0) {
+                                    todasLasObras = todasLasObras.concat(obrasSupabase);
+                                    console.log(`✅ Página ${numeroPagina} cargada: ${obrasSupabase.length} obras (total acumulado: ${todasLasObras.length})`);
+                                    offset += pageSize;
+                                    paginaCargada = true;
+                                    
+                                    // Si recibimos menos de pageSize, no hay más datos
+                                    if (obrasSupabase.length < pageSize) {
+                                        hayMasDatos = false;
+                                        console.log('📄 Última página detectada (menos de pageSize resultados)');
+                                    }
+                                } else {
+                                    hayMasDatos = false;
+                                    paginaCargada = true;
+                                    console.log('📄 No hay más datos (respuesta vacía)');
+                                }
+                            } catch (errorPagina) {
+                                console.error(`❌ Error cargando página ${numeroPagina} (intento ${intento}/${maxIntentos}):`, errorPagina);
+                                
+                                if (intento < maxIntentos) {
+                                    // Backoff exponencial: esperar más tiempo en cada intento
+                                    const delayMs = 1000 * intento;
+                                    console.log(`⏳ Esperando ${delayMs}ms antes del siguiente intento...`);
+                                    await new Promise(resolve => setTimeout(resolve, delayMs));
+                                } else {
+                                    console.error(`❌ Falló después de ${maxIntentos} intentos, lanzando error`);
+                                    throw errorPagina;
+                                }
+                            }
                         }
                     }
+                    
+                    const tiempoCarga = Date.now() - inicioTiempo;
+                    console.log(`⏱️ Tiempo total de carga desde Supabase: ${tiempoCarga}ms (${(tiempoCarga / 1000).toFixed(2)}s)`);
                     
                     if (todasLasObras.length > 0) {
                         const obrasSupabase = todasLasObras;
                         console.log(`✅ ${obrasSupabase.length} obras cargadas desde Supabase`);
+                        console.log('🔄 Procesando y formateando datos...');
                         
                         // Convertir datos de Supabase al formato esperado
                         // Supabase puede tener campos como JSONB que necesitan parsearse
@@ -2990,13 +3047,17 @@
                         };
                         
                         datosCargados = true;
-                        console.log('✅ Datos cargados desde Supabase (fuente principal)');
+                        const tiempoTotal = Date.now() - inicioTiempo;
+                        console.log(`✅ Datos cargados desde Supabase (fuente principal) en ${tiempoTotal}ms`);
+                        console.log(`📊 Total obras: ${datosOriginales.length}, Fuente: Supabase`);
                     } else {
-                        console.warn('⚠️ Supabase no tiene datos o hubo un error:', errorSupabase);
-                        throw new Error('Supabase vacío o error: ' + (errorSupabase?.message || 'Sin datos'));
+                        console.warn('⚠️ Supabase no tiene datos o hubo un error');
+                        throw new Error('Supabase vacío o error: Sin datos recibidos');
                     }
                 } catch (errorSupabase) {
-                    console.warn('⚠️ Error cargando desde Supabase, intentando JSON como fallback:', errorSupabase);
+                    const tiempoError = Date.now() - inicioTiempo;
+                    console.error(`❌ Error cargando desde Supabase después de ${tiempoError}ms:`, errorSupabase);
+                    console.warn('⚠️ Intentando JSON como fallback...');
                 }
                 
                 // INTENTO 2: Cargar desde JSON (fallback/respaldo)
