@@ -1,0 +1,2 @@
+Hemos desarrollado una plataforma web para gestionar nuestro corpus de obras teatrales del Siglo de Oro. El sistema integra bases de datos, autenticación y herramientas de edición colaborativa con control de versiones. Acceso: https://comediacortesana.github.io/comedia_cortesana/ Roles: Colaborador (consulta), Editor (edita con aprobación), Administrador (control total). Instrucciones: registrarse con email institucional, confirmar cuenta, iniciar sesión. Para permisos específicos o sugerencias, podemos organizar una breve reunión.
+

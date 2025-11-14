@@ -409,8 +409,58 @@
             font-weight: 600;
         }
         
+        .comentario-visto {
+            opacity: 0.7;
+            border-left-color: #95a5a6;
+        }
+        
+        .comentario-pendiente {
+            border-left-color: #3498db;
+        }
+        
+        .badge-visto {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        
+        .btn-marcar-visto {
+            padding: 4px 10px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .btn-marcar-visto:hover {
+            background: #229954;
+        }
+        
         #comentario-form textarea {
             resize: vertical;
+        }
+        
+        .btn-comentarios-modal {
+            padding: 8px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 10px 5px;
+        }
+        
+        .btn-comentarios-modal:hover {
+            background: #2980b9;
         }
     </style>
 </head>
@@ -450,6 +500,10 @@
             <!-- Estado: Autenticado -->
             <div id="user-ui" style="display: none;">
                 <span>👤 <strong id="user-name">Usuario</strong></span>
+                <button id="btn-comentarios-global" onclick="mostrarModalComentariosGlobal()" style="margin-left: 10px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; position: relative;">
+                    💬 Comentarios
+                    <span id="contador-comentarios" style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;">0</span>
+                </button>
                 <button onclick="logout()" style="margin-left: 10px; padding: 8px 15px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Salir</button>
                 <!-- Botón admin se añadirá aquí dinámicamente -->
             </div>
@@ -581,9 +635,25 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <h2 id="modal-titulo">Detalle de Obra</h2>
-                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <button onclick="document.getElementById('seccion-comentarios')?.scrollIntoView({behavior: 'smooth', block: 'start'});" style="padding: 6px 12px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;" title="Ir a comentarios">💬 Comentarios</button>
+                    <button class="modal-close" onclick="cerrarModal()">&times;</button>
+                </div>
             </div>
             <div class="modal-body" id="modal-body">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Comentarios Globales -->
+    <div id="modal-comentarios-global" class="modal-overlay" onclick="cerrarModalComentariosGlobal(event)">
+        <div class="modal-content" style="max-width: 1000px;" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>💬 Todos los Comentarios</h2>
+                <button class="modal-close" onclick="cerrarModalComentariosGlobal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-comentarios-global-body">
                 <!-- Contenido dinámico -->
             </div>
         </div>
@@ -1551,6 +1621,9 @@
                 
                 // Cargar cambios pendientes desde Supabase
                 await cargarCambiosPendientes();
+                
+                // Actualizar contador de comentarios
+                await actualizarContadorComentarios();
             } catch (error) {
                 console.error('❌ Error en mostrarUIUsuario:', error);
                 // Asegurar que al menos se muestre algo
@@ -1565,6 +1638,13 @@
                 }
             }
         }
+        
+        // Actualizar contador periódicamente (cada 2 minutos)
+        setInterval(async () => {
+            if (usuarioActual) {
+                await actualizarContadorComentarios();
+            }
+        }, 120000); // 2 minutos
         
         function mostrarBotonAdmin() {
             const userUI = document.getElementById('user-ui');
@@ -2287,21 +2367,32 @@
             }
         }
         
-        // Crear comentario
-        async function crearComentario(obraId, contenido, tipo = 'comentario') {
+        // Crear comentario (obraId puede ser null para comentarios generales)
+        async function crearComentario(obraId, contenido, tipo = 'comentario', filtrosBusqueda = null) {
             if (!usuarioActual) {
                 alert('Debes iniciar sesión para comentar');
                 return false;
             }
             
+            const comentarioData = {
+                usuario_id: usuarioActual.id,
+                contenido: contenido,
+                tipo: tipo
+            };
+            
+            // Solo añadir obra_id si existe
+            if (obraId !== null && obraId !== undefined) {
+                comentarioData.obra_id = obraId;
+            }
+            
+            // Añadir filtros de búsqueda si se proporcionan
+            if (filtrosBusqueda) {
+                comentarioData.filtros_busqueda = filtrosBusqueda;
+            }
+            
             const { data, error } = await supabase
                 .from('comentarios')
-                .insert({
-                    obra_id: obraId,
-                    usuario_id: usuarioActual.id,
-                    contenido: contenido,
-                    tipo: tipo
-                })
+                .insert(comentarioData)
                 .select()
                 .single();
             
@@ -2312,6 +2403,366 @@
             }
             
             return data;
+        }
+        
+        // Cargar todos los comentarios (para el modal global)
+        async function cargarTodosComentarios() {
+            if (!usuarioActual) {
+                return [];
+            }
+            
+            try {
+                const { data: comentariosData, error } = await supabase
+                    .from('comentarios')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(500);
+                
+                if (error) {
+                    console.error('Error cargando todos los comentarios:', error);
+                    return [];
+                }
+                
+                // Cargar perfiles de usuarios y obras por separado
+                if (comentariosData && comentariosData.length > 0) {
+                    const userIds = [...new Set(comentariosData.map(c => c.usuario_id).filter(Boolean))];
+                    const obraIds = [...new Set(comentariosData.map(c => c.obra_id).filter(Boolean))];
+                    
+                    // Cargar perfiles
+                    let perfilesMap = {};
+                    if (userIds.length > 0) {
+                        const { data: perfilesData } = await supabase
+                            .from('perfiles_usuarios')
+                            .select('id, nombre_completo, avatar_url')
+                            .in('id', userIds);
+                        
+                        if (perfilesData) {
+                            perfilesData.forEach(perfil => {
+                                perfilesMap[perfil.id] = perfil;
+                            });
+                        }
+                    }
+                    
+                    // Cargar obras
+                    let obrasMap = {};
+                    if (obraIds.length > 0) {
+                        const { data: obrasData } = await supabase
+                            .from('obras')
+                            .select('id, titulo')
+                            .in('id', obraIds);
+                        
+                        if (obrasData) {
+                            obrasData.forEach(obra => {
+                                obrasMap[obra.id] = obra;
+                            });
+                        }
+                    }
+                    
+                    // Combinar datos
+                    const comentariosCompletos = comentariosData.map(comentario => ({
+                        ...comentario,
+                        perfiles_usuarios: perfilesMap[comentario.usuario_id] || null,
+                        obra: obrasMap[comentario.obra_id] || null
+                    }));
+                    
+                    return comentariosCompletos;
+                }
+                
+                return comentariosData || [];
+            } catch (err) {
+                console.error('Excepción al cargar todos los comentarios:', err);
+                return [];
+            }
+        }
+        
+        // Contar comentarios no vistos (solo para admins)
+        async function contarComentariosNoVistos() {
+            if (!usuarioActual || !esAdmin) {
+                return 0;
+            }
+            
+            try {
+                const { count, error } = await supabase
+                    .from('comentarios')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('visto_por_admin', false);
+                
+                if (error) {
+                    console.error('Error contando comentarios no vistos:', error);
+                    return 0;
+                }
+                
+                return count || 0;
+            } catch (err) {
+                console.error('Excepción al contar comentarios:', err);
+                return 0;
+            }
+        }
+        
+        // Actualizar contador de comentarios
+        async function actualizarContadorComentarios() {
+            if (!usuarioActual) {
+                const contador = document.getElementById('contador-comentarios');
+                if (contador) {
+                    contador.style.display = 'none';
+                }
+                return;
+            }
+            
+            // Solo mostrar contador si el usuario es admin
+            if (!esAdmin) {
+                const contador = document.getElementById('contador-comentarios');
+                if (contador) {
+                    contador.style.display = 'none';
+                }
+                return;
+            }
+            
+            const count = await contarComentariosNoVistos();
+            const contador = document.getElementById('contador-comentarios');
+            if (contador) {
+                if (count > 0) {
+                    contador.textContent = count > 99 ? '99+' : count;
+                    contador.style.display = 'flex';
+                } else {
+                    contador.style.display = 'none';
+                }
+            }
+        }
+        
+        // Mostrar modal de comentarios globales
+        async function mostrarModalComentariosGlobal() {
+            if (!usuarioActual) {
+                alert('Debes iniciar sesión para ver los comentarios');
+                return;
+            }
+            
+            const modal = document.getElementById('modal-comentarios-global');
+            const modalBody = document.getElementById('modal-comentarios-global-body');
+            
+            if (!modal || !modalBody) {
+                console.error('Modal de comentarios globales no encontrado');
+                return;
+            }
+            
+            // Mostrar loading
+            modalBody.innerHTML = '<p style="text-align: center; padding: 40px;">Cargando comentarios...</p>';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Cargar comentarios
+            const comentarios = await cargarTodosComentarios();
+            
+            let html = '';
+            
+            // Sección para crear comentario general
+            html += '<div class="field-section" style="border: 2px solid #3498db; border-radius: 8px; padding: 15px; margin-bottom: 20px; background: #f8f9fa;">';
+            html += '<div class="section-title" style="color: #3498db; font-size: 16px;">➕ Añadir Comentario General</div>';
+            html += '<div id="comentario-general-form" style="margin-bottom: 20px;">';
+            html += '<textarea id="comentario-general-texto" placeholder="Escribe un comentario general sobre el sistema, sugerencias de mejora, reportar problemas generales, etc..." style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; min-height: 100px; font-family: inherit; font-size: 14px;"></textarea>';
+            html += '<div style="margin-top: 10px; display: flex; gap: 10px; align-items: center;">';
+            html += '<label style="font-size: 12px;"><input type="checkbox" id="guardar-filtros-actuales" style="margin-right: 5px;"> Guardar filtros de búsqueda actuales con este comentario</label>';
+            html += '</div>';
+            html += '<button onclick="enviarComentarioGeneral()" style="margin-top: 10px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">Enviar Comentario General</button>';
+            html += '</div>';
+            html += '</div>';
+            
+            // Lista de comentarios
+            html += '<div class="field-section">';
+            html += `<div class="section-title">📋 Todos los Comentarios (${comentarios.length})</div>`;
+            
+            if (comentarios.length === 0) {
+                html += '<p style="color: #999; padding: 20px; text-align: center;">No hay comentarios aún.</p>';
+            } else {
+                html += '<div style="max-height: 600px; overflow-y: auto;">';
+                
+                comentarios.forEach(comentario => {
+                    const fecha = new Date(comentario.created_at).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    const nombre = comentario.perfiles_usuarios?.nombre_completo || 'Usuario';
+                    const vistoPorAdmin = comentario.visto_por_admin || false;
+                    const vistoAt = comentario.visto_at ? new Date(comentario.visto_at).toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }) : null;
+                    const obraTitulo = comentario.obra ? comentario.obra.titulo : null;
+                    const tieneFiltros = comentario.filtros_busqueda && Object.keys(comentario.filtros_busqueda).length > 0;
+                    
+                    const vistoClass = vistoPorAdmin ? 'comentario-visto' : 'comentario-pendiente';
+                    const vistoBadge = vistoPorAdmin 
+                        ? `<span class="badge-visto" title="Visto por admin el ${vistoAt}">✅ OK, visto</span>` 
+                        : '<span style="color: #e74c3c; font-weight: bold;">⚠️ Pendiente</span>';
+                    
+                    const botonVisto = esAdmin && !vistoPorAdmin
+                        ? `<button class="btn-marcar-visto" onclick="marcarComentarioVistoGlobal('${comentario.id}')" style="font-size: 11px; padding: 4px 8px;">✓ OK, visto</button>`
+                        : '';
+                    
+                    html += `<div class="comentario-item ${vistoClass}" style="margin-bottom: 15px;">`;
+                    html += '<div class="comentario-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">';
+                    html += '<div>';
+                    html += `<strong>${escapeHtml(nombre)}</strong> ${vistoBadge}`;
+                    if (obraTitulo) {
+                        html += `<div style="font-size: 12px; color: #666; margin-top: 4px;">📚 Obra: <strong>${escapeHtml(obraTitulo)}</strong> (ID: ${comentario.obra_id})</div>`;
+                    } else {
+                        html += '<div style="font-size: 12px; color: #666; margin-top: 4px;">🌐 Comentario general</div>';
+                    }
+                    html += '</div>';
+                    html += '<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">';
+                    html += `<span class="comentario-fecha" style="font-size: 11px;">${fecha}</span>`;
+                    if (tieneFiltros) {
+                        html += `<button onclick="reproducirBusquedaDesdeComentario('${comentario.id}')" style="padding: 4px 10px; background: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;" title="Aplicar filtros de búsqueda guardados">🔍 Reproducir búsqueda</button>`;
+                    }
+                    html += botonVisto;
+                    html += '</div>';
+                    html += '</div>';
+                    html += `<div class="comentario-contenido" style="margin-bottom: 8px;">${escapeHtml(comentario.contenido)}</div>`;
+                    html += `<div class="comentario-tipo">${comentario.tipo}</div>`;
+                    html += '</div>';
+                });
+                
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            
+            modalBody.innerHTML = html;
+        }
+        
+        // Cerrar modal de comentarios globales
+        function cerrarModalComentariosGlobal(event) {
+            if (!event || event.target.id === 'modal-comentarios-global' || event.target.className === 'modal-close') {
+                const modal = document.getElementById('modal-comentarios-global');
+                if (modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            }
+        }
+        
+        // Enviar comentario general
+        async function enviarComentarioGeneral() {
+            const texto = document.getElementById('comentario-general-texto');
+            if (!texto || !texto.value.trim()) {
+                alert('Escribe un comentario');
+                return;
+            }
+            
+            const guardarFiltros = document.getElementById('guardar-filtros-actuales')?.checked || false;
+            let filtrosBusqueda = null;
+            
+            if (guardarFiltros) {
+                // Capturar filtros actuales
+                filtrosBusqueda = {
+                    titulo: document.getElementById('titulo')?.value || '',
+                    tipo_obra: document.getElementById('tipo_obra')?.value || '',
+                    fuente: document.getElementById('fuente')?.value || '',
+                    autor: document.getElementById('autor')?.value || '',
+                    epoca: document.getElementById('epoca')?.value || '',
+                    lugar: document.getElementById('lugar')?.value || '',
+                    tipo_lugar: document.getElementById('tipo_lugar')?.value || '',
+                    region: document.getElementById('region')?.value || '',
+                    compania: document.getElementById('compania')?.value || '',
+                    fecha_desde: document.getElementById('fecha_desde')?.value || '',
+                    fecha_hasta: document.getElementById('fecha_hasta')?.value || '',
+                    mecenas: document.getElementById('mecenas')?.value || ''
+                };
+            }
+            
+            const resultado = await crearComentario(null, texto.value.trim(), 'comentario_general', filtrosBusqueda);
+            if (resultado) {
+                texto.value = '';
+                if (document.getElementById('guardar-filtros-actuales')) {
+                    document.getElementById('guardar-filtros-actuales').checked = false;
+                }
+                await mostrarModalComentariosGlobal(); // Recargar
+                await actualizarContadorComentarios(); // Actualizar contador
+            }
+        }
+        
+        // Reproducir búsqueda desde comentario
+        async function reproducirBusquedaDesdeComentario(comentarioId) {
+            try {
+                const { data, error } = await supabase
+                    .from('comentarios')
+                    .select('filtros_busqueda')
+                    .eq('id', comentarioId)
+                    .single();
+                
+                if (error || !data || !data.filtros_busqueda) {
+                    alert('No se encontraron filtros de búsqueda guardados en este comentario');
+                    return;
+                }
+                
+                const filtros = data.filtros_busqueda;
+                
+                // Aplicar filtros
+                if (filtros.titulo) document.getElementById('titulo').value = filtros.titulo;
+                if (filtros.tipo_obra) document.getElementById('tipo_obra').value = filtros.tipo_obra;
+                if (filtros.fuente) document.getElementById('fuente').value = filtros.fuente;
+                if (filtros.autor) document.getElementById('autor').value = filtros.autor;
+                if (filtros.epoca) document.getElementById('epoca').value = filtros.epoca;
+                if (filtros.lugar) document.getElementById('lugar').value = filtros.lugar;
+                if (filtros.tipo_lugar) document.getElementById('tipo_lugar').value = filtros.tipo_lugar;
+                if (filtros.region) document.getElementById('region').value = filtros.region;
+                if (filtros.compania) document.getElementById('compania').value = filtros.compania;
+                if (filtros.fecha_desde) document.getElementById('fecha_desde').value = filtros.fecha_desde;
+                if (filtros.fecha_hasta) document.getElementById('fecha_hasta').value = filtros.fecha_hasta;
+                if (filtros.mecenas) document.getElementById('mecenas').value = filtros.mecenas;
+                
+                // Aplicar filtros y cerrar modal
+                aplicarFiltros();
+                cerrarModalComentariosGlobal();
+                
+                // Scroll a resultados
+                setTimeout(() => {
+                    document.getElementById('results-container')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+            } catch (err) {
+                console.error('Error reproduciendo búsqueda:', err);
+                alert('Error al reproducir la búsqueda');
+            }
+        }
+        
+        // Marcar comentario como visto (versión global)
+        async function marcarComentarioVistoGlobal(comentarioId) {
+            if (!esAdmin) {
+                alert('Solo los administradores pueden marcar comentarios como vistos');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('comentarios')
+                    .update({
+                        visto_por_admin: true,
+                        visto_at: new Date().toISOString(),
+                        visto_por: usuarioActual.id
+                    })
+                    .eq('id', comentarioId)
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('Error marcando comentario como visto:', error);
+                    alert('Error: ' + error.message);
+                    return;
+                }
+                
+                // Recargar modal y actualizar contador
+                await mostrarModalComentariosGlobal();
+                await actualizarContadorComentarios();
+            } catch (err) {
+                console.error('Excepción al marcar comentario como visto:', err);
+                alert('Error al marcar comentario como visto');
+            }
         }
         
         // Renderizar comentarios en el modal
@@ -2349,11 +2800,37 @@
                     minute: '2-digit'
                 });
                 const nombre = comentario.perfiles_usuarios?.nombre_completo || 'Usuario';
+                const vistoPorAdmin = comentario.visto_por_admin || false;
+                const vistoAt = comentario.visto_at ? new Date(comentario.visto_at).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : null;
+                
+                // Clase CSS para comentarios vistos
+                const vistoClass = vistoPorAdmin ? 'comentario-visto' : 'comentario-pendiente';
+                const vistoBadge = vistoPorAdmin 
+                    ? `<span class="badge-visto" title="Visto por admin el ${vistoAt}">✅ OK, visto</span>` 
+                    : '';
+                
+                // Botón para admin marcar como visto
+                const botonVisto = esAdmin && !vistoPorAdmin
+                    ? `<button class="btn-marcar-visto" onclick="marcarComentarioVisto('${comentario.id}', ${obraId})" title="Marcar como visto">✓ OK, visto</button>`
+                    : '';
+                
                 html += `
-                    <div class="comentario-item">
+                    <div class="comentario-item ${vistoClass}">
                         <div class="comentario-header">
-                            <strong>${escapeHtml(nombre)}</strong>
-                            <span class="comentario-fecha">${fecha}</span>
+                            <div>
+                                <strong>${escapeHtml(nombre)}</strong>
+                                ${vistoBadge}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="comentario-fecha">${fecha}</span>
+                                ${botonVisto}
+                            </div>
                         </div>
                         <div class="comentario-contenido">${escapeHtml(comentario.contenido)}</div>
                         <div class="comentario-tipo">${comentario.tipo}</div>
@@ -2363,6 +2840,39 @@
             html += '</div>';
             
             container.innerHTML = html;
+        }
+        
+        // Marcar comentario como visto por admin
+        async function marcarComentarioVisto(comentarioId, obraId) {
+            if (!esAdmin) {
+                alert('Solo los administradores pueden marcar comentarios como vistos');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('comentarios')
+                    .update({
+                        visto_por_admin: true,
+                        visto_at: new Date().toISOString(),
+                        visto_por: usuarioActual.id
+                    })
+                    .eq('id', comentarioId)
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('Error marcando comentario como visto:', error);
+                    alert('Error: ' + error.message);
+                    return;
+                }
+                
+                // Recargar comentarios para mostrar el cambio
+                await mostrarComentariosEnModal(obraId);
+            } catch (err) {
+                console.error('Excepción al marcar comentario como visto:', err);
+                alert('Error al marcar comentario como visto');
+            }
         }
         
         // Función helper para escapar HTML
@@ -2391,6 +2901,132 @@
             if (resultado) {
                 texto.value = '';
                 await mostrarComentariosEnModal(obraId);
+                await actualizarContadorComentarios(); // Actualizar contador
+            }
+        }
+        
+        // ============================================================================
+        // SISTEMA DE LOGS DE ERRORES
+        // ============================================================================
+        
+        // Crear log de error en Supabase
+        async function crearLogError(tipoError, mensaje, detalles = {}) {
+            // Solo crear logs si el usuario está autenticado
+            if (!usuarioActual) {
+                console.warn('⚠️ No se puede crear log de error: usuario no autenticado');
+                return;
+            }
+            
+            try {
+                const logData = {
+                    tipo_error: tipoError,
+                    mensaje: mensaje,
+                    detalles: detalles,
+                    usuario_id: usuarioActual.id,
+                    usuario_email: usuarioActual.email || null,
+                    url: window.location.href,
+                    user_agent: navigator.userAgent
+                };
+                
+                const { data, error } = await supabase
+                    .from('logs_errores')
+                    .insert(logData)
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('❌ Error creando log de error:', error);
+                    // No mostrar alert al usuario, solo log en consola
+                } else {
+                    console.log('✅ Log de error creado:', data.id);
+                }
+            } catch (err) {
+                console.error('❌ Excepción al crear log de error:', err);
+                // No interrumpir el flujo de la aplicación
+            }
+        }
+        
+        // Cargar logs de errores (solo para admins)
+        async function cargarLogsErrores() {
+            if (!esAdmin) {
+                return [];
+            }
+            
+            try {
+                const { data: logsData, error } = await supabase
+                    .from('logs_errores')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+                
+                if (error) {
+                    console.error('Error cargando logs de errores:', error);
+                    return [];
+                }
+                
+                // Cargar perfiles de usuarios por separado
+                if (logsData && logsData.length > 0) {
+                    const userIds = [...new Set(logsData.map(log => log.usuario_id).filter(Boolean))];
+                    if (userIds.length > 0) {
+                        const { data: perfilesData } = await supabase
+                            .from('perfiles_usuarios')
+                            .select('id, nombre_completo')
+                            .in('id', userIds);
+                        
+                        // Crear un mapa de perfiles por usuario_id
+                        const perfilesMap = {};
+                        if (perfilesData) {
+                            perfilesData.forEach(perfil => {
+                                perfilesMap[perfil.id] = perfil;
+                            });
+                        }
+                        
+                        // Combinar logs con perfiles
+                        const logsConPerfiles = logsData.map(log => ({
+                            ...log,
+                            usuario_nombre: perfilesMap[log.usuario_id]?.nombre_completo || null
+                        }));
+                        
+                        return logsConPerfiles;
+                    }
+                }
+                
+                return logsData || [];
+            } catch (err) {
+                console.error('Excepción al cargar logs de errores:', err);
+                return [];
+            }
+        }
+        
+        // Marcar log de error como visto por admin
+        async function marcarLogErrorVisto(logId) {
+            if (!esAdmin) {
+                alert('Solo los administradores pueden marcar logs como vistos');
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('logs_errores')
+                    .update({
+                        visto_por_admin: true,
+                        visto_at: new Date().toISOString(),
+                        visto_por: usuarioActual.id
+                    })
+                    .eq('id', logId)
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('Error marcando log como visto:', error);
+                    alert('Error: ' + error.message);
+                    return;
+                }
+                
+                return data;
+            } catch (err) {
+                console.error('Excepción al marcar log como visto:', err);
+                alert('Error al marcar log como visto');
             }
         }
         
@@ -2573,6 +3209,12 @@
             html += '<div id="cambios-pendientes-container">Cargando cambios...</div>';
             html += '</div>';
             
+            // Sección de logs de errores
+            html += '<div class="field-section" style="margin-top: 30px;">';
+            html += '<div class="section-title">⚠️ Logs de Errores</div>';
+            html += '<div id="logs-errores-container">Cargando logs...</div>';
+            html += '</div>';
+            
             // Sección de información
             html += '<div class="field-section">';
             html += '<div class="section-title">ℹ️ Información</div>';
@@ -2588,10 +3230,141 @@
             
             modalBody.innerHTML = html;
             
-            // Cargar cambios pendientes
+            // Cargar cambios pendientes y logs de errores
             await cargarCambiosPendientesAdmin();
+            await cargarLogsErroresAdmin();
             modalAdmin.style.display = 'block';
             document.body.style.overflow = 'hidden';
+        }
+        
+        // Cargar y mostrar logs de errores en el panel admin
+        async function cargarLogsErroresAdmin() {
+            if (!esAdmin) return;
+            
+            const container = document.getElementById('logs-errores-container');
+            if (!container) return;
+            
+            try {
+                const logs = await cargarLogsErrores();
+                
+                if (logs.length === 0) {
+                    container.innerHTML = '<p style="color: #666; padding: 20px; text-align: center;">✅ No hay errores registrados.</p>';
+                    return;
+                }
+                
+                // Contar errores no vistos
+                const noVistos = logs.filter(log => !log.visto_por_admin).length;
+                let html = '';
+                
+                if (noVistos > 0) {
+                    html += `<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin-bottom: 15px; border-radius: 4px;">`;
+                    html += `<strong>⚠️ ${noVistos} error(es) sin revisar</strong>`;
+                    html += `</div>`;
+                }
+                
+                html += '<div style="max-height: 400px; overflow-y: auto;">';
+                html += '<table class="results-table" style="margin-top: 15px; font-size: 12px;">';
+                html += '<thead><tr>';
+                html += '<th>Fecha/Hora</th>';
+                html += '<th>Usuario</th>';
+                html += '<th>Tipo</th>';
+                html += '<th>Mensaje</th>';
+                html += '<th>Estado</th>';
+                html += '<th>Acción</th>';
+                html += '</tr></thead>';
+                html += '<tbody>';
+                
+                logs.forEach(log => {
+                    const fecha = new Date(log.created_at).toLocaleString('es-ES', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    const usuario = log.usuario_email || log.usuario_nombre || 'Usuario desconocido';
+                    const visto = log.visto_por_admin;
+                    const vistoBadge = visto 
+                        ? '<span class="badge-visto" style="font-size: 10px;">✅ Visto</span>' 
+                        : '<span style="color: #e74c3c; font-weight: bold;">⚠️ Pendiente</span>';
+                    
+                    html += '<tr style="' + (!visto ? 'background-color: #fff3cd;' : '') + '">';
+                    html += `<td style="font-size: 11px;">${fecha}</td>`;
+                    html += `<td style="font-size: 11px;">${escapeHtml(usuario)}</td>`;
+                    html += `<td><span style="background: #e3f2fd; padding: 2px 6px; border-radius: 3px; font-size: 10px;">${escapeHtml(log.tipo_error || 'N/A')}</span></td>`;
+                    html += `<td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(log.mensaje || '')}">${escapeHtml((log.mensaje || '').substring(0, 50))}${(log.mensaje || '').length > 50 ? '...' : ''}</td>`;
+                    html += `<td>${vistoBadge}</td>`;
+                    html += '<td>';
+                    if (!visto) {
+                        html += `<button class="btn-marcar-visto" onclick="marcarLogErrorVistoYRecargar('${log.id}')" style="font-size: 10px; padding: 3px 8px;">✓ Marcar visto</button>`;
+                    }
+                    html += `<button onclick="verDetallesLog('${log.id}')" style="font-size: 10px; padding: 3px 8px; background: #3498db; color: white; border: none; border-radius: 3px; cursor: pointer; margin-left: 5px;">Ver detalles</button>`;
+                    html += '</td>';
+                    html += '</tr>';
+                });
+                
+                html += '</tbody></table>';
+                html += '</div>';
+                
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('Error cargando logs de errores:', err);
+                container.innerHTML = '<p style="color: red;">Error al cargar logs de errores</p>';
+            }
+        }
+        
+        // Marcar log como visto y recargar
+        async function marcarLogErrorVistoYRecargar(logId) {
+            await marcarLogErrorVisto(logId);
+            await cargarLogsErroresAdmin();
+        }
+        
+        // Ver detalles de un log
+        async function verDetallesLog(logId) {
+            try {
+                const { data, error } = await supabase
+                    .from('logs_errores')
+                    .select('*')
+                    .eq('id', logId)
+                    .single();
+                
+                if (error) {
+                    alert('Error al cargar detalles del log: ' + error.message);
+                    return;
+                }
+                
+                const detalles = JSON.stringify(data.detalles || {}, null, 2);
+                const fecha = new Date(data.created_at).toLocaleString('es-ES');
+                
+                const html = `
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; max-width: 600px; margin: 20px auto;">
+                        <h3 style="margin-top: 0;">Detalles del Error</h3>
+                        <p><strong>Fecha/Hora:</strong> ${fecha}</p>
+                        <p><strong>Usuario:</strong> ${escapeHtml(data.usuario_email || 'N/A')}</p>
+                        <p><strong>Tipo:</strong> ${escapeHtml(data.tipo_error || 'N/A')}</p>
+                        <p><strong>Mensaje:</strong> ${escapeHtml(data.mensaje || 'N/A')}</p>
+                        <p><strong>URL:</strong> ${escapeHtml(data.url || 'N/A')}</p>
+                        <p><strong>Detalles técnicos:</strong></p>
+                        <pre style="background: white; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 11px;">${escapeHtml(detalles)}</pre>
+                        <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
+                    </div>
+                `;
+                
+                // Crear modal temporal para mostrar detalles
+                const modalDetalles = document.createElement('div');
+                modalDetalles.className = 'modal-overlay';
+                modalDetalles.style.display = 'block';
+                modalDetalles.innerHTML = html;
+                modalDetalles.onclick = function(e) {
+                    if (e.target === modalDetalles) {
+                        modalDetalles.remove();
+                    }
+                };
+                document.body.appendChild(modalDetalles);
+            } catch (err) {
+                console.error('Error al ver detalles del log:', err);
+                alert('Error al cargar detalles del log');
+            }
         }
         
         // Cerrar modal de admin
@@ -3060,6 +3833,21 @@
                     const tiempoError = Date.now() - inicioTiempo;
                     console.error(`❌ Error cargando desde Supabase después de ${tiempoError}ms:`, errorSupabase);
                     console.warn('⚠️ Intentando JSON como fallback...');
+                    
+                    // Crear log de error si el usuario está autenticado
+                    if (usuarioActual) {
+                        await crearLogError(
+                            'carga_datos',
+                            'Error al cargar datos desde Supabase',
+                            {
+                                error_message: errorSupabase.message || String(errorSupabase),
+                                error_stack: errorSupabase.stack || null,
+                                tiempo_ms: tiempoError,
+                                timestamp: new Date().toISOString(),
+                                intento_fallback: true
+                            }
+                        );
+                    }
                 }
                 
                 // INTENTO 2: Cargar desde JSON (fallback/respaldo)
@@ -3111,6 +3899,21 @@
                         datosCargados = true;
                     } catch (errorJson) {
                         console.error('❌ Error cargando datos desde JSON:', errorJson);
+                        
+                        // Crear log de error si el usuario está autenticado
+                        if (usuarioActual) {
+                            await crearLogError(
+                                'carga_datos',
+                                'Error al cargar datos desde JSON (fallback también falló)',
+                                {
+                                    error_message: errorJson.message || String(errorJson),
+                                    error_stack: errorJson.stack || null,
+                                    timestamp: new Date().toISOString(),
+                                    fallback_failed: true
+                                }
+                            );
+                        }
+                        
                         throw new Error('No se pudieron cargar datos ni desde Supabase ni desde JSON. ' + errorJson.message);
                     }
                 }
@@ -3153,6 +3956,21 @@
             } catch (error) {
                 // Este catch captura errores no manejados
                 console.error('❌ Error no manejado en cargarDatos:', error);
+                
+                // Crear log de error si el usuario está autenticado
+                if (usuarioActual) {
+                    await crearLogError(
+                        'carga_datos',
+                        'Error no manejado al cargar datos',
+                        {
+                            error_message: error.message || String(error),
+                            error_stack: error.stack || null,
+                            timestamp: new Date().toISOString(),
+                            error_type: 'unhandled_exception'
+                        }
+                    );
+                }
+                
                 const errorHtml = `
                     <div style="background: #ffebee; color: #c62828; padding: 20px; border-radius: 4px; margin: 10px 0; border-left: 4px solid #c62828;">
                         <h3 style="margin-top: 0;">⚠️ Error cargando datos</h3>
@@ -3167,6 +3985,7 @@
                         <p style="margin-top: 15px; font-size: 12px; color: #666;">
                             URL intentada: <code>${window.location.href}datos_obras.json</code>
                         </p>
+                        ${usuarioActual ? '<p style="margin-top: 10px; font-size: 12px; color: #666;">✅ El error ha sido registrado en el sistema de logs.</p>' : ''}
                     </div>
                 `;
                 if (document.getElementById('results-container')) {
@@ -3515,6 +4334,41 @@
                 html += '</div>';
             }
             
+            // Sección 0: Comentarios (mover al principio para mayor visibilidad)
+            html += '<div class="field-section" id="seccion-comentarios" style="border: 2px solid #3498db; border-radius: 8px; padding: 15px; margin-bottom: 20px; background: #f8f9fa;">';
+            html += '<div class="section-title" style="color: #3498db; font-size: 18px;">💬 Comentarios y Validaciones</div>';
+            
+            // Botón destacado para comentar (si está autenticado)
+            if (usuarioActual && obraId) {
+                html += '<div style="margin-bottom: 15px;">';
+                html += '<button class="btn-comentarios-modal" onclick="document.getElementById(\'comentario-texto\')?.focus(); document.getElementById(\'comentario-texto\')?.scrollIntoView({behavior: \'smooth\', block: \'center\'});" style="font-size: 16px; padding: 12px 20px;">💬 Añadir Comentario</button>';
+                html += '</div>';
+            } else if (!usuarioActual) {
+                html += '<div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #ffc107;">';
+                html += '<p style="margin: 0;"><strong>⚠️ Inicia sesión para dejar comentarios</strong></p>';
+                html += '<p style="margin: 5px 0 0 0; font-size: 14px;">Los comentarios ayudan a mejorar la calidad de los datos. Puedes sugerir correcciones, reportar errores o añadir información adicional.</p>';
+                html += '</div>';
+            }
+            
+            // Formulario de comentario (solo si está autenticado)
+            if (usuarioActual) {
+                html += '<div id="comentario-form" style="margin-bottom: 20px;">';
+                html += '<textarea id="comentario-texto" placeholder="Escribe un comentario sobre esta obra... Puedes sugerir mejoras, reportar errores o añadir información adicional." style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; min-height: 100px; font-family: inherit; font-size: 14px;"></textarea>';
+                // Validar que obraId existe antes de crear el botón
+                if (obraId) {
+                    html += '<button onclick="enviarComentario(' + obraId + ')" style="margin-top: 10px; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;">Enviar Comentario</button>';
+                } else {
+                    html += '<p style="color: #999; padding: 10px;">Error: ID de obra no disponible</p>';
+                }
+                html += '</div>';
+            }
+            
+            // Contenedor de comentarios
+            html += '<div id="comentarios-container">';
+            html += '<p style="color: #999; padding: 10px;">Cargando comentarios...</p>';
+            html += '</div>';
+            html += '</div>';
+            
             // Sección 1: Información Básica
             html += '<div class="field-section">';
             html += '<div class="section-title">📋 Información Básica</div>';
@@ -3654,31 +4508,6 @@
                 html += `<div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto; white-space: pre-wrap;">${obra.texto_original_pdf}</div>`;
                 html += '</div>';
             }
-            
-            // Sección de Comentarios (añadir antes de modalBody.innerHTML = html)
-            html += '<div class="field-section">';
-            html += '<div class="section-title">💬 Comentarios y Validaciones</div>';
-            
-            // Formulario de comentario (solo si está autenticado)
-            if (usuarioActual) {
-                html += '<div id="comentario-form" style="margin-bottom: 20px;">';
-                html += '<textarea id="comentario-texto" placeholder="Escribe un comentario sobre esta obra..." style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ddd; min-height: 80px; font-family: inherit;"></textarea>';
-                // Validar que obraId existe antes de crear el botón
-                if (obraId) {
-                    html += '<button onclick="enviarComentario(' + obraId + ')" style="margin-top: 10px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Enviar Comentario</button>';
-                } else {
-                    html += '<p style="color: #999; padding: 10px;">Error: ID de obra no disponible</p>';
-                }
-                html += '</div>';
-            } else {
-                html += '<p style="color: #999; padding: 10px;">Inicia sesión para dejar comentarios</p>';
-            }
-            
-            // Contenedor de comentarios
-            html += '<div id="comentarios-container">';
-            html += '<p style="color: #999; padding: 10px;">Cargando comentarios...</p>';
-            html += '</div>';
-            html += '</div>';
             
             modalBody.innerHTML = html;
             modal.style.display = 'block';
