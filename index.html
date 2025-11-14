@@ -3967,14 +3967,82 @@
         };
         
         // Cargar datos iniciales
-        window.onload = function() {
+        // Procesar parámetros de autenticación del hash de la URL
+        // Esto maneja cuando Supabase redirige después de confirmar email o magic link
+        async function procesarHashAutenticacion() {
+            const hash = window.location.hash;
+            if (!hash) return;
+            
+            console.log('🔍 Hash detectado en URL:', hash.substring(0, 100) + (hash.length > 100 ? '...' : ''));
+            
+            // Extraer parámetros del hash
+            const hashParams = new URLSearchParams(hash.substring(1)); // Remover el #
+            const accessToken = hashParams.get('access_token');
+            const refreshToken = hashParams.get('refresh_token');
+            const type = hashParams.get('type'); // 'signup', 'recovery', 'magiclink', etc.
+            
+            if (accessToken) {
+                console.log('🔑 Token de acceso detectado en URL, tipo:', type);
+                
+                try {
+                    // Establecer la sesión usando el token del hash
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken || ''
+                    });
+                    
+                    if (error) {
+                        console.error('❌ Error estableciendo sesión desde hash:', error);
+                        alert('Error al procesar la confirmación de cuenta. Por favor, intenta iniciar sesión manualmente.');
+                        // Limpiar el hash para evitar intentos repetidos
+                        window.history.replaceState(null, '', window.location.pathname);
+                        return;
+                    }
+                    
+                    if (data.session) {
+                        console.log('✅ Sesión establecida desde hash:', data.session.user.email);
+                        usuarioActual = data.session.user;
+                        
+                        // Mostrar mensaje según el tipo
+                        if (type === 'signup') {
+                            alert('✅ Cuenta confirmada exitosamente. ¡Bienvenido!');
+                        } else if (type === 'recovery') {
+                            alert('✅ Enlace de recuperación procesado. Puedes cambiar tu contraseña.');
+                        } else if (type === 'magiclink') {
+                            alert('✅ Sesión iniciada exitosamente.');
+                        }
+                        
+                        // Limpiar el hash de la URL
+                        window.history.replaceState(null, '', window.location.pathname);
+                        
+                        // Mostrar UI de usuario
+                        await mostrarUIUsuario();
+                    }
+                } catch (error) {
+                    console.error('❌ Error procesando hash de autenticación:', error);
+                    alert('Error al procesar la confirmación. Por favor, intenta iniciar sesión manualmente.');
+                    // Limpiar el hash
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
+            } else {
+                // Si hay hash pero no tiene access_token, puede ser otro tipo de parámetro
+                console.log('ℹ️ Hash sin access_token, ignorando');
+            }
+        }
+        
+        window.onload = async function() {
             console.log('🚀 Iniciando aplicación...');
             console.log('🌐 URL actual:', window.location.href);
             console.log('📦 Supabase disponible:', typeof window.supabase !== 'undefined');
             console.log('💡 Para diagnosticar problemas, ejecuta: diagnosticarUsuario()');
             
-            // Mostrar login por defecto inmediatamente (se actualizará si hay sesión)
-            mostrarUILogin();
+            // PRIMERO: Procesar hash de autenticación si existe (antes de mostrar login)
+            await procesarHashAutenticacion();
+            
+            // Mostrar login por defecto inmediatamente (se actualizará si hay sesión o si procesarHashAutenticacion estableció una)
+            if (!usuarioActual) {
+                mostrarUILogin();
+            }
             
             // Cargar datos inmediatamente (no depende de la sesión)
             cargarDatos();
