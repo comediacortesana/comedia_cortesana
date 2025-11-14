@@ -1,20 +1,39 @@
 -- ============================================================================
--- HACER ADMIN AL USUARIO isimo@ucm.es
+-- HACER ADMIN A UN USUARIO
 -- ============================================================================
 -- Ejecuta este SQL en Supabase SQL Editor
 
--- Primero, necesitas el UUID del usuario
--- Ve a Authentication > Users y copia el UUID de isimo@ucm.es
--- Luego ejecuta esto (reemplaza el UUID):
+-- OPCIÓN 1: Cambiar por EMAIL (Más fácil)
+-- Reemplaza 'isimosanchez@gmail.com' con el email del usuario que quieres hacer admin
 
 UPDATE perfiles_usuarios
 SET rol = 'admin'
-WHERE id = '8a9a2143-5188-4dd1-9c0a-93cd48560c3d';  -- ⚠️ Reemplaza con el UUID real si es diferente
+WHERE id IN (
+    SELECT id FROM auth.users WHERE email = 'isimosanchez@gmail.com'
+);
+
+-- OPCIÓN 2: Cambiar por UUID (Más preciso)
+-- Primero obtén el UUID desde Authentication > Users
+-- Luego ejecuta esto (reemplaza el UUID):
+
+-- UPDATE perfiles_usuarios
+-- SET rol = 'admin'
+-- WHERE id = 'TU-UUID-AQUI';
 
 -- Verificar que se actualizó
-SELECT id, nombre_completo, rol 
+SELECT id, nombre_completo, rol, created_at
 FROM perfiles_usuarios 
-WHERE id = '8a9a2143-5188-4dd1-9c0a-93cd48560c3d';
+WHERE rol = 'admin';
+
+-- Ver todos los usuarios y sus roles
+SELECT 
+    pu.id,
+    pu.nombre_completo,
+    pu.rol,
+    au.email
+FROM perfiles_usuarios pu
+LEFT JOIN auth.users au ON pu.id = au.id
+ORDER BY pu.created_at DESC;
 
 -- ============================================================================
 -- POLÍTICA RLS PARA QUE ADMINS PUEDAN EDITAR ROLES

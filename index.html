@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Content Security Policy: Permitir conexiones a Supabase -->
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self' https://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net; 
+                   script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
+                   connect-src 'self' https://kyxxpoewwjixbpcezays.supabase.co wss://kyxxpoewwjixbpcezays.supabase.co;
+                   style-src 'self' 'unsafe-inline';">
     <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
     <style>
         * {
@@ -425,6 +431,9 @@
                     <button onclick="mostrarRegistro()" style="padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">Registrarse</button>
                     <button onclick="handleResetPassword()" style="padding: 8px 15px; background: #e67e22; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">¿Olvidaste contraseña?</button>
                 </div>
+                <div style="margin-top: 10px;">
+                    <button onclick="reenviarConfirmacionEmail(document.getElementById('login-email').value)" style="padding: 6px 12px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;" title="Reenviar email de confirmación si no lo recibiste">📧 Reenviar confirmación</button>
+                </div>
                 
                 <!-- Formulario de registro (oculto por defecto) -->
                 <div id="registro-form" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
@@ -598,6 +607,14 @@
                 autoRefreshToken: true,
                 detectSessionInUrl: true,
                 storage: window.localStorage
+            },
+            db: {
+                schema: 'public'
+            },
+            global: {
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY
+                }
             }
         });
         
@@ -611,7 +628,10 @@
         // Estado de autenticación
         let usuarioActual = null;
         let esAdmin = false;
+        let rolUsuario = null; // 'colaborador', 'editor', 'admin' o null
         let logoutExplicito = false; // Bandera para saber si el usuario hizo logout explícitamente
+        let modoEdicionActivo = false; // Controla si el modo edición está activo
+        let cambiosEnMemoria = {}; // Almacena cambios en memoria: { obraId: { campo: nuevoValor } }
         
         // IMPORTANTE: Registrar onAuthStateChange INMEDIATAMENTE después de inicializar Supabase
         // Esto asegura que capture el evento INITIAL_SESSION
@@ -752,37 +772,223 @@
             }
         }, 3000);
         
-        // Verificar si el usuario es admin
-        async function verificarEsAdmin() {
+        // Obtener rol del usuario actual
+        async function obtenerRolUsuario() {
             if (!usuarioActual) {
                 console.log('❌ No hay usuario actual');
+                rolUsuario = null;
                 esAdmin = false;
-                return false;
+                return null;
             }
             
             try {
-                console.log('🔍 Verificando si es admin para usuario:', usuarioActual.id);
-                const { data, error } = await supabase
+                console.log('🔍 Obteniendo rol para usuario:', usuarioActual.id);
+                console.log('🔍 Email del usuario:', usuarioActual.email);
+                
+                // Intentar con timeout usando Promise.race
+                console.log('📡 Ejecutando consulta a Supabase con timeout...');
+                const consultaPromise = supabase
                     .from('perfiles_usuarios')
-                    .select('rol')
+                    .select('rol, nombre_completo')
                     .eq('id', usuarioActual.id)
                     .maybeSingle();
                 
-                if (error) {
-                    console.error('❌ Error verificando admin:', error);
-                    esAdmin = false;
-                    return false;
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('TIMEOUT: Consulta tardó más de 8 segundos')), 8000)
+                );
+                
+                let resultado;
+                try {
+                    resultado = await Promise.race([consultaPromise, timeoutPromise]);
+                } catch (timeoutError) {
+                    if (timeoutError.message.includes('TIMEOUT')) {
+                        console.warn('⏱️ Timeout en consulta Supabase, intentando con fetch directo...');
+                        // Intentar con fetch directo como alternativa
+                        return await obtenerRolConFetchDirecto();
+                    }
+                    throw timeoutError;
                 }
                 
-                console.log('📊 Datos del perfil:', data);
-                esAdmin = data && data.rol === 'admin';
-                console.log('✅ Es admin?', esAdmin);
-                return esAdmin;
+                const { data, error } = resultado;
+                
+                console.log('📡 Respuesta de Supabase recibida');
+                console.log('📡 Data:', data);
+                console.log('📡 Error:', error);
+                
+                if (error) {
+                    console.error('❌ Detalles del error:', {
+                        code: error.code,
+                        message: error.message,
+                        details: error.details,
+                        hint: error.hint
+                    });
+                }
+                
+                if (error) {
+                    console.error('❌ Error obteniendo rol:', error);
+                    console.error('   Código:', error.code);
+                    console.error('   Mensaje:', error.message);
+                    console.error('   Detalles:', error.details);
+                    console.error('   Hint:', error.hint);
+                    
+                    // Si el error es que no existe, crear el perfil
+                    if (error.code === 'PGRST116' || error.message.includes('No rows') || error.message.includes('0 rows')) {
+                        console.log('📝 Perfil no existe, creando...');
+                        await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
+                        // Intentar de nuevo después de crear
+                        const { data: newData, error: newError } = await supabase
+                            .from('perfiles_usuarios')
+                            .select('rol')
+                            .eq('id', usuarioActual.id)
+                            .maybeSingle();
+                        
+                        console.log('📡 Segunda consulta después de crear:', { newData, newError });
+                        
+                        if (newError) {
+                            console.error('❌ Error después de crear perfil:', newError);
+                            rolUsuario = 'colaborador'; // Valor por defecto
+                            esAdmin = false;
+                        } else {
+                            rolUsuario = newData ? (newData.rol || 'colaborador') : 'colaborador';
+                            esAdmin = rolUsuario === 'admin';
+                            console.log('✅ Rol obtenido después de crear perfil:', rolUsuario);
+                        }
+                    } else {
+                        console.error('❌ Error desconocido, usando valor por defecto');
+                        rolUsuario = 'colaborador'; // Valor por defecto en caso de error desconocido
+                        esAdmin = false;
+                    }
+                    console.log('🔐 Rol final después de error:', rolUsuario);
+                    return rolUsuario;
+                }
+                
+                console.log('📊 Datos del perfil recibidos:', data);
+                console.log('📊 Tipo de data:', typeof data);
+                console.log('📊 Data es null?', data === null);
+                console.log('📊 Data es undefined?', data === undefined);
+                
+                if (!data || data === null) {
+                    // No existe perfil, crearlo
+                    console.log('📝 No se encontró perfil (data es null/undefined), creando...');
+                    const creado = await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
+                    if (creado) {
+                        // Intentar obtener de nuevo
+                        const { data: retryData, error: retryError } = await supabase
+                            .from('perfiles_usuarios')
+                            .select('rol')
+                            .eq('id', usuarioActual.id)
+                            .maybeSingle();
+                        
+                        if (retryError) {
+                            console.error('❌ Error en reintento:', retryError);
+                            rolUsuario = 'colaborador';
+                        } else {
+                            rolUsuario = retryData ? (retryData.rol || 'colaborador') : 'colaborador';
+                        }
+                    } else {
+                        rolUsuario = 'colaborador'; // Valor por defecto
+                    }
+                    esAdmin = false;
+                } else {
+                    // Perfil existe, usar su rol
+                    console.log('✅ Perfil encontrado, rol:', data.rol);
+                    rolUsuario = data.rol || 'colaborador';
+                    esAdmin = rolUsuario === 'admin';
+                    console.log('✅ Rol asignado:', rolUsuario, 'Es admin?', esAdmin);
+                }
+                
+                console.log('✅ Rol final obtenido:', rolUsuario, 'Es admin?', esAdmin);
+                return rolUsuario;
             } catch (error) {
-                console.error('❌ Error en verificarEsAdmin:', error);
+                console.error('❌ Error en obtenerRolUsuario:', error);
+                console.error('   Stack:', error.stack);
+                rolUsuario = 'colaborador'; // Valor por defecto en caso de error
                 esAdmin = false;
-                return false;
+                return rolUsuario;
             }
+        }
+        
+        // Función alternativa usando fetch directo cuando el cliente de Supabase falla
+        async function obtenerRolConFetchDirecto() {
+            console.log('🌐 Usando fetch directo para obtener rol...');
+            console.log('🌐 Usuario ID:', usuarioActual ? usuarioActual.id : 'null');
+            
+            try {
+                // Hacer consulta directa a la API REST de Supabase (sin token, solo con apikey)
+                // Las políticas RLS permiten lectura pública, así que no necesitamos token
+                const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=rol,nombre_completo`;
+                
+                console.log('📡 URL de consulta:', url);
+                console.log('📡 Ejecutando fetch sin token (solo con apikey)...');
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('📡 Respuesta fetch recibida:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ Error en fetch:', response.status, errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('📡 Datos recibidos via fetch:', data);
+                
+                if (!data || data.length === 0) {
+                    console.log('📝 No se encontró perfil, creando...');
+                    await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
+                    rolUsuario = 'colaborador';
+                    esAdmin = false;
+                } else {
+                    const perfil = data[0];
+                    rolUsuario = perfil.rol || 'colaborador';
+                    esAdmin = rolUsuario === 'admin';
+                    console.log('✅ Rol obtenido via fetch:', rolUsuario);
+                    console.log('✅ Es admin?', esAdmin);
+                    
+                    // Actualizar UI inmediatamente
+                    mostrarInfoPermisos();
+                    if (esAdmin) {
+                        mostrarBotonAdmin();
+                    } else {
+                        ocultarBotonAdmin();
+                    }
+                    if (puedeEditar()) {
+                        mostrarBotonEdicion();
+                    } else {
+                        ocultarBotonEdicion();
+                    }
+                }
+                
+                return rolUsuario;
+            } catch (error) {
+                console.error('❌ Error en obtenerRolConFetchDirecto:', error);
+                rolUsuario = 'colaborador';
+                esAdmin = false;
+                return rolUsuario;
+            }
+        }
+        
+        // Verificar si el usuario es admin (mantener compatibilidad)
+        async function verificarEsAdmin() {
+            const rol = await obtenerRolUsuario();
+            return rol === 'admin';
+        }
+        
+        // Verificar si el usuario puede editar (editor o admin)
+        function puedeEditar() {
+            return rolUsuario === 'editor' || rolUsuario === 'admin';
+        }
+        
+        // Verificar si el usuario es colaborador o superior
+        function puedeComentar() {
+            return rolUsuario !== null; // Cualquier usuario autenticado puede comentar
         }
         
         // ============================================================================
@@ -888,14 +1094,21 @@
         
         // Registro
         async function registro(email, password, nombreCompleto) {
+            // URL de redirección: usar producción si está en GitHub Pages, sino usar local
+            const redirectUrl = window.location.hostname === 'comediacortesana.github.io' 
+                ? 'https://comediacortesana.github.io/comedia_cortesana/'
+                : window.location.href;
+            
+            console.log('📧 URL de redirección para email:', redirectUrl);
+            
             const { data, error } = await supabase.auth.signUp({
-                email: email,
+                email: email.trim(),
                 password: password,
                 options: {
                     data: {
                         nombre_completo: nombreCompleto
                     },
-                    emailRedirectTo: window.location.href
+                    emailRedirectTo: redirectUrl
                 }
             });
             
@@ -905,17 +1118,55 @@
                 return false;
             }
             
+            console.log('📧 Registro exitoso:', {
+                user: data.user,
+                session: data.session,
+                needsConfirmation: !data.session
+            });
+            
             // El perfil se crea automáticamente con el trigger de Supabase
             // Si el usuario está confirmado inmediatamente, iniciar sesión
             if (data.user && data.session) {
+                // Usuario confirmado automáticamente (email confirmation deshabilitado)
                 usuarioActual = data.user;
-                mostrarUIUsuario();
-                alert('¡Registro exitoso! Ya puedes usar la aplicación.');
+                await mostrarUIUsuario();
+                alert('✅ ¡Registro exitoso! Ya puedes usar la aplicación.');
+            } else if (data.user && !data.session) {
+                // Usuario necesita confirmar email
+                alert('✅ ¡Registro exitoso!\n\n📧 Revisa tu email (' + email + ') para confirmar tu cuenta.\n\nSi no recibes el email:\n1. Revisa la carpeta de spam\n2. Usa el botón "Reenviar confirmación" en la pantalla de login\n3. O verifica la configuración de email en Supabase');
             } else {
-                alert('¡Registro exitoso! Revisa tu email para confirmar tu cuenta. Después podrás iniciar sesión.');
+                alert('⚠️ Registro completado pero hay un problema. Por favor, intenta iniciar sesión.');
             }
             
             return true;
+        }
+        
+        // Reenviar email de confirmación
+        async function reenviarConfirmacionEmail(email) {
+            if (!email) {
+                email = prompt('Ingresa tu email para reenviar la confirmación:');
+                if (!email) return false;
+            }
+            
+            try {
+                const { data, error } = await supabase.auth.resend({
+                    type: 'signup',
+                    email: email.trim()
+                });
+                
+                if (error) {
+                    console.error('Error reenviando confirmación:', error);
+                    alert('Error: ' + error.message);
+                    return false;
+                }
+                
+                alert('✅ Email de confirmación reenviado a ' + email + '\n\nRevisa tu bandeja de entrada y la carpeta de spam.');
+                return true;
+            } catch (error) {
+                console.error('Error en reenviarConfirmacionEmail:', error);
+                alert('Error al reenviar el email. Por favor, intenta de nuevo.');
+                return false;
+            }
         }
         
         // Resetear contraseña
@@ -1019,6 +1270,9 @@
                 // Siempre forzar el logout localmente
                 usuarioActual = null;
                 esAdmin = false;
+                rolUsuario = null;
+                modoEdicionActivo = false;
+                cambiosEnMemoria = {}; // Limpiar cambios en memoria al cerrar sesión
                 mostrarUILogin();
                 
                 // Verificar que se limpió
@@ -1036,6 +1290,9 @@
                 // Forzar logout localmente incluso si hay error
                 usuarioActual = null;
                 esAdmin = false;
+                rolUsuario = null;
+                modoEdicionActivo = false;
+                cambiosEnMemoria = {}; // Limpiar cambios en memoria al cerrar sesión
                 
                 // Limpiar localStorage de todas formas
                 Object.keys(localStorage).forEach(key => {
@@ -1051,54 +1308,158 @@
         
         // Crear perfil de usuario
         async function crearPerfilUsuario(userId, nombreCompleto) {
-            const { error } = await supabase
-                .from('perfiles_usuarios')
-                .insert({
-                    id: userId,
-                    nombre_completo: nombreCompleto,
-                    rol: 'colaborador'
-                });
-            
-            if (error && error.code !== '23505') { // Ignorar si ya existe
-                console.error('Error creando perfil:', error);
+            console.log('📝 Creando perfil para usuario:', userId, nombreCompleto);
+            try {
+                const { data, error } = await supabase
+                    .from('perfiles_usuarios')
+                    .insert({
+                        id: userId,
+                        nombre_completo: nombreCompleto || 'Usuario',
+                        rol: 'colaborador'
+                    })
+                    .select()
+                    .single();
+                
+                if (error) {
+                    if (error.code === '23505') {
+                        // Ya existe, no es un error
+                        console.log('ℹ️ Perfil ya existe');
+                        return true;
+                    } else {
+                        console.error('❌ Error creando perfil:', error);
+                        console.error('   Código:', error.code);
+                        console.error('   Mensaje:', error.message);
+                        console.error('   Detalles:', error.details);
+                        return false;
+                    }
+                }
+                
+                console.log('✅ Perfil creado exitosamente:', data);
+                return true;
+            } catch (error) {
+                console.error('❌ Excepción creando perfil:', error);
+                return false;
             }
         }
         
         // Cargar perfil de usuario
         async function cargarPerfilUsuario() {
-            if (!usuarioActual) return;
+            if (!usuarioActual) {
+                console.log('⚠️ No hay usuario actual para cargar perfil');
+                return;
+            }
             
             try {
-                const { data, error } = await supabase
+                console.log('📋 Cargando perfil para usuario:', usuarioActual.id, usuarioActual.email);
+                
+                // Intentar con timeout usando Promise.race
+                const consultaPromise = supabase
                     .from('perfiles_usuarios')
-                    .select('nombre_completo')
+                    .select('nombre_completo, rol')
                     .eq('id', usuarioActual.id)
-                    .maybeSingle(); // Usar maybeSingle() en lugar de single() para evitar error si no existe
+                    .maybeSingle();
+                
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('TIMEOUT')), 5000)
+                );
+                
+                let resultado;
+                try {
+                    resultado = await Promise.race([consultaPromise, timeoutPromise]);
+                } catch (timeoutError) {
+                    if (timeoutError.message === 'TIMEOUT') {
+                        console.warn('⏱️ Timeout en cargarPerfilUsuario, usando fetch directo...');
+                        // Usar fetch directo como alternativa (sin token primero, ya que las políticas RLS permiten lectura pública)
+                        const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=nombre_completo,rol`;
+                        console.log('📡 URL fetch cargarPerfilUsuario:', url);
+                        console.log('📡 Intentando fetch sin token (solo con apikey)...');
+                        
+                        const response = await fetch(url, {
+                            headers: {
+                                'apikey': SUPABASE_ANON_KEY,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+                        
+                        console.log('📡 Respuesta fetch cargarPerfilUsuario:', response.status, response.statusText);
+                        
+                        if (response.ok) {
+                            const fetchData = await response.json();
+                            console.log('📡 Datos recibidos cargarPerfilUsuario:', fetchData);
+                            resultado = { 
+                                data: fetchData && fetchData.length > 0 ? fetchData[0] : null, 
+                                error: null 
+                            };
+                            console.log('✅ Perfil cargado via fetch directo');
+                        } else {
+                            const errorText = await response.text();
+                            console.error('❌ Error en fetch cargarPerfilUsuario:', response.status, errorText);
+                            resultado = { data: null, error: { message: `HTTP ${response.status}: ${errorText}` } };
+                        }
+                    } else {
+                        throw timeoutError;
+                    }
+                }
+                
+                const { data, error } = resultado;
+                
+                const userNameElement = document.getElementById('user-name');
                 
                 if (error) {
-                    console.error('Error cargando perfil:', error);
+                    console.error('❌ Error cargando perfil:', error);
                     // Si no existe perfil, usar email como fallback
-                    const userNameElement = document.getElementById('user-name');
                     if (userNameElement) {
-                        userNameElement.textContent = usuarioActual.email;
+                        userNameElement.textContent = usuarioActual.email || 'Usuario';
                     }
                     return;
                 }
                 
-                if (data) {
-                    const userNameElement = document.getElementById('user-name');
-                    if (userNameElement) {
-                        userNameElement.textContent = data.nombre_completo || usuarioActual.email;
+                if (data && data.nombre_completo) {
+                    console.log('✅ Perfil encontrado:', data.nombre_completo);
+                    
+                    // Si el nombre_completo parece ser un email mal escrito, usar el email correcto
+                    const nombreCompleto = data.nombre_completo.trim();
+                    const emailCorrecto = usuarioActual.email;
+                    
+                    // Verificar si nombre_completo parece ser un email (contiene @)
+                    // y si es diferente del email correcto, usar el email correcto
+                    if (nombreCompleto.includes('@') && nombreCompleto !== emailCorrecto) {
+                        console.log('⚠️ Nombre completo parece ser un email incorrecto, usando email correcto');
+                        if (userNameElement) {
+                            userNameElement.textContent = emailCorrecto;
+                        }
+                        // Opcional: actualizar el nombre_completo en Supabase con el email correcto
+                        await supabase
+                            .from('perfiles_usuarios')
+                            .update({ nombre_completo: emailCorrecto })
+                            .eq('id', usuarioActual.id);
+                    } else {
+                        // Usar el nombre completo normalmente
+                        if (userNameElement) {
+                            userNameElement.textContent = nombreCompleto;
+                        }
                     }
                 } else {
-                    // Si no hay perfil, usar email
-                    const userNameElement = document.getElementById('user-name');
+                    // Si no hay perfil o no tiene nombre, usar email
+                    console.log('⚠️ No hay nombre completo, usando email');
                     if (userNameElement) {
-                        userNameElement.textContent = usuarioActual.email;
+                        userNameElement.textContent = usuarioActual.email || 'Usuario';
+                    }
+                    // Intentar crear perfil si no existe
+                    if (!data) {
+                        console.log('📝 Creando perfil nuevo...');
+                        await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
+                    } else if (data && !data.nombre_completo) {
+                        // Si existe perfil pero sin nombre_completo, actualizarlo
+                        console.log('📝 Actualizando nombre_completo vacío...');
+                        await supabase
+                            .from('perfiles_usuarios')
+                            .update({ nombre_completo: usuarioActual.email })
+                            .eq('id', usuarioActual.id);
                     }
                 }
             } catch (error) {
-                console.error('Error en cargarPerfilUsuario:', error);
+                console.error('❌ Error en cargarPerfilUsuario:', error);
                 // Fallback: usar email
                 const userNameElement = document.getElementById('user-name');
                 if (userNameElement) {
@@ -1111,6 +1472,8 @@
         async function mostrarUIUsuario() {
             try {
                 console.log('👤 Mostrando UI de usuario...');
+                console.log('👤 Usuario actual:', usuarioActual ? usuarioActual.email : 'null');
+                
                 const loginUI = document.getElementById('login-ui');
                 const userUI = document.getElementById('user-ui');
                 
@@ -1122,20 +1485,40 @@
                 loginUI.style.display = 'none';
                 userUI.style.display = 'block';
                 
+                // Primero cargar el nombre (usando email como fallback inmediato)
+                const userNameElement = document.getElementById('user-name');
+                if (userNameElement && usuarioActual) {
+                    userNameElement.textContent = usuarioActual.email || 'Usuario';
+                }
+                
                 console.log('📋 Cargando perfil de usuario...');
                 await cargarPerfilUsuario().catch(err => {
                     console.error('⚠️ Error cargando perfil (continuando):', err);
                 });
                 
-                console.log('🔍 Verificando si es admin...');
-                const esAdminResultado = await verificarEsAdmin().catch(err => {
-                    console.error('⚠️ Error verificando admin (continuando):', err);
-                    return false;
+                console.log('🔍 Obteniendo rol del usuario...');
+                const rol = await obtenerRolUsuario().catch(err => {
+                    console.error('⚠️ Error obteniendo rol (continuando):', err);
+                    console.error('   Error completo:', JSON.stringify(err, null, 2));
+                    return null;
                 });
                 
-                console.log('🔐 Resultado de verificarEsAdmin:', esAdminResultado);
+                console.log('🔐 Rol retornado por función:', rol);
+                console.log('🔐 Variable rolUsuario:', rolUsuario);
                 console.log('🔐 Variable esAdmin:', esAdmin);
+                console.log('🔐 Puede editar?', puedeEditar());
                 
+                // Forzar actualización si el rol cambió
+                if (rol && rol !== rolUsuario) {
+                    console.log('⚠️ Inconsistencia detectada, forzando actualización...');
+                    rolUsuario = rol;
+                    esAdmin = rol === 'admin';
+                }
+                
+                // Esperar un momento para asegurar que el DOM está listo
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Mostrar botones según el rol
                 if (esAdmin) {
                     console.log('✅ Mostrando botón admin');
                     mostrarBotonAdmin();
@@ -1143,6 +1526,21 @@
                     console.log('❌ Ocultando botón admin (no es admin)');
                     ocultarBotonAdmin();
                 }
+                
+                // Mostrar botón de edición si es editor o admin
+                if (puedeEditar()) {
+                    console.log('✅ Usuario puede editar, mostrando botón de edición');
+                    mostrarBotonEdicion();
+                } else {
+                    console.log('❌ Usuario no puede editar');
+                    ocultarBotonEdicion();
+                }
+                
+                // Mostrar información de permisos
+                mostrarInfoPermisos();
+                
+                // Cargar cambios pendientes desde Supabase
+                await cargarCambiosPendientes();
             } catch (error) {
                 console.error('❌ Error en mostrarUIUsuario:', error);
                 // Asegurar que al menos se muestre algo
@@ -1150,27 +1548,425 @@
                 if (userUI) {
                     userUI.style.display = 'block';
                 }
+                // Asegurar que el nombre se muestre
+                const userNameElement = document.getElementById('user-name');
+                if (userNameElement && usuarioActual) {
+                    userNameElement.textContent = usuarioActual.email || 'Usuario';
+                }
             }
         }
         
         function mostrarBotonAdmin() {
+            const userUI = document.getElementById('user-ui');
+            if (!userUI) {
+                console.error('❌ No se encontró user-ui para añadir botón admin');
+                return;
+            }
+            
             let botonAdmin = document.getElementById('admin-panel-btn');
             if (!botonAdmin) {
-                const userUI = document.getElementById('user-ui');
                 botonAdmin = document.createElement('button');
                 botonAdmin.id = 'admin-panel-btn';
                 botonAdmin.textContent = '⚙️ Panel Admin';
                 botonAdmin.onclick = mostrarPanelAdmin;
                 botonAdmin.style.cssText = 'margin-left: 10px; padding: 8px 15px; background: #9b59b6; color: white; border: none; border-radius: 4px; cursor: pointer;';
                 userUI.appendChild(botonAdmin);
+                console.log('✅ Botón admin creado y añadido');
             }
             botonAdmin.style.display = 'inline-block';
+            console.log('✅ Botón admin mostrado');
         }
         
         function ocultarBotonAdmin() {
             const botonAdmin = document.getElementById('admin-panel-btn');
             if (botonAdmin) {
                 botonAdmin.style.display = 'none';
+            }
+        }
+        
+        function mostrarBotonEdicion() {
+            const userUI = document.getElementById('user-ui');
+            if (!userUI) {
+                console.error('❌ No se encontró user-ui para añadir botón edición');
+                return;
+            }
+            
+            let botonEdicion = document.getElementById('edicion-btn');
+            if (!botonEdicion) {
+                botonEdicion = document.createElement('button');
+                botonEdicion.id = 'edicion-btn';
+                botonEdicion.textContent = '✏️ Modo Edición';
+                botonEdicion.onclick = activarModoEdicion;
+                botonEdicion.style.cssText = 'margin-left: 10px; padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;';
+                userUI.appendChild(botonEdicion);
+                console.log('✅ Botón edición creado y añadido');
+            }
+            botonEdicion.style.display = 'inline-block';
+            console.log('✅ Botón edición mostrado');
+        }
+        
+        function ocultarBotonEdicion() {
+            const botonEdicion = document.getElementById('edicion-btn');
+            if (botonEdicion) {
+                botonEdicion.style.display = 'none';
+            }
+        }
+        
+        // Mostrar información de permisos
+        function mostrarInfoPermisos() {
+            // Añadir badge de rol al nombre de usuario si no existe
+            const userName = document.getElementById('user-name');
+            if (!userName) {
+                console.warn('⚠️ No se encontró el elemento user-name');
+                return;
+            }
+            
+            if (rolUsuario) {
+                // Verificar si ya tiene el badge
+                let badgeRol = document.getElementById('badge-rol-usuario');
+                if (!badgeRol) {
+                    badgeRol = document.createElement('span');
+                    badgeRol.id = 'badge-rol-usuario';
+                    badgeRol.className = `badge badge-${rolUsuario}`;
+                    badgeRol.textContent = rolUsuario;
+                    badgeRol.style.cssText = 'margin-left: 8px; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 600;';
+                    badgeRol.title = 'Click para ver información de permisos';
+                    badgeRol.style.cursor = 'pointer';
+                    badgeRol.onclick = mostrarModalPermisos;
+                    userName.parentElement.appendChild(badgeRol);
+                    console.log('✅ Badge de rol añadido:', rolUsuario);
+                } else {
+                    badgeRol.className = `badge badge-${rolUsuario}`;
+                    badgeRol.textContent = rolUsuario;
+                }
+            } else {
+                // Si no hay rol, eliminar badge si existe
+                const badgeRol = document.getElementById('badge-rol-usuario');
+                if (badgeRol) {
+                    badgeRol.remove();
+                }
+            }
+        }
+        
+        // Modal de información de permisos
+        function mostrarModalPermisos() {
+            let modalPermisos = document.getElementById('modal-permisos');
+            if (!modalPermisos) {
+                modalPermisos = document.createElement('div');
+                modalPermisos.id = 'modal-permisos';
+                modalPermisos.className = 'modal-overlay';
+                modalPermisos.onclick = function(e) {
+                    if (e.target.id === 'modal-permisos') {
+                        cerrarModalPermisos();
+                    }
+                };
+                document.body.appendChild(modalPermisos);
+            }
+            
+            const rolActual = rolUsuario || 'No autenticado';
+            const puedeEditarActual = puedeEditar();
+            const puedeComentarActual = puedeComentar();
+            
+            modalPermisos.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;" onclick="event.stopPropagation()">
+                    <div class="modal-header">
+                        <h2>🔐 Niveles de Permisos</h2>
+                        <button class="modal-close" onclick="cerrarModalPermisos()">&times;</button>
+                    </div>
+                    <div class="modal-body" style="padding: 30px;">
+                        <div style="margin-bottom: 30px;">
+                            <h3 style="color: #2c3e50; margin-bottom: 15px;">Tu Rol Actual</h3>
+                            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #3498db;">
+                                <p style="margin: 0 0 10px 0;"><strong>Rol:</strong> <span class="badge badge-${rolActual}" style="font-size: 14px; padding: 6px 12px;">${rolActual}</span></p>
+                                <p style="margin: 5px 0;"><strong>Puedes editar:</strong> ${puedeEditarActual ? '✅ Sí' : '❌ No'}</p>
+                                <p style="margin: 5px 0;"><strong>Puedes comentar:</strong> ${puedeComentarActual ? '✅ Sí' : '❌ No'}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="color: #2c3e50; margin-bottom: 15px;">Niveles de Permisos</h3>
+                            
+                            <div style="background: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                                <h4 style="margin-top: 0; color: #1976d2;">👤 Colaborador</h4>
+                                <ul style="margin: 10px 0; padding-left: 20px;">
+                                    <li>Ver todas las obras y datos</li>
+                                    <li>Filtrar y buscar información</li>
+                                    <li>Exportar resultados a CSV</li>
+                                    <li>Dejar comentarios sobre obras</li>
+                                    <li>Proponer validaciones/correcciones</li>
+                                </ul>
+                                <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;"><em>Rol por defecto al registrarse</em></p>
+                            </div>
+                            
+                            <div style="background: #fff3e0; padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                                <h4 style="margin-top: 0; color: #e65100;">✏️ Editor</h4>
+                                <ul style="margin: 10px 0; padding-left: 20px;">
+                                    <li>Todas las funciones de Colaborador</li>
+                                    <li><strong>Editar datos directamente en la interfaz</strong></li>
+                                    <li>Modificar información de obras, autores, lugares</li>
+                                    <li>Los cambios se guardan en memoria (prueba)</li>
+                                    <li>Requiere aprobación de Admin para persistir</li>
+                                </ul>
+                                <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;"><em>Asignado por un administrador</em></p>
+                            </div>
+                            
+                            <div style="background: #f3e5f5; padding: 15px; border-radius: 5px;">
+                                <h4 style="margin-top: 0; color: #7b1fa2;">⚙️ Administrador</h4>
+                                <ul style="margin: 10px 0; padding-left: 20px;">
+                                    <li>Todas las funciones de Editor</li>
+                                    <li><strong>Gestionar usuarios y roles</strong></li>
+                                    <li>Aprobar/rechazar validaciones propuestas</li>
+                                    <li>Cambiar roles de otros usuarios</li>
+                                    <li>Acceso al panel de administración</li>
+                                    <li>Persistir cambios en la base de datos</li>
+                                </ul>
+                                <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;"><em>Acceso completo al sistema</em></p>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fff9c4; padding: 15px; border-radius: 5px; border-left: 4px solid #fbc02d;">
+                            <p style="margin: 0; font-size: 13px;"><strong>💡 Nota:</strong> Actualmente, la edición funciona en memoria (solo en tu navegador). Los cambios no se guardan permanentemente hasta que un administrador los apruebe y persista en la base de datos.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            modalPermisos.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function cerrarModalPermisos() {
+            const modal = document.getElementById('modal-permisos');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // ============================================================================
+        // FUNCIONES DE EDICIÓN EN MEMORIA
+        // ============================================================================
+        
+        // Activar/desactivar modo edición
+        function activarModoEdicion() {
+            if (!puedeEditar()) {
+                alert('No tienes permisos para editar. Necesitas ser Editor o Administrador.');
+                return;
+            }
+            
+            modoEdicionActivo = !modoEdicionActivo;
+            const botonEdicion = document.getElementById('edicion-btn');
+            
+            if (modoEdicionActivo) {
+                botonEdicion.textContent = '💾 Modo Edición ACTIVO';
+                botonEdicion.style.background = '#e74c3c';
+                alert('✅ Modo edición activado\n\nLos cambios se guardan en memoria (solo en tu navegador).\nPara persistir cambios, un administrador debe aprobarlos.');
+            } else {
+                botonEdicion.textContent = '✏️ Modo Edición';
+                botonEdicion.style.background = '#27ae60';
+                if (Object.keys(cambiosEnMemoria).length > 0) {
+                    if (confirm(`Tienes ${Object.keys(cambiosEnMemoria).length} obra(s) con cambios en memoria. ¿Deseas descartarlos?`)) {
+                        cambiosEnMemoria = {};
+                    } else {
+                        modoEdicionActivo = true;
+                        botonEdicion.textContent = '💾 Modo Edición ACTIVO';
+                        botonEdicion.style.background = '#e74c3c';
+                        return;
+                    }
+                }
+            }
+            
+            mostrarResultados();
+        }
+        
+        // Editar campo de una obra (guarda en memoria Y en Supabase)
+        async function editarCampoObra(obraId, campo, valorAnterior) {
+            if (!modoEdicionActivo) {
+                alert('Activa el modo edición primero');
+                return;
+            }
+            
+            if (!usuarioActual) {
+                alert('Debes estar autenticado para editar');
+                return;
+            }
+            
+            const nuevoValor = prompt(`Editar ${campo}:\n\nValor actual: ${valorAnterior || '(vacío)'}\n\nNuevo valor:`, valorAnterior || '');
+            
+            if (nuevoValor === null) {
+                return; // Usuario canceló
+            }
+            
+            // Si el valor no cambió, no hacer nada
+            if (nuevoValor === valorAnterior) {
+                return;
+            }
+            
+            // Encontrar la obra en datosFiltrados y datosOriginales (comparar como string para evitar problemas de tipo)
+            const obraFiltrada = datosFiltrados.find(o => String(o.id) === String(obraId));
+            const obraOriginal = datosOriginales.find(o => String(o.id) === String(obraId));
+            
+            if (!obraFiltrada || !obraOriginal) {
+                alert('Error: No se encontró la obra');
+                return;
+            }
+            
+            // Guardar cambio en memoria (usar String para consistencia)
+            const obraIdStr = String(obraId);
+            if (!cambiosEnMemoria[obraIdStr]) {
+                cambiosEnMemoria[obraIdStr] = {};
+            }
+            cambiosEnMemoria[obraIdStr][campo] = nuevoValor;
+            
+            // Aplicar cambio en memoria (solo visual, no persiste)
+            obraFiltrada[campo] = nuevoValor;
+            obraOriginal[campo] = nuevoValor;
+            
+            // Guardar cambio en Supabase
+            try {
+                const { data, error } = await supabase
+                    .from('cambios_pendientes')
+                    .insert({
+                        obra_id: obraIdStr,
+                        campo: campo,
+                        valor_anterior: valorAnterior || null,
+                        valor_nuevo: nuevoValor,
+                        usuario_id: usuarioActual.id,
+                        estado: 'pendiente'
+                    })
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('❌ Error guardando cambio en Supabase:', error);
+                    alert('⚠️ El cambio se guardó en memoria pero hubo un error al guardarlo en la base de datos. Por favor, intenta de nuevo.');
+                    return;
+                }
+                
+                console.log('✅ Cambio guardado en Supabase:', data);
+                
+                // Actualizar visualización
+                mostrarResultados();
+                
+                // Si el modal de detalle está abierto, actualizarlo
+                const modalDetalle = document.getElementById('modal-detalle');
+                if (modalDetalle && modalDetalle.style.display !== 'none') {
+                    const index = datosFiltrados.findIndex(o => String(o.id) === String(obraId));
+                    if (index !== -1) {
+                        mostrarDetalleObra(index);
+                    }
+                }
+                
+                // Mostrar confirmación
+                alert(`✅ Cambio guardado\n\nCampo: ${campo}\nNuevo valor: ${nuevoValor}\n\nEl cambio está pendiente de aprobación por un administrador.`);
+                
+            } catch (error) {
+                console.error('❌ Error en editarCampoObra:', error);
+                alert('Error al guardar el cambio. Por favor, intenta de nuevo.');
+            }
+        }
+        
+        // Obtener valor de campo (considerando cambios en memoria)
+        function obtenerValorCampo(obra, campo) {
+            const obraId = String(obra.id);
+            if (cambiosEnMemoria[obraId] && cambiosEnMemoria[obraId][campo] !== undefined) {
+                return cambiosEnMemoria[obraId][campo];
+            }
+            return obra[campo];
+        }
+        
+        // Ver resumen de cambios en memoria y Supabase
+        async function verCambiosEnMemoria() {
+            if (!usuarioActual) {
+                alert('Debes estar autenticado para ver cambios');
+                return;
+            }
+            
+            try {
+                // Cargar cambios pendientes desde Supabase
+                const { data: cambiosSupabase, error } = await supabase
+                    .from('cambios_pendientes')
+                    .select('*')
+                    .eq('usuario_id', usuarioActual.id)
+                    .eq('estado', 'pendiente')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error cargando cambios:', error);
+                    alert('Error al cargar cambios desde la base de datos');
+                    return;
+                }
+                
+                if (!cambiosSupabase || cambiosSupabase.length === 0) {
+                    alert('No tienes cambios pendientes');
+                    return;
+                }
+                
+                // Agrupar por obra
+                const cambiosPorObra = {};
+                cambiosSupabase.forEach(cambio => {
+                    if (!cambiosPorObra[cambio.obra_id]) {
+                        cambiosPorObra[cambio.obra_id] = [];
+                    }
+                    cambiosPorObra[cambio.obra_id].push(cambio);
+                });
+                
+                let mensaje = `📝 Tus cambios pendientes (${cambiosSupabase.length} cambio(s)):\n\n`;
+                Object.keys(cambiosPorObra).forEach(obraId => {
+                    const obra = datosOriginales.find(o => String(o.id) === String(obraId));
+                    const titulo = obra ? (obra.titulo || obra.Título || 'Sin título') : `ID: ${obraId}`;
+                    mensaje += `\n📖 ${titulo}:\n`;
+                    cambiosPorObra[obraId].forEach(cambio => {
+                        mensaje += `  • ${cambio.campo}: "${cambio.valor_anterior || '(vacío)'}" → "${cambio.valor_nuevo}"\n`;
+                    });
+                });
+                
+                mensaje += '\n💡 Nota: Estos cambios están pendientes de aprobación por un administrador.';
+                alert(mensaje);
+                
+            } catch (error) {
+                console.error('Error en verCambiosEnMemoria:', error);
+                alert('Error al cargar cambios');
+            }
+        }
+        
+        // Cargar cambios pendientes desde Supabase al iniciar
+        async function cargarCambiosPendientes() {
+            if (!usuarioActual) return;
+            
+            try {
+                const { data, error } = await supabase
+                    .from('cambios_pendientes')
+                    .select('*')
+                    .eq('usuario_id', usuarioActual.id)
+                    .eq('estado', 'pendiente');
+                
+                if (error) {
+                    console.error('Error cargando cambios pendientes:', error);
+                    return;
+                }
+                
+                // Aplicar cambios pendientes a memoria
+                if (data && data.length > 0) {
+                    data.forEach(cambio => {
+                        const obraIdStr = String(cambio.obra_id);
+                        if (!cambiosEnMemoria[obraIdStr]) {
+                            cambiosEnMemoria[obraIdStr] = {};
+                        }
+                        cambiosEnMemoria[obraIdStr][cambio.campo] = cambio.valor_nuevo;
+                        
+                        // Aplicar también a los datos
+                        const obraFiltrada = datosFiltrados.find(o => String(o.id) === obraIdStr);
+                        const obraOriginal = datosOriginales.find(o => String(o.id) === obraIdStr);
+                        if (obraFiltrada) obraFiltrada[cambio.campo] = cambio.valor_nuevo;
+                        if (obraOriginal) obraOriginal[cambio.campo] = cambio.valor_nuevo;
+                    });
+                    
+                    console.log(`✅ ${data.length} cambios pendientes cargados desde Supabase`);
+                    mostrarResultados();
+                }
+            } catch (error) {
+                console.error('Error en cargarCambiosPendientes:', error);
             }
         }
         
@@ -1502,20 +2298,29 @@
             
             html += '</div>';
             
+            // Sección de cambios pendientes
+            html += '<div class="field-section" style="margin-top: 30px;">';
+            html += '<div class="section-title">📝 Cambios Pendientes de Aprobación</div>';
+            html += '<div id="cambios-pendientes-container">Cargando cambios...</div>';
+            html += '</div>';
+            
             // Sección de información
             html += '<div class="field-section">';
             html += '<div class="section-title">ℹ️ Información</div>';
             html += '<div style="padding: 15px; background: #e3f2fd; border-radius: 5px;">';
             html += '<p><strong>Roles disponibles:</strong></p>';
             html += '<ul style="margin-left: 20px;">';
-            html += '<li><strong>Colaborador:</strong> Puede dejar comentarios y proponer validaciones</li>';
-            html += '<li><strong>Editor:</strong> Puede editar datos directamente en la web (próximamente)</li>';
-            html += '<li><strong>Admin:</strong> Puede gestionar usuarios y aprobar validaciones</li>';
+            html += '<li><strong>Colaborador:</strong> Puede ver datos, filtrar, exportar y dejar comentarios</li>';
+            html += '<li><strong>Editor:</strong> Puede editar datos directamente en la interfaz (cambios requieren aprobación)</li>';
+            html += '<li><strong>Admin:</strong> Puede gestionar usuarios, cambiar roles y aprobar/rechazar cambios</li>';
             html += '</ul>';
             html += '</div>';
             html += '</div>';
             
             modalBody.innerHTML = html;
+            
+            // Cargar cambios pendientes
+            await cargarCambiosPendientesAdmin();
             modalAdmin.style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -1526,6 +2331,172 @@
             if (modal) {
                 modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Cargar cambios pendientes para admin
+        async function cargarCambiosPendientesAdmin() {
+            if (!esAdmin) return;
+            
+            try {
+                const { data: cambios, error } = await supabase
+                    .from('cambios_pendientes')
+                    .select(`
+                        *,
+                        perfiles_usuarios:usuario_id (
+                            nombre_completo,
+                            rol
+                        )
+                    `)
+                    .eq('estado', 'pendiente')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Error cargando cambios pendientes:', error);
+                    document.getElementById('cambios-pendientes-container').innerHTML = 
+                        '<p style="color: red;">Error al cargar cambios pendientes</p>';
+                    return;
+                }
+                
+                const container = document.getElementById('cambios-pendientes-container');
+                
+                if (!cambios || cambios.length === 0) {
+                    container.innerHTML = '<p style="color: #666;">✅ No hay cambios pendientes de aprobación</p>';
+                    return;
+                }
+                
+                // Agrupar por obra
+                const cambiosPorObra = {};
+                cambios.forEach(cambio => {
+                    if (!cambiosPorObra[cambio.obra_id]) {
+                        cambiosPorObra[cambio.obra_id] = [];
+                    }
+                    cambiosPorObra[cambio.obra_id].push(cambio);
+                });
+                
+                let html = `<p style="margin-bottom: 15px;"><strong>Total: ${cambios.length} cambio(s) pendiente(s) en ${Object.keys(cambiosPorObra).length} obra(s)</strong></p>`;
+                
+                Object.keys(cambiosPorObra).forEach(obraId => {
+                    const obra = datosOriginales.find(o => String(o.id) === String(obraId));
+                    const titulo = obra ? (obra.titulo || obra.Título || 'Sin título') : `ID: ${obraId}`;
+                    const cambiosObra = cambiosPorObra[obraId];
+                    
+                    html += '<div style="background: #fff9c4; padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #fbc02d;">';
+                    html += `<h4 style="margin-top: 0;">📖 ${escapeHtml(titulo)} (ID: ${obraId})</h4>`;
+                    
+                    cambiosObra.forEach(cambio => {
+                        const usuarioNombre = cambio.perfiles_usuarios?.nombre_completo || 'Usuario';
+                        const fecha = new Date(cambio.created_at).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        
+                        html += '<div style="background: white; padding: 10px; border-radius: 3px; margin-bottom: 10px;">';
+                        html += `<p style="margin: 5px 0;"><strong>Campo:</strong> ${escapeHtml(cambio.campo)}</p>`;
+                        html += `<p style="margin: 5px 0;"><strong>Valor anterior:</strong> <span style="color: #e74c3c;">${escapeHtml(cambio.valor_anterior || '(vacío)')}</span></p>`;
+                        html += `<p style="margin: 5px 0;"><strong>Valor nuevo:</strong> <span style="color: #27ae60;">${escapeHtml(cambio.valor_nuevo)}</span></p>`;
+                        html += `<p style="margin: 5px 0; font-size: 12px; color: #666;">Por: ${escapeHtml(usuarioNombre)} | ${fecha}</p>`;
+                        html += `<div style="margin-top: 10px;">`;
+                        html += `<button onclick="aprobarCambio('${cambio.id}')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">✅ Aprobar</button>`;
+                        html += `<button onclick="rechazarCambio('${cambio.id}')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Rechazar</button>`;
+                        html += `</div>`;
+                        html += '</div>';
+                    });
+                    
+                    html += '</div>';
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error en cargarCambiosPendientesAdmin:', error);
+                document.getElementById('cambios-pendientes-container').innerHTML = 
+                    '<p style="color: red;">Error al cargar cambios pendientes</p>';
+            }
+        }
+        
+        // Aprobar cambio
+        async function aprobarCambio(cambioId) {
+            if (!esAdmin) {
+                alert('Solo los administradores pueden aprobar cambios');
+                return;
+            }
+            
+            if (!confirm('¿Aprobar este cambio? Se aplicará permanentemente.')) {
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('cambios_pendientes')
+                    .update({
+                        estado: 'aprobado',
+                        revisado_por: usuarioActual.id,
+                        revisado_at: new Date().toISOString()
+                    })
+                    .eq('id', cambioId)
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('Error aprobando cambio:', error);
+                    alert('Error al aprobar el cambio: ' + error.message);
+                    return;
+                }
+                
+                console.log('✅ Cambio aprobado:', data);
+                alert('✅ Cambio aprobado exitosamente\n\nNota: El cambio se aplicará al JSON cuando se sincronice con GitHub.');
+                
+                // Recargar cambios pendientes
+                await cargarCambiosPendientesAdmin();
+                
+            } catch (error) {
+                console.error('Error en aprobarCambio:', error);
+                alert('Error al aprobar el cambio');
+            }
+        }
+        
+        // Rechazar cambio
+        async function rechazarCambio(cambioId) {
+            if (!esAdmin) {
+                alert('Solo los administradores pueden rechazar cambios');
+                return;
+            }
+            
+            if (!confirm('¿Rechazar este cambio? Se marcará como rechazado.')) {
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('cambios_pendientes')
+                    .update({
+                        estado: 'rechazado',
+                        revisado_por: usuarioActual.id,
+                        revisado_at: new Date().toISOString()
+                    })
+                    .eq('id', cambioId)
+                    .select()
+                    .single();
+                
+                if (error) {
+                    console.error('Error rechazando cambio:', error);
+                    alert('Error al rechazar el cambio: ' + error.message);
+                    return;
+                }
+                
+                console.log('❌ Cambio rechazado:', data);
+                alert('❌ Cambio rechazado');
+                
+                // Recargar cambios pendientes
+                await cargarCambiosPendientesAdmin();
+                
+            } catch (error) {
+                console.error('Error en rechazarCambio:', error);
+                alert('Error al rechazar el cambio');
             }
         }
         
@@ -1749,6 +2720,9 @@
             html += '<th>Lugar</th>';
             html += '<th>Fecha</th>';
             html += '<th>Compañía</th>';
+            if (modoEdicionActivo) {
+                html += '<th>Editar</th>';
+            }
             html += '</tr></thead>';
             html += '<tbody>';
             
@@ -1804,8 +2778,10 @@
                 // Clase CSS para fuente (con validación)
                 const fuenteClass = fuente ? fuente.toLowerCase() : 'desconocida';
                 
-                html += `<tr onclick="mostrarDetalleObra(${index})">`;
-                html += `<td>${id}</td>`;
+                const tieneCambios = cambiosEnMemoria[String(id)] && Object.keys(cambiosEnMemoria[String(id)]).length > 0;
+                const rowClass = tieneCambios ? 'style="background-color: #fff9c4;"' : '';
+                html += `<tr ${rowClass} onclick="mostrarDetalleObra(${index})">`;
+                html += `<td>${id}${tieneCambios ? ' ✏️' : ''}</td>`;
                 html += `<td><strong>${titulo}</strong></td>`;
                 html += `<td>${autorNombre}</td>`;
                 html += `<td>${tipoObra}</td>`;
@@ -1813,11 +2789,36 @@
                 html += `<td>${lugar}${region ? (lugar ? ', ' : '') + region : ''}</td>`;
                 html += `<td>${fecha}</td>`;
                 html += `<td>${compania}</td>`;
+                if (modoEdicionActivo) {
+                    html += `<td onclick="event.stopPropagation(); editarCampoObra('${id}', 'titulo', '${escapeHtml(titulo)}')" style="cursor: pointer; color: #27ae60; font-weight: bold;" title="Click para editar">✏️</td>`;
+                }
                 html += '</tr>';
             });
             
             html += '</tbody></table>';
+            
+            // Añadir información sobre modo edición y cambios
+            if (modoEdicionActivo) {
+                const totalCambios = Object.keys(cambiosEnMemoria).length;
+                html += `<div style="margin-top: 15px; padding: 15px; background: #e8f5e9; border-radius: 5px; border-left: 4px solid #4caf50;">`;
+                html += `<p style="margin: 0 0 10px 0;"><strong>💾 Modo Edición ACTIVO</strong></p>`;
+                html += `<p style="margin: 0 0 10px 0;">Cambios pendientes: <strong>${totalCambios}</strong> obra(s)</p>`;
+                if (totalCambios > 0) {
+                    html += `<button onclick="verCambiosEnMemoria()" style="padding: 8px 15px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">Ver Cambios</button>`;
+                }
+                html += `<p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">💡 Los cambios están solo en memoria. Click en una fila para editar campos individuales.</p>`;
+                html += `</div>`;
+            }
+            
             container.innerHTML = html;
+        }
+        
+        // Función helper para escapar HTML
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
         
         // Función para limpiar filtros
@@ -1849,16 +2850,23 @@
             modalTitulo.textContent = obra.titulo || 'Sin título';
             
             // Función helper para mostrar campo
-            function renderField(label, value, emoji = '') {
+            function renderField(label, value, emoji = '', campoNombre = null) {
                 const hasValue = value && value !== '' && value !== null && value !== 0;
                 const className = hasValue ? 'field-item has-value' : 'field-item empty';
                 const displayValue = hasValue ? value : '(vacío - pendiente de completar)';
                 const valueClass = hasValue ? 'field-value' : 'field-value empty-value';
                 const statusEmoji = hasValue ? '✅' : '⚪';
                 
+                // Si el modo edición está activo y tenemos el nombre del campo, añadir botón de edición
+                let botonEdicion = '';
+                if (modoEdicionActivo && campoNombre) {
+                    const valorActual = obtenerValorCampo(obra, campoNombre);
+                    botonEdicion = `<button onclick="editarCampoObra('${obra.id}', '${campoNombre}', ${JSON.stringify(valorActual || '')})" style="margin-left: 10px; padding: 4px 8px; background: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 11px;" title="Editar ${label}">✏️ Editar</button>`;
+                }
+                
                 return `
                     <div class="${className}">
-                        <div class="field-label">${statusEmoji} ${emoji} ${label}</div>
+                        <div class="field-label">${statusEmoji} ${emoji} ${label}${botonEdicion}</div>
                         <div class="${valueClass}">${displayValue}</div>
                     </div>
                 `;
@@ -1866,20 +2874,28 @@
             
             let html = '';
             
+            // Aviso si hay cambios en memoria para esta obra
+            const tieneCambiosObra = cambiosEnMemoria[String(obra.id)] && Object.keys(cambiosEnMemoria[String(obra.id)]).length > 0;
+            if (tieneCambiosObra && modoEdicionActivo) {
+                html += '<div style="background: #fff9c4; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #fbc02d;">';
+                html += '<p style="margin: 0;"><strong>✏️ Esta obra tiene cambios pendientes en memoria</strong></p>';
+                html += '</div>';
+            }
+            
             // Sección 1: Información Básica
             html += '<div class="field-section">';
             html += '<div class="section-title">📋 Información Básica</div>';
             html += '<div class="field-grid">';
-            html += renderField('ID de la Obra', obra.id, '🔢');
-            html += renderField('Título Principal', obra.titulo, '🎭');
-            html += renderField('Título Original', obra.titulo_original, '📝');
-            html += renderField('Títulos Alternativos', obra.titulo_alternativo, '🔄');
-            html += renderField('Tipo de Obra', obra.tipo_obra, '🎬');
-            html += renderField('Género', obra.genero, '🎨');
-            html += renderField('Subgénero', obra.subgenero, '📚');
-            html += renderField('Tema', obra.tema, '💡');
-            html += renderField('Idioma', obra.idioma, '🌐');
-            html += renderField('Fecha de Creación', obra.fecha_creacion, '📅');
+            html += renderField('ID de la Obra', obra.id, '🔢', 'id');
+            html += renderField('Título Principal', obtenerValorCampo(obra, 'titulo'), '🎭', 'titulo');
+            html += renderField('Título Original', obtenerValorCampo(obra, 'titulo_original'), '📝', 'titulo_original');
+            html += renderField('Títulos Alternativos', obtenerValorCampo(obra, 'titulo_alternativo'), '🔄', 'titulo_alternativo');
+            html += renderField('Tipo de Obra', obtenerValorCampo(obra, 'tipo_obra'), '🎬', 'tipo_obra');
+            html += renderField('Género', obtenerValorCampo(obra, 'genero'), '🎨', 'genero');
+            html += renderField('Subgénero', obtenerValorCampo(obra, 'subgenero'), '📚', 'subgenero');
+            html += renderField('Tema', obtenerValorCampo(obra, 'tema'), '💡', 'tema');
+            html += renderField('Idioma', obtenerValorCampo(obra, 'idioma'), '🌐', 'idioma');
+            html += renderField('Fecha de Creación', obtenerValorCampo(obra, 'fecha_creacion'), '📅', 'fecha_creacion');
             html += '</div></div>';
             
             // Sección 2: Autor
@@ -1925,7 +2941,7 @@
             html += '<div class="field-section">';
             html += '<div class="section-title">👑 Mecenazgo y Patrocinio</div>';
             html += '<div class="field-grid">';
-            html += renderField('Mecenas', obra.mecenas, '💰');
+            html += renderField('Mecenas', obtenerValorCampo(obra, 'mecenas'), '💰', 'mecenas');
             html += '</div></div>';
             
             // Sección 6: Bibliografía e Historia Textual
@@ -2151,11 +3167,255 @@
             alert(`✅ CSV exportado con ${datosFiltrados.length} obras.\n\n💡 Ahora puedes:\n1. Subir a Google Sheets\n2. Editar colaborativamente\n3. Descargar como CSV\n4. Re-importar a Django`);
         }
         
+        // Función de diagnóstico (ejecutar desde consola: diagnosticarUsuario())
+        window.diagnosticarUsuario = async function() {
+            console.log('🔍 === DIAGNÓSTICO DE USUARIO ===');
+            console.log('1. Usuario actual:', usuarioActual ? usuarioActual.email : 'null');
+            console.log('2. Rol usuario:', rolUsuario);
+            console.log('3. Es admin:', esAdmin);
+            console.log('4. Puede editar:', puedeEditar());
+            
+            if (usuarioActual) {
+                console.log('5. Verificando perfil en Supabase...');
+                console.log('   - Usuario ID:', usuarioActual.id);
+                console.log('   - Usuario Email:', usuarioActual.email);
+                try {
+                    console.log('   - Ejecutando consulta con timeout...');
+                    const consultaPromise = supabase
+                        .from('perfiles_usuarios')
+                        .select('*')
+                        .eq('id', usuarioActual.id)
+                        .maybeSingle();
+                    
+                    const timeoutPromise = new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('TIMEOUT')), 8000)
+                    );
+                    
+                    let resultado;
+                    try {
+                        resultado = await Promise.race([consultaPromise, timeoutPromise]);
+                    } catch (timeoutError) {
+                        if (timeoutError.message === 'TIMEOUT') {
+                            console.warn('   ⏱️ Timeout en consulta, intentando con fetch directo...');
+                            const session = await supabase.auth.getSession();
+                            const token = session.data?.session?.access_token;
+                            if (token) {
+                                const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=*`;
+                                const response = await fetch(url, {
+                                    headers: {
+                                        'apikey': SUPABASE_ANON_KEY,
+                                        'Authorization': `Bearer ${token}`,
+                                        'Content-Type': 'application/json'
+                                    }
+                                });
+                                const fetchData = await response.json();
+                                resultado = { data: fetchData && fetchData.length > 0 ? fetchData[0] : null, error: null };
+                                console.log('   ✅ Datos obtenidos via fetch directo');
+                            } else {
+                                throw new Error('No hay token de sesión');
+                            }
+                        } else {
+                            throw timeoutError;
+                        }
+                    }
+                    
+                    const { data, error } = resultado;
+                    
+                    console.log('   - Consulta completada');
+                    console.log('   - Respuesta completa:', { data, error });
+                    
+                    if (error) {
+                        console.error('❌ Error:', error);
+                        console.error('   Código:', error.code);
+                        console.error('   Mensaje:', error.message);
+                        console.error('   Detalles:', error.details);
+                    } else if (data) {
+                        console.log('✅ Perfil encontrado:', data);
+                        console.log('   - Nombre:', data.nombre_completo);
+                        console.log('   - Rol:', data.rol);
+                        console.log('   - Rol debería ser:', data.rol === 'admin' ? 'ADMIN ✅' : data.rol);
+                    } else {
+                        console.log('⚠️ No se encontró perfil (data es null)');
+                        console.log('💡 Intentando crear perfil...');
+                        const creado = await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
+                        if (creado) {
+                            console.log('✅ Perfil creado, recargando rol...');
+                            const nuevoRol = await obtenerRolUsuario();
+                            console.log('✅ Rol después de crear:', nuevoRol);
+                            console.log('✅ Variable rolUsuario:', rolUsuario);
+                        }
+                    }
+                } catch (err) {
+                    console.error('❌ Excepción:', err);
+                    console.error('   Stack:', err.stack);
+                }
+            }
+            
+            console.log('6. Elementos UI:');
+            console.log('   - login-ui:', document.getElementById('login-ui') ? '✅' : '❌');
+            console.log('   - user-ui:', document.getElementById('user-ui') ? '✅' : '❌');
+            console.log('   - user-name:', document.getElementById('user-name') ? '✅' : '❌');
+            console.log('   - admin-panel-btn:', document.getElementById('admin-panel-btn') ? '✅' : '❌');
+            console.log('   - edicion-btn:', document.getElementById('edicion-btn') ? '✅' : '❌');
+            
+            console.log('7. Estado de visualización:');
+            const userUI = document.getElementById('user-ui');
+            const loginUI = document.getElementById('login-ui');
+            console.log('   - user-ui display:', userUI ? userUI.style.display : 'N/A');
+            console.log('   - login-ui display:', loginUI ? loginUI.style.display : 'N/A');
+            
+            console.log('8. Forzando actualización de UI...');
+            if (usuarioActual) {
+                console.log('   - Forzando recarga de rol...');
+                const nuevoRol = await obtenerRolUsuario();
+                console.log('   - Rol después de forzar:', nuevoRol);
+                console.log('   - Variable rolUsuario:', rolUsuario);
+                console.log('   - Variable esAdmin:', esAdmin);
+                
+                mostrarInfoPermisos();
+                
+                if (esAdmin) {
+                    console.log('   - Mostrando botón admin');
+                    mostrarBotonAdmin();
+                } else {
+                    console.log('   - Ocultando botón admin');
+                    ocultarBotonAdmin();
+                }
+                
+                if (puedeEditar()) {
+                    console.log('   - Mostrando botón edición');
+                    mostrarBotonEdicion();
+                } else {
+                    console.log('   - Ocultando botón edición');
+                    ocultarBotonEdicion();
+                }
+            }
+            
+            console.log('🔍 === FIN DIAGNÓSTICO ===');
+            console.log('💡 Si aún no ves botones:');
+            console.log('   1. Verifica que el rol está como "admin" en Supabase');
+            console.log('   2. Cierra sesión y vuelve a iniciar sesión');
+            console.log('   3. Ejecuta: recargarRol()');
+        };
+        
+        // Función para probar conexión con Supabase
+        window.probarSupabase = async function() {
+            console.log('🧪 === PRUEBA DE CONEXIÓN SUPABASE ===');
+            console.log('1. Verificando cliente Supabase...');
+            console.log('   - Supabase existe?', typeof supabase !== 'undefined');
+            console.log('   - Supabase URL:', SUPABASE_URL);
+            console.log('   - Supabase Key existe?', !!SUPABASE_ANON_KEY);
+            
+            if (!supabase) {
+                console.error('❌ Cliente Supabase no está inicializado');
+                return;
+            }
+            
+            console.log('2. Probando consulta simple...');
+            try {
+                const startTime = Date.now();
+                const { data, error } = await Promise.race([
+                    supabase.from('perfiles_usuarios').select('count').limit(1),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout después de 10 segundos')), 10000))
+                ]);
+                
+                const elapsed = Date.now() - startTime;
+                console.log(`✅ Consulta completada en ${elapsed}ms`);
+                console.log('   - Data:', data);
+                console.log('   - Error:', error);
+                
+                if (error) {
+                    console.error('❌ Error en consulta:', error);
+                    console.error('   Código:', error.code);
+                    console.error('   Mensaje:', error.message);
+                    console.error('   Detalles:', error.details);
+                    console.error('   Hint:', error.hint);
+                }
+            } catch (err) {
+                console.error('❌ Error o timeout:', err);
+            }
+            
+            console.log('3. Probando consulta con tu ID...');
+            if (usuarioActual) {
+                try {
+                    const startTime = Date.now();
+                    const { data, error } = await Promise.race([
+                        supabase
+                            .from('perfiles_usuarios')
+                            .select('*')
+                            .eq('id', usuarioActual.id)
+                            .maybeSingle(),
+                        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
+                    ]);
+                    
+                    const elapsed = Date.now() - startTime;
+                    console.log(`✅ Consulta completada en ${elapsed}ms`);
+                    console.log('   - Data:', data);
+                    console.log('   - Error:', error);
+                    
+                    if (data) {
+                        console.log('✅ Perfil encontrado!');
+                        console.log('   - Rol:', data.rol);
+                        console.log('   - Nombre:', data.nombre_completo);
+                        
+                        // Actualizar variables
+                        rolUsuario = data.rol || 'colaborador';
+                        esAdmin = rolUsuario === 'admin';
+                        console.log('✅ Variables actualizadas:', { rolUsuario, esAdmin });
+                        
+                        // Actualizar UI
+                        mostrarInfoPermisos();
+                        if (esAdmin) mostrarBotonAdmin();
+                        if (puedeEditar()) mostrarBotonEdicion();
+                    }
+                } catch (err) {
+                    console.error('❌ Error o timeout:', err);
+                }
+            }
+            
+            console.log('🧪 === FIN PRUEBA ===');
+        };
+        
+        // Función para forzar recarga del rol (ejecutar desde consola: recargarRol())
+        window.recargarRol = async function() {
+            console.log('🔄 Forzando recarga de rol...');
+            if (!usuarioActual) {
+                console.log('❌ No hay usuario actual');
+                return;
+            }
+            
+            // Resetear variables
+            rolUsuario = null;
+            esAdmin = false;
+            
+            // Obtener rol de nuevo
+            const nuevoRol = await obtenerRolUsuario();
+            console.log('✅ Rol recargado:', nuevoRol);
+            console.log('✅ Variable rolUsuario:', rolUsuario);
+            console.log('✅ Variable esAdmin:', esAdmin);
+            
+            // Actualizar UI
+            mostrarInfoPermisos();
+            if (esAdmin) {
+                mostrarBotonAdmin();
+            } else {
+                ocultarBotonAdmin();
+            }
+            if (puedeEditar()) {
+                mostrarBotonEdicion();
+            } else {
+                ocultarBotonEdicion();
+            }
+            
+            console.log('✅ UI actualizada');
+        };
+        
         // Cargar datos iniciales
         window.onload = function() {
             console.log('🚀 Iniciando aplicación...');
             console.log('🌐 URL actual:', window.location.href);
             console.log('📦 Supabase disponible:', typeof window.supabase !== 'undefined');
+            console.log('💡 Para diagnosticar problemas, ejecuta: diagnosticarUsuario()');
             
             // Mostrar login por defecto inmediatamente (se actualizará si hay sesión)
             mostrarUILogin();
