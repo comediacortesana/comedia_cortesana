@@ -723,43 +723,51 @@
             }
         }, 100);
         
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('🔄 Cambio de estado de auth:', event, session ? `Usuario: ${session.user.email}` : 'Sin sesión');
+        // IMPORTANTE: Según la documentación oficial de Supabase, NO debemos usar await
+        // ni llamar a otros métodos de Supabase dentro del callback de onAuthStateChange
+        // porque puede causar dead-locks. En su lugar, usamos setTimeout(..., 0) para
+        // mover las llamadas fuera del callback.
+        // Ver: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
+        supabase.auth.onAuthStateChange((event, session) => {
+            console.log('🔄 Cambio de estado de auth:', event, session ? `Usuario: ${session.user?.email}` : 'Sin sesión');
             sesionVerificada = true;
             
-            try {
-                if (event === 'SIGNED_IN' && session) {
-                    console.log('✅ Usuario inició sesión:', session.user.email);
-                    usuarioActual = session.user;
-                    await mostrarUIUsuario();
-                } else if (event === 'SIGNED_OUT') {
-                    console.log('👋 Usuario cerró sesión');
-                    usuarioActual = null;
-                    esAdmin = false;
-                    mostrarUILogin();
-                } else if (event === 'TOKEN_REFRESHED' && session) {
-                    console.log('🔄 Token refrescado');
-                    usuarioActual = session.user;
-                    await mostrarUIUsuario();
-                } else if (event === 'USER_UPDATED' && session) {
-                    console.log('👤 Usuario actualizado');
-                    usuarioActual = session.user;
-                    await mostrarUIUsuario();
-                } else if (event === 'INITIAL_SESSION') {
-                    console.log('📋 Sesión inicial detectada');
-                    if (session) {
-                        console.log('✅ Hay sesión guardada:', session.user.email);
+            // Usar setTimeout(..., 0) para evitar dead-lock según recomendación oficial
+            setTimeout(async () => {
+                try {
+                    if (event === 'SIGNED_IN' && session) {
+                        console.log('✅ Usuario inició sesión:', session.user.email);
                         usuarioActual = session.user;
                         await mostrarUIUsuario();
-                    } else {
-                        console.log('❌ No hay sesión guardada');
+                    } else if (event === 'SIGNED_OUT') {
+                        console.log('👋 Usuario cerró sesión');
+                        usuarioActual = null;
+                        esAdmin = false;
                         mostrarUILogin();
+                    } else if (event === 'TOKEN_REFRESHED' && session) {
+                        console.log('🔄 Token refrescado');
+                        usuarioActual = session.user;
+                        await mostrarUIUsuario();
+                    } else if (event === 'USER_UPDATED' && session) {
+                        console.log('👤 Usuario actualizado');
+                        usuarioActual = session.user;
+                        await mostrarUIUsuario();
+                    } else if (event === 'INITIAL_SESSION') {
+                        console.log('📋 Sesión inicial detectada');
+                        if (session) {
+                            console.log('✅ Hay sesión guardada:', session.user.email);
+                            usuarioActual = session.user;
+                            await mostrarUIUsuario();
+                        } else {
+                            console.log('❌ No hay sesión guardada');
+                            mostrarUILogin();
+                        }
                     }
+                } catch (error) {
+                    console.error('❌ Error en onAuthStateChange:', error);
+                    mostrarUILogin();
                 }
-            } catch (error) {
-                console.error('❌ Error en onAuthStateChange:', error);
-                mostrarUILogin();
-            }
+            }, 0);
         });
         
         console.log('👂 Listener de onAuthStateChange registrado');
@@ -1942,6 +1950,11 @@
                     .eq('estado', 'pendiente');
                 
                 if (error) {
+                    // Si la tabla no existe (PGRST205), es normal y no mostrar error
+                    if (error.code === 'PGRST205') {
+                        console.log('ℹ️ Tabla cambios_pendientes no existe aún. Ejecuta supabase_cambios_pendientes.sql para crearla.');
+                        return;
+                    }
                     console.error('Error cargando cambios pendientes:', error);
                     return;
                 }
@@ -2202,15 +2215,39 @@
             }
             
             try {
+                console.log('🔐 Cambiando rol de usuario:', userId, 'a:', nuevoRol);
+                
+                // Primero verificar que el usuario existe
+                const { data: usuarioExistente, error: errorVerificacion } = await supabase
+                    .from('perfiles_usuarios')
+                    .select('id, rol')
+                    .eq('id', userId)
+                    .maybeSingle();
+                
+                if (errorVerificacion) {
+                    console.error('Error verificando usuario:', errorVerificacion);
+                    throw errorVerificacion;
+                }
+                
+                if (!usuarioExistente) {
+                    throw new Error('Usuario no encontrado en perfiles_usuarios');
+                }
+                
+                console.log('✅ Usuario encontrado, rol actual:', usuarioExistente.rol);
+                
+                // Actualizar el rol
                 const { data, error } = await supabase
                     .from('perfiles_usuarios')
                     .update({ rol: nuevoRol })
                     .eq('id', userId)
-                    .select()
-                    .single();
+                    .select();
                 
                 if (error) {
                     console.error('Error cambiando rol:', error);
+                    console.error('Código de error:', error.code);
+                    console.error('Mensaje:', error.message);
+                    console.error('Detalles:', error.details);
+                    console.error('Hint:', error.hint);
                     alert('Error: ' + error.message);
                     return false;
                 }
@@ -2339,19 +2376,39 @@
             if (!esAdmin) return;
             
             try {
+                // Obtener cambios pendientes y luego cargar perfiles por separado
+                // porque usuario_id referencia a auth.users, no directamente a perfiles_usuarios
                 const { data: cambios, error } = await supabase
                     .from('cambios_pendientes')
-                    .select(`
-                        *,
-                        perfiles_usuarios:usuario_id (
-                            nombre_completo,
-                            rol
-                        )
-                    `)
+                    .select('*')
                     .eq('estado', 'pendiente')
                     .order('created_at', { ascending: false });
                 
+                // Si hay cambios, cargar los perfiles de usuarios por separado
+                if (cambios && cambios.length > 0) {
+                    const userIds = [...new Set(cambios.map(c => c.usuario_id))];
+                    const { data: perfiles } = await supabase
+                        .from('perfiles_usuarios')
+                        .select('id, nombre_completo, rol')
+                        .in('id', userIds);
+                    
+                    // Agregar información del perfil a cada cambio
+                    cambios.forEach(cambio => {
+                        const perfil = perfiles?.find(p => p.id === cambio.usuario_id);
+                        cambio.perfil_usuario = perfil || { nombre_completo: 'Usuario desconocido', rol: 'colaborador' };
+                    });
+                }
+                
                 if (error) {
+                    // Si la tabla no existe (PGRST205), mostrar mensaje informativo
+                    if (error.code === 'PGRST205') {
+                        document.getElementById('cambios-pendientes-container').innerHTML = 
+                            '<p style="color: #666; padding: 20px; text-align: center;">' +
+                            'ℹ️ La tabla <code>cambios_pendientes</code> no existe aún.<br>' +
+                            'Ejecuta <code>supabase_cambios_pendientes.sql</code> en Supabase para crearla.' +
+                            '</p>';
+                        return;
+                    }
                     console.error('Error cargando cambios pendientes:', error);
                     document.getElementById('cambios-pendientes-container').innerHTML = 
                         '<p style="color: red;">Error al cargar cambios pendientes</p>';
@@ -2385,7 +2442,7 @@
                     html += `<h4 style="margin-top: 0;">📖 ${escapeHtml(titulo)} (ID: ${obraId})</h4>`;
                     
                     cambiosObra.forEach(cambio => {
-                        const usuarioNombre = cambio.perfiles_usuarios?.nombre_completo || 'Usuario';
+                        const usuarioNombre = cambio.perfil_usuario?.nombre_completo || 'Usuario';
                         const fecha = new Date(cambio.created_at).toLocaleDateString('es-ES', {
                             year: 'numeric',
                             month: 'short',
