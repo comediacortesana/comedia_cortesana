@@ -187,7 +187,8 @@
             font-weight: 600;
         }
         
-        .badge-fuentesxi {
+        .badge-fuentesxi,
+        .badge-fuentes-ix {
             background-color: #e3f2fd;
             color: #1976d2;
         }
@@ -485,6 +486,7 @@
                     <label for="fuente">Fuente de datos</label>
                     <select id="fuente">
                         <option value="">Todas</option>
+                        <option value="Fuentes IX">FUENTES IX</option>
                         <option value="FUENTESXI">FUENTES XI</option>
                         <option value="CATCOM">CATCOM</option>
                         <option value="AMBAS">Ambas</option>
@@ -3200,11 +3202,17 @@
                     if (!obraTipo || obraTipo !== tipoObra) return false;
                 }
                 
-                // Filtro de fuente
+                // Filtro de fuente (compatibilidad con "Fuentes IX" y "FUENTESXI")
                 const fuente = document.getElementById('fuente').value;
                 if (fuente) {
                     const obraFuente = getField(obra, 'fuente', 'Fuente Principal', 'Fuente');
-                    if (!obraFuente || obraFuente !== fuente) return false;
+                    if (!obraFuente) return false;
+                    
+                    // Normalizar para comparación (aceptar tanto "Fuentes IX" como "FUENTESXI")
+                    const obraFuenteNormalizada = obraFuente === 'Fuentes IX' || obraFuente === 'FUENTESXI' ? 'Fuentes IX' : obraFuente;
+                    const fuenteFiltroNormalizada = fuente === 'Fuentes IX' || fuente === 'FUENTESXI' ? 'Fuentes IX' : fuente;
+                    
+                    if (obraFuenteNormalizada !== fuenteFiltroNormalizada) return false;
                 }
                 
                 // Filtro de autor (puede ser string, objeto, null o undefined)
@@ -3373,14 +3381,28 @@
                 const id = getObraField(obra, 'id', 'ID') || '-';
                 const titulo = getObraField(obra, 'titulo', 'Título', 'T?tulo') || 'Sin título';
                 const tipoObra = getObraField(obra, 'tipo_obra', 'Tipo de Obra') || '-';
-                const fuente = getObraField(obra, 'fuente', 'Fuente Principal', 'Fuente') || 'DESCONOCIDA';
+                let fuente = getObraField(obra, 'fuente', 'Fuente Principal', 'Fuente') || 'DESCONOCIDA';
                 const lugar = getObraField(obra, 'lugar', 'Lugar') || '';
                 const region = getObraField(obra, 'region', 'Región') || '';
                 const fecha = getObraField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '-';
                 const compania = getObraField(obra, 'compania', 'Compañía') || '';
                 
-                // Clase CSS para fuente (con validación)
-                const fuenteClass = fuente ? fuente.toLowerCase() : 'desconocida';
+                // Normalizar fuente para display y clase CSS
+                // Mantener "Fuentes IX" internamente pero mostrar como "FUENTES IX" (más compacto)
+                let fuenteDisplay = fuente;
+                let fuenteClass = fuente ? fuente.toLowerCase().replace(/\s+/g, '-') : 'desconocida';
+                
+                // Mapear valores de fuente para display mejorado
+                if (fuente === 'Fuentes IX' || fuente === 'FUENTESXI') {
+                    fuenteDisplay = 'FUENTES IX';  // Display más compacto y visual
+                    fuenteClass = 'fuentesxi';  // Usar la clase CSS existente
+                } else if (fuente === 'CATCOM') {
+                    fuenteDisplay = 'CATCOM';
+                    fuenteClass = 'catcom';
+                } else if (fuente === 'AMBAS') {
+                    fuenteDisplay = 'AMBAS';
+                    fuenteClass = 'ambas';
+                }
                 
                 const tieneCambios = cambiosEnMemoria[String(id)] && Object.keys(cambiosEnMemoria[String(id)]).length > 0;
                 const rowClass = tieneCambios ? 'style="background-color: #fff9c4;"' : '';
@@ -3389,7 +3411,7 @@
                 html += `<td><strong>${titulo}</strong></td>`;
                 html += `<td>${autorNombre}</td>`;
                 html += `<td>${tipoObra}</td>`;
-                html += `<td><span class="badge badge-${fuenteClass}">${fuente}</span></td>`;
+                html += `<td><span class="badge badge-${fuenteClass}">${fuenteDisplay}</span></td>`;
                 html += `<td>${lugar}${region ? (lugar ? ', ' : '') + region : ''}</td>`;
                 html += `<td>${fecha}</td>`;
                 html += `<td>${compania}</td>`;

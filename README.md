@@ -28,11 +28,47 @@ Aplicación Web (index.html)
 Autenticación y gestión de usuarios
 ```
 
+## 🐍 Configuración del Entorno Python (Conda)
+
+Este proyecto usa **Conda** para gestionar las dependencias de Python de forma aislada.
+
+### Inicio Rápido
+
+```bash
+# 1. Crear entorno conda
+conda env create -f environment.yml
+
+# 2. Activar entorno
+conda activate delia
+
+# 3. Verificar instalación
+python --version  # Debería mostrar Python 3.11.x
+```
+
+### Scripts Disponibles
+
+Con el entorno `delia` activado, puedes ejecutar:
+
+```bash
+# Corrección de datos
+python scripts/corregir_fuente_fuentesxi.py --dry-run
+
+# Sincronización con Supabase
+python scripts/sync_to_supabase.py --file datos_obras.json
+
+# Diagnóstico de carga de datos
+python scripts/diagnosticar_carga_datos.py --url https://comediacortesana.github.io/comedia_cortesana/
+```
+
+📖 **Ver [CONFIGURACION_CONDA.md](./CONFIGURACION_CONDA.md)** para documentación completa.
+
 ## 📁 Archivos Principales
 
 - **`index.html`** - Aplicación principal con filtros, autenticación y exportación
 - **`datos_obras.json`** - Datos de obras en formato JSON (actualizado automáticamente desde Google Sheets)
 - **`obras_completas.csv`** - Exportación CSV de los datos (para referencia)
+- **`environment.yml`** - Configuración del entorno Conda
+- **`scripts/`** - Scripts Python para sincronización, validación y corrección de datos
 
 ## 📋 Campos Disponibles para Filtrado
 
