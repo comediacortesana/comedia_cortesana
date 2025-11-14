@@ -1,0 +1,24 @@
+# Archivos de configuración con credenciales
+.env
+
+# Archivos temporales
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos de datos temporales
+*.tmp
+temp_*.json
+
