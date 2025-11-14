@@ -2385,9 +2385,15 @@
                 comentarioData.obra_id = obraId;
             }
             
-            // Añadir filtros de búsqueda si se proporcionan
+            // Añadir filtros de búsqueda si se proporcionan (solo si la columna existe)
             if (filtrosBusqueda) {
-                comentarioData.filtros_busqueda = filtrosBusqueda;
+                // Intentar añadir filtros, pero no fallar si la columna no existe
+                try {
+                    comentarioData.filtros_busqueda = filtrosBusqueda;
+                } catch (e) {
+                    console.warn('⚠️ No se pudo añadir filtros_busqueda (columna puede no existir):', e);
+                    // Continuar sin filtros si la columna no existe
+                }
             }
             
             const { data, error } = await supabase
@@ -2398,7 +2404,18 @@
             
             if (error) {
                 console.error('Error creando comentario:', error);
-                alert('Error: ' + error.message);
+                console.error('Detalles del error:', JSON.stringify(error, null, 2));
+                
+                // Manejar errores específicos con instrucciones claras
+                let mensajeError = 'Error: ' + error.message;
+                
+                if (error.message && error.message.includes('filtros_busqueda')) {
+                    mensajeError = 'Error: La columna filtros_busqueda no existe en la base de datos.\n\nPor favor, ejecuta el script SQL:\nsupabase_añadir_filtros_busqueda.sql\n\nen Supabase SQL Editor.';
+                } else if (error.message && (error.message.includes('null value') || error.message.includes('not-null constraint') || error.message.includes('obra_id'))) {
+                    mensajeError = 'Error: La columna obra_id aún tiene restricción NOT NULL.\n\nPor favor, ejecuta el script SQL:\nsupabase_permitir_comentarios_generales.sql\n\nen Supabase SQL Editor para permitir comentarios generales.';
+                }
+                
+                alert(mensajeError);
                 return false;
             }
             
@@ -2594,7 +2611,10 @@
                         minute: '2-digit'
                     }) : null;
                     const obraTitulo = comentario.obra ? comentario.obra.titulo : null;
-                    const tieneFiltros = comentario.filtros_busqueda && Object.keys(comentario.filtros_busqueda).length > 0;
+                    // Verificar si tiene filtros de forma segura (puede que la columna no exista)
+                    const tieneFiltros = comentario.filtros_busqueda && 
+                                        typeof comentario.filtros_busqueda === 'object' && 
+                                        Object.keys(comentario.filtros_busqueda).length > 0;
                     
                     const vistoClass = vistoPorAdmin ? 'comentario-visto' : 'comentario-pendiente';
                     const vistoBadge = vistoPorAdmin 
