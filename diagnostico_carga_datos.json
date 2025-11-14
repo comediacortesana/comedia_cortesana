@@ -1,0 +1,97 @@
+{
+  "fecha": "2025-11-14T13:12:27.151850",
+  "url": "https://comediacortesana.github.io/comedia_cortesana/",
+  "diagnosticos": [
+    {
+      "categoria": "SUCCESS",
+      "mensaje": "Página cargada correctamente",
+      "timestamp": "2025-11-14T13:12:18.673968",
+      "detalles": {
+        "title": "Filtro de Obras - Teatro Español del Siglo de Oro",
+        "url": "https://comediacortesana.github.io/comedia_cortesana/"
+      }
+    },
+    {
+      "categoria": "ERROR",
+      "mensaje": "Se encontraron 1 errores en la consola",
+      "timestamp": "2025-11-14T13:12:20.683860",
+      "detalles": {
+        "errores": [
+          "https://comediacortesana.github.io/favicon.ico - Failed to load resource: the server responded with a status of 404 ()"
+        ]
+      }
+    },
+    {
+      "categoria": "INFO",
+      "mensaje": "Mensajes relacionados con Supabase: 6",
+      "timestamp": "2025-11-14T13:12:20.683973",
+      "detalles": {
+        "mensajes": [
+          "https://comediacortesana.github.io/comedia_cortesana/ 624:20 \"✅ Supabase inicializado correctamente\"",
+          "https://comediacortesana.github.io/comedia_cortesana/ 4035:20 \"📦 Supabase disponible:\" true",
+          "https://comediacortesana.github.io/comedia_cortesana/ 2917:28 \"🔍 Intentando cargar datos desde Supabase...\"",
+          "https://comediacortesana.github.io/comedia_cortesana/ 660:24 \"🔑 Claves de Supabase en localStorage:\" Array(0)",
+          "https://comediacortesana.github.io/comedia_cortesana/ 2951:32 \"✅ 2100 obras cargadas desde Supabase\"",
+          "https://comediacortesana.github.io/comedia_cortesana/ 2992:32 \"✅ Datos cargados desde Supabase (fuente principal)\""
+        ]
+      }
+    },
+    {
+      "categoria": "INFO",
+      "mensaje": "Estado de datos en la página",
+      "timestamp": "2025-11-14T13:12:24.843683",
+      "detalles": {
+        "fuente_detectada": "Supabase",
+        "resultados_texto": "",
+        "mensaje_carga": "",
+        "hay_tabla": true,
+        "num_filas_tabla": 2100,
+        "tabla_visible": true,
+        "tabla_info": {
+          "visible": true,
+          "display": "table-row-group",
+          "visibility": "visible",
+          "opacity": "1",
+          "height": "85095.5px",
+          "width": "1340px"
+        }
+      }
+    },
+    {
+      "categoria": "ERROR",
+      "mensaje": "Error verificando Supabase: Message: javascript error: Cannot read properties of undefined (reading 'getSession')\n  (Session info: chrome=142.0.7444.135)\nStacktrace:\n0   chromedriver                        0x000000010471baa4 cxxbridge1$str$ptr + 2943380\n1   chromedriver                        0x0000000104713760 cxxbridge1$str$ptr + 2909776\n2   chromedriver                        0x000000010422a2bc _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 74028\n3   chromedriver                        0x00000001042301ec _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 98396\n4   chromedriver                        0x00000001042325e0 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 107600\n5   chromedriver                        0x00000001042b3cec _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 637788\n6   chromedriver                        0x00000001042b2d78 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 633832\n7   chromedriver                        0x0000000104265f10 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318848\n8   chromedriver                        0x00000001046ddb98 cxxbridge1$str$ptr + 2689672\n9   chromedriver                        0x00000001046e13ac cxxbridge1$str$ptr + 2704028\n10  chromedriver                        0x00000001046bea08 cxxbridge1$str$ptr + 2562296\n11  chromedriver                        0x00000001046e1c84 cxxbridge1$str$ptr + 2706292\n12  chromedriver                        0x00000001046b0304 cxxbridge1$str$ptr + 2503156\n13  chromedriver                        0x0000000104701d58 cxxbridge1$str$ptr + 2837576\n14  chromedriver                        0x0000000104701edc cxxbridge1$str$ptr + 2837964\n15  chromedriver                        0x00000001047133b0 cxxbridge1$str$ptr + 2908832\n16  libsystem_pthread.dylib             0x0000000182923034 _pthread_start + 136\n17  libsystem_pthread.dylib             0x000000018291de3c thread_start + 8\n",
+      "timestamp": "2025-11-14T13:12:25.851527",
+      "detalles": {}
+    },
+    {
+      "categoria": "INFO",
+      "mensaje": "Mensajes relacionados con carga de datos",
+      "timestamp": "2025-11-14T13:12:26.861272",
+      "detalles": {
+        "mensajes_cargar_datos": [],
+        "mensajes_supabase": [],
+        "mensajes_fallback": []
+      }
+    },
+    {
+      "categoria": "INFO",
+      "mensaje": "Estado de variables de datos en JavaScript",
+      "timestamp": "2025-11-14T13:12:26.868014",
+      "detalles": {
+        "datos_filtrados_length": 2100,
+        "datos_originales_length": 2100,
+        "metadata": {
+          "fuente": "Supabase",
+          "total_obras": 2100,
+          "ultima_actualizacion": "2025-11-14T12:12:14.529Z"
+        }
+      }
+    }
+  ],
+  "resumen": {
+    "total_diagnosticos": 7,
+    "errores": 2,
+    "warnings": 0,
+    "success": 1
+  }
+}

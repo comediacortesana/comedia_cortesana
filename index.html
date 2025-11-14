@@ -568,7 +568,7 @@
             
             <div id="results-container">
                 <div style="text-align: center; padding: 40px; color: #3498db; font-size: 16px;">
-                    ⏳ Cargando datos desde GitHub...
+                    ⏳ Cargando datos desde Supabase...
                 </div>
             </div>
         </div>
@@ -3227,6 +3227,25 @@
             const container = document.getElementById('results-container');
             const totalResults = document.getElementById('total-results');
             
+            // Validación defensiva
+            if (!container) {
+                console.error('❌ No se encontró el contenedor results-container');
+                return;
+            }
+            
+            if (!totalResults) {
+                console.error('❌ No se encontró el elemento total-results');
+                return;
+            }
+            
+            // Validar que datosFiltrados existe y es un array
+            if (!datosFiltrados || !Array.isArray(datosFiltrados)) {
+                console.error('❌ datosFiltrados no es un array válido:', datosFiltrados);
+                container.innerHTML = '<div class="no-results">Error: datosFiltrados no está disponible</div>';
+                return;
+            }
+            
+            console.log(`📊 Mostrando ${datosFiltrados.length} resultados`);
             totalResults.textContent = datosFiltrados.length;
             
             if (datosFiltrados.length === 0) {
