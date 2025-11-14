@@ -272,18 +272,65 @@ class TestEdicionPersistencia:
         try:
             print("\n🔍 Test 4: Activar modo edición...")
             
-            # Buscar y hacer clic en el botón de modo edición
-            modo_edicion_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.ID, "modo-edicion-toggle"))
-            )
-            modo_edicion_button.click()
-            time.sleep(1)
+            time.sleep(2)  # Esperar a que la UI se cargue completamente
             
-            self.log_test("Activar modo edición", True, "Modo edición activado")
-            return True
+            # Buscar el botón de modo edición - puede tener diferentes IDs o textos
+            modo_edicion_button = None
+            
+            # Intentar diferentes formas de encontrar el botón
+            # El botón tiene ID "edicion-btn" según el código
+            try:
+                modo_edicion_button = WebDriverWait(self.driver, 10).until(
+                    EC.element_to_be_clickable((By.ID, "edicion-btn"))
+                )
+            except TimeoutException:
+                try:
+                    # Buscar por texto "Modo Edición" o "✏️ Modo Edición"
+                    modo_edicion_button = WebDriverWait(self.driver, 5).until(
+                        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'Modo Edición') or contains(text(), 'modo edición')]"))
+                    )
+                except TimeoutException:
+                    try:
+                        # Buscar por onclick que contenga "toggleModoEdicion" o similar
+                        modo_edicion_button = self.driver.find_element(By.XPATH, "//button[contains(@onclick, 'toggleModoEdicion') or contains(@onclick, 'modo')]")
+                    except:
+                        # Buscar cualquier botón que contenga "edición" o "edicion" en el texto
+                        modo_edicion_button = self.driver.find_element(By.XPATH, "//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'edición') or contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'edicion')]")
+            
+            if modo_edicion_button:
+                # Asegurar que esté visible
+                self.driver.execute_script("arguments[0].scrollIntoView(true);", modo_edicion_button)
+                time.sleep(0.5)
+                modo_edicion_button.click()
+                time.sleep(1)
+                
+                # Manejar alert si aparece
+                try:
+                    alert = WebDriverWait(self.driver, 3).until(EC.alert_is_present())
+                    alert_text = alert.text
+                    alert.accept()
+                    print(f"   ℹ️  Alert aceptado: {alert_text[:50]}...")
+                except TimeoutException:
+                    # No hay alert, continuar
+                    pass
+                
+                print("   ✅ Modo edición activado")
+                self.log_test("Activar modo edición", True, "Modo edición activado")
+                return True
+            else:
+                self.log_test("Activar modo edición", False, "No se encontró el botón de modo edición")
+                return False
             
         except Exception as e:
             self.log_test("Activar modo edición", False, f"Error: {str(e)}")
+            import traceback
+            print(f"   Stack trace: {traceback.format_exc()}")
+            # Tomar screenshot para debug
+            try:
+                self.driver.save_screenshot("modo_edicion_failed.png")
+                print("   📸 Screenshot guardado en modo_edicion_failed.png")
+            except:
+                pass
             return False
     
     def test_editar_campo(self) -> Dict[str, Any]:
@@ -319,38 +366,52 @@ class TestEdicionPersistencia:
                 # Obtener valor anterior
                 valor_anterior = boton_editar.get_attribute("data-valor") or ""
                 
-                # Hacer clic en editar
-                boton_editar.click()
-                time.sleep(1)
-                
-                # Esperar el prompt y manejarlo
-                # Nota: Selenium no puede manejar prompt() directamente, así que usamos JavaScript
+                # Preparar nuevo valor
                 nuevo_valor = f"TEST_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
                 
-                # Sobrescribir window.prompt ANTES de hacer clic
+                # IMPORTANTE: Sobrescribir window.prompt ANTES de hacer clic
+                # Esto debe hacerse antes de cualquier interacción que pueda activar el prompt
                 self.driver.execute_script(f"""
-                    window.prompt = function() {{
-                        return '{nuevo_valor}';
-                    }};
+                    (function() {{
+                        // Guardar referencia original si existe
+                        window._originalPrompt = window.prompt;
+                        
+                        // Sobrescribir prompt para que siempre retorne nuestro valor
+                        window.prompt = function() {{
+                            console.log('Prompt interceptado, retornando: {nuevo_valor}');
+                            return '{nuevo_valor}';
+                        }};
+                        
+                        // También usar defineProperty para hacerlo más robusto
+                        try {{
+                            Object.defineProperty(window, 'prompt', {{
+                                value: function() {{ return '{nuevo_valor}'; }},
+                                writable: true,
+                                configurable: true
+                            }});
+                        }} catch(e) {{
+                            console.log('No se pudo usar defineProperty:', e);
+                        }}
+                    }})();
                 """)
                 
-                # Hacer clic para activar el prompt (que ahora retornará nuestro valor)
-                boton_editar.click()
-                time.sleep(3)  # Esperar más tiempo para que se procese
+                time.sleep(0.5)  # Dar tiempo para que se aplique
                 
-                # Verificar que se cerró el prompt (esperando que aparezca un alert o cambio en el DOM)
+                # Ahora hacer clic - el prompt debería retornar nuestro valor automáticamente
+                boton_editar.click()
+                time.sleep(3)  # Esperar a que se procese el prompt y el cambio
+                
+                # Manejar alert si aparece (confirmación del cambio)
                 try:
-                    WebDriverWait(self.driver, 5).until(
-                        lambda d: nuevo_valor in d.page_source or d.switch_to.alert
-                    )
-                    # Si hay un alert, aceptarlo
-                    try:
-                        alert = self.driver.switch_to.alert
-                        alert.accept()
-                    except:
-                        pass
-                except:
+                    alert = WebDriverWait(self.driver, 5).until(EC.alert_is_present())
+                    alert_text = alert.text
+                    alert.accept()
+                    print(f"   ℹ️  Alert de confirmación aceptado: {alert_text[:50]}...")
+                except TimeoutException:
+                    # No hay alert, puede que el cambio se haya aplicado directamente
                     pass
+                
+                time.sleep(1)  # Esperar un poco más para que se actualice el DOM
                 
                 # Verificar que el cambio se aplicó
                 # Buscar el nuevo valor en el modal
@@ -484,13 +545,50 @@ class TestEdicionPersistencia:
                 return False
             
             # Re-login después de recargar (si es necesario)
-            time.sleep(2)
-            if "login" in self.driver.page_source.lower() and "email" in self.driver.page_source.lower():
-                print("\n⚠️  Se requiere login después de recargar...")
-                if not self.test_login():
-                    return False
+            time.sleep(3)  # Dar más tiempo para que la página cargue completamente
             
+            # Verificar si necesitamos hacer login de nuevo
+            page_source_lower = self.driver.page_source.lower()
+            needs_login = (
+                ("login" in page_source_lower and "email" in page_source_lower) or
+                self.driver.find_elements(By.ID, "login-email")
+            )
+            
+            login_after_reload_ok = True
+            if needs_login:
+                print("\n⚠️  Se requiere login después de recargar...")
+                # Esperar a que los campos de login estén listos
+                time.sleep(3)
+                try:
+                    # Intentar login pero con más tiempo y mejor manejo de errores
+                    email_input = WebDriverWait(self.driver, 10).until(
+                        EC.element_to_be_clickable((By.ID, "login-email"))
+                    )
+                    email_input.clear()
+                    email_input.send_keys(self.email)
+                    
+                    if self.password:
+                        password_input = self.driver.find_element(By.ID, "login-password")
+                        password_input.clear()
+                        password_input.send_keys(self.password)
+                        login_button = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Entrar')]")
+                        login_button.click()
+                        time.sleep(5)
+                        login_after_reload_ok = True
+                except Exception as e:
+                    print(f"   ⚠️  Login después de recargar falló: {str(e)}")
+                    print("   ⚠️  Continuando para verificar persistencia...")
+                    login_after_reload_ok = False
+            else:
+                print("\n✅ No se requiere login después de recargar (sesión persistió)")
+            
+            # Intentar verificar persistencia incluso si el login falló
+            # (puede que la sesión persista y el cambio esté visible)
             persistencia_ok = self.test_verificar_cambio_persiste(cambio_info)
+            
+            # Si el login falló pero la persistencia está OK, considerar éxito parcial
+            if not login_after_reload_ok and persistencia_ok:
+                print("\n⚠️  Nota: Login después de recargar falló, pero el cambio persiste (sesión puede haber persistido)")
             
             return persistencia_ok
             

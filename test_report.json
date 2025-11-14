@@ -1,23 +1,44 @@
 {
-  "fecha": "2025-11-14T12:23:58.909982",
+  "fecha": "2025-11-14T12:26:24.659459",
   "url": "https://comediacortesana.github.io/comedia_cortesana/",
   "email": "isimosanchez@gmail.com",
-  "total_tests": 2,
-  "tests_exitosos": 1,
+  "total_tests": 5,
+  "tests_exitosos": 4,
   "tests_fallidos": 1,
   "resultados": [
     {
       "test": "Cargar página",
       "success": true,
       "message": "Página cargada correctamente",
-      "timestamp": "2025-11-14T12:23:34.287974",
+      "timestamp": "2025-11-14T12:25:36.145741",
       "details": {}
     },
     {
       "test": "Login",
+      "success": true,
+      "message": "Login exitoso (verificado por contenido)",
+      "timestamp": "2025-11-14T12:26:06.797922",
+      "details": {}
+    },
+    {
+      "test": "Verificar rol admin",
+      "success": true,
+      "message": "Usuario es admin",
+      "timestamp": "2025-11-14T12:26:18.894490",
+      "details": {}
+    },
+    {
+      "test": "Activar modo edición",
+      "success": true,
+      "message": "Modo edición activado",
+      "timestamp": "2025-11-14T12:26:22.505573",
+      "details": {}
+    },
+    {
+      "test": "Editar campo",
       "success": false,
-      "message": "Error con contraseña: Message: no such element: Unable to locate element: {\"method\":\"css selector\",\"selector\":\"button[type='submit']\"}\n  (Session info: chrome=142.0.7444.135); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception\nStacktrace:\n0   chromedriver                        0x0000000102bf3aa4 cxxbridge1$str$ptr + 2943380\n1   chromedriver                        0x0000000102beb760 cxxbridge1$str$ptr + 2909776\n2   chromedriver                        0x00000001027022bc _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 74028\n3   chromedriver                        0x00000001027498ac _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 366364\n4   chromedriver                        0x000000010278ad78 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 633832\n5   chromedriver                        0x000000010273df10 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318848\n6   chromedriver                        0x0000000102bb5b98 cxxbridge1$str$ptr + 2689672\n7   chromedriver                        0x0000000102bb93ac cxxbridge1$str$ptr + 2704028\n8   chromedriver                        0x0000000102b96a08 cxxbridge1$str$ptr + 2562296\n9   chromedriver                        0x0000000102bb9c84 cxxbridge1$str$ptr + 2706292\n10  chromedriver                        0x0000000102b88304 cxxbridge1$str$ptr + 2503156\n11  chromedriver                        0x0000000102bd9d58 cxxbridge1$str$ptr + 2837576\n12  chromedriver                        0x0000000102bd9edc cxxbridge1$str$ptr + 2837964\n13  chromedriver                        0x0000000102beb3b0 cxxbridge1$str$ptr + 2908832\n14  libsystem_pthread.dylib             0x0000000182923034 _pthread_start + 136\n15  libsystem_pthread.dylib             0x000000018291de3c thread_start + 8\n",
-      "timestamp": "2025-11-14T12:23:58.812862",
+      "message": "Error: Alert Text: ✅ Modo edición activado\n\nLos cambios se guardan en memoria (solo en tu navegador).\nPara persistir cambios, un administrador debe aprobarlos.\nMessage: unexpected alert open: {Alert text : ✅ Modo edición activado\n\nLos cambios se guardan en memoria (solo en tu navegador).\nPara persistir cambios, un administrador debe aprobarlos.}\n  (Session info: chrome=142.0.7444.135)\nStacktrace:\n0   chromedriver                        0x00000001029bfaa4 cxxbridge1$str$ptr + 2943380\n1   chromedriver                        0x00000001029b7760 cxxbridge1$str$ptr + 2909776\n2   chromedriver                        0x00000001024ce2bc _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 74028\n3   chromedriver                        0x00000001025574f0 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 635744\n4   chromedriver                        0x0000000102509f10 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318848\n5   chromedriver                        0x0000000102981b98 cxxbridge1$str$ptr + 2689672\n6   chromedriver                        0x00000001029853ac cxxbridge1$str$ptr + 2704028\n7   chromedriver                        0x0000000102962a08 cxxbridge1$str$ptr + 2562296\n8   chromedriver                        0x0000000102985c84 cxxbridge1$str$ptr + 2706292\n9   chromedriver                        0x0000000102954304 cxxbridge1$str$ptr + 2503156\n10  chromedriver                        0x00000001029a5d58 cxxbridge1$str$ptr + 2837576\n11  chromedriver                        0x00000001029a5edc cxxbridge1$str$ptr + 2837964\n12  chromedriver                        0x00000001029b73b0 cxxbridge1$str$ptr + 2908832\n13  libsystem_pthread.dylib             0x0000000182923034 _pthread_start + 136\n14  libsystem_pthread.dylib             0x000000018291de3c thread_start + 8\n",
+      "timestamp": "2025-11-14T12:26:24.512507",
       "details": {}
     }
   ]
