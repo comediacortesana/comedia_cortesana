@@ -1,0 +1,50 @@
+# ============================================================================
+# GitHub Action: Mantener Supabase Activo
+# ============================================================================
+# Este workflow hace consultas periódicas a Supabase para mantenerlo activo
+# Ejecuta 2 veces al día (9:00 y 21:00 UTC)
+# ============================================================================
+
+name: Keep Supabase Active
+
+on:
+  # Ejecutar según schedule (cron)
+  schedule:
+    # 9:00 UTC (10:00 CET) - Primera consulta del día
+    - cron: '0 9 * * *'
+    # 21:00 UTC (22:00 CET) - Segunda consulta del día
+    - cron: '0 21 * * *'
+  
+  # También permitir ejecución manual desde GitHub
+  workflow_dispatch:
+
+jobs:
+  query-supabase:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests python-dotenv
+      
+      - name: 🔍 Query Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          python comedia_cortesana/scripts/keep_supabase_active.py
+      
+      - name: ✅ Log completion
+        run: |
+          echo "✅ Consulta completada: $(date)"
+          echo "🔄 Próxima ejecución: según schedule (9:00 y 21:00 UTC)"
+
