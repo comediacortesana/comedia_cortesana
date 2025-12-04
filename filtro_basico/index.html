@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .filters-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .filters-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        
+        .filter-group input,
+        .filter-group select {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .results-section {
+            margin-top: 20px;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .results-count {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .results-table thead {
+            background-color: #34495e;
+            color: white;
+        }
+        
+        .results-table th {
+            padding: 12px 8px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .results-table td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 13px;
+        }
+        
+        .results-table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #95a5a6;
+            font-size: 16px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .badge-fuentesxi {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .badge-catcom {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .badge-ambas {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        /* Modal de Detalle */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 50px auto;
+            max-width: 1200px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .modal-body {
+            padding: 30px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .field-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .field-item {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 5px;
+            border-left: 3px solid #ddd;
+        }
+        
+        .field-item.has-value {
+            border-left-color: #28a745;
+            background: #f1f9f4;
+        }
+        
+        .field-item.empty {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+        
+        .field-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .field-value {
+            font-size: 14px;
+            color: #2c3e50;
+            word-wrap: break-word;
+        }
+        
+        .field-value.empty-value {
+            color: #999;
+            font-style: italic;
+        }
+        
+        .representacion-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .representacion-header {
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .results-table tbody tr {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .results-table tbody tr:hover {
+            background-color: #e3f2fd !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Teatro Español del Siglo de Oro</h1>
+        <p class="subtitle">Filtro de obras, autores, representaciones y lugares</p>
+        
+        <!-- Sección de Filtros -->
+        <div class="filters-section">
+            <div class="filters-title">🔍 Filtros de Búsqueda</div>
+            
+            <div class="filters-grid">
+                <!-- Filtros de Obra -->
+                <div class="filter-group">
+                    <label for="titulo">Título de la obra</label>
+                    <input type="text" id="titulo" placeholder="Buscar por título...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tipo_obra">Tipo de obra</label>
+                    <select id="tipo_obra">
+                        <option value="">Todos</option>
+                        <option value="comedia">Comedia</option>
+                        <option value="auto">Auto sacramental</option>
+                        <option value="zarzuela">Zarzuela</option>
+                        <option value="entremes">Entremés</option>
+                        <option value="tragedia">Tragedia</option>
+                        <option value="loa">Loa</option>
+                        <option value="sainete">Sainete</option>
+                        <option value="baile">Baile</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fuente">Fuente de datos</label>
+                    <select id="fuente">
+                        <option value="">Todas</option>
+                        <option value="FUENTESXI">FUENTES XI</option>
+                        <option value="CATCOM">CATCOM</option>
+                        <option value="AMBAS">Ambas</option>
+                    </select>
+                </div>
+                
+                <!-- Filtros de Autor -->
+                <div class="filter-group">
+                    <label for="autor">Autor</label>
+                    <input type="text" id="autor" placeholder="Nombre del autor...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="epoca">Época</label>
+                    <input type="text" id="epoca" placeholder="Ej: Siglo de Oro">
+                </div>
+                
+                <!-- Filtros de Lugar -->
+                <div class="filter-group">
+                    <label for="lugar">Lugar</label>
+                    <input type="text" id="lugar" placeholder="Ciudad o lugar...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="tipo_lugar">Tipo de lugar</label>
+                    <select id="tipo_lugar">
+                        <option value="">Todos</option>
+                        <option value="palacio">Palacio</option>
+                        <option value="corral">Corral de comedias</option>
+                        <option value="iglesia">Iglesia</option>
+                        <option value="plaza">Plaza pública</option>
+                        <option value="teatro">Teatro</option>
+                        <option value="casa">Casa particular</option>
+                        <option value="universidad">Universidad</option>
+                        <option value="convento">Convento</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="region">Región</label>
+                    <input type="text" id="region" placeholder="Región o provincia...">
+                </div>
+                
+                <!-- Filtros de Representación -->
+                <div class="filter-group">
+                    <label for="compania">Compañía teatral</label>
+                    <input type="text" id="compania" placeholder="Nombre de compañía...">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fecha_desde">Fecha desde</label>
+                    <input type="text" id="fecha_desde" placeholder="Ej: 1600">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="fecha_hasta">Fecha hasta</label>
+                    <input type="text" id="fecha_hasta" placeholder="Ej: 1700">
+                </div>
+                
+                <div class="filter-group">
+                    <label for="mecenas">Mecenas</label>
+                    <input type="text" id="mecenas" placeholder="Nombre del mecenas...">
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn-primary" onclick="aplicarFiltros()">Aplicar Filtros</button>
+                <button class="btn-secondary" onclick="limpiarFiltros()">Limpiar Todo</button>
+                <button class="btn-success" onclick="exportarCSV()">📊 Exportar a CSV</button>
+            </div>
+        </div>
+        
+        <!-- Sección de Resultados -->
+        <div class="results-section">
+            <div class="results-header">
+                <div class="results-count">
+                    <span id="total-results">0</span> resultados encontrados
+                </div>
+            </div>
+            
+            <div id="results-container">
+                <div style="text-align: center; padding: 40px; color: #3498db; font-size: 16px;">
+                    ⏳ Cargando datos desde GitHub...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Detalle de Obra -->
+    <div id="modal-detalle" class="modal-overlay" onclick="cerrarModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Detalle de Obra</h2>
+                <button class="modal-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Variables globales
+        let datosOriginales = [];
+        let datosFiltrados = [];
+        let metadata = {};
+        
+        // Cargar datos desde el JSON del repositorio
+        async function cargarDatos() {
+            try {
+                const response = await fetch('datos_obras.json');
+                if (!response.ok) {
+                    throw new Error('No se pudo cargar el archivo JSON');
+                }
+                const data = await response.json();
+                metadata = data.metadata || {};
+                datosOriginales = data.obras || [];
+                datosFiltrados = [...datosOriginales];
+                mostrarResultados();
+                
+                // Actualizar subtítulo con info de metadata
+                if (metadata.total_obras) {
+                    document.querySelector('.subtitle').textContent = 
+                        `Filtro de obras, autores, representaciones y lugares - ${metadata.total_obras} obras en la base de datos`;
+                }
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                document.getElementById('results-container').innerHTML = 
+                    '<div style="background: #ffebee; color: #c62828; padding: 15px; border-radius: 4px; margin: 10px 0;">' +
+                    '⚠️ Error cargando datos. Asegúrate de que el archivo datos_obras.json está en el mismo directorio.' +
+                    '</div>';
+            }
+        }
+        
+        // Función para aplicar filtros
+        function aplicarFiltros() {
+            datosFiltrados = datosOriginales.filter(obra => {
+                // Filtro de título
+                const titulo = document.getElementById('titulo').value.toLowerCase();
+                if (titulo && !obra.titulo.toLowerCase().includes(titulo)) return false;
+                
+                // Filtro de tipo de obra
+                const tipoObra = document.getElementById('tipo_obra').value;
+                if (tipoObra && obra.tipo_obra !== tipoObra) return false;
+                
+                // Filtro de fuente
+                const fuente = document.getElementById('fuente').value;
+                if (fuente && obra.fuente !== fuente) return false;
+                
+                // Filtro de autor (ahora es objeto)
+                const autor = document.getElementById('autor').value.toLowerCase();
+                const autorNombre = typeof obra.autor === 'string' ? obra.autor : (obra.autor.nombre || '');
+                if (autor && !autorNombre.toLowerCase().includes(autor)) return false;
+                
+                // Filtro de época
+                const epoca = document.getElementById('epoca').value.toLowerCase();
+                const epocaObra = typeof obra.autor === 'string' ? '' : (obra.autor.epoca || '');
+                if (epoca && !epocaObra.toLowerCase().includes(epoca)) return false;
+                
+                // Filtro de lugar
+                const lugar = document.getElementById('lugar').value.toLowerCase();
+                if (lugar && !obra.lugar.toLowerCase().includes(lugar)) return false;
+                
+                // Filtro de tipo de lugar
+                const tipoLugar = document.getElementById('tipo_lugar').value;
+                if (tipoLugar && obra.tipo_lugar !== tipoLugar) return false;
+                
+                // Filtro de región
+                const region = document.getElementById('region').value.toLowerCase();
+                if (region && !obra.region.toLowerCase().includes(region)) return false;
+                
+                // Filtro de compañía
+                const compania = document.getElementById('compania').value.toLowerCase();
+                if (compania && !obra.compania.toLowerCase().includes(compania)) return false;
+                
+                // Filtro de fecha desde
+                const fechaDesde = document.getElementById('fecha_desde').value;
+                const fechaObra = obra.fecha_creacion || obra.fecha || '';
+                if (fechaDesde && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
+                
+                // Filtro de fecha hasta
+                const fechaHasta = document.getElementById('fecha_hasta').value;
+                if (fechaHasta && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
+                
+                // Filtro de mecenas
+                const mecenas = document.getElementById('mecenas').value.toLowerCase();
+                if (mecenas && !obra.mecenas.toLowerCase().includes(mecenas)) return false;
+                
+                return true;
+            });
+            
+            mostrarResultados();
+        }
+        
+        // Función para mostrar resultados
+        function mostrarResultados() {
+            const container = document.getElementById('results-container');
+            const totalResults = document.getElementById('total-results');
+            
+            totalResults.textContent = datosFiltrados.length;
+            
+            if (datosFiltrados.length === 0) {
+                container.innerHTML = '<div class="no-results">No se encontraron resultados con los filtros seleccionados</div>';
+                return;
+            }
+            
+            let html = '<table class="results-table">';
+            html += '<thead><tr>';
+            html += '<th>ID</th>';
+            html += '<th>Título</th>';
+            html += '<th>Autor</th>';
+            html += '<th>Tipo</th>';
+            html += '<th>Fuente</th>';
+            html += '<th>Lugar</th>';
+            html += '<th>Fecha</th>';
+            html += '<th>Compañía</th>';
+            html += '</tr></thead>';
+            html += '<tbody>';
+            
+            datosFiltrados.forEach((obra, index) => {
+                // Manejar autor (puede ser string u objeto)
+                const autorNombre = typeof obra.autor === 'string' ? obra.autor : (obra.autor.nombre || 'Anónimo');
+                
+                html += `<tr onclick="mostrarDetalleObra(${index})">`;
+                html += `<td>${obra.id}</td>`;
+                html += `<td><strong>${obra.titulo}</strong></td>`;
+                html += `<td>${autorNombre}</td>`;
+                html += `<td>${obra.tipo_obra}</td>`;
+                html += `<td><span class="badge badge-${obra.fuente.toLowerCase()}">${obra.fuente}</span></td>`;
+                html += `<td>${obra.lugar || '-'}${obra.region ? ', ' + obra.region : ''}</td>`;
+                html += `<td>${obra.fecha_creacion || obra.fecha || '-'}</td>`;
+                html += `<td>${obra.compania || '-'}</td>`;
+                html += '</tr>';
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // Función para limpiar filtros
+        function limpiarFiltros() {
+            document.getElementById('titulo').value = '';
+            document.getElementById('tipo_obra').value = '';
+            document.getElementById('fuente').value = '';
+            document.getElementById('autor').value = '';
+            document.getElementById('epoca').value = '';
+            document.getElementById('lugar').value = '';
+            document.getElementById('tipo_lugar').value = '';
+            document.getElementById('region').value = '';
+            document.getElementById('compania').value = '';
+            document.getElementById('fecha_desde').value = '';
+            document.getElementById('fecha_hasta').value = '';
+            document.getElementById('mecenas').value = '';
+            
+            datosFiltrados = [...datosOriginales];
+            mostrarResultados();
+        }
+        
+        // Funciones del Modal
+        function mostrarDetalleObra(index) {
+            const obra = datosFiltrados[index];
+            const modal = document.getElementById('modal-detalle');
+            const modalTitulo = document.getElementById('modal-titulo');
+            const modalBody = document.getElementById('modal-body');
+            
+            modalTitulo.textContent = obra.titulo || 'Sin título';
+            
+            // Función helper para mostrar campo
+            function renderField(label, value, emoji = '') {
+                const hasValue = value && value !== '' && value !== null && value !== 0;
+                const className = hasValue ? 'field-item has-value' : 'field-item empty';
+                const displayValue = hasValue ? value : '(vacío - pendiente de completar)';
+                const valueClass = hasValue ? 'field-value' : 'field-value empty-value';
+                const statusEmoji = hasValue ? '✅' : '⚪';
+                
+                return `
+                    <div class="${className}">
+                        <div class="field-label">${statusEmoji} ${emoji} ${label}</div>
+                        <div class="${valueClass}">${displayValue}</div>
+                    </div>
+                `;
+            }
+            
+            let html = '';
+            
+            // Sección 1: Información Básica
+            html += '<div class="field-section">';
+            html += '<div class="section-title">📋 Información Básica</div>';
+            html += '<div class="field-grid">';
+            html += renderField('ID de la Obra', obra.id, '🔢');
+            html += renderField('Título Principal', obra.titulo, '🎭');
+            html += renderField('Título Original', obra.titulo_original, '📝');
+            html += renderField('Títulos Alternativos', obra.titulo_alternativo, '🔄');
+            html += renderField('Tipo de Obra', obra.tipo_obra, '🎬');
+            html += renderField('Género', obra.genero, '🎨');
+            html += renderField('Subgénero', obra.subgenero, '📚');
+            html += renderField('Tema', obra.tema, '💡');
+            html += renderField('Idioma', obra.idioma, '🌐');
+            html += renderField('Fecha de Creación', obra.fecha_creacion, '📅');
+            html += '</div></div>';
+            
+            // Sección 2: Autor
+            html += '<div class="field-section">';
+            html += '<div class="section-title">✍️ Información del Autor</div>';
+            html += '<div class="field-grid">';
+            const autor = obra.autor || {};
+            html += renderField('Nombre del Autor', autor.nombre || 'Anónimo', '👤');
+            html += renderField('Nombre Completo', autor.nombre_completo, '📛');
+            html += renderField('Fecha de Nacimiento', autor.fecha_nacimiento, '🎂');
+            html += renderField('Fecha de Muerte', autor.fecha_muerte, '⚰️');
+            html += renderField('Época', autor.epoca, '⏳');
+            html += renderField('Biografía', autor.biografia, '📖');
+            html += '</div></div>';
+            
+            // Sección 3: Estructura de la Obra
+            html += '<div class="field-section">';
+            html += '<div class="section-title">📐 Estructura de la Obra</div>';
+            html += '<div class="field-grid">';
+            html += renderField('Número de Actos', obra.actos, '🎬');
+            html += renderField('Número de Versos', obra.versos, '📜');
+            html += '</div></div>';
+            
+            // Sección 4: Música
+            html += '<div class="field-section">';
+            html += '<div class="section-title">🎵 Información Musical</div>';
+            html += '<div class="field-grid">';
+            html += renderField('Música Conservada', obra.musica_conservada ? 'Sí' : 'No', '💿');
+            html += renderField('Compositor', obra.compositor, '🎼');
+            html += renderField('Bibliotecas con Música', obra.bibliotecas_musica, '🏛️');
+            html += renderField('Bibliografía Musical', obra.bibliografia_musica, '📚');
+            html += '</div></div>';
+            
+            // Sección 5: Mecenazgo
+            html += '<div class="field-section">';
+            html += '<div class="section-title">👑 Mecenazgo y Patrocinio</div>';
+            html += '<div class="field-grid">';
+            html += renderField('Mecenas', obra.mecenas, '💰');
+            html += '</div></div>';
+            
+            // Sección 6: Bibliografía e Historia Textual
+            html += '<div class="field-section">';
+            html += '<div class="section-title">📚 Bibliografía e Historia Textual</div>';
+            html += '<div class="field-grid">';
+            html += renderField('Edición Príncipe', obra.edicion_principe, '📖');
+            html += renderField('Notas Bibliográficas', obra.notas_bibliograficas, '📝');
+            html += renderField('Manuscritos Conocidos', obra.manuscritos_conocidos, '📜');
+            html += renderField('Ediciones Conocidas', obra.ediciones_conocidas, '📕');
+            html += '</div></div>';
+            
+            // Sección 7: Fuente y Origen de Datos
+            html += '<div class="field-section">';
+            html += '<div class="section-title">🔍 Fuente y Origen de Datos</div>';
+            html += '<div class="field-grid">';
+            html += renderField('Fuente Principal', obra.fuente, '📊');
+            html += renderField('Origen de Datos', obra.origen_datos, '💾');
+            html += renderField('Página del PDF', obra.pagina_pdf, '📄');
+            html += renderField('Texto Original del PDF', obra.texto_original_pdf ? '(Ver en campo largo)' : '', '📃');
+            html += '</div></div>';
+            
+            // Sección 8: Notas y Observaciones
+            html += '<div class="field-section">';
+            html += '<div class="section-title">📝 Notas y Observaciones</div>';
+            html += '<div class="field-grid">';
+            html += renderField('Notas', obra.notas, '🗒️');
+            html += renderField('Observaciones', obra.observaciones, '💬');
+            html += '</div></div>';
+            
+            // Sección 9: Representaciones
+            html += '<div class="field-section">';
+            html += `<div class="section-title">🎭 Representaciones (${obra.total_representaciones || 0})</div>`;
+            
+            if (obra.representaciones && obra.representaciones.length > 0) {
+                obra.representaciones.forEach((rep, idx) => {
+                    html += '<div class="representacion-card">';
+                    html += `<div class="representacion-header">Representación #${idx + 1} - ${rep.fecha || 'Fecha desconocida'}</div>`;
+                    html += '<div class="field-grid">';
+                    html += renderField('Fecha', rep.fecha, '📅');
+                    html += renderField('Fecha Formateada', rep.fecha_formateada, '🗓️');
+                    html += renderField('Lugar', rep.lugar, '📍');
+                    html += renderField('Región', rep.region, '🗺️');
+                    html += renderField('País', rep.pais, '🌍');
+                    html += renderField('Tipo de Lugar', rep.tipo_lugar, '🏛️');
+                    html += renderField('Compañía', rep.compania, '🎪');
+                    html += renderField('Director de Compañía', rep.director_compañia, '🎬');
+                    html += renderField('Mecenas', rep.mecenas, '👑');
+                    html += renderField('Gestor Administrativo', rep.gestor_administrativo, '📋');
+                    html += renderField('Personajes Históricos', rep.personajes_historicos, '👥');
+                    html += renderField('Organizadores de Fiesta', rep.organizadores_fiesta, '🎉');
+                    html += renderField('Tipo de Función', rep.tipo_funcion, '🎭');
+                    html += renderField('Público', rep.publico, '👨‍👩‍👧‍👦');
+                    html += renderField('Entrada/Precio', rep.entrada, '🎟️');
+                    html += renderField('Duración', rep.duracion, '⏱️');
+                    html += renderField('Observaciones', rep.observaciones, '💬');
+                    html += renderField('Notas', rep.notas, '📝');
+                    html += renderField('Fuente', rep.fuente, '📖');
+                    html += renderField('Página PDF', rep.pagina_pdf, '📄');
+                    html += renderField('Anterior a 1650', rep.es_anterior_1650 ? 'Sí' : 'No', '📜');
+                    html += renderField('Anterior a 1665', rep.es_anterior_1665 ? 'Sí' : 'No', '📜');
+                    html += '</div></div>';
+                });
+            } else {
+                html += '<div class="field-item empty">';
+                html += '<div class="field-label">⚪ Sin representaciones registradas</div>';
+                html += '<div class="field-value empty-value">Esta obra aún no tiene representaciones en la base de datos</div>';
+                html += '</div>';
+            }
+            html += '</div>';
+            
+            // Texto largo del PDF (si existe)
+            if (obra.texto_original_pdf) {
+                html += '<div class="field-section">';
+                html += '<div class="section-title">📃 Texto Original Extraído del PDF</div>';
+                html += `<div style="background: #f8f9fa; padding: 15px; border-radius: 5px; font-family: monospace; font-size: 12px; max-height: 300px; overflow-y: auto; white-space: pre-wrap;">${obra.texto_original_pdf}</div>`;
+                html += '</div>';
+            }
+            
+            modalBody.innerHTML = html;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function cerrarModal(event) {
+            if (!event || event.target.id === 'modal-detalle' || event.target.className === 'modal-close') {
+                document.getElementById('modal-detalle').style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cerrarModal();
+            }
+        });
+        
+        // Función para exportar a CSV
+        function exportarCSV() {
+            if (datosFiltrados.length === 0) {
+                alert('No hay datos para exportar. Aplica filtros o carga los datos primero.');
+                return;
+            }
+            
+            // Función helper para escapar valores CSV
+            function escaparCSV(valor) {
+                if (valor === null || valor === undefined) return '';
+                const str = String(valor);
+                // Si contiene coma, comillas o saltos de línea, envolver en comillas
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }
+            
+            // Definir TODAS las columnas (35 campos de obra + 6 de autor)
+            const columnas = [
+                // Básicos
+                'id', 'titulo', 'titulo_original', 'titulo_alternativo',
+                // Autor
+                'autor_nombre', 'autor_nombre_completo', 'autor_fecha_nacimiento', 
+                'autor_fecha_muerte', 'autor_epoca', 'autor_biografia',
+                // Clasificación
+                'tipo_obra', 'genero', 'subgenero', 'tema',
+                // Fuentes
+                'fuente', 'origen_datos', 'pagina_pdf',
+                // Estructura
+                'actos', 'versos', 'idioma',
+                // Fechas
+                'fecha_creacion',
+                // Música
+                'musica_conservada', 'compositor', 'bibliotecas_musica', 'bibliografia_musica',
+                // Mecenazgo
+                'mecenas',
+                // Bibliografía
+                'edicion_principe', 'notas_bibliograficas', 'manuscritos_conocidos', 'ediciones_conocidas',
+                // Notas
+                'notas', 'observaciones',
+                // Representaciones
+                'total_representaciones',
+                // Legacy
+                'lugar', 'region', 'tipo_lugar', 'compania', 'director_compañia'
+            ];
+            
+            // Encabezados en español legibles
+            const encabezados = [
+                'ID', 'Título', 'Título Original', 'Títulos Alternativos',
+                'Autor', 'Autor Nombre Completo', 'Autor Nacimiento', 
+                'Autor Muerte', 'Autor Época', 'Autor Biografía',
+                'Tipo de Obra', 'Género', 'Subgénero', 'Tema',
+                'Fuente', 'Origen Datos', 'Página PDF',
+                'Actos', 'Versos', 'Idioma',
+                'Fecha Creación',
+                'Música Conservada', 'Compositor', 'Bibliotecas Música', 'Bibliografía Música',
+                'Mecenas',
+                'Edición Príncipe', 'Notas Bibliográficas', 'Manuscritos Conocidos', 'Ediciones Conocidas',
+                'Notas', 'Observaciones',
+                'Total Representaciones',
+                'Lugar (1ra rep)', 'Región (1ra rep)', 'Tipo Lugar (1ra rep)', 'Compañía (1ra rep)', 'Director (1ra rep)'
+            ];
+            
+            // Crear CSV
+            let csv = encabezados.join(',') + '\n';
+            
+            datosFiltrados.forEach(obra => {
+                const fila = [];
+                const autor = obra.autor || {};
+                
+                columnas.forEach(col => {
+                    let valor = '';
+                    
+                    // Campos de autor
+                    if (col.startsWith('autor_')) {
+                        const autorCampo = col.replace('autor_', '');
+                        valor = autor[autorCampo] || '';
+                    } else if (col === 'musica_conservada') {
+                        valor = obra[col] ? 'Sí' : 'No';
+                    } else {
+                        valor = obra[col] || '';
+                    }
+                    
+                    fila.push(escaparCSV(valor));
+                });
+                
+                csv += fila.join(',') + '\n';
+            });
+            
+            // Descargar archivo
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `teatro_espanol_${Date.now()}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert(`✅ CSV exportado con ${datosFiltrados.length} obras.\n\n💡 Ahora puedes:\n1. Subir a Google Sheets\n2. Editar colaborativamente\n3. Descargar como CSV\n4. Re-importar a Django`);
+        }
+        
+        // Cargar datos iniciales
+        window.onload = function() {
+            cargarDatos();
+        };
+    </script>
+</body>
+</html>
+
