@@ -1,0 +1,65 @@
+{
+  "fecha": "2025-11-14T12:29:58.586122",
+  "url": "https://comediacortesana.github.io/comedia_cortesana/",
+  "email": "isimosanchez@gmail.com",
+  "total_tests": 7,
+  "tests_exitosos": 6,
+  "tests_fallidos": 1,
+  "resultados": [
+    {
+      "test": "Cargar página",
+      "success": true,
+      "message": "Página cargada correctamente",
+      "timestamp": "2025-11-14T12:28:43.265133",
+      "details": {}
+    },
+    {
+      "test": "Login",
+      "success": true,
+      "message": "Login exitoso (verificado por contenido)",
+      "timestamp": "2025-11-14T12:29:13.901896",
+      "details": {}
+    },
+    {
+      "test": "Verificar rol admin",
+      "success": true,
+      "message": "Usuario es admin",
+      "timestamp": "2025-11-14T12:29:25.999344",
+      "details": {}
+    },
+    {
+      "test": "Activar modo edición",
+      "success": true,
+      "message": "Modo edición activado",
+      "timestamp": "2025-11-14T12:29:29.626021",
+      "details": {}
+    },
+    {
+      "test": "Editar campo",
+      "success": true,
+      "message": "Campo editado: TEST_20251114_122933",
+      "timestamp": "2025-11-14T12:29:38.337521",
+      "details": {
+        "obra_id": "2581",
+        "campo": "titulo",
+        "valor_anterior": "\"Las fuentes documentales\"",
+        "valor_nuevo": "TEST_20251114_122933",
+        "cambio_aplicado": true
+      }
+    },
+    {
+      "test": "Recargar página",
+      "success": true,
+      "message": "Página recargada correctamente",
+      "timestamp": "2025-11-14T12:29:43.813583",
+      "details": {}
+    },
+    {
+      "test": "Login",
+      "success": false,
+      "message": "Error durante login: Message: element not interactable\n  (Session info: chrome=142.0.7444.135); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#elementnotinteractableexception\nStacktrace:\n0   chromedriver                        0x00000001045dfaa4 cxxbridge1$str$ptr + 2943380\n1   chromedriver                        0x00000001045d7760 cxxbridge1$str$ptr + 2909776\n2   chromedriver                        0x00000001040ee120 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 73616\n3   chromedriver                        0x000000010412d7a0 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 333328\n4   chromedriver                        0x000000010412b524 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 324500\n5   chromedriver                        0x0000000104176d78 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 633832\n6   chromedriver                        0x0000000104129f10 _RNvCsgXDX2mvAJAg_7___rustc35___rust_no_alloc_shim_is_unstable_v2 + 318848\n7   chromedriver                        0x00000001045a1b98 cxxbridge1$str$ptr + 2689672\n8   chromedriver                        0x00000001045a53ac cxxbridge1$str$ptr + 2704028\n9   chromedriver                        0x0000000104582a08 cxxbridge1$str$ptr + 2562296\n10  chromedriver                        0x00000001045a5c84 cxxbridge1$str$ptr + 2706292\n11  chromedriver                        0x0000000104574304 cxxbridge1$str$ptr + 2503156\n12  chromedriver                        0x00000001045c5d58 cxxbridge1$str$ptr + 2837576\n13  chromedriver                        0x00000001045c5edc cxxbridge1$str$ptr + 2837964\n14  chromedriver                        0x00000001045d73b0 cxxbridge1$str$ptr + 2908832\n15  libsystem_pthread.dylib             0x0000000182923034 _pthread_start + 136\n16  libsystem_pthread.dylib             0x000000018291de3c thread_start + 8\n",
+      "timestamp": "2025-11-14T12:29:58.499579",
+      "details": {}
+    }
+  ]
+}

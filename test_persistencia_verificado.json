@@ -1,0 +1,68 @@
+{
+  "fecha": "2025-11-14T12:35:22.579288",
+  "url": "https://comediacortesana.github.io/comedia_cortesana/",
+  "email": "isimosanchez@gmail.com",
+  "total_tests": 7,
+  "tests_exitosos": 7,
+  "tests_fallidos": 0,
+  "resultados": [
+    {
+      "test": "Cargar página",
+      "success": true,
+      "message": "Página cargada correctamente",
+      "timestamp": "2025-11-14T12:34:01.456551",
+      "details": {}
+    },
+    {
+      "test": "Login",
+      "success": true,
+      "message": "Login exitoso (verificado por contenido)",
+      "timestamp": "2025-11-14T12:34:32.019846",
+      "details": {}
+    },
+    {
+      "test": "Verificar rol admin",
+      "success": true,
+      "message": "Usuario es admin",
+      "timestamp": "2025-11-14T12:34:44.094711",
+      "details": {}
+    },
+    {
+      "test": "Activar modo edición",
+      "success": true,
+      "message": "Modo edición activado",
+      "timestamp": "2025-11-14T12:34:47.725676",
+      "details": {}
+    },
+    {
+      "test": "Editar campo",
+      "success": true,
+      "message": "Campo editado: TEST_20251114_123451",
+      "timestamp": "2025-11-14T12:34:56.465031",
+      "details": {
+        "obra_id": "2581",
+        "campo": "titulo",
+        "valor_anterior": "\"Las fuentes documentales\"",
+        "valor_nuevo": "TEST_20251114_123451",
+        "cambio_aplicado": true
+      }
+    },
+    {
+      "test": "Recargar página",
+      "success": true,
+      "message": "Página recargada correctamente",
+      "timestamp": "2025-11-14T12:35:01.779809",
+      "details": {}
+    },
+    {
+      "test": "Verificar persistencia",
+      "success": true,
+      "message": "Cambio persiste: TEST_20251114_123451 encontrado después de recargar",
+      "timestamp": "2025-11-14T12:35:22.422749",
+      "details": {
+        "obra_id": "2581",
+        "valor_buscado": "TEST_20251114_123451"
+      }
+    }
+  ]
+}
