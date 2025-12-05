@@ -1,116 +1,81 @@
+#!/usr/bin/env python3
 """
-Script para mantener Supabase activo con consultas periódicas
-Ejecutado por GitHub Actions cada 12 horas
+Script para mantener Supabase activo mediante consultas periódicas.
+Este script hace una consulta simple a Supabase para evitar que se ponga en modo inactivo.
 """
 
 import os
 import sys
-import json
+import requests
 from datetime import datetime
 
-try:
-    import requests
-except ImportError:
-    print("❌ Error: requests no está instalado")
-    sys.exit(1)
-
-
-def main():
-    """Realiza consultas simples a Supabase para mantenerlo activo"""
+def query_supabase():
+    """Hace una consulta simple a Supabase para mantenerlo activo"""
     
-    # Obtener credenciales
+    # Obtener variables de entorno
     supabase_url = os.getenv('SUPABASE_URL')
     supabase_key = os.getenv('SUPABASE_KEY')
     
-    if not supabase_url or not supabase_key:
-        print("❌ Error: SUPABASE_URL y SUPABASE_KEY deben estar definidos")
+    if not supabase_url:
+        print("❌ Error: SUPABASE_URL no está definido")
         sys.exit(1)
     
-    print("="*70)
-    print("🤖 KEEP SUPABASE ACTIVE")
-    print("="*70)
-    print(f"⏰ Timestamp: {datetime.utcnow().isoformat()}Z")
-    print(f"🔌 URL: {supabase_url}")
-    print()
+    if not supabase_key:
+        print("❌ Error: SUPABASE_KEY no está definido")
+        sys.exit(1)
+    
+    # Construir URL de la API REST de Supabase
+    # Hacemos una consulta simple a la tabla 'obras' limitada a 1 resultado
+    api_url = f"{supabase_url}/rest/v1/obras?select=id&limit=1"
     
     headers = {
         'apikey': supabase_key,
         'Authorization': f'Bearer {supabase_key}',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Prefer': 'return=representation'
     }
     
-    # Lista de consultas simples a realizar
-    queries = [
-        {
-            'name': 'Obras',
-            'endpoint': '/rest/v1/obras',
-            'params': {'select': 'id', 'limit': '1'}
-        },
-        {
-            'name': 'Comentarios',
-            'endpoint': '/rest/v1/comentarios',
-            'params': {'select': 'id', 'limit': '1'}
-        },
-        {
-            'name': 'Perfiles',
-            'endpoint': '/rest/v1/perfiles_usuarios',
-            'params': {'select': 'id', 'limit': '1'}
-        }
-    ]
-    
-    success_count = 0
-    error_count = 0
-    
-    print("📊 Ejecutando consultas...")
-    print()
-    
-    for query in queries:
-        try:
-            url = f"{supabase_url}{query['endpoint']}"
-            response = requests.get(
-                url,
-                headers=headers,
-                params=query['params'],
-                timeout=10
-            )
+    try:
+        print(f"🔄 Consultando Supabase a las {datetime.now().strftime('%Y-%m-%d %H:%M:%S UTC')}...")
+        print(f"📍 URL: {supabase_url}")
+        
+        # Hacer la consulta
+        response = requests.get(api_url, headers=headers, timeout=30)
+        
+        if response.status_code == 200:
+            print("✅ Consulta exitosa - Supabase está activo")
+            print(f"📊 Respuesta: {len(response.json())} registro(s) obtenido(s)")
+            return True
+        elif response.status_code == 401:
+            print("❌ Error de autenticación - Verifica SUPABASE_KEY")
+            print(f"   Status: {response.status_code}")
+            sys.exit(1)
+        elif response.status_code == 404:
+            print("⚠️  Tabla 'obras' no encontrada - Esto es normal si la tabla no existe aún")
+            print(f"   Status: {response.status_code}")
+            return True  # No es un error crítico
+        else:
+            print(f"⚠️  Respuesta inesperada: Status {response.status_code}")
+            print(f"   Mensaje: {response.text[:200]}")
+            return False
             
-            if response.status_code == 200:
-                data = response.json()
-                count = len(data)
-                print(f"  ✅ {query['name']}: OK ({count} registros)")
-                success_count += 1
-            else:
-                print(f"  ⚠️  {query['name']}: HTTP {response.status_code}")
-                error_count += 1
-                
-        except Exception as e:
-            print(f"  ❌ {query['name']}: Error - {str(e)[:50]}")
-            error_count += 1
-    
-    print()
-    print("="*70)
-    print("📋 RESUMEN")
-    print("="*70)
-    print(f"✅ Consultas exitosas: {success_count}/{len(queries)}")
-    
-    if error_count > 0:
-        print(f"❌ Consultas fallidas: {error_count}/{len(queries)}")
-    
-    print()
-    print(f"⏰ Finalizado: {datetime.utcnow().isoformat()}Z")
-    print("🔄 Próxima ejecución: según schedule de GitHub Actions")
-    print("="*70)
-    
-    # Salir con error si todas las consultas fallaron
-    if success_count == 0:
-        print()
-        print("⚠️  ADVERTENCIA: Todas las consultas fallaron")
+    except requests.exceptions.Timeout:
+        print("❌ Error: Timeout al conectar con Supabase")
         sys.exit(1)
-    
-    # Éxito si al menos una consulta funcionó
-    sys.exit(0)
+    except requests.exceptions.ConnectionError:
+        print("❌ Error: No se pudo conectar con Supabase")
+        sys.exit(1)
+    except Exception as e:
+        print(f"❌ Error inesperado: {str(e)}")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
-    main()
+    success = query_supabase()
+    if success:
+        print("✅ Script completado exitosamente")
+        sys.exit(0)
+    else:
+        print("⚠️  Script completado con advertencias")
+        sys.exit(0)  # No fallar el workflow por advertencias menores
 

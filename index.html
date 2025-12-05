@@ -11,52 +11,6 @@
                    style-src 'self' 'unsafe-inline';">
     <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
     <style>
-        :root {
-            /* Modo Claro - Colores Modernos */
-            --bg-primary: #f8f9fa;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f1f3f5;
-            --bg-hover: #e9ecef;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-muted: #868e96;
-            --border-color: #dee2e6;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.1);
-            --accent-blue: #4c6ef5;
-            --accent-blue-hover: #364fc7;
-            --accent-blue-light: #e7f5ff;
-            --accent-green: #37b24d;
-            --accent-red: #f03e3e;
-            --accent-yellow: #fab005;
-            --accent-purple: #9775fa;
-            --accent-teal: #20c997;
-        }
-        
-        /* Modo Oscuro */
-        body.dark-mode {
-            --bg-primary: #1a1b1e;
-            --bg-secondary: #25262b;
-            --bg-tertiary: #2c2e33;
-            --bg-hover: #373a40;
-            --text-primary: #e9ecef;
-            --text-secondary: #adb5bd;
-            --text-muted: #868e96;
-            --border-color: #373a40;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.5);
-            --accent-blue: #5c7cfa;
-            --accent-blue-hover: #748ffc;
-            --accent-blue-light: #364fc7;
-            --accent-green: #51cf66;
-            --accent-red: #ff6b6b;
-            --accent-yellow: #ffd43b;
-            --accent-purple: #a78bfa;
-            --accent-teal: #3bc9db;
-        }
-        
         * {
             margin: 0;
             padding: 0;
@@ -65,79 +19,42 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
+            background-color: #f5f5f5;
             padding: 20px;
-            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: var(--bg-secondary);
+            background: white;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        /* Header con toggle de modo oscuro */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .theme-toggle {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            border-radius: 50px;
-            padding: 8px 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-        }
-        
-        .theme-toggle:hover {
-            background: var(--bg-hover);
-            transform: translateY(-1px);
-        }
-        
-        .theme-toggle-icon {
-            font-size: 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         h1 {
-            color: var(--text-primary);
+            color: #2c3e50;
             margin-bottom: 10px;
             font-size: 28px;
-            font-weight: 700;
         }
         
         .subtitle {
-            color: var(--text-secondary);
+            color: #7f8c8d;
             margin-bottom: 30px;
             font-size: 14px;
         }
         
         .filters-section {
-            background: var(--bg-tertiary);
+            background: #f8f9fa;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 5px;
             margin-bottom: 30px;
-            border: 1px solid var(--border-color);
-            transition: background-color 0.3s ease;
         }
         
         .filters-title {
             font-size: 18px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #2c3e50;
             margin-bottom: 15px;
         }
         
@@ -156,31 +73,22 @@
         .filter-group label {
             font-size: 13px;
             font-weight: 600;
-            color: var(--text-secondary);
+            color: #555;
             margin-bottom: 5px;
         }
         
         .filter-group input,
         .filter-group select {
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             font-size: 14px;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            transition: all 0.2s ease;
         }
         
         .filter-group input:focus,
         .filter-group select:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 0 3px var(--accent-blue-light);
-        }
-        
-        .filter-group input:hover,
-        .filter-group select:hover {
-            border-color: var(--accent-blue);
+            border-color: #3498db;
         }
         
         .button-group {
@@ -192,34 +100,29 @@
         button {
             padding: 10px 20px;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
+            transition: background-color 0.3s;
         }
         
         .btn-primary {
-            background-color: var(--accent-blue);
+            background-color: #3498db;
             color: white;
         }
         
         .btn-primary:hover {
-            background-color: var(--accent-blue-hover);
+            background-color: #2980b9;
         }
         
         .btn-secondary {
-            background-color: var(--text-muted);
+            background-color: #95a5a6;
             color: white;
         }
         
         .btn-secondary:hover {
-            background-color: var(--text-secondary);
+            background-color: #7f8c8d;
         }
         
         .results-section {
@@ -232,13 +135,13 @@
             align-items: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent-blue);
+            border-bottom: 2px solid #3498db;
         }
         
         .results-count {
             font-size: 16px;
             font-weight: 600;
-            color: var(--text-primary);
+            color: #2c3e50;
         }
         
         .results-table {
@@ -278,46 +181,41 @@
         
         .badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 3px 8px;
+            border-radius: 3px;
             font-size: 11px;
             font-weight: 600;
-            transition: transform 0.2s ease;
-        }
-        
-        .badge:hover {
-            transform: scale(1.05);
         }
         
         .badge-fuentesxi,
         .badge-fuentes-ix {
-            background-color: var(--accent-blue-light);
-            color: var(--accent-blue);
+            background-color: #e3f2fd;
+            color: #1976d2;
         }
         
         .badge-catcom {
-            background-color: rgba(167, 139, 250, 0.2);
-            color: var(--accent-purple);
+            background-color: #f3e5f5;
+            color: #7b1fa2;
         }
         
         .badge-ambas {
-            background-color: rgba(55, 178, 77, 0.15);
-            color: var(--accent-green);
+            background-color: #e8f5e9;
+            color: #388e3c;
         }
         
         .badge-colaborador {
-            background-color: var(--accent-blue-light);
-            color: var(--accent-blue);
+            background-color: #e3f2fd;
+            color: #1976d2;
         }
         
         .badge-editor {
-            background-color: rgba(250, 176, 5, 0.15);
-            color: var(--accent-yellow);
+            background-color: #fff3e0;
+            color: #e65100;
         }
         
         .badge-admin {
-            background-color: rgba(167, 139, 250, 0.2);
-            color: var(--accent-purple);
+            background-color: #f3e5f5;
+            color: #7b1fa2;
         }
         
         /* Modal de Detalle */
@@ -564,73 +462,12 @@
         .btn-comentarios-modal:hover {
             background: #2980b9;
         }
-        
-        /* Mejoras para tablas en modo oscuro */
-        .results-table {
-            background: var(--bg-secondary);
-        }
-        
-        .results-table thead {
-            background: var(--bg-tertiary);
-        }
-        
-        .results-table th {
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--border-color);
-        }
-        
-        .results-table td {
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .results-table tbody tr:hover {
-            background: var(--bg-hover) !important;
-        }
-        
-        /* Modal */
-        .modal-content {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-        }
-        
-        .modal-header {
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .modal-header h2 {
-            color: var(--text-primary);
-        }
-        
-        .close {
-            color: var(--text-secondary);
-        }
-        
-        /* Cards de obras */
-        .obra-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
-        
-        .obra-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div>
-                <h1>🎭 Teatro Español del Siglo de Oro</h1>
-                <p class="subtitle">Filtro de obras, autores, representaciones y lugares</p>
-            </div>
-            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
-                <span class="theme-toggle-icon" id="theme-icon">🌙</span>
-                <span id="theme-text">Modo Oscuro</span>
-            </button>
-        </div>
+        <h1>🎭 Teatro Español del Siglo de Oro</h1>
+        <p class="subtitle">Filtro de obras, autores, representaciones y lugares</p>
         
         <!-- Sección de Autenticación -->
         <div id="auth-section" style="margin-bottom: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px;">
@@ -824,51 +661,7 @@
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ============================================================================
-        // TOGGLE DE TEMA (MODO CLARO/OSCURO)
-        // ============================================================================
-        
-        // Cargar tema guardado al iniciar
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-                updateThemeButton(true);
-            }
-        });
-        
-        // Función para cambiar el tema
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.classList.toggle('dark-mode');
-            
-            // Guardar preferencia
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            
-            // Actualizar botón
-            updateThemeButton(isDark);
-            
-            // Animación suave
-            body.style.transition = 'all 0.3s ease';
-        }
-        
-        // Actualizar icono y texto del botón
-        function updateThemeButton(isDark) {
-            const icon = document.getElementById('theme-icon');
-            const text = document.getElementById('theme-text');
-            
-            if (isDark) {
-                icon.textContent = '☀️';
-                text.textContent = 'Modo Claro';
-            } else {
-                icon.textContent = '🌙';
-                text.textContent = 'Modo Oscuro';
-            }
-        }
-        
-        // ============================================================================
-        // VARIABLES GLOBALES
-        // ============================================================================
+        // Variables globales
         let datosOriginales = [];
         let datosFiltrados = [];
         let metadata = {};
