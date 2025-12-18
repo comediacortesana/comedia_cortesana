@@ -146,6 +146,9 @@ FUENTESXI_backup/
 data/raw/
 data/catcom/
 data/fuentesxi/
+# backups/ - Permitido para backups automáticos de Supabase
+# backup_*.json - Permitido para backups automáticos
+# backup_*.db - Permitido para backups automáticos
 
 # Documentation backup data
 docs/backup/
