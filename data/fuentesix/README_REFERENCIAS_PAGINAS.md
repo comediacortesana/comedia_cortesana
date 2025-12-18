@@ -50,7 +50,7 @@ Componente reutilizable para mostrar referencias a páginas PDF en la interfaz.
 
 **Uso en templates**:
 ```django
-{% include 'obras/includes/referencia_pagina_pdf.html' with referencia=referencia_pagina_pdf %}
+{% raw %}{% include 'obras/includes/referencia_pagina_pdf.html' with referencia=referencia_pagina_pdf %}{% endraw %}
 ```
 
 ## Estructura de Datos

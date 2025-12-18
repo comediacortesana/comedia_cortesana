@@ -29,7 +29,7 @@ Activar el sistema de confirmación de email para que los usuarios reciban un me
 5. Pégalo en la plantilla de Supabase
 6. Haz clic en **Save** (Guardar)
 
-**Nota:** Las variables `{{ .ConfirmationURL }}` son automáticamente reemplazadas por Supabase con la URL real de confirmación.
+**Nota:** Las variables `{% raw %}{{ .ConfirmationURL }}{% endraw %}` son automáticamente reemplazadas por Supabase con la URL real de confirmación.
 
 ### Paso 4: Configurar URLs de Redirección
 
@@ -141,7 +141,7 @@ No necesitas hacer nada adicional, ya está activado por defecto.
 
 ## 📝 Notas Importantes
 
-1. **Variables de Supabase:** El HTML usa `{{ .ConfirmationURL }}` que Supabase reemplaza automáticamente. No cambies esta variable.
+1. **Variables de Supabase:** El HTML usa `{% raw %}{{ .ConfirmationURL }}{% endraw %}` que Supabase reemplaza automáticamente. No cambies esta variable.
 
 2. **Estilo:** El email está diseñado para coincidir con el estilo académico y elegante de la aplicación, usando los mismos colores y fuentes.
 
@@ -154,7 +154,7 @@ No necesitas hacer nada adicional, ya está activado por defecto.
 Si quieres modificar el diseño del email:
 
 1. Edita el archivo `email_activacion_usuario.html`
-2. Mantén las variables de Supabase (`{{ .ConfirmationURL }}`, etc.)
+2. Mantén las variables de Supabase (`{% raw %}{{ .ConfirmationURL }}{% endraw %}`, etc.)
 3. Copia el contenido actualizado a Supabase → Email Templates → Confirm signup
 4. Guarda los cambios
 

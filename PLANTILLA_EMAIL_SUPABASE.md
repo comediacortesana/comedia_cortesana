@@ -59,7 +59,7 @@ Copia y pega este HTML en la plantilla "Confirm signup":
 </p>
 
 <p style="color: #3498db; font-family: monospace; font-size: 12px; word-break: break-all;">
-  {{ .ConfirmationURL }}
+  {% raw %}{{ .ConfirmationURL }}{% endraw %}
 </p>
 
 <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
@@ -119,12 +119,12 @@ El código en `index.html` ya está configurado para usar:
 
 Supabase proporciona estas variables que puedes usar:
 
-- `{{ .ConfirmationURL }}` - URL de confirmación completa
-- `{{ .Token }}` - Token de confirmación
-- `{{ .TokenHash }}` - Hash del token
-- `{{ .SiteURL }}` - URL de tu sitio
-- `{{ .Email }}` - Email del usuario
-- `{{ .Data }}` - Datos adicionales del usuario
+- `{% raw %}{{ .ConfirmationURL }}{% endraw %}` - URL de confirmación completa
+- `{% raw %}{{ .Token }}{% endraw %}` - Token de confirmación
+- `{% raw %}{{ .TokenHash }}{% endraw %}` - Hash del token
+- `{% raw %}{{ .SiteURL }}{% endraw %}` - URL de tu sitio
+- `{% raw %}{{ .Email }}{% endraw %}` - Email del usuario
+- `{% raw %}{{ .Data }}{% endraw %}` - Datos adicionales del usuario
 
 ## 🎨 Plantilla HTML Avanzada (Más Bonita)
 
@@ -158,13 +158,13 @@ Si quieres algo más elaborado:
       <p>Gracias por registrarte en nuestro sistema de filtrado de obras del teatro español del Siglo de Oro.</p>
       <p>Para completar tu registro, haz clic en el siguiente botón:</p>
       <div style="text-align: center;">
-        <a href="{{ .ConfirmationURL }}" class="button">
+        <a href="{% raw %}{{ .ConfirmationURL }}{% endraw %}" class="button">
           ✅ Confirmar mi cuenta
         </a>
       </div>
       <p style="font-size: 12px; color: #666;">
         O copia este enlace: <br>
-        <span style="word-break: break-all;">{{ .ConfirmationURL }}</span>
+        <span style="word-break: break-all;">{% raw %}{{ .ConfirmationURL }}{% endraw %}</span>
       </p>
     </div>
     <div class="footer">

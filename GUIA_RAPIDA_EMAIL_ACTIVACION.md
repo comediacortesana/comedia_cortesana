@@ -37,7 +37,7 @@ Confirma tu registro - Teatro Español del Siglo de Oro
 
 El contenido completo está en el archivo `email_activacion_usuario.html`. Solo necesitas copiarlo y pegarlo en Supabase.
 
-**Importante:** NO cambies la variable `{{ .ConfirmationURL }}` - Supabase la reemplazará automáticamente con el enlace real.
+**Importante:** NO cambies la variable `{% raw %}{{ .ConfirmationURL }}{% endraw %}` - Supabase la reemplazará automáticamente con el enlace real.
 
 ## ✅ Verificar que Funciona
 
