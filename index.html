@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self' https://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net; 
                    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
-                   connect-src 'self' https://kyxxpoewwjixbpcezays.supabase.co wss://kyxxpoewwjixbpcezays.supabase.co;
+                   connect-src 'self' https://kyxxpoewwjixbpcezays.supabase.co wss://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net;
                    style-src 'self' 'unsafe-inline';">
     <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
     <style>
@@ -588,18 +588,24 @@
                 <!-- Filtros de Autor -->
                 <div class="filter-group">
                     <label for="autor">Autor</label>
-                    <input type="text" id="autor" placeholder="Nombre del autor...">
+                    <select id="autor">
+                        <option value="">Todos los autores</option>
+                    </select>
                 </div>
                 
                 <div class="filter-group">
                     <label for="epoca">Época</label>
-                    <input type="text" id="epoca" placeholder="Ej: Siglo de Oro">
+                    <select id="epoca">
+                        <option value="">Todas las épocas</option>
+                    </select>
                 </div>
                 
                 <!-- Filtros de Lugar -->
                 <div class="filter-group">
                     <label for="lugar">Lugar</label>
-                    <input type="text" id="lugar" placeholder="Ciudad o lugar...">
+                    <select id="lugar">
+                        <option value="">Todos los lugares</option>
+                    </select>
                 </div>
                 
                 <div class="filter-group">
@@ -620,28 +626,34 @@
                 
                 <div class="filter-group">
                     <label for="region">Región</label>
-                    <input type="text" id="region" placeholder="Región o provincia...">
+                    <select id="region">
+                        <option value="">Todas las regiones</option>
+                    </select>
                 </div>
                 
                 <!-- Filtros de Representación -->
                 <div class="filter-group">
                     <label for="compania">Compañía teatral</label>
-                    <input type="text" id="compania" placeholder="Nombre de compañía...">
+                    <select id="compania">
+                        <option value="">Todas las compañías</option>
+                    </select>
                 </div>
                 
                 <div class="filter-group">
                     <label for="fecha_desde">Fecha desde</label>
-                    <input type="text" id="fecha_desde" placeholder="Ej: 1600">
+                    <input type="number" id="fecha_desde" placeholder="Ej: 1600" min="1500" max="1800">
                 </div>
                 
                 <div class="filter-group">
                     <label for="fecha_hasta">Fecha hasta</label>
-                    <input type="text" id="fecha_hasta" placeholder="Ej: 1700">
+                    <input type="number" id="fecha_hasta" placeholder="Ej: 1700" min="1500" max="1800">
                 </div>
                 
                 <div class="filter-group">
                     <label for="mecenas">Mecenas</label>
-                    <input type="text" id="mecenas" placeholder="Nombre del mecenas...">
+                    <select id="mecenas">
+                        <option value="">Todos los mecenas</option>
+                    </select>
                 </div>
             </div>
             
@@ -710,29 +722,87 @@
         const SUPABASE_URL = 'https://kyxxpoewwjixbpcezays.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5eHhwb2V3d2ppeGJwY2V6YXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MjAzMDksImV4cCI6MjA3Nzk5NjMwOX0.sIw7flVHQ00r3VwrhU7tvohVzKpb7LGtXVzG43FAP10';
         
-        // Inicializar cliente Supabase con configuración de persistencia
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                persistSession: true,
-                autoRefreshToken: true,
-                detectSessionInUrl: true,
-                storage: window.localStorage
-            },
-            db: {
-                schema: 'public'
-            },
-            global: {
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY
+        // Función helper para obtener el cliente de Supabase
+        function getSupabaseClient() {
+            return window.supabaseClient || window.supabase;
+        }
+        
+        // Esperar a que Supabase esté disponible antes de inicializar
+        function inicializarSupabase() {
+            // Verificar que el script de Supabase se haya cargado
+            if (typeof window.supabase === 'undefined') {
+                console.warn('⚠️ Esperando a que Supabase se cargue...');
+                // Reintentar después de un breve delay
+                setTimeout(inicializarSupabase, 100);
+                return;
+            }
+            
+            // Verificar si ya existe una variable global supabase (del script CDN)
+            // Si existe, la reutilizamos; si no, creamos una nueva
+            if (typeof window.supabaseClient === 'undefined') {
+                // Inicializar cliente Supabase con configuración de persistencia
+                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true,
+                        storage: window.localStorage
+                    },
+                    db: {
+                        schema: 'public'
+                    },
+                    global: {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY
+                        }
+                    }
+                });
+                
+                // Crear alias global 'supabase' solo si no existe
+                if (typeof window.supabase !== 'object' || !window.supabase.auth) {
+                    window.supabase = window.supabaseClient;
+                }
+                
+                // Verificar que Supabase se inicializó correctamente
+                if (!window.supabaseClient) {
+                    console.error('❌ Error: No se pudo inicializar Supabase');
+                } else {
+                    console.log('✅ Supabase inicializado correctamente');
+                    // Actualizar variable global para compatibilidad
+                    // Usar window.supabase solo si no existe (el CDN puede haberlo creado)
+                    if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
+                        window.supabase = window.supabaseClient;
+                    }
+                }
+            } else {
+                console.log('✅ Supabase ya estaba inicializado');
+                // Asegurar que la variable global esté actualizada
+                if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
+                    window.supabase = window.supabaseClient;
                 }
             }
-        });
+            
+            // Crear getter global para 'supabase' que siempre devuelva el cliente
+            try {
+                Object.defineProperty(window, 'supabase', {
+                    get: function() { return window.supabaseClient || window.supabase; },
+                    configurable: true,
+                    enumerable: true
+                });
+            } catch (e) {
+                // Si falla, simplemente asignar directamente
+                if (!window.supabase || typeof window.supabase.createClient === 'undefined') {
+                    window.supabase = window.supabaseClient;
+                }
+            }
+        }
         
-        // Verificar que Supabase se inicializó correctamente
-        if (!supabase) {
-            console.error('❌ Error: No se pudo inicializar Supabase');
+        // Inicializar Supabase cuando el script esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', inicializarSupabase);
         } else {
-            console.log('✅ Supabase inicializado correctamente');
+            // Pequeño delay para asegurar que el script CDN se haya cargado
+            setTimeout(inicializarSupabase, 50);
         }
         
         // Estado de autenticación
@@ -802,7 +872,13 @@
                     setTimeout(() => reject(new Error('Timeout')), 1000)
                 );
                 
-                const sessionPromise = supabase.auth.getSession();
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    console.warn('⚠️ Supabase client no disponible aún');
+                    sesionVerificada = true;
+                    return;
+                }
+                const sessionPromise = supabaseClient.auth.getSession();
                 
                 const { data: { session }, error } = await Promise.race([
                     sessionPromise,
@@ -838,7 +914,16 @@
         // porque puede causar dead-locks. En su lugar, usamos setTimeout(..., 0) para
         // mover las llamadas fuera del callback.
         // Ver: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
-        supabase.auth.onAuthStateChange((event, session) => {
+        // Registrar listener después de que Supabase esté inicializado
+        function registrarAuthStateChange() {
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient || !supabaseClient.auth) {
+                console.warn('⚠️ Esperando a que Supabase se inicialice para registrar auth listener...');
+                setTimeout(registrarAuthStateChange, 100);
+                return;
+            }
+            
+            supabaseClient.auth.onAuthStateChange((event, session) => {
             console.log('🔄 Cambio de estado de auth:', event, session ? `Usuario: ${session.user?.email}` : 'Sin sesión');
             sesionVerificada = true;
             
@@ -879,8 +964,12 @@
                 }
             }, 0);
         });
+        }
         
-        console.log('👂 Listener de onAuthStateChange registrado');
+        // Llamar a registrarAuthStateChange después de inicializar Supabase
+        setTimeout(() => {
+            registrarAuthStateChange();
+        }, 200);
         
         // Timeout de seguridad: si después de 3 segundos no hay evento INITIAL_SESSION, mostrar login
         setTimeout(() => {
@@ -1150,7 +1239,7 @@
                 
                 try {
                     const { data: { session }, error } = await Promise.race([
-                        supabase.auth.getSession(),
+                        getSupabaseClient().auth.getSession(),
                         timeoutPromise
                     ]);
                     
@@ -1192,7 +1281,12 @@
             
             console.log('🔐 Intentando login con:', email);
             
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email.trim(),
                 password: password
             });
@@ -1229,7 +1323,12 @@
             
             console.log('📧 URL de redirección para email:', redirectUrl);
             
-            const { data, error } = await supabase.auth.signUp({
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { data, error } = await supabaseClient.auth.signUp({
                 email: email.trim(),
                 password: password,
                 options: {
@@ -1277,7 +1376,12 @@
             }
             
             try {
-                const { data, error } = await supabase.auth.resend({
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                    return;
+                }
+                const { data, error } = await supabaseClient.auth.resend({
                     type: 'signup',
                     email: email.trim()
                 });
@@ -1315,7 +1419,12 @@
             
             console.log('🔐 Intentando resetear contraseña para:', emailLimpio);
             
-            const { error } = await supabase.auth.resetPasswordForEmail(emailLimpio, {
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(emailLimpio, {
                 redirectTo: window.location.origin + window.location.pathname
             });
             
@@ -1331,7 +1440,12 @@
         
         // Magic Link (sin contraseña)
         async function loginMagicLink(email) {
-            const { error } = await supabase.auth.signInWithOtp({
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { error } = await supabaseClient.auth.signInWithOtp({
                 email: email,
                 options: {
                     emailRedirectTo: window.location.href
@@ -1377,7 +1491,12 @@
                     setTimeout(() => reject(new Error('Timeout en logout')), 3000)
                 );
                 
-                const signOutPromise = supabase.auth.signOut();
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    console.error('Error: Supabase no está disponible');
+                    return;
+                }
+                const signOutPromise = supabaseClient.auth.signOut();
                 
                 const { error } = await Promise.race([
                     signOutPromise,
@@ -2015,7 +2134,11 @@
                     
                     if (campo.includes('.')) {
                         // Campo anidado (ej: autor.nombre_completo)
-                        const { data: obraActual, error: errorObra } = await supabase
+                        const supabaseClient = getSupabaseClient();
+                        if (!supabaseClient) {
+                            throw new Error('Supabase client no disponible');
+                        }
+                        const { data: obraActual, error: errorObra } = await supabaseClient
                             .from('obras')
                             .select('*')
                             .eq('id', obraIdStr)
@@ -2055,7 +2178,11 @@
                     }
                     
                     // Actualizar la obra en Supabase directamente
-                    const { error: errorUpdate } = await supabase
+                    const supabaseClient = getSupabaseClient();
+                    if (!supabaseClient) {
+                        throw new Error('Supabase client no disponible');
+                    }
+                    const { error: errorUpdate } = await supabaseClient
                         .from('obras')
                         .update(updateData)
                         .eq('id', obraIdStr);
@@ -2528,7 +2655,12 @@
                     // Cargar obras
                     let obrasMap = {};
                     if (obraIds.length > 0) {
-                        const { data: obrasData } = await supabase
+                        const supabaseClient = getSupabaseClient();
+                        if (!supabaseClient) {
+                            console.error('Supabase client no disponible');
+                            return;
+                        }
+                        const { data: obrasData } = await supabaseClient
                             .from('obras')
                             .select('id, titulo')
                             .in('id', obraIds);
@@ -3812,7 +3944,11 @@
                             }
                             
                             try {
-                                const queryPromise = supabase
+                                const supabaseClient = getSupabaseClient();
+                                if (!supabaseClient) {
+                                    throw new Error('Supabase client no disponible');
+                                }
+                                const queryPromise = supabaseClient
                                     .from('obras')
                                     .select('*')
                                     .order('id', { ascending: true })
@@ -4005,13 +4141,16 @@
                 
                 // Mostrar resultados y actualizar UI
                 if (datosCargados) {
+                    // Poblar dropdowns con valores únicos
+                    poblarDropdowns();
+                    
                     mostrarResultados();
                     
                     // Actualizar subtítulo con info de metadata
                     const fuenteTexto = metadata.fuente === 'Supabase' ? 'Supabase' : 'JSON (respaldo)';
                     const totalObras = metadata.total_obras || datosOriginales.length;
                     document.querySelector('.subtitle').textContent = 
-                        `Filtro de obras, autores, representaciones y lugares - ${totalObras} obras en la base de datos (${fuenteTexto})`;
+                        `Catálogo de obras, autores, representaciones y lugares - ${totalObras} obras en la base de datos (${fuenteTexto})`;
                     
                     // Mostrar notificación si se usó fallback
                     if (metadata.fuente === 'JSON (fallback)') {
@@ -4079,6 +4218,175 @@
             }
         }
         
+        // Función para poblar dropdowns con valores únicos de los datos
+        function poblarDropdowns() {
+            if (!datosOriginales || datosOriginales.length === 0) {
+                console.warn('⚠️ No hay datos para poblar dropdowns');
+                return;
+            }
+            
+            // Función helper para obtener valor de campo con diferentes nombres
+            function getField(obra, ...names) {
+                for (const name of names) {
+                    if (obra[name] !== undefined && obra[name] !== null && obra[name] !== '') {
+                        return obra[name];
+                    }
+                }
+                return null;
+            }
+            
+            // Función para poblar un select con valores únicos
+            function poblarSelect(selectId, valores, labelTodos = 'Todos') {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                
+                // Guardar valor seleccionado actual
+                const valorActual = select.value;
+                
+                // Limpiar opciones existentes excepto la primera
+                while (select.options.length > 1) {
+                    select.remove(1);
+                }
+                
+                // Ordenar valores únicos
+                const valoresUnicos = [...new Set(valores.filter(v => v !== null && v !== undefined && v !== ''))].sort();
+                
+                // Añadir opciones
+                valoresUnicos.forEach(valor => {
+                    const option = document.createElement('option');
+                    option.value = valor;
+                    option.textContent = valor;
+                    select.appendChild(option);
+                });
+                
+                // Restaurar valor seleccionado si existe
+                if (valorActual && valoresUnicos.includes(valorActual)) {
+                    select.value = valorActual;
+                }
+            }
+            
+            // Extraer valores únicos para cada campo
+            
+            // Autor
+            const autores = datosOriginales.map(obra => {
+                const autor = getField(obra, 'Autor', 'autor');
+                return extraerNombreAutor(autor);
+            }).filter(autor => autor !== null && autor !== undefined && autor !== '');
+            poblarSelect('autor', autores, 'Todos los autores');
+            
+            // Época
+            const epocas = datosOriginales.map(obra => {
+                const autor = getField(obra, 'Autor', 'autor');
+                if (autor && typeof autor === 'object' && autor !== null) {
+                    return autor.epoca || autor['?poca'] || autor['Época'] || null;
+                }
+                return null;
+            }).filter(Boolean);
+            poblarSelect('epoca', epocas, 'Todas las épocas');
+            
+            // Lugar
+            const lugares = datosOriginales.map(obra => getField(obra, 'lugar', 'Lugar')).filter(Boolean);
+            poblarSelect('lugar', lugares, 'Todos los lugares');
+            
+            // Región
+            const regiones = datosOriginales.map(obra => getField(obra, 'region', 'Región', 'Región')).filter(Boolean);
+            poblarSelect('region', regiones, 'Todas las regiones');
+            
+            // Compañía
+            const companias = datosOriginales.map(obra => getField(obra, 'compania', 'Compañía', 'Compañía')).filter(Boolean);
+            poblarSelect('compania', companias, 'Todas las compañías');
+            
+            // Mecenas
+            const mecenas = datosOriginales.map(obra => getField(obra, 'mecenas', 'Mecenas')).filter(Boolean);
+            poblarSelect('mecenas', mecenas, 'Todos los mecenas');
+            
+            console.log('✅ Dropdowns poblados con valores únicos');
+        }
+        
+        // Función helper para extraer nombre del autor de diferentes formatos
+        function extraerNombreAutor(autor) {
+            if (!autor) return null;
+            
+            // Si es string, retornarlo directamente
+            if (typeof autor === 'string') {
+                return autor.trim();
+            }
+            
+            // Si es objeto, intentar extraer el nombre de diferentes formas
+            if (typeof autor === 'object' && autor !== null) {
+                // Intentar diferentes propiedades comunes (en orden de prioridad)
+                const propiedadesNombre = [
+                    'nombre', 'name', 'Nombre', 'NOMBRE',
+                    'nombre_completo', 'nombreCompleto', 'Nombre Completo',
+                    'nombreCompleto', 'NombreCompleto', 'NOMBRE_COMPLETO',
+                    'apellido', 'apellidos', 'Apellido', 'Apellidos'
+                ];
+                
+                for (const prop of propiedadesNombre) {
+                    if (autor[prop] && typeof autor[prop] === 'string' && autor[prop].trim() !== '') {
+                        return autor[prop].trim();
+                    }
+                }
+                
+                // Buscar cualquier propiedad que sea string y no sea un objeto/array
+                const keys = Object.keys(autor);
+                for (const key of keys) {
+                    const value = autor[key];
+                    // Ignorar propiedades comunes que no son nombres
+                    if (['id', 'created_at', 'updated_at', 'epoca', 'fecha_nacimiento', 
+                         'fecha_muerte', 'biografia', 'obras_principales', 'notas'].includes(key)) {
+                        continue;
+                    }
+                    if (typeof value === 'string' && value.trim() !== '' && 
+                        !Array.isArray(value) && typeof value !== 'object') {
+                        return value.trim();
+                    }
+                }
+                
+                // Si no se puede extraer, retornar null silenciosamente (se filtrará)
+                // Solo loguear en modo debug si es necesario
+                if (console.debug) {
+                    console.debug('⚠️ Autor objeto sin propiedad nombre reconocida:', JSON.stringify(autor, null, 2));
+                }
+                return null;
+            }
+            
+            // Si es un número u otro tipo primitivo, convertir a string
+            if (typeof autor !== 'object') {
+                return String(autor).trim();
+            }
+            
+            // Si llegamos aquí, es un objeto complejo que no pudimos procesar
+            return null;
+        }
+        
+        // Función helper para extraer año de diferentes formatos de fecha
+        function extraerAño(fecha) {
+            if (!fecha) return null;
+            
+            // Si es un número, devolverlo directamente
+            if (typeof fecha === 'number') {
+                return fecha;
+            }
+            
+            // Convertir a string
+            const fechaStr = String(fecha).trim();
+            
+            // Si es solo un número de 4 dígitos (año)
+            if (/^\d{4}$/.test(fechaStr)) {
+                return parseInt(fechaStr);
+            }
+            
+            // Intentar extraer año de formato YYYY-MM-DD o similar
+            const match = fechaStr.match(/(\d{4})/);
+            if (match) {
+                return parseInt(match[1]);
+            }
+            
+            // Si no se puede extraer, retornar null
+            return null;
+        }
+        
         // Función para aplicar filtros
         function aplicarFiltros() {
             datosFiltrados = datosOriginales.filter(obra => {
@@ -4119,37 +4427,30 @@
                     if (obraFuenteNormalizada !== fuenteFiltroNormalizada) return false;
                 }
                 
-                // Filtro de autor (puede ser string, objeto, null o undefined)
-                const autor = document.getElementById('autor').value.toLowerCase();
+                // Filtro de autor (ahora es select, comparación exacta)
+                const autor = document.getElementById('autor').value;
                 if (autor) {
                     const obraAutor = getField(obra, 'Autor', 'autor');
-                    let autorNombre = '';
-                    if (obraAutor) {
-                        if (typeof obraAutor === 'string') {
-                            autorNombre = obraAutor;
-                        } else if (typeof obraAutor === 'object' && obraAutor.nombre) {
-                            autorNombre = obraAutor.nombre;
-                        }
-                    }
-                    if (!autorNombre || !autorNombre.toString().toLowerCase().includes(autor)) return false;
+                    const autorNombre = extraerNombreAutor(obraAutor);
+                    if (!autorNombre || autorNombre !== autor) return false;
                 }
                 
-                // Filtro de época
-                const epoca = document.getElementById('epoca').value.toLowerCase();
+                // Filtro de época (ahora es select, comparación exacta)
+                const epoca = document.getElementById('epoca').value;
                 if (epoca) {
                     const obraAutor = getField(obra, 'Autor', 'autor');
                     let epocaObra = '';
                     if (obraAutor && typeof obraAutor === 'object' && obraAutor !== null) {
                         epocaObra = obraAutor.epoca || obraAutor['?poca'] || obraAutor['Época'] || '';
                     }
-                    if (!epocaObra || !epocaObra.toString().toLowerCase().includes(epoca)) return false;
+                    if (!epocaObra || epocaObra !== epoca) return false;
                 }
                 
-                // Filtro de lugar
-                const lugar = document.getElementById('lugar').value.toLowerCase();
+                // Filtro de lugar (ahora es select, comparación exacta)
+                const lugar = document.getElementById('lugar').value;
                 if (lugar) {
                     const obraLugar = getField(obra, 'lugar', 'Lugar');
-                    if (!obraLugar || !obraLugar.toString().toLowerCase().includes(lugar)) return false;
+                    if (!obraLugar || obraLugar !== lugar) return false;
                 }
                 
                 // Filtro de tipo de lugar
@@ -4159,34 +4460,43 @@
                     if (!obraTipoLugar || obraTipoLugar !== tipoLugar) return false;
                 }
                 
-                // Filtro de región
-                const region = document.getElementById('region').value.toLowerCase();
+                // Filtro de región (ahora es select, comparación exacta)
+                const region = document.getElementById('region').value;
                 if (region) {
                     const obraRegion = getField(obra, 'region', 'Región', 'Región');
-                    if (!obraRegion || !obraRegion.toString().toLowerCase().includes(region)) return false;
+                    if (!obraRegion || obraRegion !== region) return false;
                 }
                 
-                // Filtro de compañía
-                const compania = document.getElementById('compania').value.toLowerCase();
+                // Filtro de compañía (ahora es select, comparación exacta)
+                const compania = document.getElementById('compania').value;
                 if (compania) {
                     const obraCompania = getField(obra, 'compania', 'Compañía', 'Compañía');
-                    if (!obraCompania || !obraCompania.toString().toLowerCase().includes(compania)) return false;
+                    if (!obraCompania || obraCompania !== compania) return false;
                 }
                 
-                // Filtro de fecha desde
+                // Filtro de fecha desde - extraer año de diferentes formatos
                 const fechaDesde = document.getElementById('fecha_desde').value;
-                const fechaObra = getField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '';
-                if (fechaDesde && fechaObra && !isNaN(parseInt(fechaObra)) && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
+                if (fechaDesde) {
+                    const fechaObra = getField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha', 'fecha_creacion_estimada') || '';
+                    const añoObra = extraerAño(fechaObra);
+                    const añoDesde = parseInt(fechaDesde);
+                    if (añoObra !== null && !isNaN(añoDesde) && añoObra < añoDesde) return false;
+                }
                 
-                // Filtro de fecha hasta
+                // Filtro de fecha hasta - extraer año de diferentes formatos
                 const fechaHasta = document.getElementById('fecha_hasta').value;
-                if (fechaHasta && fechaObra && !isNaN(parseInt(fechaObra)) && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
+                if (fechaHasta) {
+                    const fechaObra = getField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha', 'fecha_creacion_estimada') || '';
+                    const añoObra = extraerAño(fechaObra);
+                    const añoHasta = parseInt(fechaHasta);
+                    if (añoObra !== null && !isNaN(añoHasta) && añoObra > añoHasta) return false;
+                }
                 
-                // Filtro de mecenas
-                const mecenas = document.getElementById('mecenas').value.toLowerCase();
+                // Filtro de mecenas (ahora es select, comparación exacta)
+                const mecenas = document.getElementById('mecenas').value;
                 if (mecenas) {
                     const obraMecenas = getField(obra, 'mecenas', 'Mecenas');
-                    if (!obraMecenas || !obraMecenas.toString().toLowerCase().includes(mecenas)) return false;
+                    if (!obraMecenas || obraMecenas !== mecenas) return false;
                 }
                 
                 return true;
@@ -4769,7 +5079,12 @@
                     } catch (timeoutError) {
                         if (timeoutError.message === 'TIMEOUT') {
                             console.warn('   ⏱️ Timeout en consulta, intentando con fetch directo...');
-                            const session = await supabase.auth.getSession();
+                            const supabaseClient = getSupabaseClient();
+                            if (!supabaseClient) {
+                                console.error('Supabase client no disponible');
+                                return;
+                            }
+                            const session = await supabaseClient.auth.getSession();
                             const token = session.data?.session?.access_token;
                             if (token) {
                                 const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=*`;
@@ -4887,7 +5202,7 @@
             try {
                 const startTime = Date.now();
                 const { data, error } = await Promise.race([
-                    supabase.from('perfiles_usuarios').select('count').limit(1),
+                    getSupabaseClient().from('perfiles_usuarios').select('count').limit(1),
                     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout después de 10 segundos')), 10000))
                 ]);
                 
@@ -5002,7 +5317,12 @@
                 
                 try {
                     // Establecer la sesión usando el token del hash
-                    const { data, error } = await supabase.auth.setSession({
+                    const supabaseClient = getSupabaseClient();
+                    if (!supabaseClient) {
+                        console.error('Supabase client no disponible');
+                        return;
+                    }
+                    const { data, error } = await supabaseClient.auth.setSession({
                         access_token: accessToken,
                         refresh_token: refreshToken || ''
                     });

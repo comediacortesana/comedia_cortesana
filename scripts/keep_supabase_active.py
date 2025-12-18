@@ -79,3 +79,9 @@ if __name__ == '__main__':
         print("⚠️  Script completado con advertencias")
         sys.exit(0)  # No fallar el workflow por advertencias menores
 
+
+
+
+
+
+

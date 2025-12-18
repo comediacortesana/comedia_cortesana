@@ -77,3 +77,9 @@ WITH CHECK (
 -- 5. La política de SELECT ya existe y permite lectura pública (no se modifica aquí)
 
 
+
+
+
+
+
+
