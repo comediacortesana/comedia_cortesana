@@ -8,15 +8,51 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Variables CSS para tema claro */
+        :root {
+            --bg-color: #faf9f7;
+            --text-color: #2c2416;
+            --navbar-bg: #5d4e37;
+            --navbar-border: #8b7355;
+            --card-bg: #ffffff;
+            --card-border: #e8e6e3;
+            --main-bg: #ffffff;
+            --main-border: #e8e6e3;
+            --heading-color: #1a1612;
+            --btn-primary-bg: #5d4e37;
+            --btn-primary-hover: #4a3f2d;
+            --footer-bg: #5d4e37;
+            --footer-border: #8b7355;
+        }
+
+        /* Variables CSS para tema oscuro */
+        [data-theme="dark"] {
+            --bg-color: #1a1612;
+            --text-color: #e8e6e3;
+            --navbar-bg: #2c2416;
+            --navbar-border: #4a3f2d;
+            --card-bg: #2c2416;
+            --card-border: #4a3f2d;
+            --main-bg: #2c2416;
+            --main-border: #4a3f2d;
+            --heading-color: #faf9f7;
+            --btn-primary-bg: #5d4e37;
+            --btn-primary-hover: #6d5e47;
+            --footer-bg: #2c2416;
+            --footer-border: #4a3f2d;
+        }
+
         body {
-            background-color: #faf9f7;
+            background-color: var(--bg-color);
             font-family: 'Crimson Text', 'Source Serif Pro', 'Times New Roman', serif;
-            color: #2c2416;
+            color: var(--text-color);
             line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .navbar {
-            background-color: #5d4e37 !important;
-            border-bottom: 2px solid #8b7355;
+            background-color: var(--navbar-bg) !important;
+            border-bottom: 2px solid var(--navbar-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .navbar-brand {
             font-weight: 600;
@@ -32,9 +68,10 @@
             font-weight: 500;
         }
         .card {
-            border: 1px solid #e8e6e3;
+            border: 1px solid var(--card-border);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            background-color: #ffffff;
+            background-color: var(--card-bg);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .btn {
             border-radius: 2px;
@@ -46,29 +83,49 @@
             padding: 10px 20px;
         }
         .btn-primary {
-            background-color: #5d4e37;
-            border-color: #5d4e37;
+            background-color: var(--btn-primary-bg);
+            border-color: var(--btn-primary-bg);
         }
         .btn-primary:hover {
-            background-color: #4a3f2d;
-            border-color: #4a3f2d;
+            background-color: var(--btn-primary-hover);
+            border-color: var(--btn-primary-hover);
         }
         main {
-            background-color: #ffffff;
+            background-color: var(--main-bg);
             padding: 40px 50px;
-            border: 1px solid #e8e6e3;
+            border: 1px solid var(--main-border);
             margin-top: 30px !important;
             margin-bottom: 30px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Crimson Text', serif;
-            color: #1a1612;
+            color: var(--heading-color);
             font-weight: 600;
+            transition: color 0.3s ease;
         }
         footer {
-            background-color: #5d4e37 !important;
-            border-top: 2px solid #8b7355;
+            background-color: var(--footer-bg) !important;
+            border-top: 2px solid var(--footer-border);
             font-family: 'Crimson Text', serif;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+        .theme-toggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .theme-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -79,7 +136,10 @@
             <a class="navbar-brand" href="/">
                 Teatro Español del Siglo de Oro
             </a>
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto d-flex align-items-center">
+                <button class="theme-toggle me-3" id="themeToggle" aria-label="Cambiar tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
                 <a class="nav-link" href="/obras/catalogos/">
                     <i class="fas fa-book"></i> Catálogos
                 </a>
@@ -101,6 +161,49 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para aplicar el tema
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                if (theme === 'dark') {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            }
+        }
+
+        // Función para obtener el tema guardado o usar el predeterminado
+        function getStoredTheme() {
+            return localStorage.getItem('theme') || 'light';
+        }
+
+        // Función para guardar el tema
+        function setStoredTheme(theme) {
+            localStorage.setItem('theme', theme);
+        }
+
+        // Aplicar tema al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = getStoredTheme();
+            applyTheme(currentTheme);
+
+            // Configurar el toggle
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    const currentTheme = getStoredTheme();
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    applyTheme(newTheme);
+                    setStoredTheme(newTheme);
+                });
+            }
+        });
+    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

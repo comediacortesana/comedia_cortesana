@@ -20,59 +20,107 @@
         /* Importar fuente académica */
         @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+Pro:wght@400;600;700&display=swap');
         
+        /* Variables CSS para tema claro */
+        :root {
+            --bg-color: #faf9f7;
+            --text-color: #2c2416;
+            --container-bg: #ffffff;
+            --container-border: #e8e6e3;
+            --heading-color: #1a1612;
+            --border-color: #8b7355;
+            --filters-bg: #f7f6f4;
+            --filters-border: #e0ddd8;
+            --filters-title-color: #3d3428;
+            --label-color: #4a4235;
+            --input-bg: #ffffff;
+            --input-border: #c9c4bb;
+            --table-header-bg: #5d4e37;
+            --table-row-hover: #f7f6f4;
+            --subtitle-color: #5a5247;
+            --auth-section-bg: #f7f6f4;
+            --auth-section-border: #e0ddd8;
+        }
+
+        /* Variables CSS para tema oscuro */
+        [data-theme="dark"] {
+            --bg-color: #1a1612;
+            --text-color: #e8e6e3;
+            --container-bg: #2c2416;
+            --container-border: #4a3f2d;
+            --heading-color: #faf9f7;
+            --border-color: #6d5e47;
+            --filters-bg: #2c2416;
+            --filters-border: #4a3f2d;
+            --filters-title-color: #e8e6e3;
+            --label-color: #d4c9b8;
+            --input-bg: #1a1612;
+            --input-border: #4a3f2d;
+            --table-header-bg: #3d3428;
+            --table-row-hover: #3d3428;
+            --subtitle-color: #b8a99a;
+            --auth-section-bg: #2c2416;
+            --auth-section-border: #4a3f2d;
+        }
+        
         body {
             font-family: 'Crimson Text', 'Source Serif Pro', 'Times New Roman', serif;
-            background-color: #faf9f7;
+            background-color: var(--bg-color);
             padding: 20px;
-            color: #2c2416;
+            color: var(--text-color);
             line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: #ffffff;
+            background: var(--container-bg);
             padding: 40px 50px;
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border: 1px solid #e8e6e3;
+            border: 1px solid var(--container-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         h1 {
-            color: #1a1612;
+            color: var(--heading-color);
             margin-bottom: 15px;
             font-size: 32px;
             font-weight: 700;
             letter-spacing: -0.5px;
-            border-bottom: 2px solid #8b7355;
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 12px;
+            transition: color 0.3s ease, border-color 0.3s ease;
         }
         
         .subtitle {
-            color: #5a5247;
+            color: var(--subtitle-color);
             margin-bottom: 35px;
             font-size: 15px;
             font-style: italic;
             letter-spacing: 0.3px;
+            transition: color 0.3s ease;
         }
         
         .filters-section {
-            background: #f7f6f4;
+            background: var(--filters-bg);
             padding: 25px 30px;
             border-radius: 3px;
             margin-bottom: 35px;
-            border: 1px solid #e0ddd8;
+            border: 1px solid var(--filters-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         .filters-title {
             font-size: 19px;
             font-weight: 600;
-            color: #3d3428;
+            color: var(--filters-title-color);
             margin-bottom: 20px;
             font-family: 'Crimson Text', serif;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 16px;
+            transition: color 0.3s ease;
         }
         
         .filters-grid {
@@ -90,29 +138,65 @@
         .filter-group label {
             font-size: 13px;
             font-weight: 600;
-            color: #4a4235;
+            color: var(--label-color);
             margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             font-size: 12px;
+            transition: color 0.3s ease;
         }
         
         .filter-group input,
         .filter-group select {
             padding: 10px 12px;
-            border: 1px solid #c9c4bb;
+            border: 1px solid var(--input-border);
             border-radius: 2px;
             font-size: 15px;
             font-family: 'Crimson Text', serif;
-            background: #ffffff;
-            transition: border-color 0.2s;
+            background: var(--input-bg);
+            color: var(--text-color);
+            transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
         }
         
         .filter-group input:focus,
         .filter-group select:focus {
             outline: none;
-            border-color: #8b7355;
+            border-color: var(--border-color);
             box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.1);
+        }
+        
+        .theme-toggle {
+            background: var(--btn-primary-bg, #5d4e37);
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Crimson Text', serif;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .theme-toggle:hover {
+            background-color: var(--btn-primary-hover, #4a3f2d);
+        }
+        
+        .theme-toggle:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        .header-with-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
         .button-group {
@@ -163,14 +247,16 @@
             align-items: center;
             margin-bottom: 20px;
             padding-bottom: 12px;
-            border-bottom: 2px solid #8b7355;
+            border-bottom: 2px solid var(--border-color);
+            transition: border-color 0.3s ease;
         }
         
         .results-count {
             font-size: 17px;
             font-weight: 600;
-            color: #3d3428;
+            color: var(--filters-title-color);
             font-family: 'Crimson Text', serif;
+            transition: color 0.3s ease;
         }
         
         .results-table {
@@ -180,8 +266,9 @@
         }
         
         .results-table thead {
-            background-color: #5d4e37;
+            background-color: var(--table-header-bg);
             color: #ffffff;
+            transition: background-color 0.3s ease;
         }
         
         .results-table th {
@@ -196,21 +283,23 @@
         
         .results-table td {
             padding: 12px 12px;
-            border-bottom: 1px solid #e8e6e3;
+            border-bottom: 1px solid var(--container-border);
             font-size: 15px;
             font-family: 'Crimson Text', serif;
+            transition: border-color 0.3s ease;
         }
         
         .results-table tbody tr:hover {
-            background-color: #f7f6f4;
+            background-color: var(--table-row-hover);
         }
         
         .no-results {
             text-align: center;
             padding: 50px;
-            color: #8b7355;
+            color: var(--border-color);
             font-size: 17px;
             font-style: italic;
+            transition: color 0.3s ease;
         }
         
         .badge {
@@ -267,11 +356,12 @@
         
         .modal-content {
             position: relative;
-            background: white;
+            background: var(--container-bg);
             margin: 50px auto;
             max-width: 1200px;
             border-radius: 8px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: background-color 0.3s ease;
         }
         
         .modal-header {
@@ -337,10 +427,11 @@
         }
         
         .field-item {
-            background: #f8f9fa;
+            background: var(--filters-bg);
             padding: 12px 15px;
             border-radius: 5px;
-            border-left: 3px solid #ddd;
+            border-left: 3px solid var(--container-border);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         .field-item.has-value {
@@ -348,39 +439,50 @@
             background: #f1f9f4;
         }
         
+        [data-theme="dark"] .field-item.has-value {
+            background: rgba(40, 167, 69, 0.2);
+        }
+        
         .field-item.empty {
             border-left-color: #ffc107;
             background: #fffbf0;
         }
         
+        [data-theme="dark"] .field-item.empty {
+            background: rgba(255, 193, 7, 0.2);
+        }
+        
         .field-label {
             font-size: 11px;
             font-weight: 600;
-            color: #666;
+            color: var(--label-color);
             text-transform: uppercase;
             margin-bottom: 5px;
             display: flex;
             align-items: center;
             gap: 5px;
+            transition: color 0.3s ease;
         }
         
         .field-value {
             font-size: 14px;
-            color: #2c3e50;
+            color: var(--text-color);
             word-wrap: break-word;
+            transition: color 0.3s ease;
         }
         
         .field-value.empty-value {
-            color: #999;
+            color: var(--subtitle-color);
             font-style: italic;
         }
         
         .representacion-card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
+            background: var(--container-bg);
+            border: 1px solid var(--container-border);
             border-radius: 5px;
             padding: 15px;
             margin-bottom: 15px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         
         .representacion-header {
@@ -408,11 +510,12 @@
         }
         
         .comentario-item {
-            background: #f8f9fa;
+            background: var(--filters-bg);
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 5px;
             border-left: 3px solid #3498db;
+            transition: background-color 0.3s ease;
         }
         
         .comentario-header {
@@ -423,14 +526,16 @@
         }
         
         .comentario-fecha {
-            color: #999;
+            color: var(--subtitle-color);
             font-size: 12px;
+            transition: color 0.3s ease;
         }
         
         .comentario-contenido {
-            color: #333;
+            color: var(--text-color);
             line-height: 1.5;
             margin-bottom: 8px;
+            transition: color 0.3s ease;
         }
         
         .comentario-tipo {
@@ -505,12 +610,13 @@
         }
         
         .analisis-ia-item {
-            background: #f8f9fa;
+            background: var(--filters-bg);
             border-left: 4px solid #9b59b6; /* Color distintivo para IA */
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 4px;
             position: relative;
+            transition: background-color 0.3s ease;
         }
         
         .analisis-ia-item.validado {
@@ -550,10 +656,11 @@
         .analisis-ia-frase {
             padding: 8px;
             margin: 5px 0;
-            background: white;
+            background: var(--container-bg);
             border-radius: 4px;
             font-size: 14px;
             line-height: 1.5;
+            transition: background-color 0.3s ease;
         }
         
         .analisis-ia-acciones {
@@ -630,8 +737,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Teatro Español del Siglo de Oro</h1>
-        <p class="subtitle">Catálogo de obras, autores, representaciones y lugares • Sincronización automática activa</p>
+        <div class="header-with-toggle">
+            <div>
+                <h1 style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">Teatro Español del Siglo de Oro</h1>
+                <p class="subtitle" style="margin-bottom: 0;">Catálogo de obras, autores, representaciones y lugares • Sincronización automática activa</p>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+                <i class="fas fa-moon" id="themeIcon"></i>
+                <span id="themeText">Modo Oscuro</span>
+            </button>
+        </div>
         
         <!-- Sección de Autenticación -->
         <div id="auth-section" style="margin-bottom: 25px; padding: 20px 25px; background: #f7f6f4; border-radius: 3px; border: 1px solid #e0ddd8;">
@@ -5686,6 +5801,54 @@
                 actualizarContadorAnalisisPendientes();
             }, 2000);
         };
+        
+        // Sistema de Tema Oscuro - Aplicar inmediatamente para evitar flash
+        (function() {
+            // Función para aplicar el tema
+            function applyTheme(theme) {
+                document.documentElement.setAttribute('data-theme', theme);
+                const themeIcon = document.getElementById('themeIcon');
+                const themeText = document.getElementById('themeText');
+                if (themeIcon) {
+                    if (theme === 'dark') {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                        if (themeText) themeText.textContent = 'Modo Claro';
+                    } else {
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                        if (themeText) themeText.textContent = 'Modo Oscuro';
+                    }
+                }
+            }
+
+            // Función para obtener el tema guardado o usar el predeterminado
+            function getStoredTheme() {
+                return localStorage.getItem('theme') || 'light';
+            }
+
+            // Función para guardar el tema
+            function setStoredTheme(theme) {
+                localStorage.setItem('theme', theme);
+            }
+
+            // Aplicar tema inmediatamente (antes de que se muestre el contenido)
+            const currentTheme = getStoredTheme();
+            applyTheme(currentTheme);
+
+            // Configurar el toggle cuando el DOM esté listo
+            document.addEventListener('DOMContentLoaded', function() {
+                const themeToggle = document.getElementById('themeToggle');
+                if (themeToggle) {
+                    themeToggle.addEventListener('click', function() {
+                        const currentTheme = getStoredTheme();
+                        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                        applyTheme(newTheme);
+                        setStoredTheme(newTheme);
+                    });
+                }
+            });
+        })();
     </script>
 </body>
 </html>
