@@ -1,0 +1,352 @@
+{
+  "lugares_teatrales": {
+    "metadata": {
+      "version": "1.0",
+      "created": "2025-01-27",
+      "description": "Estructura jerárquica de lugares teatrales del Siglo de Oro español",
+      "total_lugares": 30,
+      "total_representaciones": 137
+    },
+    "categorias": {
+      "palacios": {
+        "nombre": "Palacios Reales",
+        "descripcion": "Representaciones en palacios reales y residencias nobiliarias",
+        "tipo": "palacio",
+        "lugares": {
+          "palacio_general": {
+            "nombre": "Palacio",
+            "variantes": [
+              "Palacio",
+              "Representación palaciega",
+              "Representación palacíega"
+            ],
+            "representaciones": 187,
+            "descripcion": "Representaciones generales en palacio",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          },
+          "palacio_salon": {
+            "nombre": "Palacio - Salón",
+            "variantes": [
+              "Palacio, Salón",
+              "Palacio. Salón",
+              "Palacio, Salón dorado"
+            ],
+            "representaciones": 47,
+            "descripcion": "Representaciones en el salón del palacio",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          },
+          "cuarto_reina": {
+            "nombre": "Cuarto de la Reina",
+            "variantes": [
+              "Cuarto de la Reina",
+              "Palacio, Cuarto de la Reina",
+              "Pardo, Cuarto de la Reina"
+            ],
+            "representaciones": 21,
+            "descripcion": "Representaciones en el cuarto de la reina",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          }
+        }
+      },
+      "corrales": {
+        "nombre": "Corrales de Comedias",
+        "descripcion": "Teatros públicos al aire libre",
+        "tipo": "corral",
+        "lugares": {
+          "corral_principe": {
+            "nombre": "Corral del Príncipe",
+            "variantes": [
+              "Corral del Príncipe"
+            ],
+            "representaciones": 16,
+            "descripcion": "Principal corral de comedias de Madrid",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid",
+              "direccion": "Calle del Príncipe"
+            }
+          },
+          "corral_cruz": {
+            "nombre": "Corral de la Cruz",
+            "variantes": [
+              "Corral de la Cruz"
+            ],
+            "representaciones": 10,
+            "descripcion": "Segundo corral de comedias de Madrid",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid",
+              "direccion": "Calle de la Cruz"
+            }
+          },
+          "corrales_genericos": {
+            "nombre": "Corrales Genéricos",
+            "variantes": [
+              "Uno de los dos corrales"
+            ],
+            "representaciones": 1,
+            "descripcion": "Referencias genéricas a los corrales",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          }
+        }
+      },
+      "retiro": {
+        "nombre": "Buen Retiro",
+        "descripcion": "Complejo palaciego del Buen Retiro",
+        "tipo": "retiro",
+        "lugares": {
+          "retiro_general": {
+            "nombre": "Buen Retiro",
+            "variantes": [
+              "Buen Retiro"
+            ],
+            "representaciones": 8,
+            "descripcion": "Representaciones generales en el Buen Retiro",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          },
+          "retiro_coliseo": {
+            "nombre": "Buen Retiro - Coliseo",
+            "variantes": [
+              "Buen Retiro, Coliseo",
+              "Buen Retiro, Coliseo, al pueblo",
+              "[Buen Retiro, Coliseo], con el título de Decio y Araclea"
+            ],
+            "representaciones": 21,
+            "descripcion": "Teatro del Coliseo en el Buen Retiro",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          },
+          "retiro_saloncete": {
+            "nombre": "Buen Retiro - Saloncete",
+            "variantes": [
+              "Buen Retiro, Saloncete"
+            ],
+            "representaciones": 6,
+            "descripcion": "Salón pequeño del Buen Retiro",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          },
+          "retiro_saloncillo": {
+            "nombre": "Buen Retiro - Saloncillo",
+            "variantes": [
+              "Buen Retiro, Saloncillo"
+            ],
+            "representaciones": 5,
+            "descripcion": "Salón muy pequeño del Buen Retiro",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          },
+          "retiro_salon": {
+            "nombre": "Buen Retiro - Salón",
+            "variantes": [
+              "Buen Retiro, Salón"
+            ],
+            "representaciones": 2,
+            "descripcion": "Salón principal del Buen Retiro",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038,
+              "ciudad": "Madrid"
+            }
+          }
+        }
+      },
+      "pardo": {
+        "nombre": "El Pardo",
+        "descripcion": "Palacio Real de El Pardo",
+        "tipo": "palacio",
+        "lugares": {
+          "pardo_general": {
+            "nombre": "El Pardo",
+            "variantes": [
+              "Pardo"
+            ],
+            "representaciones": 2,
+            "descripcion": "Representaciones en el Palacio de El Pardo",
+            "coordenadas": {
+              "lat": 40.5167,
+              "lng": -3.7667,
+              "ciudad": "El Pardo"
+            }
+          }
+        }
+      },
+      "toledo": {
+        "nombre": "Toledo",
+        "descripcion": "Representaciones en Toledo",
+        "tipo": "ciudad",
+        "lugares": {
+          "toledo_palacio_azeca": {
+            "nombre": "Toledo - Palacio de Azeca",
+            "variantes": [
+              "Toledo. Palacio de Azeca",
+              "Toledo, Palacio de Azeca"
+            ],
+            "representaciones": 2,
+            "descripcion": "Palacio de Azeca en Toledo",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273,
+              "ciudad": "Toledo"
+            }
+          },
+          "toledo_plaza_palacio": {
+            "nombre": "Toledo - Plaza de Palacio",
+            "variantes": [
+              "Toledo, Plaza de Palacio"
+            ],
+            "representaciones": 1,
+            "descripcion": "Plaza del Palacio en Toledo",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273,
+              "ciudad": "Toledo"
+            }
+          },
+          "toledo_jardin_cardenal": {
+            "nombre": "Toledo - Jardín del Cardenal Arzobispo",
+            "variantes": [
+              "Toledo, Jardín del Cardenal Arzobispo"
+            ],
+            "representaciones": 1,
+            "descripcion": "Jardín del Cardenal Arzobispo en Toledo",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273,
+              "ciudad": "Toledo"
+            }
+          },
+          "toledo_casa_campo": {
+            "nombre": "Toledo - Casa del Campo",
+            "variantes": [
+              "Toledo, Casa del Campo"
+            ],
+            "representaciones": 1,
+            "descripcion": "Casa del Campo en Toledo",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273,
+              "ciudad": "Toledo"
+            }
+          }
+        }
+      },
+      "otros": {
+        "nombre": "Otros Lugares",
+        "descripcion": "Lugares diversos y referencias especiales",
+        "tipo": "otro",
+        "lugares": {
+          "referencias_especiales": {
+            "nombre": "Referencias Especiales",
+            "variantes": [
+              "Se trata de dos obras distintas.",
+              "Se refiere probablemente a la siguiente representación: Carnestolendas de 1676",
+              "Se habla de ensayos de Fieras afemina amor para una representación palaciega",
+              "Representación palaciega, con el título de Pitias y Damón",
+              "Representación\npalaciega"
+            ],
+            "representaciones": 7,
+            "descripcion": "Referencias especiales y notas explicativas",
+            "coordenadas": null
+          }
+        }
+      }
+    },
+    "estadisticas": {
+      "por_tipo": {
+        "palacio": 255,
+        "corral": 27,
+        "retiro": 42,
+        "ciudad": 5,
+        "otro": 7
+      },
+      "por_ciudad": {
+        "Madrid": 324,
+        "Toledo": 5,
+        "El Pardo": 2
+      },
+      "lugares_mas_frecuentes": [
+        {
+          "lugar": "Palacio",
+          "representaciones": 187,
+          "porcentaje": 58.1
+        },
+        {
+          "lugar": "Buen Retiro, Coliseo",
+          "representaciones": 21,
+          "porcentaje": 6.5
+        },
+        {
+          "lugar": "Palacio, Salón",
+          "representaciones": 23,
+          "porcentaje": 7.1
+        },
+        {
+          "lugar": "Corral del Príncipe",
+          "representaciones": 16,
+          "porcentaje": 5.0
+        },
+        {
+          "lugar": "Cuarto de la Reina",
+          "representaciones": 15,
+          "porcentaje": 4.7
+        }
+      ]
+    },
+    "agrupaciones_sugeridas": {
+      "lugares_principales": [
+        "Palacio",
+        "Corral del Príncipe", 
+        "Corral de la Cruz",
+        "Buen Retiro, Coliseo",
+        "Cuarto de la Reina"
+      ],
+      "lugares_secundarios": [
+        "Palacio, Salón",
+        "Buen Retiro",
+        "Buen Retiro, Saloncete",
+        "Buen Retiro, Saloncillo"
+      ],
+      "lugares_especiales": [
+        "Toledo",
+        "El Pardo",
+        "Referencias Especiales"
+      ]
+    }
+  }
+}
+
+
+
+

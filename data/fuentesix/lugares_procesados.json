@@ -1,0 +1,346 @@
+{
+  "metadata": {
+    "total_lugares": 16,
+    "total_representaciones": 25,
+    "fecha_procesamiento": "2025-01-27"
+  },
+  "lugares_normalizados": {
+    "palacio_general": {
+      "id": "palacio_general",
+      "nombre": "Palacio",
+      "categoria": "palacios",
+      "tipo": "desconocido",
+      "variantes": [
+        "Palacio",
+        "Representación palaciega",
+        "Representación palacíega"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "ciudad": "Madrid"
+      },
+      "ciudad": "Madrid",
+      "descripcion": "Representaciones generales en palacio"
+    },
+    "corral_principe": {
+      "id": "corral_principe",
+      "nombre": "Corral del Príncipe",
+      "categoria": "corrales",
+      "tipo": "desconocido",
+      "variantes": [
+        "Corral del Príncipe"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "ciudad": "Madrid",
+        "direccion": "Calle del Príncipe"
+      },
+      "ciudad": "Madrid",
+      "descripcion": "Principal corral de comedias de Madrid"
+    },
+    "cuarto_reina": {
+      "id": "cuarto_reina",
+      "nombre": "Cuarto de la Reina",
+      "categoria": "palacios",
+      "tipo": "desconocido",
+      "variantes": [
+        "Cuarto de la Reina",
+        "Palacio, Cuarto de la Reina",
+        "Pardo, Cuarto de la Reina"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "ciudad": "Madrid"
+      },
+      "ciudad": "Madrid",
+      "descripcion": "Representaciones en el cuarto de la reina"
+    },
+    "retiro_general": {
+      "id": "retiro_general",
+      "nombre": "Buen Retiro",
+      "categoria": "retiro",
+      "tipo": "desconocido",
+      "variantes": [
+        "Buen Retiro"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "ciudad": "Madrid"
+      },
+      "ciudad": "Madrid",
+      "descripcion": "Representaciones generales en el Buen Retiro"
+    },
+    "corral_cruz": {
+      "id": "corral_cruz",
+      "nombre": "Corral de la Cruz",
+      "categoria": "corrales",
+      "tipo": "desconocido",
+      "variantes": [
+        "Corral de la Cruz"
+      ],
+      "representaciones": 10,
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "ciudad": "Madrid",
+        "direccion": "Calle de la Cruz"
+      },
+      "ciudad": "Madrid",
+      "descripcion": "Segundo corral de comedias de Madrid"
+    },
+    "corrales_genericos": {
+      "id": "corrales_genericos",
+      "nombre": "Corrales Genéricos",
+      "categoria": "corrales",
+      "tipo": "desconocido",
+      "variantes": [
+        "Uno de los dos corrales"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038,
+        "ciudad": "Madrid"
+      },
+      "ciudad": "Madrid",
+      "descripcion": "Referencias genéricas a los corrales"
+    },
+    "toledo_jardin_cardenal": {
+      "id": "toledo_jardin_cardenal",
+      "nombre": "Toledo - Jardín del Cardenal Arzobispo",
+      "categoria": "toledo",
+      "tipo": "desconocido",
+      "variantes": [
+        "Toledo, Jardín del Cardenal Arzobispo"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 39.8628,
+        "lng": -4.0273,
+        "ciudad": "Toledo"
+      },
+      "ciudad": "Toledo",
+      "descripcion": "Jardín del Cardenal Arzobispo en Toledo"
+    },
+    "toledo_casa_campo": {
+      "id": "toledo_casa_campo",
+      "nombre": "Toledo - Casa del Campo",
+      "categoria": "toledo",
+      "tipo": "desconocido",
+      "variantes": [
+        "Toledo, Casa del Campo"
+      ],
+      "representaciones": 1,
+      "coordenadas": {
+        "lat": 39.8628,
+        "lng": -4.0273,
+        "ciudad": "Toledo"
+      },
+      "ciudad": "Toledo",
+      "descripcion": "Casa del Campo en Toledo"
+    },
+    "referencias_especiales": {
+      "id": "referencias_especiales",
+      "nombre": "Referencias Especiales",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Se trata de dos obras distintas.",
+        "Se refiere probablemente a la siguiente representación: Carnestolendas de 1676",
+        "Se habla de ensayos de Fieras afemina amor para una representación palaciega",
+        "Representación palaciega, con el título de Pitias y Damón",
+        "Representación\npalaciega"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Referencias especiales y notas explicativas"
+    },
+    "desconocido_9": {
+      "id": "desconocido_9",
+      "nombre": "Se refiere probablemente a la siguiente representación: Carnestolendas de 1676",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Se refiere probablemente a la siguiente representación: Carnestolendas de 1676"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    },
+    "desconocido_10": {
+      "id": "desconocido_10",
+      "nombre": "Sala del Ayuntamiento, con el título de Narciso y Eco",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Sala del Ayuntamiento, con el título de Narciso y Eco"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    },
+    "desconocido_11": {
+      "id": "desconocido_11",
+      "nombre": "Real Casa del Campo",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Real Casa del Campo"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    },
+    "desconocido_12": {
+      "id": "desconocido_12",
+      "nombre": "Probablemente se trate de una representación de El pleito que tuvo el diablo con el cura de Madriiejos, comedia de Luis Vélez de Guevara, Rojas Zorrilla y Mira de Amescua, impresa en la Flor de las mejores doze comedias de los mayores ingenios de España",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Probablemente se trate de una representación de El pleito que tuvo el diablo con el cura de Madriiejos, comedia de Luis Vélez de Guevara, Rojas Zorrilla y Mira de Amescua, impresa en la Flor de las mejores doze comedias de los mayores ingenios de España"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    },
+    "desconocido_13": {
+      "id": "desconocido_13",
+      "nombre": "Parque",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Parque"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    },
+    "desconocido_14": {
+      "id": "desconocido_14",
+      "nombre": "Pago por vestidos hechos para una representación",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Pago por vestidos hechos para una representación"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    },
+    "desconocido_15": {
+      "id": "desconocido_15",
+      "nombre": "Ayuntamiento, al Consejo Real",
+      "categoria": "otros",
+      "tipo": "desconocido",
+      "variantes": [
+        "Ayuntamiento, al Consejo Real"
+      ],
+      "representaciones": 1,
+      "coordenadas": null,
+      "ciudad": null,
+      "descripcion": "Lugar no clasificado"
+    }
+  },
+  "grupos_filtros": {
+    "categorias": [
+      {
+        "id": "palacios",
+        "nombre": "Palacios Reales",
+        "count": 2,
+        "descripcion": "Representaciones en palacios reales y residencias nobiliarias"
+      },
+      {
+        "id": "corrales",
+        "nombre": "Corrales de Comedias",
+        "count": 12,
+        "descripcion": "Teatros públicos al aire libre"
+      },
+      {
+        "id": "retiro",
+        "nombre": "Buen Retiro",
+        "count": 1,
+        "descripcion": "Complejo palaciego del Buen Retiro"
+      },
+      {
+        "id": "toledo",
+        "nombre": "Toledo",
+        "count": 2,
+        "descripcion": "Representaciones en Toledo"
+      },
+      {
+        "id": "otros",
+        "nombre": "Otros Lugares",
+        "count": 8,
+        "descripcion": "Lugares diversos y referencias especiales"
+      }
+    ],
+    "lugares_principales": [
+      {
+        "id": "corral_cruz",
+        "nombre": "Corral de la Cruz",
+        "representaciones": 10,
+        "categoria": "corrales",
+        "ciudad": "Madrid",
+        "tipo": "desconocido",
+        "coordenadas": {
+          "lat": 40.4168,
+          "lng": -3.7038,
+          "ciudad": "Madrid",
+          "direccion": "Calle de la Cruz"
+        },
+        "descripcion": "Segundo corral de comedias de Madrid"
+      }
+    ],
+    "lugares_secundarios": [],
+    "ciudades": [
+      {
+        "id": "Madrid",
+        "nombre": "Madrid",
+        "count": 15
+      },
+      {
+        "id": "Toledo",
+        "nombre": "Toledo",
+        "count": 2
+      }
+    ],
+    "tipos": [
+      {
+        "id": "desconocido",
+        "nombre": "Desconocido",
+        "count": 25
+      }
+    ]
+  },
+  "estadisticas": {
+    "por_categoria": {
+      "palacios": 2,
+      "corrales": 12,
+      "retiro": 1,
+      "toledo": 2,
+      "otros": 8
+    },
+    "por_ciudad": {
+      "Madrid": 15,
+      "Toledo": 2
+    },
+    "por_tipo": {
+      "desconocido": 25
+    }
+  }
+}

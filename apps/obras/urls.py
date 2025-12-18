@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
+from . import views_validacion
 
 router = DefaultRouter()
 router.register(r'obras', views.ObraViewSet)
@@ -41,4 +42,9 @@ urlpatterns = [
     path('busqueda-avanzada/', views.busqueda_avanzada_view, name='busqueda_avanzada'),
     path('redes-colaboracion/', views.redes_colaboracion_view, name='redes_colaboracion'),
     path('mapas-geograficos/', views.mapas_geograficos_view, name='mapas_geograficos'),
+    # Rutas de validación de análisis de IA
+    path('validacion-analisis/', views_validacion.validacion_analisis_list, name='validacion_analisis_list'),
+    path('validacion-analisis/<str:nombre_archivo>/', views_validacion.validacion_analisis_detail, name='validacion_analisis_detail'),
+    path('validacion-analisis/validar-item/', views_validacion.validar_item, name='validar_item'),
+    path('validacion-analisis/validar-lote/', views_validacion.validar_lote, name='validar_lote'),
 ]

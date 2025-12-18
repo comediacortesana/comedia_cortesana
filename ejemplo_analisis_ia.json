@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "fecha_generacion": "2025-12-05T13:29:48.436223",
+    "total_analisis": 1,
+    "version_sistema": "1.0.0"
+  },
+  "analisis": [
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_part_001_rep_1",
+      "fecha_analisis": "2025-12-05T13:29:48.436213",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El Pastor Fido",
+        "fecha": "22 de mayo de 1687",
+        "compañia": "compañía de Agustín Manuel",
+        "lugar": "Saloncillo del Buen Retiro"
+      },
+      "frases_originales": [
+        "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V",
+        "y en el Saloncete, según Fuentes I"
+      ],
+      "interpretaciones": [
+        "Ambas fuentes mencionan la misma representación pero con nombres diferentes de sala",
+        "Saloncillo y Saloncete son ambas salas del Buen Retiro, probablemente la misma representación"
+      ],
+      "discrepancias": [
+        {
+          "tipo": "lugar",
+          "fuente_1": {
+            "fuente": "Fuentes I",
+            "lugar": "Saloncete"
+          },
+          "fuente_2": {
+            "fuente": "Fuentes V",
+            "lugar": "Saloncillo del Buen Retiro"
+          },
+          "resolucion": "Ambas son salas del Buen Retiro, probablemente la misma representación"
+        }
+      ],
+      "patrones_detectados": [
+        "[FECHA] la compañía de [COMPAÑÍA] representó [OBRA], en [LUGAR], según [FUENTE]"
+      ],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "part_001",
+        "pagina_pdf": 134
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    }
+  ]
+}

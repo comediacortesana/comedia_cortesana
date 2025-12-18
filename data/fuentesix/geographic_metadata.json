@@ -1,0 +1,324 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2025-01-27",
+    "description": "Metadatos geográficos para lugares teatrales del Siglo de Oro español",
+    "coordinate_system": "WGS84",
+    "map_provider": "OpenStreetMap",
+    "default_zoom": 12
+  },
+  "ciudades": {
+    "Madrid": {
+      "nombre": "Madrid",
+      "coordenadas": {
+        "lat": 40.4168,
+        "lng": -3.7038
+      },
+      "region": "Comunidad de Madrid",
+      "pais": "España",
+      "siglo_xvii": {
+        "poblacion_estimada": 100000,
+        "capital": true,
+        "descripcion": "Capital del Reino de España durante el Siglo de Oro"
+      },
+      "lugares_teatrales": {
+        "palacios": [
+          {
+            "nombre": "Palacio Real",
+            "coordenadas": {
+              "lat": 40.4178,
+              "lng": -3.7142
+            },
+            "tipo": "palacio_real",
+            "descripcion": "Residencia oficial de los reyes de España",
+            "construccion": "1738-1764",
+            "nota_historica": "En el siglo XVII se ubicaba en el Alcázar de Madrid"
+          },
+          {
+            "nombre": "Palacio del Buen Retiro",
+            "coordenadas": {
+              "lat": 40.4150,
+              "lng": -3.6833
+            },
+            "tipo": "palacio_real",
+            "descripcion": "Complejo palaciego y jardines reales",
+            "construccion": "1630-1640",
+            "estado": "parcialmente_destruido",
+            "nota_historica": "Destruido durante la Guerra de la Independencia"
+          }
+        ],
+        "corrales": [
+          {
+            "nombre": "Corral del Príncipe",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038
+            },
+            "direccion": "Calle del Príncipe",
+            "tipo": "corral_comedias",
+            "construccion": "1582",
+            "capacidad_estimada": 2000,
+            "descripcion": "Principal corral de comedias de Madrid",
+            "estado": "demolido",
+            "nota_historica": "Ubicado en el actual Teatro Español"
+          },
+          {
+            "nombre": "Corral de la Cruz",
+            "coordenadas": {
+              "lat": 40.4168,
+              "lng": -3.7038
+            },
+            "direccion": "Calle de la Cruz",
+            "tipo": "corral_comedias",
+            "construccion": "1579",
+            "capacidad_estimada": 1500,
+            "descripcion": "Segundo corral de comedias de Madrid",
+            "estado": "demolido",
+            "nota_historica": "Competía directamente con el Corral del Príncipe"
+          }
+        ],
+        "otros_lugares": [
+          {
+            "nombre": "Cuarto de la Reina",
+            "coordenadas": {
+              "lat": 40.4178,
+              "lng": -3.7142
+            },
+            "tipo": "apartamento_real",
+            "descripcion": "Residencia privada de la reina en el palacio",
+            "ubicacion": "dentro_del_palacio_real"
+          }
+        ]
+      }
+    },
+    "Toledo": {
+      "nombre": "Toledo",
+      "coordenadas": {
+        "lat": 39.8628,
+        "lng": -4.0273
+      },
+      "region": "Castilla-La Mancha",
+      "pais": "España",
+      "siglo_xvii": {
+        "poblacion_estimada": 25000,
+        "capital": false,
+        "descripcion": "Antigua capital visigoda, importante centro religioso y cultural"
+      },
+      "lugares_teatrales": {
+        "palacios": [
+          {
+            "nombre": "Palacio de Azeca",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273
+            },
+            "tipo": "palacio_nobiliario",
+            "descripcion": "Palacio de la nobleza toledana",
+            "estado": "desconocido",
+            "nota_historica": "Lugar de representaciones ocasionales"
+          }
+        ],
+        "espacios_publicos": [
+          {
+            "nombre": "Plaza de Palacio",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273
+            },
+            "tipo": "plaza_publica",
+            "descripcion": "Plaza principal de Toledo",
+            "uso_teatral": "representaciones_especiales"
+          },
+          {
+            "nombre": "Jardín del Cardenal Arzobispo",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273
+            },
+            "tipo": "jardin_privado",
+            "descripcion": "Jardín del palacio arzobispal",
+            "uso_teatral": "representaciones_privadas"
+          },
+          {
+            "nombre": "Casa del Campo",
+            "coordenadas": {
+              "lat": 39.8628,
+              "lng": -4.0273
+            },
+            "tipo": "residencia_campo",
+            "descripcion": "Residencia de campo en Toledo",
+            "uso_teatral": "representaciones_estivales"
+          }
+        ]
+      }
+    },
+    "El Pardo": {
+      "nombre": "El Pardo",
+      "coordenadas": {
+        "lat": 40.5167,
+        "lng": -3.7667
+      },
+      "region": "Comunidad de Madrid",
+      "pais": "España",
+      "siglo_xvii": {
+        "poblacion_estimada": 500,
+        "capital": false,
+        "descripcion": "Pequeña villa real cerca de Madrid"
+      },
+      "lugares_teatrales": {
+        "palacios": [
+          {
+            "nombre": "Palacio Real de El Pardo",
+            "coordenadas": {
+              "lat": 40.5167,
+              "lng": -3.7667
+            },
+            "tipo": "palacio_real",
+            "descripcion": "Residencia de caza y retiro real",
+            "construccion": "1547-1558",
+            "estado": "conservado",
+            "nota_historica": "Lugar de representaciones íntimas para la corte"
+          }
+        ]
+      }
+    }
+  },
+  "mapas_interactivos": {
+    "configuracion_default": {
+      "zoom_inicial": 12,
+      "centro": {
+        "lat": 40.4168,
+        "lng": -3.7038
+      },
+      "estilo": "satellite",
+      "marcadores": {
+        "palacios": {
+          "color": "#FFD700",
+          "icono": "crown",
+          "tamaño": "large"
+        },
+        "corrales": {
+          "color": "#FF6B6B",
+          "icono": "theater",
+          "tamaño": "medium"
+        },
+        "otros": {
+          "color": "#4ECDC4",
+          "icono": "location",
+          "tamaño": "small"
+        }
+      }
+    },
+    "capas": {
+      "siglo_xvii": {
+        "nombre": "Madrid Siglo XVII",
+        "descripcion": "Reconstrucción histórica de Madrid en el siglo XVII",
+        "fuente": "Planos históricos y documentos de época",
+        "precision": "aproximada"
+      },
+      "lugares_teatrales": {
+        "nombre": "Lugares Teatrales",
+        "descripcion": "Ubicaciones de teatros, corrales y palacios",
+        "fuente": "Documentos teatrales y crónicas",
+        "precision": "documentada"
+      },
+      "rutas_comerciales": {
+        "nombre": "Rutas Comerciales",
+        "descripcion": "Caminos y rutas comerciales del siglo XVII",
+        "fuente": "Documentos comerciales",
+        "precision": "aproximada"
+      }
+    }
+  },
+  "estadisticas_geograficas": {
+    "distribucion_por_region": {
+      "Comunidad de Madrid": {
+        "lugares": 8,
+        "representaciones": 324,
+        "porcentaje": 95.3
+      },
+      "Castilla-La Mancha": {
+        "lugares": 4,
+        "representaciones": 5,
+        "porcentaje": 1.5
+      }
+    },
+    "distribucion_por_tipo": {
+      "palacios": {
+        "lugares": 6,
+        "representaciones": 255,
+        "porcentaje": 75.0
+      },
+      "corrales": {
+        "lugares": 2,
+        "representaciones": 27,
+        "porcentaje": 7.9
+      },
+      "otros": {
+        "lugares": 4,
+        "representaciones": 12,
+        "porcentaje": 3.5
+      }
+    },
+    "concentracion_geografica": {
+      "madrid_centro": {
+        "radio_km": 2,
+        "lugares": 6,
+        "representaciones": 300,
+        "densidad": "muy_alta"
+      },
+      "madrid_periferia": {
+        "radio_km": 10,
+        "lugares": 2,
+        "representaciones": 24,
+        "densidad": "baja"
+      },
+      "fuera_madrid": {
+        "lugares": 4,
+        "representaciones": 5,
+        "densidad": "muy_baja"
+      }
+    }
+  },
+  "apis_externas": {
+    "openstreetmap": {
+      "url": "https://www.openstreetmap.org/",
+      "licencia": "ODbL",
+      "uso": "mapas_base"
+    },
+    "nominatim": {
+      "url": "https://nominatim.openstreetmap.org/",
+      "licencia": "ODbL",
+      "uso": "geocodificacion"
+    },
+    "leaflet": {
+      "url": "https://leafletjs.com/",
+      "licencia": "BSD-2-Clause",
+      "uso": "mapas_interactivos"
+    }
+  },
+  "futuras_mejoras": {
+    "mapas_interactivos": [
+      "Visualización de rutas de compañías teatrales",
+      "Timeline de representaciones por lugar",
+      "Comparación temporal de lugares",
+      "Análisis de proximidad entre lugares"
+    ],
+    "datos_geograficos": [
+      "Coordenadas más precisas",
+      "Información sobre accesibilidad histórica",
+      "Datos demográficos del siglo XVII",
+      "Información sobre transporte de la época"
+    ],
+    "visualizaciones": [
+      "Mapas de calor por frecuencia de representaciones",
+      "Clusters de lugares por tipo",
+      "Líneas de tiempo geográficas",
+      "Comparaciones regionales"
+    ]
+  }
+}
+
+
+
+

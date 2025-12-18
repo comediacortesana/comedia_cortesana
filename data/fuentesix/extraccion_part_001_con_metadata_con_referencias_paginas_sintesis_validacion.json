@@ -1,0 +1,1698 @@
+{
+  "metadata_archivo": {
+    "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+    "fecha_extraccion": "2025-01-27T10:30:00Z",
+    "version_extraccion": "1.0.0",
+    "metodo_extraccion": "IA_manual",
+    "modelo_ia": "gpt-4",
+    "confianza_promedio": "medio",
+    "total_paginas": 25,
+    "tipo_contenido": "Introducción y prefacios",
+    "nota": "Este archivo contiene principalmente introducción metodológica. Los datos específicos de obras aparecen en archivos posteriores.",
+    "estado": "pendiente_integracion",
+    "checksum": null,
+    "total_registros": 18
+  },
+  "representaciones": [
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_1",
+      "sintesis": "Se encontró una representación de la obra 'El Pastor Fido' el 22 de mayo de 1687. La representación fue realizada por compañía de Agustín Manuel. Tuvo lugar en Saloncillo del Buen Retiro (palacio). Tipo de función: representación_normal. Público: corte. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes V menciona Saloncillo del Buen Retiro, Fuentes I menciona Saloncete. Ambas son salas del Buen Retiro. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I.\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'El Pastor Fido' el 22 de mayo de 1687.",
+        "La representación fue realizada por compañía de Agustín Manuel.",
+        "Tuvo lugar en Saloncillo del Buen Retiro (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes V menciona Saloncillo del Buen Retiro, Fuentes I menciona Saloncete. Ambas son salas del Buen Retiro.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I.\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "El Pastor Fido",
+        "fecha": "22 de mayo de 1687",
+        "fecha_formateada": "1687-05-22",
+        "compañia": "compañía de Agustín Manuel",
+        "director_compañia": "Agustín Manuel",
+        "lugar_nombre": "Saloncillo del Buen Retiro",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "DISCREPANCIA: Fuentes V menciona Saloncillo del Buen Retiro, Fuentes I menciona Saloncete. Ambas son salas del Buen Retiro.",
+        "pagina_pdf": 134,
+        "texto_original": "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I.",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I.",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_1",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I.",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 134,
+      "texto_original": "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I."
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_2",
+      "sintesis": "Se encontró una representación de la obra 'El Mariscal de Virón' el 3 de octubre de 1685. La representación fue realizada por compañía de Rosendo López. Tuvo lugar en Palacio (palacio). Tipo de función: representación_normal. Público: corte. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes V dice 3 de octubre con compañía de Rosendo López. Fuentes I dice 4 de octubre con compañía de Manuel de Mosquera. Posiblemente misma representación con datos contradictorios. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manu...\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'El Mariscal de Virón' el 3 de octubre de 1685.",
+        "La representación fue realizada por compañía de Rosendo López.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes V dice 3 de octubre con compañía de Rosendo López. Fuentes I dice 4 de octubre con compañía de Manuel de Mosquera. Posiblemente misma representación con datos contradictorios.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manu...\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "El Mariscal de Virón",
+        "fecha": "3 de octubre de 1685",
+        "fecha_formateada": "1685-10-03",
+        "compañia": "compañía de Rosendo López",
+        "director_compañia": "Rosendo López",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "DISCREPANCIA: Fuentes V dice 3 de octubre con compañía de Rosendo López. Fuentes I dice 4 de octubre con compañía de Manuel de Mosquera. Posiblemente misma representación con datos contradictorios.",
+        "pagina_pdf": 134,
+        "texto_original": "Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_2",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 134,
+      "texto_original": "Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio."
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_3",
+      "sintesis": "Se encontró una representación de la obra 'El Mariscal de Virón' el 4 de octubre de 1685. La representación fue realizada por compañía de Manuel de Mosquera. Tuvo lugar en Palacio (palacio). Tipo de función: representación_normal. Público: corte. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona esta fecha y compañía. Puede ser la misma representación que Fuentes V fecha el 3 de octubre. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'El Mariscal de Virón' el 4 de octubre de 1685.",
+        "La representación fue realizada por compañía de Manuel de Mosquera.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona esta fecha y compañía. Puede ser la misma representación que Fuentes V fecha el 3 de octubre.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "El Mariscal de Virón",
+        "fecha": "4 de octubre de 1685",
+        "fecha_formateada": "1685-10-04",
+        "compañia": "compañía de Manuel de Mosquera",
+        "director_compañia": "Manuel de Mosquera",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "DISCREPANCIA: Fuentes I menciona esta fecha y compañía. Puede ser la misma representación que Fuentes V fecha el 3 de octubre.",
+        "pagina_pdf": 134,
+        "texto_original": "Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_3",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 134,
+      "texto_original": "Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio."
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_4",
+      "sintesis": "Se encontró una representación de la obra 'La profetisa Casandra' el 21 de septiembre de 1685. La representación fue realizada por compañías combinadas. Tuvo lugar en Palacio (palacio). Tipo de función: fiesta. Público: corte. Observaciones: Obra de espectáculo proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón. Representada por compañías combinadas. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Lu...\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'La profetisa Casandra' el 21 de septiembre de 1685.",
+        "La representación fue realizada por compañías combinadas.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: fiesta.",
+        "Público: corte.",
+        "Observaciones: Obra de espectáculo proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón. Representada por compañías combinadas.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Lu...\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "La profetisa Casandra",
+        "fecha": "21 de septiembre de 1685",
+        "fecha_formateada": "1685-09-21",
+        "compañia": "compañías combinadas",
+        "director_compañia": "",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "María Luisa de Borbón",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [
+          "María Luisa de Borbón",
+          "Reina"
+        ],
+        "tipo_funcion": "fiesta",
+        "publico": "corte",
+        "observaciones": "Obra de espectáculo proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón. Representada por compañías combinadas.",
+        "pagina_pdf": 134,
+        "texto_original": "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187)",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187)",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_4",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187)",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": [
+          {
+            "tipo": "referencia_fuente",
+            "pagina": 187,
+            "fuente": "(Fuentes V, pág. 187)",
+            "contexto": "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187)"
+          }
+        ]
+      },
+      "confianza": "alto",
+      "pagina_pdf": 134,
+      "texto_original": "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187)"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_5",
+      "sintesis": "Se encontró una representación de la obra 'La garza de Portugal' el 12 de diciembre de 1680. La representación fue realizada por compañía de Jerónimo García. Tuvo lugar en Palacio (palacio). Tipo de función: representación_palaciega. Público: corte. Observaciones: Según Fuentes I. Fuentes V no registra esta representación para esta fecha. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'La garza de Portugal' el 12 de diciembre de 1680.",
+        "La representación fue realizada por compañía de Jerónimo García.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_palaciega.",
+        "Público: corte.",
+        "Observaciones: Según Fuentes I. Fuentes V no registra esta representación para esta fecha.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "La garza de Portugal",
+        "fecha": "12 de diciembre de 1680",
+        "fecha_formateada": "1680-12-12",
+        "compañia": "compañía de Jerónimo García",
+        "director_compañia": "Jerónimo García",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_palaciega",
+        "publico": "corte",
+        "observaciones": "Según Fuentes I. Fuentes V no registra esta representación para esta fecha.",
+        "pagina_pdf": 134,
+        "texto_original": "En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_5",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 134,
+      "texto_original": "En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_6",
+      "sintesis": "Se encontró una representación de la obra 'El rico hombre de Alcalá' el 12 de diciembre de 1680. La representación fue realizada por compañía de Jerónimo García. Tuvo lugar en Palacio (palacio). Tipo de función: representación_palaciega. Público: corte. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Según Fuentes V, la compañía de García hizo esta obra el día 12. Fuentes I menciona El rico hombre de Alcalá el día 15. Probablemente Fuentes V es más fiable. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'El rico hombre de Alcalá' el 12 de diciembre de 1680.",
+        "La representación fue realizada por compañía de Jerónimo García.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_palaciega.",
+        "Público: corte.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Según Fuentes V, la compañía de García hizo esta obra el día 12. Fuentes I menciona El rico hombre de Alcalá el día 15. Probablemente Fuentes V es más fiable.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "El rico hombre de Alcalá",
+        "fecha": "12 de diciembre de 1680",
+        "fecha_formateada": "1680-12-12",
+        "compañia": "compañía de Jerónimo García",
+        "director_compañia": "Jerónimo García",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_palaciega",
+        "publico": "corte",
+        "observaciones": "DISCREPANCIA: Según Fuentes V, la compañía de García hizo esta obra el día 12. Fuentes I menciona El rico hombre de Alcalá el día 15. Probablemente Fuentes V es más fiable.",
+        "pagina_pdf": 134,
+        "texto_original": "según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_6",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "alto",
+      "pagina_pdf": 134,
+      "texto_original": "según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_7",
+      "sintesis": "Se encontró una representación de la obra 'El rico hombre de Alcalá' el 15 de diciembre de 1680. La representación fue realizada por compañía de Jerónimo García. Tuvo lugar en Palacio (palacio). Tipo de función: representación_palaciega. Público: corte. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Según Fuentes I. Fuentes V no registra representación para el día 15. Probablemente es menos fiable. 📄 Esta información aparece en la página 134 del PDF original. Texto original extraído: \"y de El rico hombre de Alcalá el día 15\" Nivel de confianza: 🔴 Baja confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'El rico hombre de Alcalá' el 15 de diciembre de 1680.",
+        "La representación fue realizada por compañía de Jerónimo García.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_palaciega.",
+        "Público: corte.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Según Fuentes I. Fuentes V no registra representación para el día 15. Probablemente es menos fiable.",
+        "📄 Esta información aparece en la página 134 del PDF original.",
+        "Texto original extraído: \"y de El rico hombre de Alcalá el día 15\"",
+        "Nivel de confianza: 🔴 Baja confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "El rico hombre de Alcalá",
+        "fecha": "15 de diciembre de 1680",
+        "fecha_formateada": "1680-12-15",
+        "compañia": "compañía de Jerónimo García",
+        "director_compañia": "Jerónimo García",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_palaciega",
+        "publico": "corte",
+        "observaciones": "DISCREPANCIA: Según Fuentes I. Fuentes V no registra representación para el día 15. Probablemente es menos fiable.",
+        "pagina_pdf": 134,
+        "texto_original": "y de El rico hombre de Alcalá el día 15",
+        "confianza": "bajo",
+        "referencia_pagina_pdf": {
+          "pagina": 134,
+          "url": "/obras/pagina-pdf/134/",
+          "texto": "Ver página 134 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "texto_original": "y de El rico hombre de Alcalá el día 15",
+        "confianza": "bajo",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_7",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 134,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_134.png",
+          "url_pagina": "/obras/pagina-pdf/134/",
+          "url_imagen": "/media/pdf_pages/page_134.png",
+          "contexto": "y de El rico hombre de Alcalá el día 15",
+          "texto_referencia": "Página 134 del PDF original",
+          "enlace_verificacion": "Ver página 134 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "bajo",
+      "pagina_pdf": 134,
+      "texto_original": "y de El rico hombre de Alcalá el día 15"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_8",
+      "sintesis": "Se encontró una representación de la obra 'El príncipe prodigioso' el 9 de enero de 1681. La representación fue realizada por compañía de Jerónimo García. Tuvo lugar en Palacio (palacio). Tipo de función: representación_normal. Público: corte. Observaciones: Según Fuentes I. Fuentes V menciona otra obra (El alcalde de Zalamea) el mismo día por la misma compañía. Posiblemente dos comedias el mismo día. 📄 Esta información aparece en la página 135 del PDF original. Texto original extraído: \"cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'El príncipe prodigioso' el 9 de enero de 1681.",
+        "La representación fue realizada por compañía de Jerónimo García.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "Observaciones: Según Fuentes I. Fuentes V menciona otra obra (El alcalde de Zalamea) el mismo día por la misma compañía. Posiblemente dos comedias el mismo día.",
+        "📄 Esta información aparece en la página 135 del PDF original.",
+        "Texto original extraído: \"cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "El príncipe prodigioso",
+        "fecha": "9 de enero de 1681",
+        "fecha_formateada": "1681-01-09",
+        "compañia": "compañía de Jerónimo García",
+        "director_compañia": "Jerónimo García",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "Según Fuentes I. Fuentes V menciona otra obra (El alcalde de Zalamea) el mismo día por la misma compañía. Posiblemente dos comedias el mismo día.",
+        "pagina_pdf": 135,
+        "texto_original": "cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 135,
+          "url": "/obras/pagina-pdf/135/",
+          "texto": "Ver página 135 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "texto_original": "cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_8",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 135,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_135.png",
+          "url_pagina": "/obras/pagina-pdf/135/",
+          "url_imagen": "/media/pdf_pages/page_135.png",
+          "contexto": "cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso",
+          "texto_referencia": "Página 135 del PDF original",
+          "enlace_verificacion": "Ver página 135 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 135,
+      "texto_original": "cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_9",
+      "sintesis": "Se encontró una representación de la obra 'El alcalde de Zalamea' el 9 de enero de 1681. La representación fue realizada por compañía de Jerónimo García. Tuvo lugar en Palacio (palacio). Tipo de función: representación_normal. Público: corte. Observaciones: Según Fuentes V. Fuentes I menciona otra obra (El príncipe prodigioso) el mismo día. Posiblemente dos comedias el mismo día. 📄 Esta información aparece en la página 135 del PDF original. Texto original extraído: \"según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'El alcalde de Zalamea' el 9 de enero de 1681.",
+        "La representación fue realizada por compañía de Jerónimo García.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "Observaciones: Según Fuentes V. Fuentes I menciona otra obra (El príncipe prodigioso) el mismo día. Posiblemente dos comedias el mismo día.",
+        "📄 Esta información aparece en la página 135 del PDF original.",
+        "Texto original extraído: \"según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "El alcalde de Zalamea",
+        "fecha": "9 de enero de 1681",
+        "fecha_formateada": "1681-01-09",
+        "compañia": "compañía de Jerónimo García",
+        "director_compañia": "Jerónimo García",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "Según Fuentes V. Fuentes I menciona otra obra (El príncipe prodigioso) el mismo día. Posiblemente dos comedias el mismo día.",
+        "pagina_pdf": 135,
+        "texto_original": "según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 135,
+          "url": "/obras/pagina-pdf/135/",
+          "texto": "Ver página 135 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "texto_original": "según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_9",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 135,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_135.png",
+          "url_pagina": "/obras/pagina-pdf/135/",
+          "url_imagen": "/media/pdf_pages/page_135.png",
+          "contexto": "según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea",
+          "texto_referencia": "Página 135 del PDF original",
+          "enlace_verificacion": "Ver página 135 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 135,
+      "texto_original": "según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_10",
+      "sintesis": "Se encontró una representación de la obra 'El monstruo de los jardines' el 14 de febrero de 1695. La representación fue realizada por compañía de Damián Polope. Tuvo lugar en Cuarto del Rey (palacio). Tipo de función: representación_normal. Público: corte. Observaciones: Misma compañía representó dos obras el mismo día en diferentes lugares del palacio. El certificado menciona que la compañía entró en el Salón a las tres y media. 📄 Esta información aparece en la página 135 del PDF original. Texto original extraído: \"En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'El monstruo de los jardines' el 14 de febrero de 1695.",
+        "La representación fue realizada por compañía de Damián Polope.",
+        "Tuvo lugar en Cuarto del Rey (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "Observaciones: Misma compañía representó dos obras el mismo día en diferentes lugares del palacio. El certificado menciona que la compañía entró en el Salón a las tres y media.",
+        "📄 Esta información aparece en la página 135 del PDF original.",
+        "Texto original extraído: \"En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "El monstruo de los jardines",
+        "fecha": "14 de febrero de 1695",
+        "fecha_formateada": "1695-02-14",
+        "compañia": "compañía de Damián Polope",
+        "director_compañia": "Damián Polope",
+        "lugar_nombre": "Cuarto del Rey",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "Misma compañía representó dos obras el mismo día en diferentes lugares del palacio. El certificado menciona que la compañía entró en el Salón a las tres y media.",
+        "pagina_pdf": 135,
+        "texto_original": "En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 135,
+          "url": "/obras/pagina-pdf/135/",
+          "texto": "Ver página 135 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "texto_original": "En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_10",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 135,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_135.png",
+          "url_pagina": "/obras/pagina-pdf/135/",
+          "url_imagen": "/media/pdf_pages/page_135.png",
+          "contexto": "En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey",
+          "texto_referencia": "Página 135 del PDF original",
+          "enlace_verificacion": "Ver página 135 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "alto",
+      "pagina_pdf": 135,
+      "texto_original": "En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_11",
+      "sintesis": "Se encontró una representación de la obra 'Cuando no se aguarda' el 14 de febrero de 1695. La representación fue realizada por compañía de Damián Polope. Tuvo lugar en Cuarto de la Reina (palacio). Tipo de función: representación_normal. Público: corte. Observaciones: Misma compañía representó dos obras el mismo día en diferentes lugares del palacio. 📄 Esta información aparece en la página 135 del PDF original. Texto original extraído: \"y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'Cuando no se aguarda' el 14 de febrero de 1695.",
+        "La representación fue realizada por compañía de Damián Polope.",
+        "Tuvo lugar en Cuarto de la Reina (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "Observaciones: Misma compañía representó dos obras el mismo día en diferentes lugares del palacio.",
+        "📄 Esta información aparece en la página 135 del PDF original.",
+        "Texto original extraído: \"y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "Cuando no se aguarda",
+        "fecha": "14 de febrero de 1695",
+        "fecha_formateada": "1695-02-14",
+        "compañia": "compañía de Damián Polope",
+        "director_compañia": "Damián Polope",
+        "lugar_nombre": "Cuarto de la Reina",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "Misma compañía representó dos obras el mismo día en diferentes lugares del palacio.",
+        "pagina_pdf": 135,
+        "texto_original": "y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 135,
+          "url": "/obras/pagina-pdf/135/",
+          "texto": "Ver página 135 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "texto_original": "y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_11",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 135,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_135.png",
+          "url_pagina": "/obras/pagina-pdf/135/",
+          "url_imagen": "/media/pdf_pages/page_135.png",
+          "contexto": "y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope",
+          "texto_referencia": "Página 135 del PDF original",
+          "enlace_verificacion": "Ver página 135 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "alto",
+      "pagina_pdf": 135,
+      "texto_original": "y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_12",
+      "sintesis": "Se encontró una representación de la obra 'Las armas de la hermosura' el 23 de julio de 1684. La representación fue realizada por compañía de Manuel Vallejo. Tipo de función: representación_normal. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes para fechas similares. 📄 Esta información aparece en la página 138 del PDF original. Texto original extraído: \"evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio\" Nivel de confianza: 🔴 Baja confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'Las armas de la hermosura' el 23 de julio de 1684.",
+        "La representación fue realizada por compañía de Manuel Vallejo.",
+        "Tipo de función: representación_normal.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes para fechas similares.",
+        "📄 Esta información aparece en la página 138 del PDF original.",
+        "Texto original extraído: \"evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio\"",
+        "Nivel de confianza: 🔴 Baja confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "Las armas de la hermosura",
+        "fecha": "23 de julio de 1684",
+        "fecha_formateada": "1684-07-23",
+        "compañia": "compañía de Manuel Vallejo",
+        "director_compañia": "Manuel Vallejo",
+        "lugar_nombre": "",
+        "lugar_tipo": "",
+        "lugar_region": "",
+        "lugar_ciudad": "",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "",
+        "observaciones": "DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes para fechas similares.",
+        "pagina_pdf": 138,
+        "texto_original": "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio",
+        "confianza": "bajo",
+        "referencia_pagina_pdf": {
+          "pagina": 138,
+          "url": "/obras/pagina-pdf/138/",
+          "texto": "Ver página 138 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 138,
+        "texto_original": "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio",
+        "confianza": "bajo",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_12",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 138,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_138.png",
+          "url_pagina": "/obras/pagina-pdf/138/",
+          "url_imagen": "/media/pdf_pages/page_138.png",
+          "contexto": "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio",
+          "texto_referencia": "Página 138 del PDF original",
+          "enlace_verificacion": "Ver página 138 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "bajo",
+      "pagina_pdf": 138,
+      "texto_original": "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_13",
+      "sintesis": "Se encontró una representación de la obra 'El maestro de danzar' el 26 de julio de 1684. La representación fue realizada por compañía de Manuel Vallejo. Tipo de función: representación_normal. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes (El mérito es la corona) para la misma fecha. 📄 Esta información aparece en la página 138 del PDF original. Texto original extraído: \"y de El maestro de danzar el día 26\" Nivel de confianza: 🔴 Baja confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'El maestro de danzar' el 26 de julio de 1684.",
+        "La representación fue realizada por compañía de Manuel Vallejo.",
+        "Tipo de función: representación_normal.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes (El mérito es la corona) para la misma fecha.",
+        "📄 Esta información aparece en la página 138 del PDF original.",
+        "Texto original extraído: \"y de El maestro de danzar el día 26\"",
+        "Nivel de confianza: 🔴 Baja confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "El maestro de danzar",
+        "fecha": "26 de julio de 1684",
+        "fecha_formateada": "1684-07-26",
+        "compañia": "compañía de Manuel Vallejo",
+        "director_compañia": "Manuel Vallejo",
+        "lugar_nombre": "",
+        "lugar_tipo": "",
+        "lugar_region": "",
+        "lugar_ciudad": "",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "",
+        "observaciones": "DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes (El mérito es la corona) para la misma fecha.",
+        "pagina_pdf": 138,
+        "texto_original": "y de El maestro de danzar el día 26",
+        "confianza": "bajo",
+        "referencia_pagina_pdf": {
+          "pagina": 138,
+          "url": "/obras/pagina-pdf/138/",
+          "texto": "Ver página 138 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 138,
+        "texto_original": "y de El maestro de danzar el día 26",
+        "confianza": "bajo",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_13",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 138,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_138.png",
+          "url_pagina": "/obras/pagina-pdf/138/",
+          "url_imagen": "/media/pdf_pages/page_138.png",
+          "contexto": "y de El maestro de danzar el día 26",
+          "texto_referencia": "Página 138 del PDF original",
+          "enlace_verificacion": "Ver página 138 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "bajo",
+      "pagina_pdf": 138,
+      "texto_original": "y de El maestro de danzar el día 26"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_14",
+      "sintesis": "Se encontró una representación de la obra 'El mérito es la corona' el 26 de julio de 1684. La representación fue realizada por compañía de Manuel de Vallejo y compañía de Manuel de Mosquera. Tuvo lugar en Palacio (palacio). Tipo de función: celebración. Público: corte. Observaciones: Para celebrar el santo de la Reina Madre. Fuentes V es más fiable según los autores. Fuentes I tiene discrepancias. 📄 Esta información aparece en la página 138 del PDF original. Texto original extraído: \"las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'El mérito es la corona' el 26 de julio de 1684.",
+        "La representación fue realizada por compañía de Manuel de Vallejo y compañía de Manuel de Mosquera.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: celebración.",
+        "Público: corte.",
+        "Observaciones: Para celebrar el santo de la Reina Madre. Fuentes V es más fiable según los autores. Fuentes I tiene discrepancias.",
+        "📄 Esta información aparece en la página 138 del PDF original.",
+        "Texto original extraído: \"las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "El mérito es la corona",
+        "fecha": "26 de julio de 1684",
+        "fecha_formateada": "1684-07-26",
+        "compañia": "compañía de Manuel de Vallejo y compañía de Manuel de Mosquera",
+        "director_compañia": "",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "Reina Madre",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [
+          "Reina Madre"
+        ],
+        "tipo_funcion": "celebración",
+        "publico": "corte",
+        "observaciones": "Para celebrar el santo de la Reina Madre. Fuentes V es más fiable según los autores. Fuentes I tiene discrepancias.",
+        "pagina_pdf": 138,
+        "texto_original": "las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 138,
+          "url": "/obras/pagina-pdf/138/",
+          "texto": "Ver página 138 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 138,
+        "texto_original": "las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_14",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 138,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_138.png",
+          "url_pagina": "/obras/pagina-pdf/138/",
+          "url_imagen": "/media/pdf_pages/page_138.png",
+          "contexto": "las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre",
+          "texto_referencia": "Página 138 del PDF original",
+          "enlace_verificacion": "Ver página 138 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "alto",
+      "pagina_pdf": 138,
+      "texto_original": "las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_15",
+      "sintesis": "Se encontró una representación de la obra 'Psiquis y Cupido' el 3 de diciembre de 1679. La representación fue realizada por compañía de Manuel Vallejo y compañía de José de Prado. Tipo de función: representación_normal. Observaciones: También conocida como 'Ni amor se libra de amor' según Fuentes V. 📄 Esta información aparece en la página 139 del PDF original. Texto original extraído: \"Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día...\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'Psiquis y Cupido' el 3 de diciembre de 1679.",
+        "La representación fue realizada por compañía de Manuel Vallejo y compañía de José de Prado.",
+        "Tipo de función: representación_normal.",
+        "Observaciones: También conocida como 'Ni amor se libra de amor' según Fuentes V.",
+        "📄 Esta información aparece en la página 139 del PDF original.",
+        "Texto original extraído: \"Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día...\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "Psiquis y Cupido",
+        "fecha": "3 de diciembre de 1679",
+        "fecha_formateada": "1679-12-03",
+        "compañia": "compañía de Manuel Vallejo y compañía de José de Prado",
+        "director_compañia": "",
+        "lugar_nombre": "",
+        "lugar_tipo": "",
+        "lugar_region": "",
+        "lugar_ciudad": "",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "",
+        "observaciones": "También conocida como 'Ni amor se libra de amor' según Fuentes V.",
+        "pagina_pdf": 139,
+        "texto_original": "Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 139,
+          "url": "/obras/pagina-pdf/139/",
+          "texto": "Ver página 139 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "texto_original": "Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_15",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 139,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_139.png",
+          "url_pagina": "/obras/pagina-pdf/139/",
+          "url_imagen": "/media/pdf_pages/page_139.png",
+          "contexto": "Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V",
+          "texto_referencia": "Página 139 del PDF original",
+          "enlace_verificacion": "Ver página 139 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "alto",
+      "pagina_pdf": 139,
+      "texto_original": "Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_16",
+      "sintesis": "Se encontró una representación de la obra 'Pitias y Damón' el 24 de febrero de 1683. La representación fue realizada por compañía de Matías de Castro. Tuvo lugar en Palacio (palacio). Tipo de función: representación_palaciega. Público: corte. Observaciones: También conocida como 'La amistad vence el rigor' según Fuentes VI. 📄 Esta información aparece en la página 139 del PDF original. Texto original extraído: \"Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'Pitias y Damón' el 24 de febrero de 1683.",
+        "La representación fue realizada por compañía de Matías de Castro.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_palaciega.",
+        "Público: corte.",
+        "Observaciones: También conocida como 'La amistad vence el rigor' según Fuentes VI.",
+        "📄 Esta información aparece en la página 139 del PDF original.",
+        "Texto original extraído: \"Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "Pitias y Damón",
+        "fecha": "24 de febrero de 1683",
+        "fecha_formateada": "1683-02-24",
+        "compañia": "compañía de Matías de Castro",
+        "director_compañia": "Matías de Castro",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_palaciega",
+        "publico": "corte",
+        "observaciones": "También conocida como 'La amistad vence el rigor' según Fuentes VI.",
+        "pagina_pdf": 139,
+        "texto_original": "Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 139,
+          "url": "/obras/pagina-pdf/139/",
+          "texto": "Ver página 139 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "texto_original": "Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_16",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 139,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_139.png",
+          "url_pagina": "/obras/pagina-pdf/139/",
+          "url_imagen": "/media/pdf_pages/page_139.png",
+          "contexto": "Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor",
+          "texto_referencia": "Página 139 del PDF original",
+          "enlace_verificacion": "Ver página 139 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 139,
+      "texto_original": "Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_17",
+      "sintesis": "Se encontró una representación de la obra 'Los tres mayores prodigios' el 25 de agosto de 1687. Tuvo lugar en Buen Retiro (palacio). Tipo de función: representación_normal. Público: corte. ⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona este título. Fuentes V tiene 'Los tres mayores imperios' para la misma fecha. El manuscrito 14.940 confirma que es la obra de Pablo Polope y Valdés. 📄 Esta información aparece en la página 139 del PDF original. Texto original extraído: \"para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar\" Nivel de confianza: 🔴 Baja confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'Los tres mayores prodigios' el 25 de agosto de 1687.",
+        "Tuvo lugar en Buen Retiro (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "⚠️ DISCREPANCIA DETECTADA: DISCREPANCIA: Fuentes I menciona este título. Fuentes V tiene 'Los tres mayores imperios' para la misma fecha. El manuscrito 14.940 confirma que es la obra de Pablo Polope y Valdés.",
+        "📄 Esta información aparece en la página 139 del PDF original.",
+        "Texto original extraído: \"para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar\"",
+        "Nivel de confianza: 🔴 Baja confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "Los tres mayores prodigios",
+        "fecha": "25 de agosto de 1687",
+        "fecha_formateada": "1687-08-25",
+        "compañia": "",
+        "director_compañia": "",
+        "lugar_nombre": "Buen Retiro",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "DISCREPANCIA: Fuentes I menciona este título. Fuentes V tiene 'Los tres mayores imperios' para la misma fecha. El manuscrito 14.940 confirma que es la obra de Pablo Polope y Valdés.",
+        "pagina_pdf": 139,
+        "texto_original": "para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar",
+        "confianza": "bajo",
+        "referencia_pagina_pdf": {
+          "pagina": 139,
+          "url": "/obras/pagina-pdf/139/",
+          "texto": "Ver página 139 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "texto_original": "para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar",
+        "confianza": "bajo",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_17",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 139,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_139.png",
+          "url_pagina": "/obras/pagina-pdf/139/",
+          "url_imagen": "/media/pdf_pages/page_139.png",
+          "contexto": "para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar",
+          "texto_referencia": "Página 139 del PDF original",
+          "enlace_verificacion": "Ver página 139 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "bajo",
+      "pagina_pdf": 139,
+      "texto_original": "para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_18",
+      "sintesis": "Se encontró una representación de la obra 'Los tres mayores imperios' el 25 de agosto de 1687. La representación fue realizada por compañía de Simón Aguado y compañía de Agustín Manuel. Tuvo lugar en Coliseo del Buen Retiro (palacio). Tipo de función: representación_normal. Público: corte. Observaciones: El manuscrito 14.940 de la Biblioteca Nacional confirma que es la obra de Pablo Polope y Valdés. Fuentes V es más fiable. 📄 Esta información aparece en la página 139 del PDF original. Texto original extraído: \"Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Bibl...\" Nivel de confianza: 🔵 Alta confianza",
+      "frases": [
+        "Se encontró una representación de la obra 'Los tres mayores imperios' el 25 de agosto de 1687.",
+        "La representación fue realizada por compañía de Simón Aguado y compañía de Agustín Manuel.",
+        "Tuvo lugar en Coliseo del Buen Retiro (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "Observaciones: El manuscrito 14.940 de la Biblioteca Nacional confirma que es la obra de Pablo Polope y Valdés. Fuentes V es más fiable.",
+        "📄 Esta información aparece en la página 139 del PDF original.",
+        "Texto original extraído: \"Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Bibl...\"",
+        "Nivel de confianza: 🔵 Alta confianza"
+      ],
+      "datos_json": {
+        "obra_titulo": "Los tres mayores imperios",
+        "fecha": "25 de agosto de 1687",
+        "fecha_formateada": "1687-08-25",
+        "compañia": "compañía de Simón Aguado y compañía de Agustín Manuel",
+        "director_compañia": "",
+        "lugar_nombre": "Coliseo del Buen Retiro",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "El manuscrito 14.940 de la Biblioteca Nacional confirma que es la obra de Pablo Polope y Valdés. Fuentes V es más fiable.",
+        "pagina_pdf": 139,
+        "texto_original": "Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés",
+        "confianza": "alto",
+        "referencia_pagina_pdf": {
+          "pagina": 139,
+          "url": "/obras/pagina-pdf/139/",
+          "texto": "Ver página 139 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "texto_original": "Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés",
+        "confianza": "alto",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_18",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 139,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_139.png",
+          "url_pagina": "/obras/pagina-pdf/139/",
+          "url_imagen": "/media/pdf_pages/page_139.png",
+          "contexto": "Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés",
+          "texto_referencia": "Página 139 del PDF original",
+          "enlace_verificacion": "Ver página 139 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "alto",
+      "pagina_pdf": 139,
+      "texto_original": "Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés"
+    },
+    {
+      "tipo": "representacion",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_19",
+      "sintesis": "Se encontró una representación de la obra 'El alba y el sol' el 6 de enero de 1688. La representación fue realizada por compañía de Simón Aguado. Tuvo lugar en Palacio (palacio). Tipo de función: representación_normal. Público: corte. Observaciones: Fuentes VI menciona Palacio. Fuentes I menciona Cuarto de la Reina. Probablemente misma representación. 📄 Esta información aparece en la página 139 del PDF original. Texto original extraído: \"El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma come...\" Nivel de confianza: 🟡 Confianza media",
+      "frases": [
+        "Se encontró una representación de la obra 'El alba y el sol' el 6 de enero de 1688.",
+        "La representación fue realizada por compañía de Simón Aguado.",
+        "Tuvo lugar en Palacio (palacio).",
+        "Tipo de función: representación_normal.",
+        "Público: corte.",
+        "Observaciones: Fuentes VI menciona Palacio. Fuentes I menciona Cuarto de la Reina. Probablemente misma representación.",
+        "📄 Esta información aparece en la página 139 del PDF original.",
+        "Texto original extraído: \"El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma come...\"",
+        "Nivel de confianza: 🟡 Confianza media"
+      ],
+      "datos_json": {
+        "obra_titulo": "El alba y el sol",
+        "fecha": "6 de enero de 1688",
+        "fecha_formateada": "1688-01-06",
+        "compañia": "compañía de Simón Aguado",
+        "director_compañia": "Simón Aguado",
+        "lugar_nombre": "Palacio",
+        "lugar_tipo": "palacio",
+        "lugar_region": "Comunidad de Madrid",
+        "lugar_ciudad": "Madrid",
+        "mecenas": "",
+        "organizadores_fiesta": [],
+        "personajes_historicos": [],
+        "tipo_funcion": "representación_normal",
+        "publico": "corte",
+        "observaciones": "Fuentes VI menciona Palacio. Fuentes I menciona Cuarto de la Reina. Probablemente misma representación.",
+        "pagina_pdf": 139,
+        "texto_original": "El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía",
+        "confianza": "medio",
+        "referencia_pagina_pdf": {
+          "pagina": 139,
+          "url": "/obras/pagina-pdf/139/",
+          "texto": "Ver página 139 en PDF original"
+        }
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "texto_original": "El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_19",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 139,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "directa",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_139.png",
+          "url_pagina": "/obras/pagina-pdf/139/",
+          "url_imagen": "/media/pdf_pages/page_139.png",
+          "contexto": "El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía",
+          "texto_referencia": "Página 139 del PDF original",
+          "enlace_verificacion": "Ver página 139 en PDF original"
+        },
+        "referencias_paginas_adicionales": []
+      },
+      "confianza": "medio",
+      "pagina_pdf": 139,
+      "texto_original": "El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía"
+    }
+  ],
+  "obras": [],
+  "lugares": [
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_1",
+      "sintesis": "Se encontró información sobre el lugar 'Alcázar de Madrid'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Alcázar de Madrid'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Alcázar de Madrid",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Antiguo Alcázar de Madrid, denominado «Palacio» en la documentación. Contenía: Cuarto del Rey, Cuarto de la Reina, Armería, Pieza de las Audiencias, Salón (Salón dorado)",
+        "coordenadas": {
+          "lat": 40.4178,
+          "lng": -3.7142
+        },
+        "variantes": [
+          "Palacio",
+          "Alcázar"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_1",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 10,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "inferida",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_010.png",
+          "url_pagina": "/obras/pagina-pdf/10/",
+          "url_imagen": "/media/pdf_pages/page_010.png",
+          "contexto": "Primera mención de 'Alcázar de Madrid'",
+          "texto_referencia": "Página 10 del PDF original",
+          "enlace_verificacion": "Ver página 10 en PDF original"
+        }
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_2",
+      "sintesis": "Se encontró información sobre el lugar 'Buen Retiro'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Buen Retiro'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Complejo palaciego con múltiples salas: Coliseo, Cuarto del Rey, Cuarto de la Reina, Cuarto de Príncipes, Patinejo, Saloncete, Saloncillo, Salón de los Reinos",
+        "coordenadas": {
+          "lat": 40.415,
+          "lng": -3.6833
+        },
+        "variantes": [
+          "Buen Retiro",
+          "Palacio del Buen Retiro"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_2",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 10,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "inferida",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_010.png",
+          "url_pagina": "/obras/pagina-pdf/10/",
+          "url_imagen": "/media/pdf_pages/page_010.png",
+          "contexto": "Primera mención de 'Buen Retiro'",
+          "texto_referencia": "Página 10 del PDF original",
+          "enlace_verificacion": "Ver página 10 en PDF original"
+        }
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_3",
+      "sintesis": "Se encontró información sobre el lugar 'Saloncillo del Buen Retiro'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Saloncillo del Buen Retiro'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Saloncillo del Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Sala del Palacio del Buen Retiro",
+        "coordenadas": {
+          "lat": 40.415,
+          "lng": -3.6833
+        },
+        "variantes": [
+          "Saloncillo",
+          "Saloncete"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_3",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 12,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "inferida",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_012.png",
+          "url_pagina": "/obras/pagina-pdf/12/",
+          "url_imagen": "/media/pdf_pages/page_012.png",
+          "contexto": "Primera mención de 'Saloncillo del Buen Retiro'",
+          "texto_referencia": "Página 12 del PDF original",
+          "enlace_verificacion": "Ver página 12 en PDF original"
+        }
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_4",
+      "sintesis": "Se encontró información sobre el lugar 'Saloncete del Buen Retiro'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Saloncete del Buen Retiro'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Saloncete del Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Sala del Palacio del Buen Retiro",
+        "coordenadas": {
+          "lat": 40.415,
+          "lng": -3.6833
+        },
+        "variantes": [
+          "Saloncete",
+          "Saloncillo"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_4"
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_5",
+      "sintesis": "Se encontró información sobre el lugar 'Coliseo del Buen Retiro'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Coliseo del Buen Retiro'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Coliseo del Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Teatro principal del Palacio del Buen Retiro",
+        "coordenadas": {
+          "lat": 40.415,
+          "lng": -3.6833
+        },
+        "variantes": [
+          "Coliseo",
+          "Buen Retiro, Coliseo"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_5"
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_6",
+      "sintesis": "Se encontró información sobre el lugar 'Cuarto del Rey'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Cuarto del Rey'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Cuarto del Rey",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Residencia privada del rey en el Palacio Real (Alcázar) o Buen Retiro",
+        "coordenadas": {
+          "lat": 40.4178,
+          "lng": -3.7142
+        },
+        "variantes": [
+          "Cuarto del Rey"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_6",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 10,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "inferida",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_010.png",
+          "url_pagina": "/obras/pagina-pdf/10/",
+          "url_imagen": "/media/pdf_pages/page_010.png",
+          "contexto": "Primera mención de 'Cuarto del Rey'",
+          "texto_referencia": "Página 10 del PDF original",
+          "enlace_verificacion": "Ver página 10 en PDF original"
+        }
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_7",
+      "sintesis": "Se encontró información sobre el lugar 'Cuarto de la Reina'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Cuarto de la Reina'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Cuarto de la Reina",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Residencia privada de la reina en el Palacio Real (Alcázar) o Buen Retiro",
+        "coordenadas": {
+          "lat": 40.4178,
+          "lng": -3.7142
+        },
+        "variantes": [
+          "Cuarto de la Reina"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_7",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 10,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "inferida",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_010.png",
+          "url_pagina": "/obras/pagina-pdf/10/",
+          "url_imagen": "/media/pdf_pages/page_010.png",
+          "contexto": "Primera mención de 'Cuarto de la Reina'",
+          "texto_referencia": "Página 10 del PDF original",
+          "enlace_verificacion": "Ver página 10 en PDF original"
+        }
+      }
+    },
+    {
+      "tipo": "lugar",
+      "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_8",
+      "sintesis": "Se encontró información sobre el lugar 'Salón'. Ubicación: Madrid, Comunidad de Madrid.",
+      "frases": [
+        "Se encontró información sobre el lugar 'Salón'.",
+        "Ubicación: Madrid, Comunidad de Madrid."
+      ],
+      "datos_json": {
+        "nombre": "Salón",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid",
+        "ciudad": "Madrid",
+        "descripcion": "Salón o Salón dorado del Palacio Real (Alcázar)",
+        "coordenadas": {
+          "lat": 40.4178,
+          "lng": -3.7142
+        },
+        "variantes": [
+          "Salón",
+          "Salón dorado"
+        ]
+      },
+      "metadata": {
+        "fecha_extraccion": "2025-01-27T10:30:00Z",
+        "version_extraccion": "1.0.0",
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": null,
+        "texto_original": "",
+        "confianza": "medio",
+        "extractor": "IA_manual",
+        "validado": false,
+        "fecha_validacion": null,
+        "validado_por": null,
+        "id_temporal": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_8",
+        "referencia_pagina_pdf": {
+          "pagina_pdf": 10,
+          "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+          "tipo_referencia": "inferida",
+          "ruta_imagen": "data/raw/images/FUENTES IX 1_part_001_ALL_PAGES/page_010.png",
+          "url_pagina": "/obras/pagina-pdf/10/",
+          "url_imagen": "/media/pdf_pages/page_010.png",
+          "contexto": "Primera mención de 'Salón'",
+          "texto_referencia": "Página 10 del PDF original",
+          "enlace_verificacion": "Ver página 10 en PDF original"
+        }
+      }
+    }
+  ],
+  "fecha_generacion": "2025-12-05T14:46:33.402127"
+}

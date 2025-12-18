@@ -1,0 +1,429 @@
+{
+  "metadata": {
+    "fecha_analisis": "2025-12-05T13:11:55.365829",
+    "total_frases": 116,
+    "total_terminos_unicos": 401
+  },
+  "estadisticas": {
+    "frases_con_fecha": 83,
+    "frases_con_compañia": 40,
+    "frases_con_lugar": 89,
+    "frases_completas": 26
+  },
+  "lemario": {
+    "autores": {
+      "total_terminos": 0,
+      "total_ocurrencias": 0,
+      "top_5": []
+    },
+    "lugares": {
+      "total_terminos": 0,
+      "total_ocurrencias": 0,
+      "top_5": []
+    },
+    "compañias": {
+      "total_terminos": 0,
+      "total_ocurrencias": 0,
+      "top_5": []
+    },
+    "obras": {
+      "total_terminos": 0,
+      "total_ocurrencias": 0,
+      "top_5": []
+    },
+    "fechas": {
+      "total_terminos": 0,
+      "total_ocurrencias": 0,
+      "top_5": []
+    },
+    "mecenas": {
+      "total_terminos": 6,
+      "total_ocurrencias": 40,
+      "top_5": [
+        {
+          "termino": "Rey",
+          "ocurrencias": 6,
+          "ejemplo": "La gran mayoría de los documentos palaciegos se refieren a representaciones en los palacios reales de Madrid, el Alcázar y el Buen Retiro, aunque también hay datos sobre festejos reales en otros palacios, y en Valladolid y Toledo. En cuanto al antiguo Alcázar de Madrid, denominado «Palacio» en la documentación, hay datos acerca de representaciones privadas en el Cuarto del Rey y el Cuarto de la Reina, y privadas y públicas en la Armería, la Pieza de las Audiencias y sobre todo en el Salón, o Salón dorado. La mayoría de los datos acerca de representaciones en el Buen Retiro se refieren al Coliseo, pero también se hacían comedias en el Cuarto del Rey, el de la Reina, y el de Príncipes, y en el Patinejo, Saloncete, Saloncillo y Salón de los Reinos. Especificamos en las listas el lugar de la representación, tal como aparece en la documentación: «Buen Retiro, Coliseo», «Palacio [lo sea, el Alcázar]», Salón», etcétera. Cuando se trata de una representación regia sin especificar dónde se efectuaba, la llamamos «representación palaciega». En algunas ocasiones, después de haberse estrenado una obra palaciega de gran aparato, el Rey permitió que el arrendador de los corrales de comedias se encargara del teatro; estas representaciones «al pueblo» también van anotadas aquí en las listas cronológicas."
+        },
+        {
+          "termino": "Conde",
+          "ocurrencias": 1,
+          "ejemplo": "Proviniendo como provienen de fuentes tan distintas, no es de extrañar que la evidencia que ofrecen estos datos sea de vez en cuando confusa, si no contradictoria. Cuando el notario redactaba el documento de descuento, a veces ignoraba el título preciso de la obra teatral que iba a representarse en el teatro palaciego, o se confundía entre ensayo y representación; pero en cuanto a la obra cuya representación en el corral era necesario posponer, se encontraba en un terreno más estable, por poder referirse a los carteles que anunciaban la comedia. En cuanto a los pagos de comedias palaciegas, si se efectuaban inmediatamente después de la representación, es muy posible que el título fuera exacto, pero sabemos por las peticiones de los autores de comedias que, a veces, tenían que esperar muchos meses antes de recibir una libranza; en 1648, por ejemplo, Antonio García de Prado pidió el pago de cinco comedias representadas en 1643 (Fuentes I, doc. núm. 17, págs. 51-52). En 1686 el Conde de Monterrey comenta las dificultades causadas por los pagos tardíos, indicando que causa da confusión de no saber yo los días en que se representaron y por que compañías (Fuentes I, doc. núm. 85 [a], pág. 169). Esta confusión se patentiza en dos listas de representaciones hechas en 1684-1685 por la compañía de Manuel de Mosquera; aunque tratan evidentemente de una serie de actuaciones que cubren más o menos los mismos meses, hay bastantes discrepancias de fechas y títulos (Fuentes I, doc. núm. 75, págs. 154-157). Esta confusión se origina en la redacción a"
+        },
+        {
+          "termino": "Reina",
+          "ocurrencias": 19,
+          "ejemplo": "La confrontación de los datos que provienen de los certificados de descuentos con los que se desprenden de los pagos a los autores de comedias por las representaciones palaciegas revela otros tipos de confusiones. Los certificados notariales y los documentos palaciegos pueden, por ejemplo, ofrecer evidencia contradictoria en cuanto al lugar de la representación. El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I. Puede que las dos fuentes registren fechas al parecer contradictorias. Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio. Es poco probable que dos compañías distintas hubiesen interpretado la misma comedia dos días seguidos, pero, sin la corroboración de otras fuentes distintas e independientes, es imposible decir cuál de las dos fuentes es correcta; es posible, claro está, que las dos compañías de actores se hubiesen combinado para efectuar la representación, tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187) y no una obra ya de repertorio. En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680, y de El rico hombre de Alcalá el día 15, pero según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12, y no se registra ninguna representación para el día 15. En este caso, es probable que los documentos del Archivo del Palacio Real sean más fiables que el certificado notarial."
+        },
+        {
+          "termino": "Príncipe",
+          "ocurrencias": 12,
+          "ejemplo": "A veces se registran representaciones de dos comedias el mismo día, tal como pasa el 9 de enero de 1681, cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso, y, según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea. Es obvio que hay que proceder con prudencia al interpretar la evidencia de las fuentes documentales en esta ocasión, aunque la representación de dos comedias el mismo día no sea desconocida. En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope, y el certificado del escribano dice que «bi entrar dicha compañia en el Salon a las tres y media poco mas o menos para representar dichas comedias». Se ve que, aunque existen discrepancias en cuanto al lugar de las representaciones, el escribano no se extraña, al parecer, de que una compañía hiciese dos actuaciones el mismo día. En 1684 nos encontramos con otro problema parecido, cuando Fuentes I ofrece"
+        },
+        {
+          "termino": "La Reina Madre",
+          "ocurrencias": 1,
+          "ejemplo": "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio, y de El maestro de danzar el día 26, datos que están en conflicto con los de Fuentes V, según los cuales las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre. En este caso podemos estar casi seguros de que la fuente documental de Fuentes V es correcta, no sólo por tratarse de una obra palacíega destinada a celebrar un importante acontecimiento palacíego, sino también por las discrepancias entre días de la semana y fechas anotadas en Fuentes I, doc. núm. 75, pág. 154, n. 82."
+        }
+      ]
+    },
+    "personajes": {
+      "total_terminos": 0,
+      "total_ocurrencias": 0,
+      "top_5": []
+    }
+  },
+  "terminos_frecuentes": {
+    "Palacio": 77,
+    "Vallejo": 37,
+    "Buen Retiro": 31,
+    "Aguado": 31,
+    "Manuel": 21,
+    "1687": 19,
+    "Reina": 19,
+    "López": 17,
+    "Cuarto de la Reina": 15,
+    "Salón": 15,
+    "1684": 15,
+    "1683": 14,
+    "Manuel de Mosquera": 13,
+    "Corral del Príncipe": 13,
+    "1686": 12,
+    "1680": 12,
+    "1685": 11,
+    "1695": 10,
+    "1688": 10,
+    "Príncipe": 10,
+    "Mosquera": 9,
+    "1696": 8,
+    "García": 8,
+    "1681": 8,
+    "Corral de la Cruz": 8,
+    "Osorio": 8,
+    "María": 8,
+    "Polope": 8,
+    "Alvarez": 8,
+    "1650": 7,
+    "Salón dorado": 7,
+    "especificar": 7,
+    "Escamilla": 7,
+    "Matías de Castro": 7,
+    "palacio": 6,
+    "Rey": 6,
+    "1980": 6,
+    "1692": 6,
+    "1682": 6,
+    "Cárdenas": 6,
+    "Saloncete": 5,
+    "1691": 5,
+    "Juan de Cárdenas": 5,
+    "Bezón": 5,
+    "Castro": 5,
+    "Rull": 5,
+    "Saloncillo": 4,
+    "1657": 4,
+    "1651": 4,
+    "1977": 4
+  },
+  "patrones_deteccion": {
+    "representacion": [
+      {
+        "patron": "[NOMBRE] confrontación de los datos que provienen de los certificados de descuentos con los que se desprenden de los pagos a los autores de comedias por las representaciones palaciegas revela otros tipos de confusiones. [NOMBRE] certificados notariales y los documentos palaciegos pueden, por ejemplo, ofrecer evidencia contradictoria en cuanto al lugar de la representación. [NOMBRE] [FECHA] la compañía de [NOMBRE] [NOMBRE] representó [NOMBRE] [NOMBRE] [NOMBRE], en el [NOMBRE] del [NOMBRE] [NOMBRE], según [NOMBRE] V, y en el [NOMBRE], según [NOMBRE] I. [NOMBRE] que las dos fuentes registren fechas al parecer contradictorias. [NOMBRE] [NOMBRE] V, la compañía de [NOMBRE] [NOMBRE] representó [NOMBRE] [NOMBRE_COMPLETO] en [NOMBRE] el [FECHA], pero [NOMBRE] I registra una representación de la misma comedia por la compañía de [NOMBRE_COMPLETO] el día siguiente, 4 de octubre, también en [NOMBRE]. [NOMBRE] poco probable que dos compañías distintas hubiesen interpretado la misma comedia dos días seguidos, pero, sin la corroboración de otras fuentes distintas e independientes, es imposible decir cuál de las dos fuentes es correcta; es posible, claro está, que las dos compañías de actores se hubiesen combinado para efectuar la representación, tal como pasó el 21 de septiembre del mismo año de [AÑO] cuando hicieron juntas [NOMBRE] profetisa [NOMBRE], pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la [NOMBRE] [NOMBRE] [NOMBRE_COMPLETO] ([NOMBRE] V, pág. 187) y no una obra ya de repertorio. [NOMBRE] [AÑO] encontramos en [NOMBRE] I referencias a una representación palaciega de [NOMBRE] garza de [NOMBRE] por la compañía de [NOMBRE] [NOMBRE] el [FECHA], y de [NOMBRE] rico hombre de [NOMBRE] el día 15, pero según [NOMBRE] V, la compañía de [NOMBRE] hizo [NOMBRE] rico hombre de [NOMBRE] el día 12, y no se registra ninguna representación para el día 15. [NOMBRE] este caso, es probable que los documentos del [NOMBRE] del [NOMBRE] [NOMBRE] sean más fiables que el certificado notarial.",
+        "ejemplo": "La confrontación de los datos que provienen de los certificados de descuentos con los que se desprenden de los pagos a los autores de comedias por las representaciones palaciegas revela otros tipos de confusiones. Los certificados notariales y los documentos palaciegos pueden, por ejemplo, ofrecer evidencia contradictoria en cuanto al lugar de la representación. El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I. Puede que las dos fuentes registren fechas al parecer contradictorias. Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio. Es poco probable que dos compañías distintas hubiesen interpretado la misma comedia dos días seguidos, pero, sin la corroboración de otras fuentes distintas e independientes, es imposible decir cuál de las dos fuentes es correcta; es posible, claro está, que las dos compañías de actores se hubiesen combinado para efectuar la representación, tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187) y no una obra ya de repertorio. En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680, y de El rico hombre de Alcalá el día 15, pero según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12, y no se registra ninguna representación para el día 15. En este caso, es probable que los documentos del Archivo del Palacio Real sean más fiables que el certificado notarial.",
+        "confianza": "alto"
+      },
+      {
+        "patron": "A veces se registran representaciones de dos comedias el mismo día, tal como pasa el [FECHA], cuando, según [NOMBRE] I, [NOMBRE] [NOMBRE] representó [NOMBRE] príncipe prodigioso, y, según [NOMBRE] V, la misma compañía hizo el mismo día en [NOMBRE] una representación de [NOMBRE] alcalde de [NOMBRE]. [NOMBRE] obvio que hay que proceder con prudencia al interpretar la evidencia de las fuentes documentales en esta ocasión, aunque la representación de dos comedias el mismo día no sea desconocida. [NOMBRE] [AÑO] [NOMBRE] VI ofrece datos sobre la representación el 14 de febrero de [NOMBRE] monstruo de los jardines en el [NOMBRE] del [NOMBRE] y de [NOMBRE] no se aguarda en el de la [NOMBRE], ambas por la compañía de [NOMBRE] [NOMBRE], y el certificado del escribano dice que «bi entrar dicha compañia en el [NOMBRE] a las tres y media poco mas o menos para representar dichas comedias». [NOMBRE] ve que, aunque existen discrepancias en cuanto al lugar de las representaciones, el escribano no se extraña, al parecer, de que una compañía hiciese dos actuaciones el mismo día. [NOMBRE] [AÑO] nos encontramos con otro problema parecido, cuando [NOMBRE] I ofrece",
+        "ejemplo": "A veces se registran representaciones de dos comedias el mismo día, tal como pasa el 9 de enero de 1681, cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso, y, según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea. Es obvio que hay que proceder con prudencia al interpretar la evidencia de las fuentes documentales en esta ocasión, aunque la representación de dos comedias el mismo día no sea desconocida. En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope, y el certificado del escribano dice que «bi entrar dicha compañia en el Salon a las tres y media poco mas o menos para representar dichas comedias». Se ve que, aunque existen discrepancias en cuanto al lugar de las representaciones, el escribano no se extraña, al parecer, de que una compañía hiciese dos actuaciones el mismo día. En 1684 nos encontramos con otro problema parecido, cuando Fuentes I ofrece",
+        "confianza": "alto"
+      },
+      {
+        "patron": "[NOMBRE] títulos alternativos dados a las comedias son otra fuente de confusiones. [NOMBRE] es difícil identificar [NOMBRE] y [NOMBRE], representada el [FECHA] por las compañías de [NOMBRE] [NOMBRE] y [NOMBRE_COMPLETO], según [NOMBRE] I, con [NOMBRE] amor se libra de amor, hecha por las mismas compañías el mismo día, según [NOMBRE] V. [NOMBRE] y [NOMBRE], representada en palacio por [NOMBRE_COMPLETO] el [FECHA] ([NOMBRE] I), no es tan fácilmente identificable con [NOMBRE] amistad vence el rigor, que la compañía de [NOMBRE] ponía en escena en el [NOMBRE] de la [NOMBRE] el 19 y [FECHA] ([NOMBRE] VI); sin embargo, se trata de representaciones de una misma obra teatral. A veces los documentos confunden dos comedias distintas con títulos parecidos: para el [FECHA], [NOMBRE] I da noticia de una representación en el [NOMBRE] [NOMBRE_COMPLETO] tres mayores prodigios por una compañía, o compañías, sin especificar. [NOMBRE] el mismo día, [NOMBRE] V tiene [NOMBRE] tres mayores imperios, representada en el [NOMBRE] por las compañías de [NOMBRE] [NOMBRE] y [NOMBRE] [NOMBRE]. [NOMBRE] este caso, la evidencia del manuscrito 14.940 de la [NOMBRE] [NOMBRE] confirma sin lugar a dudas que se trata de la obra de [NOMBRE] [NOMBRE] y [NOMBRE], demostrando así que el certificado del notario es fiable y que la evidencia del documento de pago no lo es. [NOMBRE] ocasiones en que la evidencia de una de las fuentes documentales aclara o complementa la de la otra. [NOMBRE] [FECHA], sabemos que la compañía de [NOMBRE] [NOMBRE] representó en [NOMBRE] [NOMBRE] alba y el sol ([NOMBRE] VI); [NOMBRE] I da noticia de una representación en el [NOMBRE] de la [NOMBRE] de la misma comedia por la misma compañía, pero la evidencia sólo nos permite decir que se hizo antes del [FECHA]. [NOMBRE] una fuente con otra, es posible deducir que probablemente se deriven de una misma representación.",
+        "ejemplo": "Los títulos alternativos dados a las comedias son otra fuente de confusiones. No es difícil identificar Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V. Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor, que la compañía de Vallejo ponía en escena en el Corral de la Cruz el 19 y 20 de enero de 1696 (Fuentes VI); sin embargo, se trata de representaciones de una misma obra teatral. A veces los documentos confunden dos comedias distintas con títulos parecidos: para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar. Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés, demostrando así que el certificado del notario es fiable y que la evidencia del documento de pago no lo es. Hay ocasiones en que la evidencia de una de las fuentes documentales aclara o complementa la de la otra. El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía, pero la evidencia sólo nos permite decir que se hizo antes del 30 de enero de 1688. Confrontando una fuente con otra, es posible deducir que probablemente se deriven de una misma representación.",
+        "confianza": "alto"
+      },
+      {
+        "patron": "sus bailes y entremeses».3 [NOMBRE] la primera mitad del siglo XVII, parece ser que se trataba en realidad de obras recién escritas y nunca estrenadas, pero a partir de [AÑO] nos encontramos con muchas quejas por parte de los arrendadores alegando la escasez de obras teatrales nuevas. [NOMBRE] en [AÑO] alega [NOMBRE_COMPLETO], a raíz de la guerra de [NOMBRE], que «por la falta de compañías y autores de comedias y no auer poetas que las hagan con la abundancia y prestesa que han de [de] hacerse», el arriendo no rinde lo que solía ([NOMBRE] XIII, doc. núm. 17 [j, pág. 111). [NOMBRE] problema se hace más agudo a medida que avanza el siglo. [NOMBRE] su postura al arriendo de [AÑO]-[AÑO], [NOMBRE_COMPLETO] [NOMBRE] dice que «aunque representan en los corrales son comedias viejas y acaudas de hacer en aquel año o el antecedente por razón de ocuparlas con los ensayos de las fiestas de S.M. y no poder poner comedias nuevas ni cumplir con los ajustes que tienen echos con el arrendamiento» ([NOMBRE] XIII, doc. núm. 42 [c], pág. 165). [NOMBRE] por esta razón el convenio entre el [NOMBRE] de los teatros y el autor de comedias [NOMBRE_COMPLETO], en [AÑO], obliga a éste a representar nuevas comedias, «las quales han de ser de las que no se hubieren hecho ni representado en esta [NOMBRE] diez años a esta parte» ([NOMBRE] XI, doc. núm. 33 [a], pág. 87). [NOMBRE] enfoque poco claro del concepto de lo que era una «comedia nueva» ayuda a explicar por qué [NOMBRE] devoción del ángel de [NOMBRE] [NOMBRE] se denomina «comedia nueva» en [AÑO], y también en el año siguiente de [AÑO] ([NOMBRE] IV); también quiere decir que no se puede aseverar categóricamente que [NOMBRE] marido de su hermana, representada el [FECHA] ([NOMBRE] IV), no puede ser la comedia de [NOMBRE] [NOMBRE_COMPLETO], que data de antes de febrero de [AÑO] ([NOMBRE] I).",
+        "ejemplo": "sus bailes y entremeses».3 En la primera mitad del siglo XVII, parece ser que se trataba en realidad de obras recién escritas y nunca estrenadas, pero a partir de 1650 nos encontramos con muchas quejas por parte de los arrendadores alegando la escasez de obras teatrales nuevas. Ya en 1637 alega Juan de Aguilar, a raíz de la guerra de Cataluña, que «por la falta de compañías y autores de comedias y no auer poetas que las hagan con la abundancia y prestesa que han de [de] hacerse», el arriendo no rinde lo que solía (Fuentes XIII, doc. núm. 17 [j, pág. 111). El problema se hace más agudo a medida que avanza el siglo. En su postura al arriendo de 1699-1703, Francisco de Soto Martínez dice que «aunque representan en los corrales son comedias viejas y acaudas de hacer en aquel año o el antecedente por razón de ocuparlas con los ensayos de las fiestas de S.M. y no poder poner comedias nuevas ni cumplir con los ajustes que tienen echos con el arrendamiento» (Fuentes XIII, doc. núm. 42 [c], pág. 165). Quizá por esta razón el convenio entre el Interventor de los teatros y el autor de comedias Manuel de Villaflor, en 1706, obliga a éste a representar nuevas comedias, «las quales han de ser de las que no se hubieren hecho ni representado en esta Corte diez años a esta parte» (Fuentes XI, doc. núm. 33 [a], pág. 87). Este enfoque poco claro del concepto de lo que era una «comedia nueva» ayuda a explicar por qué La devoción del ángel de La Guarda se denomina «comedia nueva» en 1657, y también en el año siguiente de 1658 (Fuentes IV); también quiere decir que no se puede aseverar categóricamente que El marido de su hermana, representada el 11 de octubre de 1663 (Fuentes IV), no puede ser la comedia de Juan Bautista de Villegas, que data de antes de febrero de 1623 (Fuentes I).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] V); (2) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] palaciega ([NOMBRE] V); (3) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] [NOMBRE], [NOMBRE] ([NOMBRE] I); (4) 26 ó [FECHA]. [NOMBRE] sin especificar. [NOMBRE] [NOMBRE], [NOMBRE] ([NOMBRE] I, día 26; [NOMBRE] V, día 27, con el título de [NOMBRE] garrote más bien dado); (5) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] VI); (6) antes del [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] de la [NOMBRE] (es muy probable que se refiera a la representación del 21 de enero) ([NOMBRE] I); (7) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] de la [NOMBRE] ([NOMBRE] I); (8) - (11) 10-[FECHA]. [NOMBRE]. [NOMBRE] del [NOMBRE], con el título de [NOMBRE] garrote más bien dado ([NOMBRE] VI).",
+        "ejemplo": "(1) 9 de enero de 1681. Jerónimo García. Palacio (Fuentes V); (2) 23 de enero de 1681. Jerónimo García. Representación palaciega (Fuentes V); (3) 12 de octubre de 1687. Simón Aguado. Buen Retiro, Saloncete (Fuentes I); (4) 26 ó 27 de octubre de 1687. Compañía sin especificar. Buen Retiro, Coliseo (Fuentes I, día 26; Fuentes V, día 27, con el título de El garrote más bien dado); (5) 21 de enero de 1688. Simón Aguado. Palacio (Fuentes VI); (6) antes del 30 de enero de 1688. Simón Aguado. Cuarto de la Reina (es muy probable que se refiera a la representación del 21 de enero) (Fuentes I); (7) 10 de febrero de 1692. Damián Polop. Cuarto de la Reina (Fuentes I); (8) - (11) 10-13 de mayo de 1696. Vallejo. Corral del Príncipe, con el título de El garrote más bien dado (Fuentes VI).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [NOMBRE_COMPLETO] de [AÑO] (12 de febrero). [NOMBRE] [NOMBRE]. [NOMBRE] [NOMBRE], con el título de [NOMBRE] palacio del silencio ([NOMBRE] IV); (2) - (5) [NOMBRE] 23-[FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] del [NOMBRE] ([NOMBRE] IV); (6) [FECHA]. [NOMBRE] [NOMBRE] y algunos miembros de la compañía de [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] V); (7) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE], [NOMBRE] ([NOMBRE] VI).",
+        "ejemplo": "(1) Lunes de Carnestolendas de 1657 (12 de febrero). Diego Osorio. Buen Retiro, con el título de El palacio del silencio (Fuentes IV); (2) - (5) Anunciada 23-26 de mayo de 1657. Diego Osorio. Corral del Príncipe (Fuentes IV); (6) 18 de enero de 1681. Manuel Vallejo y algunos miembros de la compañía de Jerónimo García. Palacio (Fuentes V); (7) 6 de enero de 1695. Agustín Manuel. Palacio, Salón (Fuentes VI).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] ([NOMBRE] D);",
+        "ejemplo": "(1) 18 de enero de 1676. Antonio de Escamilla. Palacio (Fuentes D);",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE]. [NOMBRE] de los dos corrales ([NOMBRE] IV); (2) [FECHA]. [[NOMBRE]] [NOMBRE]. [NOMBRE] del [NOMBRE] ([NOMBRE] IV); (3) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] I); (4) [NOMBRE_COMPLETO] de [AÑO] (10 de febrero). [NOMBRE] [NOMBRE]. [NOMBRE] palaciega ([NOMBRE] V).",
+        "ejemplo": "(1) 8 de diciembre de 1656. Osorio. Uno de los dos corrales (Fuentes IV); (2) 17 de mayo de 1660. [Jerónimo] Vallejo. Corral del Príncipe (Fuentes IV); (3) 17 de febrero de 1685. Eufrasia María. Palacio (Fuentes I); (4) Lunes de Carnestolendas de 1687 (10 de febrero). Rosendo López. Representación palaciega (Fuentes V).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] palaciega, con el título de [NOMBRE] y [NOMBRE] ([NOMBRE] I); (2) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] palaciega, con el título de [NOMBRE] y [NOMBRE] ([NOMBRE] I); (3) - (4) 19, [FECHA]. [NOMBRE]. [NOMBRE] de la [NOMBRE] ([NOMBRE] V).",
+        "ejemplo": "(1) 10 de diciembre de 1682. Matías de Castro. Representación palaciega, con el título de Pitias y Damón (Fuentes I); (2) 24 de febrero de 1683. Matías de Castro. Representación palaciega, con el título de Pitias y Damón (Fuentes I); (3) - (4) 19, 20 de enero de 1696. Vallejo. Corral de la Cruz (Fuentes V).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] de la [NOMBRE] ([NOMBRE] I); (2) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] del [NOMBRE] ([NOMBRE] VI).",
+        "ejemplo": "(1) 10 de febrero de 1691. Agustín Manuel. Cuarto de la Reina (Fuentes I); (2) 19 de diciembre de 1695. Andrea de Salazar. Corral del Príncipe (Fuentes VI).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "[NOMBRE] del [FECHA]. [NOMBRE], o compañías, sin especificar. [NOMBRE] [NOMBRE], [NOMBRE], al pueblo ([NOMBRE] I).",
+        "ejemplo": "Antes del 2 de diciembre de 1688. Compañía, o compañías, sin especificar. Buen Retiro, Coliseo, al pueblo (Fuentes I).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] del [NOMBRE]",
+        "ejemplo": "(1) 10 de febrero de 1661. Juana de Cisneros. Corral del Príncipe",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] ([NOMBRE] D); (2) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] ([NOMBRE] D); (3) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] I); (4) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE], [NOMBRE] ([NOMBRE] VI); (5) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] del [NOMBRE] ([NOMBRE] VI y X).",
+        "ejemplo": "(1) 5 de abril de 1684. Manuel de Mosquera. Palacio (Fuentes D); (2) 11 de junio de 1684. Manuel de Mosquera. Palacio (Fuentes D); (3) 4 de enero de 1685. Eufrasia María. Palacio (Fuentes I); (4) 30 de agosto de 1695. Isabel de Castro. Palacio, Salón (Fuentes VI); (5) 9 de octubre de 1697. Juan de Cárdenas. Corral del Príncipe (Fuentes VI y X).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "[NOMBRE]. [NOMBRE] más probable que se refiera aquí a una representación de [NOMBRE] y lados hacen dichosos y desdichados, comedia dudosamente atribuida a [NOMBRE] [NOMBRE] (véase [NOMBRE], 292) pero que salió anónima en edición suelta; así la tienen [NOMBRE], [NOMBRE] de la [NOMBRE] y [NOMBRE]. [NOMBRE] la B.N.M. se conservan tres copias manuscritas, 16.405 (con el título de [NOMBRE] y hados hacen dichosos y desdichados), 17.449(14) y 16.891. [NOMBRE] esta última la obra va atribuida a [NOMBRE] [NOMBRE]. [NOMBRE] hay en el mismo manuscrito una declaración del representante [NOMBRE] [NOMBRE] [NOMBRE], fechada en [NOMBRE] el [FECHA], año de esta representación ([NOMBRE], I, 241). [NOMBRE] que [NOMBRE] [NOMBRE] estuvo en [NOMBRE] en la compañía de [NOMBRE] de la [NOMBRE] en [AÑO] ([NOMBRE] II, I, 469). [NOMBRE] un documento del A.M.M., 2-200-6, fue el barba de la compañía de [NOMBRE_COMPLETO] en [AÑO]; véase [NOMBRE] [NOMBRE], ed. de [NOMBRE] hijos de la [NOMBRE], 31. [NOMBRE] en [NOMBRE], en [AÑO] ([NOMBRE] II, I, 469). [NOMBRE] tiene [NOMBRE] y hados hacen dichosos y desdichados, anónima. [NOMBRE] música para [NOMBRE] y lados en el [NOMBRE] de la [NOMBRE] de la [NOMBRE] ([NOMBRE], R[NOMBRE], III, 1-2 [[AÑO]], 223). [NOMBRE] informa nuestro colega el profesor A. [NOMBRE] [NOMBRE] que [NOMBRE] parecido en [NOMBRE], obra atribuida a [NOMBRE] [NOMBRE] pero también muy dudosamente a [NOMBRE] [NOMBRE_COMPLETO], es probablemente una refundición dieciochesca de [NOMBRE] y lados; consúltese también [NOMBRE], [NOMBRE] bibliográfico, 109. [NOMBRE] también [NOMBRE], [NOMBRE].",
+        "ejemplo": "Corte. Parece más probable que se refiera aquí a una representación de Hados y lados hacen dichosos y desdichados, comedia dudosamente atribuida a Antonio Hado (véase Balashov, 292) pero que salió anónima en edición suelta; así la tienen Medel, García de la Huerta y Arteaga. En la B.N.M. se conservan tres copias manuscritas, 16.405 (con el título de Lados y hados hacen dichosos y desdichados), 17.449(14) y 16.891. En esta última la obra va atribuida a Lorenzo García. También hay en el mismo manuscrito una declaración del representante Bernabé Alvarez Quixano, fechada en Madrid el 17 de febrero de 1678, año de esta representación (Paz, I, 241). Sabemos que Bernabé Alvarez estuvo en Valencia en la compañía de Bernardo de la Vega en 1675 (Fuentes II, I, 469). Según un documento del A.M.M., 2-200-6, fue el barba de la compañía de Juan de Cárdenas en 1697; véase Caroline Monahan, ed. de Los hijos de la Barbuda, 31. Murió en Madrid, en 1704 (Fuentes II, I, 469). Medel tiene Lados y hados hacen dichosos y desdichados, anónima. Hay música para Hados y lados en el Archivo de la Cofradía de la Novena (Stein, RMus, III, 1-2 [1980], 223). Nos informa nuestro colega el profesor A. Robert Lauer que El parecido en Rusia, obra atribuida a Lorenzo García pero también muy dudosamente a Antonio Alvarez de Toledo, es probablemente una refundición dieciochesca de Hados y lados; consúltese también Coe, Catálogo bibliográfico, 109. Véase también Parecido, El.",
+        "confianza": "medio"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE_COMPLETO] y [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] V); (2) [FECHA]. [NOMBRE_COMPLETO] y [NOMBRE] [NOMBRE]. [NOMBRE], [NOMBRE] ([NOMBRE] I); (3) - (8) 23-[FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] [NOMBRE], [NOMBRE] ([NOMBRE] I); (9) [NOMBRE_COMPLETO] [NOMBRE] de [AÑO].",
+        "ejemplo": "(1) 18 de enero de 1686. Manuel de Mosquera y Rosendo López. Palacio (Fuentes V); (2) 16 de febrero de 1686. Manuel de Mosquera y Rosendo López. Palacio, Salón (Fuentes I); (3) - (8) 23-28 de octubre de 1686. Manuel de Mosquera. Buen Retiro, Coliseo (Fuentes I); (9) Domingo de Pascua Florida de 1686.",
+        "confianza": "alto"
+      },
+      {
+        "patron": "(1) [FECHA]. [NOMBRE] [NOMBRE] y [NOMBRE_COMPLETO]. [NOMBRE] ([NOMBRE] I, V); (2) [FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] ([NOMBRE] I).",
+        "ejemplo": "(1) 22 de diciembre de 1684. Manuel Vallejo y Manuel de Mosquera. Palacio (Fuentes I, V); (2) 31 de diciembre de 1684. Manuel de Mosquera. Palacio (Fuentes I).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "[NOMBRE] ([NOMBRE] I, V); (3) anunciada [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] del [NOMBRE] ([NOMBRE] V); (4) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] palaciega ([NOMBRE] I); (5) [FECHA]. [NOMBRE] [NOMBRE]. [NOMBRE] ([NOMBRE] V); (6) [FECHA]? (fecha probablemente equivocada). [NOMBRE] [NOMBRE] y otra compañía sin especificar. [NOMBRE] palaciega ([NOMBRE] I).",
+        "ejemplo": "Salón (Fuentes I, V); (3) anunciada 9 de mayo de 1680. Manuel Vallejo. Corral del Príncipe (Fuentes V); (4) 13 de mayo de 1680. Manuel Vallejo. Representación palaciega (Fuentes I); (5) 25 de diciembre de 1683. Manuel Vallejo. Palacio (Fuentes V); (6) 23 de julio de 1684? (fecha probablemente equivocada). Manuel Vallejo y otra compañía sin especificar. Representación palaciega (Fuentes I).",
+        "confianza": "alto"
+      },
+      {
+        "patron": "[FECHA]. [NOMBRE_COMPLETO]. [NOMBRE] ([NOMBRE] V). [NOMBRE] desconocida, nueva en [AÑO].",
+        "ejemplo": "26 de julio de 1685. Manuel de Mosquera. Palacio (Fuentes V). Comedia desconocida, nueva en 1685.",
+        "confianza": "alto"
+      }
+    ],
+    "fecha": [],
+    "lugar": [],
+    "compañia": [],
+    "mecenas": [],
+    "obra": []
+  },
+  "ejemplos_frases": [
+    {
+      "texto": "Polígono Los Llanos, nave 6. Humanes. Madrid",
+      "linea": 54,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": false,
+        "obra": false
+      }
+    },
+    {
+      "texto": "En este volumen de la serie de Fuentes para la historia del teatro en España, sacamos los títulos de las obras teatrales publicados en seis tomos anteriores, Fuentes I, IV, V, VI, X y XI, los ponemos en orden alfabético y tratamos de identificar las piezas. Los datos sobre representaciones palaciegas que publicamos en Fuentes I provienen del legajo 666 del Archivo del Palacio Real. Los cuatro tomos de Fuentes IV, V, VI y XI forman un catálogo de los documentos del Archivo Municipal de Madrid que tratan de los corrales de comedias desde 1650 hasta 1719; en el tomo III sacamos a la luz los documentos de la época 1600 a 1650, pero en aquellos años no aparece en la documentación ningún título de comedia. La gran mayoría de estos documentos son del Archivo de Secretaría. También incluimos aquí el único dato referente a una representación que se encuentra en Fuentes X y que cae dentro de los límites cronológicos del presente tomo. Omitimos las escasas referencias a comedias en Fuentes II, nuestra edición del manuscrito titulado Genealogía, origen y noticias de los comediantes de España, porque estos datos no se refieren a representaciones de las obras mencionadas.",
+      "linea": 63,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Estamos muy en deuda con los archiveros y bibliotecarios de las instituciones donde hemos trabajado con más frecuencia: en Madrid, el Archivo del Palacio Real, el Archivo Municipal, y la Biblioteca Nacional; en Inglaterra, la British Library, y las bibliotecas de la Universidad de Londres y de Westfield College. Pero, éstas aparte, hemos podido contar siempre con la buena voluntad de todos.",
+      "linea": 67,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "N. D. SHERGOLD, Fuentes para la historia del teatro en España, X. Los corrales de comedias de Madrid: 1632-1745. Reparaciones y obras nuevas. Estudio y documentos (en prensa).",
+      "linea": 102,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "—y —, Fuentes para la historia del teatro en España, XIII. Los arrendos de los corrales de comedias de Madrid: 1587-1719. Estudio y documentos. Londres, 1987.",
+      "linea": 110,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Las obras teatrales que estudiamos aquí van en orden alfabético, y bajo cada título ofrecemos una lista cronológica de las representaciones anotadas en las fuentes documentales. Proceden éstas de dos archivos distintos: en el tomo I de estas Fuentes para la historia del teatro en España publicamos los documentos que formaban el legajo 666 del Archivo del Palacio Real, y los tomos IV-VI y X-XI son un catálogo de los documentos del Archivo de Secretaría de la Municipalidad de Madrid, y abarcan los años 1650 a 1719.",
+      "linea": 117,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "La gran mayoría de los documentos palaciegos se refieren a representaciones en los palacios reales de Madrid, el Alcázar y el Buen Retiro, aunque también hay datos sobre festejos reales en otros palacios, y en Valladolid y Toledo. En cuanto al antiguo Alcázar de Madrid, denominado «Palacio» en la documentación, hay datos acerca de representaciones privadas en el Cuarto del Rey y el Cuarto de la Reina, y privadas y públicas en la Armería, la Pieza de las Audiencias y sobre todo en el Salón, o Salón dorado. La mayoría de los datos acerca de representaciones en el Buen Retiro se refieren al Coliseo, pero también se hacían comedias en el Cuarto del Rey, el de la Reina, y el de Príncipes, y en el Patinejo, Saloncete, Saloncillo y Salón de los Reinos. Especificamos en las listas el lugar de la representación, tal como aparece en la documentación: «Buen Retiro, Coliseo», «Palacio [lo sea, el Alcázar]», Salón», etcétera. Cuando se trata de una representación regia sin especificar dónde se efectuaba, la llamamos «representación palaciega». En algunas ocasiones, después de haberse estrenado una obra palaciega de gran aparato, el Rey permitió que el arrendador de los corrales de comedias se encargara del teatro; estas representaciones «al pueblo» también van anotadas aquí en las listas cronológicas.",
+      "linea": 119,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Muchos de los datos sacados de los documentos del Archivo Municipal tienen su origen en estas representaciones palaciegas. Como ya hemos explicado en tomos anteriores, el Rey solía mandar que las compañías teatrales que actuaban en los corrales de comedias se presentasen en palacio, o para representar privadamente ante los Reyes —los llamados «particulares»— o para ensayar y finalmente representar una obra de espectáculo destinada a festejar un acontecimiento regio: el cumpleaños del Rey.",
+      "linea": 121,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Para proteger su inversión financiera en el arriendo teatral, el arrendador solía encargar a un notario un documento dando fe de estas actuaciones palaciegas; a veces el notario daba detalles también de la obra teatral anunciada en el corral, que los actores no habían podido representar por haber sido llamados a palacio. A base de estos papeles notariales, llamados \"bajas\" en la época, el arrendador pedía un descuento de la suma que pagaba por el derecho a disfrutar de los ingresos de las representaciones al público en los corrales de comedias.1 Los libros de cuentas del arrendador, donde se anotaban las obras representadas, los ingresos y los gastos, eran su propiedad particular, y por eso no se conservan hoy en día en el Archivo Municipal. En 1706 empezó una época de intervención por parte de Madrid en el arriendo de los corrales de comedias,2 y los primeros libros del producto y gastos conservados son de 1708-1709 (Fuentes XI, docs. núms. 54 y 55, pág. 108). Antes de 1708, se han conservado sólo extractos de los libros de cuenta de los arrendadores, por ejemplo de 1695-1696 (Fuentes VI, págs. 57-59, y doc. núm. 66 [o], págs. 194-207), que contienen datos semejantes de títulos de comedias, ingresos y gastos; estos datos entran también dentro de nuestra lista cronológica de representaciones.",
+      "linea": 125,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Proviniendo como provienen de fuentes tan distintas, no es de extrañar que la evidencia que ofrecen estos datos sea de vez en cuando confusa, si no contradictoria. Cuando el notario redactaba el documento de descuento, a veces ignoraba el título preciso de la obra teatral que iba a representarse en el teatro palaciego, o se confundía entre ensayo y representación; pero en cuanto a la obra cuya representación en el corral era necesario posponer, se encontraba en un terreno más estable, por poder referirse a los carteles que anunciaban la comedia. En cuanto a los pagos de comedias palaciegas, si se efectuaban inmediatamente después de la representación, es muy posible que el título fuera exacto, pero sabemos por las peticiones de los autores de comedias que, a veces, tenían que esperar muchos meses antes de recibir una libranza; en 1648, por ejemplo, Antonio García de Prado pidió el pago de cinco comedias representadas en 1643 (Fuentes I, doc. núm. 17, págs. 51-52). En 1686 el Conde de Monterrey comenta las dificultades causadas por los pagos tardíos, indicando que causa da confusión de no saber yo los días en que se representaron y por que compañías (Fuentes I, doc. núm. 85 [a], pág. 169). Esta confusión se patentiza en dos listas de representaciones hechas en 1684-1685 por la compañía de Manuel de Mosquera; aunque tratan evidentemente de una serie de actuaciones que cubren más o menos los mismos meses, hay bastantes discrepancias de fechas y títulos (Fuentes I, doc. núm. 75, págs. 154-157). Esta confusión se origina en la redacción a",
+      "linea": 126,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": true,
+        "obra": true
+      }
+    },
+    {
+      "texto": "La confrontación de los datos que provienen de los certificados de descuentos con los que se desprenden de los pagos a los autores de comedias por las representaciones palaciegas revela otros tipos de confusiones. Los certificados notariales y los documentos palaciegos pueden, por ejemplo, ofrecer evidencia contradictoria en cuanto al lugar de la representación. El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I. Puede que las dos fuentes registren fechas al parecer contradictorias. Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio. Es poco probable que dos compañías distintas hubiesen interpretado la misma comedia dos días seguidos, pero, sin la corroboración de otras fuentes distintas e independientes, es imposible decir cuál de las dos fuentes es correcta; es posible, claro está, que las dos compañías de actores se hubiesen combinado para efectuar la representación, tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187) y no una obra ya de repertorio. En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680, y de El rico hombre de Alcalá el día 15, pero según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12, y no se registra ninguna representación para el día 15. En este caso, es probable que los documentos del Archivo del Palacio Real sean más fiables que el certificado notarial.",
+      "linea": 134,
+      "elementos": {
+        "fecha": true,
+        "compañia": true,
+        "lugar": true,
+        "obra": true
+      }
+    },
+    {
+      "texto": "A veces se registran representaciones de dos comedias el mismo día, tal como pasa el 9 de enero de 1681, cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso, y, según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea. Es obvio que hay que proceder con prudencia al interpretar la evidencia de las fuentes documentales en esta ocasión, aunque la representación de dos comedias el mismo día no sea desconocida. En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope, y el certificado del escribano dice que «bi entrar dicha compañia en el Salon a las tres y media poco mas o menos para representar dichas comedias». Se ve que, aunque existen discrepancias en cuanto al lugar de las representaciones, el escribano no se extraña, al parecer, de que una compañía hiciese dos actuaciones el mismo día. En 1684 nos encontramos con otro problema parecido, cuando Fuentes I ofrece",
+      "linea": 135,
+      "elementos": {
+        "fecha": true,
+        "compañia": true,
+        "lugar": true,
+        "obra": true
+      }
+    },
+    {
+      "texto": "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio, y de El maestro de danzar el día 26, datos que están en conflicto con los de Fuentes V, según los cuales las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre. En este caso podemos estar casi seguros de que la fuente documental de Fuentes V es correcta, no sólo por tratarse de una obra palacíega destinada a celebrar un importante acontecimiento palacíego, sino también por las discrepancias entre días de la semana y fechas anotadas en Fuentes I, doc. núm. 75, pág. 154, n. 82.",
+      "linea": 138,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": false,
+        "obra": true
+      }
+    },
+    {
+      "texto": "Los títulos alternativos dados a las comedias son otra fuente de confusiones. No es difícil identificar Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V. Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor, que la compañía de Vallejo ponía en escena en el Corral de la Cruz el 19 y 20 de enero de 1696 (Fuentes VI); sin embargo, se trata de representaciones de una misma obra teatral. A veces los documentos confunden dos comedias distintas con títulos parecidos: para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar. Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés, demostrando así que el certificado del notario es fiable y que la evidencia del documento de pago no lo es. Hay ocasiones en que la evidencia de una de las fuentes documentales aclara o complementa la de la otra. El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía, pero la evidencia sólo nos permite decir que se hizo antes del 30 de enero de 1688. Confrontando una fuente con otra, es posible deducir que probablemente se deriven de una misma representación.",
+      "linea": 139,
+      "elementos": {
+        "fecha": true,
+        "compañia": true,
+        "lugar": true,
+        "obra": true
+      }
+    },
+    {
+      "texto": "sus bailes y entremeses».3 En la primera mitad del siglo XVII, parece ser que se trataba en realidad de obras recién escritas y nunca estrenadas, pero a partir de 1650 nos encontramos con muchas quejas por parte de los arrendadores alegando la escasez de obras teatrales nuevas. Ya en 1637 alega Juan de Aguilar, a raíz de la guerra de Cataluña, que «por la falta de compañías y autores de comedias y no auer poetas que las hagan con la abundancia y prestesa que han de [de] hacerse», el arriendo no rinde lo que solía (Fuentes XIII, doc. núm. 17 [j, pág. 111). El problema se hace más agudo a medida que avanza el siglo. En su postura al arriendo de 1699-1703, Francisco de Soto Martínez dice que «aunque representan en los corrales son comedias viejas y acaudas de hacer en aquel año o el antecedente por razón de ocuparlas con los ensayos de las fiestas de S.M. y no poder poner comedias nuevas ni cumplir con los ajustes que tienen echos con el arrendamiento» (Fuentes XIII, doc. núm. 42 [c], pág. 165). Quizá por esta razón el convenio entre el Interventor de los teatros y el autor de comedias Manuel de Villaflor, en 1706, obliga a éste a representar nuevas comedias, «las quales han de ser de las que no se hubieren hecho ni representado en esta Corte diez años a esta parte» (Fuentes XI, doc. núm. 33 [a], pág. 87). Este enfoque poco claro del concepto de lo que era una «comedia nueva» ayuda a explicar por qué La devoción del ángel de La Guarda se denomina «comedia nueva» en 1657, y también en el año siguiente de 1658 (Fuentes IV); también quiere decir que no se puede aseverar categóricamente que El marido de su hermana, representada el 11 de octubre de 1663 (Fuentes IV), no puede ser la comedia de Juan Bautista de Villegas, que data de antes de febrero de 1623 (Fuentes I).",
+      "linea": 147,
+      "elementos": {
+        "fecha": true,
+        "compañia": true,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "desaparecido totalmente. Los tomos de comedias se compraban, en la gran mayoría de los casos, para ser leídas activamente, no para consignarse a las estanterías de una biblioteca; la enorme producción de comedias sueltas, que sigue hasta muy avanzado el siglo XIX, atestigua la popularidad de la lectura de comedias, y la insaciabilidad del mercado indica que una suelta se consideraba como una edición efímera, casi de la misma manera que los romances que vendían los ciegos por las calles. Solamente en años recientes se ha emprendido el estudio científico de estas ediciones, esfuerzo atestiguado por los catálogos de colecciones de comedias sueltas que están apareciendo ahora, y por la atención dedicada a ellas por bibliógrafos serios tales como Edward M. Wilson y Don W. Cruickshank.* Pero nunca vamos a tener una bibliografía completa de la producción entera de textos dramáticos en la España de los siglos XVI, XVII y XVIII.",
+      "linea": 159,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": false,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Además del problema de variantes de título, los manuscritos dan lugar a otros problemas. Muchos de los que se conservan hoy en día son copias posteriores. A veces pertenecieron a un autor de comedias, que las modifica según su enfoque de las necesidades teatrales; en otras ocasiones las modificaciones reflejan los cambios necesarios para la puesta en escena en las tablas de un corral de comedias de una obra teatral concebida para representarse originariamente en un teatro palaciego.",
+      "linea": 173,
+      "elementos": {
+        "fecha": false,
+        "compañia": false,
+        "lugar": true,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Debemos hacer constar especialmente las valiosas orientaciones y ayuda en problemas bibliográficos tocantes a las obras de Calderón que nos dio Edward M. Wilson en la época cuando por primera vez empezamos a trabajar sobre este tema. Con referencia a Bances Candamo, pudimos entonces contar con los extensos conocimientos de Duncan W. Moir. La muerte de estos dos amigos y eruditos ha empobrecido notablemente este campo de investigación, y queremos señalar aquí nuestras deudas para con ellos. Con su ayuda, y la de otros amigos y colegas, hemos podido ensanchar el terreno bibliográfico a nuestro alcance. Señalamos en particular a Arthur L.-F. Askins, Cecilia Bainton, Don W. Cruickshank, Florian Smieja, Carole L. Bingham Kirby y A. Robert Lauer. A todos, nuestro profundo agradecimiento por la gran ayuda que tan generosamente nos han concedido al ser consultados sobre distintos problemas bibliográficos o de autoría.",
+      "linea": 182,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": false,
+        "obra": false
+      }
+    },
+    {
+      "texto": "ARTIGAS, MIGUEL y ENRIQUE SÁNCHEZ REYES. Catálogos de la Biblioteca de Menéndez Pelayo. Vol. I. Manuscritos. Santander, 1957.",
+      "linea": 321,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": false,
+        "obra": false
+      }
+    },
+    {
+      "texto": "Teatro de los theatros de los passados y presentes siglos. Prólogo, edición y notas de Duncan W. Moir. Londres, 1970.",
+      "linea": 330,
+      "elementos": {
+        "fecha": false,
+        "compañia": true,
+        "lugar": false,
+        "obra": false
+      }
+    }
+  ]
+}

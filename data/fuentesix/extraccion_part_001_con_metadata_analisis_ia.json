@@ -1,0 +1,884 @@
+{
+  "metadata": {
+    "fecha_generacion": "2025-12-05T13:29:57.403139",
+    "total_analisis": 27,
+    "version_sistema": "1.0.0"
+  },
+  "analisis": [
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_1",
+      "fecha_analisis": "2025-12-05T13:29:57.403072",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El Pastor Fido",
+        "fecha": "22 de mayo de 1687",
+        "compañia": "compañía de Agustín Manuel",
+        "lugar": "Saloncillo del Buen Retiro"
+      },
+      "frases_originales": [
+        "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I."
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Fuentes V menciona Saloncillo del Buen Retiro, Fuentes I menciona Saloncete. Ambas son salas del Buen Retiro."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Fuentes V menciona Saloncillo del Buen Retiro, Fuentes I menciona Saloncete. Ambas son salas del Buen Retiro.",
+          "confianza": "medio"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_2",
+      "fecha_analisis": "2025-12-05T13:29:57.403083",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El Mariscal de Virón",
+        "fecha": "3 de octubre de 1685",
+        "compañia": "compañía de Rosendo López",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio."
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Fuentes V dice 3 de octubre con compañía de Rosendo López. Fuentes I dice 4 de octubre con compañía de Manuel de Mosquera. Posiblemente misma representación con datos contradictorios."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Fuentes V dice 3 de octubre con compañía de Rosendo López. Fuentes I dice 4 de octubre con compañía de Manuel de Mosquera. Posiblemente misma representación con datos contradictorios.",
+          "confianza": "medio"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_3",
+      "fecha_analisis": "2025-12-05T13:29:57.403086",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El Mariscal de Virón",
+        "fecha": "4 de octubre de 1685",
+        "compañia": "compañía de Manuel de Mosquera",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio."
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Fuentes I menciona esta fecha y compañía. Puede ser la misma representación que Fuentes V fecha el 3 de octubre."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Fuentes I menciona esta fecha y compañía. Puede ser la misma representación que Fuentes V fecha el 3 de octubre.",
+          "confianza": "medio"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_4",
+      "fecha_analisis": "2025-12-05T13:29:57.403089",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "La profetisa Casandra",
+        "fecha": "21 de septiembre de 1685",
+        "compañia": "compañías combinadas",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág. 187)"
+      ],
+      "interpretaciones": [
+        "Obra de espectáculo proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón. Representada por compañías combinadas."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_5",
+      "fecha_analisis": "2025-12-05T13:29:57.403091",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "La garza de Portugal",
+        "fecha": "12 de diciembre de 1680",
+        "compañia": "compañía de Jerónimo García",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680"
+      ],
+      "interpretaciones": [
+        "Según Fuentes I. Fuentes V no registra esta representación para esta fecha."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_6",
+      "fecha_analisis": "2025-12-05T13:29:57.403093",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El rico hombre de Alcalá",
+        "fecha": "12 de diciembre de 1680",
+        "compañia": "compañía de Jerónimo García",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "según Fuentes V, la compañía de García hizo El rico hombre de Alcalá el día 12"
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Según Fuentes V, la compañía de García hizo esta obra el día 12. Fuentes I menciona El rico hombre de Alcalá el día 15. Probablemente Fuentes V es más fiable."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Según Fuentes V, la compañía de García hizo esta obra el día 12. Fuentes I menciona El rico hombre de Alcalá el día 15. Probablemente Fuentes V es más fiable.",
+          "confianza": "alto"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_7",
+      "fecha_analisis": "2025-12-05T13:29:57.403096",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El rico hombre de Alcalá",
+        "fecha": "15 de diciembre de 1680",
+        "compañia": "compañía de Jerónimo García",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "y de El rico hombre de Alcalá el día 15"
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Según Fuentes I. Fuentes V no registra representación para el día 15. Probablemente es menos fiable."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Según Fuentes I. Fuentes V no registra representación para el día 15. Probablemente es menos fiable.",
+          "confianza": "bajo"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "bajo",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 134,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_8",
+      "fecha_analisis": "2025-12-05T13:29:57.403097",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El príncipe prodigioso",
+        "fecha": "9 de enero de 1681",
+        "compañia": "compañía de Jerónimo García",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "cuando, según Fuentes I, Jerónimo García representó El príncipe prodigioso"
+      ],
+      "interpretaciones": [
+        "Según Fuentes I. Fuentes V menciona otra obra (El alcalde de Zalamea) el mismo día por la misma compañía. Posiblemente dos comedias el mismo día."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_9",
+      "fecha_analisis": "2025-12-05T13:29:57.403099",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El alcalde de Zalamea",
+        "fecha": "9 de enero de 1681",
+        "compañia": "compañía de Jerónimo García",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "según Fuentes V, la misma compañía hizo el mismo día en Palacio una representación de El alcalde de Zalamea"
+      ],
+      "interpretaciones": [
+        "Según Fuentes V. Fuentes I menciona otra obra (El príncipe prodigioso) el mismo día. Posiblemente dos comedias el mismo día."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_10",
+      "fecha_analisis": "2025-12-05T13:29:57.403101",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El monstruo de los jardines",
+        "fecha": "14 de febrero de 1695",
+        "compañia": "compañía de Damián Polope",
+        "lugar": "Cuarto del Rey"
+      },
+      "frases_originales": [
+        "En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey"
+      ],
+      "interpretaciones": [
+        "Misma compañía representó dos obras el mismo día en diferentes lugares del palacio. El certificado menciona que la compañía entró en el Salón a las tres y media."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_11",
+      "fecha_analisis": "2025-12-05T13:29:57.403103",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "Cuando no se aguarda",
+        "fecha": "14 de febrero de 1695",
+        "compañia": "compañía de Damián Polope",
+        "lugar": "Cuarto de la Reina"
+      },
+      "frases_originales": [
+        "y de Cuando no se aguarda en el de la Reina, ambas por la compañía de Damián Polope"
+      ],
+      "interpretaciones": [
+        "Misma compañía representó dos obras el mismo día en diferentes lugares del palacio."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 135,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_12",
+      "fecha_analisis": "2025-12-05T13:29:57.403105",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "Las armas de la hermosura",
+        "fecha": "23 de julio de 1684",
+        "compañia": "compañía de Manuel Vallejo",
+        "lugar": ""
+      },
+      "frases_originales": [
+        "evidencia incierta sobre la representación por la compañía de Manuel Vallejo y otra sin especificar de Las armas de la hermosura el 23 de julio"
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes para fechas similares."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes para fechas similares.",
+          "confianza": "bajo"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "bajo",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 138,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_13",
+      "fecha_analisis": "2025-12-05T13:29:57.403107",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El maestro de danzar",
+        "fecha": "26 de julio de 1684",
+        "compañia": "compañía de Manuel Vallejo",
+        "lugar": ""
+      },
+      "frases_originales": [
+        "y de El maestro de danzar el día 26"
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes (El mérito es la corona) para la misma fecha."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Fuentes I menciona esta representación. Fuentes V tiene datos diferentes (El mérito es la corona) para la misma fecha.",
+          "confianza": "bajo"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "bajo",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 138,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_14",
+      "fecha_analisis": "2025-12-05T13:29:57.403109",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El mérito es la corona",
+        "fecha": "26 de julio de 1684",
+        "compañia": "compañía de Manuel de Vallejo y compañía de Manuel de Mosquera",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "las compañías de Manuel de Vallejo y Manuel de Mosquera representaron juntos El mérito es la corona el día 26 para celebrar el santo de la Reina Madre"
+      ],
+      "interpretaciones": [
+        "Para celebrar el santo de la Reina Madre. Fuentes V es más fiable según los autores. Fuentes I tiene discrepancias."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 138,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_15",
+      "fecha_analisis": "2025-12-05T13:29:57.403111",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "Psiquis y Cupido",
+        "fecha": "3 de diciembre de 1679",
+        "compañia": "compañía de Manuel Vallejo y compañía de José de Prado",
+        "lugar": ""
+      },
+      "frases_originales": [
+        "Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V"
+      ],
+      "interpretaciones": [
+        "También conocida como 'Ni amor se libra de amor' según Fuentes V."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_16",
+      "fecha_analisis": "2025-12-05T13:29:57.403113",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "Pitias y Damón",
+        "fecha": "24 de febrero de 1683",
+        "compañia": "compañía de Matías de Castro",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor"
+      ],
+      "interpretaciones": [
+        "También conocida como 'La amistad vence el rigor' según Fuentes VI."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_17",
+      "fecha_analisis": "2025-12-05T13:29:57.403115",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "Los tres mayores prodigios",
+        "fecha": "25 de agosto de 1687",
+        "compañia": "",
+        "lugar": "Buen Retiro"
+      },
+      "frases_originales": [
+        "para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar"
+      ],
+      "interpretaciones": [
+        "Discrepancia detectada: DISCREPANCIA: Fuentes I menciona este título. Fuentes V tiene 'Los tres mayores imperios' para la misma fecha. El manuscrito 14.940 confirma que es la obra de Pablo Polope y Valdés."
+      ],
+      "discrepancias": [
+        {
+          "tipo": "general",
+          "descripcion": "DISCREPANCIA: Fuentes I menciona este título. Fuentes V tiene 'Los tres mayores imperios' para la misma fecha. El manuscrito 14.940 confirma que es la obra de Pablo Polope y Valdés.",
+          "confianza": "bajo"
+        }
+      ],
+      "patrones_detectados": [],
+      "confianza": "bajo",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_18",
+      "fecha_analisis": "2025-12-05T13:29:57.403117",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "Los tres mayores imperios",
+        "fecha": "25 de agosto de 1687",
+        "compañia": "compañía de Simón Aguado y compañía de Agustín Manuel",
+        "lugar": "Coliseo del Buen Retiro"
+      },
+      "frases_originales": [
+        "Para el mismo día, Fuentes V tiene Los tres mayores imperios, representada en el Coliseo por las compañías de Simón Aguado y Agustín Manuel. En este caso, la evidencia del manuscrito 14.940 de la Biblioteca Nacional confirma sin lugar a dudas que se trata de la obra de Pablo Polope y Valdés"
+      ],
+      "interpretaciones": [
+        "El manuscrito 14.940 de la Biblioteca Nacional confirma que es la obra de Pablo Polope y Valdés. Fuentes V es más fiable."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "representacion",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_representacion_19",
+      "fecha_analisis": "2025-12-05T13:29:57.403120",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "obra_titulo": "El alba y el sol",
+        "fecha": "6 de enero de 1688",
+        "compañia": "compañía de Simón Aguado",
+        "lugar": "Palacio"
+      },
+      "frases_originales": [
+        "El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía"
+      ],
+      "interpretaciones": [
+        "Fuentes VI menciona Palacio. Fuentes I menciona Cuarto de la Reina. Probablemente misma representación."
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "medio",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "pagina_pdf": 139,
+        "version_extraccion": "1.0.0"
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_1",
+      "fecha_analisis": "2025-12-05T13:29:57.403123",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Alcázar de Madrid",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Alcázar de Madrid"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Palacio",
+          "Alcázar"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_2",
+      "fecha_analisis": "2025-12-05T13:29:57.403126",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Buen Retiro"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Buen Retiro",
+          "Palacio del Buen Retiro"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_3",
+      "fecha_analisis": "2025-12-05T13:29:57.403128",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Saloncillo del Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Saloncillo del Buen Retiro"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Saloncillo",
+          "Saloncete"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_4",
+      "fecha_analisis": "2025-12-05T13:29:57.403130",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Saloncete del Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Saloncete del Buen Retiro"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Saloncete",
+          "Saloncillo"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_5",
+      "fecha_analisis": "2025-12-05T13:29:57.403131",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Coliseo del Buen Retiro",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Coliseo del Buen Retiro"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Coliseo",
+          "Buen Retiro, Coliseo"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_6",
+      "fecha_analisis": "2025-12-05T13:29:57.403133",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Cuarto del Rey",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Cuarto del Rey"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Cuarto del Rey"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_7",
+      "fecha_analisis": "2025-12-05T13:29:57.403135",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Cuarto de la Reina",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Cuarto de la Reina"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Cuarto de la Reina"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    },
+    {
+      "tipo": "analisis_ia_fuentes_ix",
+      "tipo_registro": "lugar",
+      "registro_id": "temp_FUENTES_IX_1_part_001_ALL_PAGES_texto_extraido.txt_lugar_8",
+      "fecha_analisis": "2025-12-05T13:29:57.403136",
+      "fuente_ia": "sistema_extraccion_inteligente",
+      "version_ia": "1.0.0",
+      "datos_extraidos": {
+        "nombre": "Salón",
+        "tipo": "palacio",
+        "region": "Comunidad de Madrid"
+      },
+      "frases_originales": [],
+      "interpretaciones": [
+        "Lugar identificado: Salón"
+      ],
+      "discrepancias": [],
+      "patrones_detectados": [],
+      "confianza": "alto",
+      "contexto_adicional": {
+        "archivo_fuente": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "variantes": [
+          "Salón",
+          "Salón dorado"
+        ]
+      },
+      "archivo_fuente": null,
+      "pagina_pdf": null,
+      "linea_texto": null
+    }
+  ]
+}

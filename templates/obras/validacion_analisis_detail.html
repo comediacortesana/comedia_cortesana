@@ -1,0 +1,330 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Validar Análisis - {{ archivo }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .sintesis-item {
+        border-left: 4px solid #007bff;
+        transition: all 0.3s;
+    }
+    .sintesis-item:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .sintesis-item.validado {
+        border-left-color: #28a745;
+        background-color: #f8fff9;
+    }
+    .sintesis-item.rechazado {
+        border-left-color: #dc3545;
+        background-color: #fff8f8;
+    }
+    .confianza-alta { color: #0066cc; }
+    .confianza-media { color: #ff9900; }
+    .confianza-baja { color: #cc0000; }
+    .frase-item {
+        padding: 0.5rem;
+        margin: 0.25rem 0;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    .datos-json {
+        max-height: 300px;
+        overflow-y: auto;
+        font-size: 0.85rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    <i class="fas fa-check-circle text-primary"></i>
+                    Validar Análisis: {{ metadata_archivo.archivo_fuente|truncatechars:50 }}
+                </h1>
+                <a href="{% url 'validacion_analisis_list' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+            
+            <!-- Estadísticas -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ total_items }}</h5>
+                            <p class="card-text text-muted mb-0">Total Items</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-info">{{ representaciones|length }}</h5>
+                            <p class="card-text text-muted mb-0">Representaciones</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">{{ obras|length }}</h5>
+                            <p class="card-text text-muted mb-0">Obras</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">{{ lugares|length }}</h5>
+                            <p class="card-text text-muted mb-0">Lugares</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Representaciones -->
+            {% if representaciones %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-theater-masks"></i>
+                        Representaciones ({{ representaciones|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for rep in representaciones %}
+                    <div class="sintesis-item card mb-3 {% if rep.validacion.estado == 'validado' %}validado{% elif rep.validacion.estado == 'rechazado' %}rechazado{% endif %}" 
+                         id="item-{{ rep.id_temporal }}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="flex-grow-1">
+                                    <h6 class="card-title">
+                                        Representación #{{ forloop.counter }}
+                                        {% if rep.validacion.estado %}
+                                        <span class="badge {% if rep.validacion.estado == 'validado' %}bg-success{% else %}bg-danger{% endif %}">
+                                            {{ rep.validacion.estado|title }}
+                                        </span>
+                                        {% endif %}
+                                    </h6>
+                                    
+                                    <!-- Síntesis en frases -->
+                                    <div class="mt-2">
+                                        {% for frase in rep.frases %}
+                                        <div class="frase-item">
+                                            {{ frase }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    
+                                    <!-- Referencia PDF -->
+                                    {% if rep.pagina_pdf %}
+                                    <div class="mt-2">
+                                        <a href="/obras/pagina-pdf/{{ rep.pagina_pdf }}/" 
+                                           target="_blank"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-pdf"></i>
+                                            Ver Página {{ rep.pagina_pdf }} del PDF
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <!-- Texto original -->
+                                    {% if rep.texto_original %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">
+                                            <strong>Texto original:</strong> 
+                                            <em>{{ rep.texto_original|truncatewords:30 }}</em>
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    <!-- Datos JSON (colapsable) -->
+                                    <div class="mt-3">
+                                        <button class="btn btn-sm btn-outline-secondary" 
+                                                type="button" 
+                                                data-bs-toggle="collapse" 
+                                                data-bs-target="#json-{{ rep.id_temporal }}">
+                                            <i class="fas fa-code"></i>
+                                            Ver Datos JSON
+                                        </button>
+                                        <div class="collapse mt-2" id="json-{{ rep.id_temporal }}">
+                                            <div class="card card-body datos-json">
+                                                <pre>{{ rep.datos_json|pprint }}</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Botones de acción -->
+                                <div class="ms-3">
+                                    {% if not rep.validacion.estado %}
+                                    <div class="btn-group-vertical">
+                                        <button class="btn btn-success btn-sm validar-btn" 
+                                                data-tipo="representacion"
+                                                data-id="{{ rep.id_temporal }}"
+                                                data-archivo="{{ archivo }}">
+                                            <i class="fas fa-check"></i>
+                                            Validar
+                                        </button>
+                                        <button class="btn btn-danger btn-sm rechazar-btn"
+                                                data-tipo="representacion"
+                                                data-id="{{ rep.id_temporal }}"
+                                                data-archivo="{{ archivo }}">
+                                            <i class="fas fa-times"></i>
+                                            Rechazar
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-muted small">
+                                        {% if rep.validacion.usuario %}
+                                        Validado por: {{ rep.validacion.usuario }}<br>
+                                        {% endif %}
+                                        {% if rep.validacion.fecha %}
+                                        Fecha: {{ rep.validacion.fecha|slice:":16" }}
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Obras -->
+            {% if obras %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-book"></i>
+                        Obras ({{ obras|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for obra in obras %}
+                    <div class="sintesis-item card mb-3">
+                        <div class="card-body">
+                            <!-- Similar estructura a representaciones -->
+                            <h6>Obra #{{ forloop.counter }}</h6>
+                            {% for frase in obra.frases %}
+                            <div class="frase-item">{{ frase }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Lugares -->
+            {% if lugares %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Lugares ({{ lugares|length }})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% for lugar in lugares %}
+                    <div class="sintesis-item card mb-3">
+                        <div class="card-body">
+                            <!-- Similar estructura -->
+                            <h6>Lugar #{{ forloop.counter }}</h6>
+                            {% for frase in lugar.frases %}
+                            <div class="frase-item">{{ frase }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal para comentarios -->
+<div class="modal fade" id="comentarioModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Añadir Comentario</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="comentarioTexto" rows="3" placeholder="Comentario opcional..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="confirmarAccion">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let accionPendiente = null;
+
+document.querySelectorAll('.validar-btn, .rechazar-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        accionPendiente = {
+            tipo: this.dataset.tipo,
+            id: this.dataset.id,
+            archivo: this.dataset.archivo,
+            accion: this.classList.contains('validar-btn') ? 'validar' : 'rechazar'
+        };
+        
+        const modal = new bootstrap.Modal(document.getElementById('comentarioModal'));
+        modal.show();
+    });
+});
+
+document.getElementById('confirmarAccion').addEventListener('click', function() {
+    if (!accionPendiente) return;
+    
+    const comentario = document.getElementById('comentarioTexto').value;
+    
+    fetch('{% url "validar_item" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            ...accionPendiente,
+            comentario: comentario
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Error: ' + (data.error || 'Error desconocido'));
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error);
+    });
+    
+    bootstrap.Modal.getInstance(document.getElementById('comentarioModal')).hide();
+    accionPendiente = null;
+    document.getElementById('comentarioTexto').value = '';
+});
+</script>
+{% endblock %}
+
+
+
+
+
+

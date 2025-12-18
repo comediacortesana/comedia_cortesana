@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirma tu registro - Teatro Español del Siglo de Oro</title>
+    <style>
+        /* Estilos inline para compatibilidad con clientes de email */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Crimson Text', 'Source Serif Pro', 'Times New Roman', serif;
+            background-color: #faf9f7;
+            color: #2c2416;
+            line-height: 1.7;
+        }
+        
+        .email-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        .email-header {
+            background-color: #5d4e37;
+            color: #ffffff;
+            padding: 30px 40px;
+            text-align: center;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+        
+        .email-header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+        }
+        
+        .email-header .subtitle {
+            margin-top: 8px;
+            font-size: 14px;
+            font-style: italic;
+            opacity: 0.9;
+            color: #ffffff;
+        }
+        
+        .email-body {
+            padding: 40px 40px;
+            background-color: #ffffff;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            color: #1a1612;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #2c2416;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 35px 0;
+        }
+        
+        .confirm-button {
+            display: inline-block;
+            background-color: #5d4e37;
+            color: #ffffff;
+            padding: 14px 32px;
+            text-decoration: none;
+            border-radius: 2px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-family: 'Crimson Text', serif;
+            transition: background-color 0.2s;
+        }
+        
+        .confirm-button:hover {
+            background-color: #4a3f2d;
+        }
+        
+        .link-fallback {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f7f6f4;
+            border: 1px solid #e0ddd8;
+            border-radius: 3px;
+        }
+        
+        .link-fallback-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #4a4235;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 10px;
+        }
+        
+        .link-fallback-url {
+            font-size: 13px;
+            color: #5d4e37;
+            word-break: break-all;
+            font-family: monospace;
+            line-height: 1.6;
+        }
+        
+        .email-footer {
+            padding: 30px 40px;
+            background-color: #f7f6f4;
+            border-top: 1px solid #e0ddd8;
+            border-bottom-left-radius: 4px;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .footer-text {
+            font-size: 13px;
+            color: #5a5247;
+            text-align: center;
+            line-height: 1.6;
+        }
+        
+        .footer-link {
+            color: #5d4e37;
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #e8e6e3;
+            margin: 30px 0;
+            border: none;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .email-body {
+                padding: 30px 25px;
+            }
+            
+            .email-header {
+                padding: 25px 25px;
+            }
+            
+            .email-header h1 {
+                font-size: 24px;
+            }
+            
+            .confirm-button {
+                padding: 12px 24px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <!-- Header -->
+        <div class="email-header">
+            <h1>🎭 Teatro Español del Siglo de Oro</h1>
+            <div class="subtitle">Sistema de Filtrado y Validación Colaborativa</div>
+        </div>
+        
+        <!-- Body -->
+        <div class="email-body">
+            <div class="greeting">¡Hola!</div>
+            
+            <div class="message">
+                Gracias por registrarte en nuestro sistema de filtrado de obras del teatro español del Siglo de Oro. Estamos encantados de tenerte como parte de nuestra comunidad académica.
+            </div>
+            
+            <div class="message">
+                Para completar tu registro y comenzar a colaborar en la validación y análisis de obras, por favor confirma tu cuenta haciendo clic en el siguiente botón:
+            </div>
+            
+            <div class="button-container">
+                <a href="{{ .ConfirmationURL }}" class="confirm-button">
+                    Confirmar mi cuenta
+                </a>
+            </div>
+            
+            <div class="link-fallback">
+                <div class="link-fallback-title">Si el botón no funciona, copia y pega este enlace en tu navegador:</div>
+                <div class="link-fallback-url">{{ .ConfirmationURL }}</div>
+            </div>
+            
+            <hr class="divider">
+            
+            <div class="message" style="font-size: 14px; color: #5a5247; font-style: italic;">
+                Si no te registraste en este sitio, puedes ignorar este email de forma segura. Tu cuenta no será creada hasta que confirmes tu dirección de correo electrónico.
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="email-footer">
+            <div class="footer-text">
+                <strong>Teatro Español del Siglo de Oro</strong><br>
+                Sistema de Filtrado y Validación Colaborativa<br><br>
+                <a href="https://comediacortesana.github.io/comedia_cortesana/" class="footer-link">
+                    Visita nuestra plataforma
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

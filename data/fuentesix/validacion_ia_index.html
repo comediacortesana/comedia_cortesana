@@ -1,0 +1,524 @@
+<!-- 
+    CÓDIGO PARA AÑADIR AL index.html EXISTENTE
+    Sistema de Validación de Análisis de IA
+    Similar a comentarios pero para análisis generados por IA
+-->
+
+<!-- ============================================================================
+     1. AÑADIR ESTILOS CSS (después de los estilos de comentarios)
+     ============================================================================ -->
+<style>
+    /* Estilos para Validación de Análisis IA - Similar a comentarios pero con distintivo IA */
+    .analisis-ia-list {
+        max-height: 600px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    
+    .analisis-ia-item {
+        background: #f8f9fa;
+        border-left: 4px solid #9b59b6; /* Color distintivo para IA */
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        position: relative;
+    }
+    
+    .analisis-ia-item.validado {
+        border-left-color: #27ae60;
+        background: #e8f5e9;
+    }
+    
+    .analisis-ia-item.rechazado {
+        border-left-color: #e74c3c;
+        background: #ffebee;
+    }
+    
+    .analisis-ia-badge {
+        display: inline-block;
+        background: #9b59b6;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
+    
+    .analisis-ia-badge.validado {
+        background: #27ae60;
+    }
+    
+    .analisis-ia-badge.rechazado {
+        background: #e74c3c;
+    }
+    
+    .analisis-ia-frases {
+        margin: 10px 0;
+    }
+    
+    .analisis-ia-frase {
+        padding: 8px;
+        margin: 5px 0;
+        background: white;
+        border-radius: 4px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    .analisis-ia-acciones {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .btn-validar-ia {
+        padding: 8px 16px;
+        background: #27ae60;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    
+    .btn-rechazar-ia {
+        padding: 8px 16px;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+    }
+    
+    .btn-ver-pdf-ia {
+        padding: 8px 16px;
+        background: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+    
+    .btn-validacion-ia-modal {
+        padding: 8px 15px;
+        background: #9b59b6;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        margin-left: 10px;
+    }
+    
+    .btn-validacion-ia-modal:hover {
+        background: #8e44ad;
+    }
+    
+    .analisis-ia-metadata {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+    }
+    
+    .analisis-ia-confianza {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 11px;
+        font-weight: bold;
+        margin-left: 10px;
+    }
+    
+    .confianza-alta {
+        background: #3498db;
+        color: white;
+    }
+    
+    .confianza-media {
+        background: #f39c12;
+        color: white;
+    }
+    
+    .confianza-baja {
+        background: #e74c3c;
+        color: white;
+    }
+</style>
+
+<!-- ============================================================================
+     2. AÑADIR BOTÓN EN LA BARRA SUPERIOR (junto al botón de comentarios)
+     ============================================================================ -->
+<!-- Buscar esta línea y añadir el botón después: -->
+<!-- 
+    <button id="btn-comentarios-global" onclick="mostrarModalComentariosGlobal()" ...>
+        💬 Comentarios
+    </button>
+-->
+
+<!-- Añadir después del botón de comentarios: -->
+<button id="btn-validacion-ia" onclick="mostrarModalValidacionIA()" style="margin-left: 10px; padding: 8px 15px; background: #9b59b6; color: white; border: none; border-radius: 4px; cursor: pointer; position: relative;">
+    🤖 Validación IA
+    <span id="contador-analisis-pendientes" style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;">0</span>
+</button>
+
+<!-- ============================================================================
+     3. AÑADIR MODAL DE VALIDACIÓN IA (después del modal de comentarios)
+     ============================================================================ -->
+<div id="modal-validacion-ia" class="modal-overlay" onclick="cerrarModalValidacionIA(event)">
+    <div class="modal-content" style="max-width: 1200px;" onclick="event.stopPropagation()">
+        <div class="modal-header">
+            <h2>🤖 Validación de Análisis de IA</h2>
+            <button class="modal-close" onclick="cerrarModalValidacionIA()">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-validacion-ia-body">
+            <!-- Contenido dinámico -->
+        </div>
+    </div>
+</div>
+
+<!-- ============================================================================
+     4. AÑADIR FUNCIONES JAVASCRIPT (después de las funciones de comentarios)
+     ============================================================================ -->
+
+<script>
+    // ============================================================================
+    // FUNCIONES DE VALIDACIÓN DE ANÁLISIS IA
+    // ============================================================================
+    
+    // Cargar archivos de síntesis desde Supabase Storage
+    async function cargarArchivosSintesis() {
+        try {
+            // Listar archivos en el bucket 'sintesis' de Supabase Storage
+            const { data, error } = await supabase.storage
+                .from('sintesis')
+                .list('', {
+                    limit: 100,
+                    offset: 0,
+                    sortBy: { column: 'created_at', order: 'desc' }
+                });
+            
+            if (error) {
+                console.error('Error cargando archivos de síntesis:', error);
+                return [];
+            }
+            
+            return data || [];
+        } catch (error) {
+            console.error('Error en cargarArchivosSintesis:', error);
+            return [];
+        }
+    }
+    
+    // Cargar contenido de un archivo de síntesis
+    async function cargarSintesisArchivo(nombreArchivo) {
+        try {
+            const { data, error } = await supabase.storage
+                .from('sintesis')
+                .download(nombreArchivo);
+            
+            if (error) {
+                console.error('Error cargando síntesis:', error);
+                return null;
+            }
+            
+            const texto = await data.text();
+            return JSON.parse(texto);
+        } catch (error) {
+            console.error('Error parseando síntesis:', error);
+            return null;
+        }
+    }
+    
+    // Cargar validaciones desde Supabase
+    async function cargarValidaciones() {
+        try {
+            const { data, error } = await supabase
+                .from('validaciones_analisis')
+                .select('*')
+                .order('fecha_validacion', { ascending: false });
+            
+            if (error) {
+                console.error('Error cargando validaciones:', error);
+                return [];
+            }
+            
+            return data || [];
+        } catch (error) {
+            console.error('Error en cargarValidaciones:', error);
+            return [];
+        }
+    }
+    
+    // Guardar validación en Supabase
+    async function guardarValidacion(archivoSintesis, tipoRegistro, idTemporal, estado, datosJson, comentario = '') {
+        try {
+            if (!usuarioActual) {
+                alert('Debes iniciar sesión para validar análisis');
+                return false;
+            }
+            
+            const { data, error } = await supabase
+                .from('validaciones_analisis')
+                .insert({
+                    archivo_sintesis: archivoSintesis,
+                    tipo_registro: tipoRegistro,
+                    id_temporal: idTemporal,
+                    estado: estado, // 'validado' o 'rechazado'
+                    usuario_id: usuarioActual.id,
+                    comentario: comentario,
+                    datos_json: datosJson,
+                    fecha_validacion: new Date().toISOString()
+                });
+            
+            if (error) {
+                console.error('Error guardando validación:', error);
+                alert('Error al guardar validación: ' + error.message);
+                return false;
+            }
+            
+            return true;
+        } catch (error) {
+            console.error('Error en guardarValidacion:', error);
+            return false;
+        }
+    }
+    
+    // Mostrar modal de validación IA
+    async function mostrarModalValidacionIA() {
+        if (!usuarioActual) {
+            alert('Debes iniciar sesión para validar análisis de IA');
+            return;
+        }
+        
+        const modal = document.getElementById('modal-validacion-ia');
+        const modalBody = document.getElementById('modal-validacion-ia-body');
+        
+        if (!modal || !modalBody) {
+            console.error('Modal de validación IA no encontrado');
+            return;
+        }
+        
+        // Mostrar loading
+        modalBody.innerHTML = '<p style="text-align: center; padding: 40px;">Cargando análisis de IA...</p>';
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Cargar archivos de síntesis
+        const archivos = await cargarArchivosSintesis();
+        const validaciones = await cargarValidaciones();
+        
+        // Crear mapa de validaciones por id_temporal
+        const validacionesMap = {};
+        validaciones.forEach(v => {
+            const key = `${v.archivo_sintesis}_${v.id_temporal}`;
+            validacionesMap[key] = v;
+        });
+        
+        let html = '';
+        
+        if (archivos.length === 0) {
+            html = '<div style="text-align: center; padding: 40px;">';
+            html += '<p style="color: #7f8c8d; margin-bottom: 20px;">No hay archivos de síntesis disponibles.</p>';
+            html += '<p style="color: #7f8c8d; font-size: 14px;">Genera síntesis primero usando el script <code>generar_sintesis_validacion.py</code></p>';
+            html += '</div>';
+        } else {
+            // Mostrar lista de archivos y sus análisis
+            for (const archivo of archivos) {
+                if (!archivo.name.endsWith('_sintesis_validacion.json')) continue;
+                
+                const sintesis = await cargarSintesisArchivo(archivo.name);
+                if (!sintesis) continue;
+                
+                html += `<div style="margin-bottom: 30px; border: 2px solid #9b59b6; border-radius: 8px; padding: 20px; background: #f8f9fa;">`;
+                html += `<h3 style="color: #9b59b6; margin-bottom: 15px;">📄 ${archivo.name}</h3>`;
+                html += `<p style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">`;
+                html += `Archivo fuente: ${sintesis.metadata_archivo?.archivo_fuente || 'Desconocido'}<br>`;
+                html += `Fecha extracción: ${sintesis.metadata_archivo?.fecha_extraccion || 'Desconocida'}<br>`;
+                html += `Total items: ${sintesis.representaciones?.length || 0} representaciones, `;
+                html += `${sintesis.obras?.length || 0} obras, ${sintesis.lugares?.length || 0} lugares`;
+                html += `</p>`;
+                
+                // Mostrar representaciones
+                if (sintesis.representaciones && sintesis.representaciones.length > 0) {
+                    html += `<h4 style="color: #2c3e50; margin: 20px 0 10px 0;">Representaciones (${sintesis.representaciones.length})</h4>`;
+                    html += '<div class="analisis-ia-list">';
+                    
+                    sintesis.representaciones.forEach((rep, index) => {
+                        const validacionKey = `${archivo.name}_${rep.id_temporal}`;
+                        const validacion = validacionesMap[validacionKey];
+                        const estado = validacion?.estado || 'pendiente';
+                        
+                        html += `<div class="analisis-ia-item ${estado}">`;
+                        html += `<span class="analisis-ia-badge ${estado}">`;
+                        html += estado === 'validado' ? '✅ Validado' : estado === 'rechazado' ? '❌ Rechazado' : '🤖 Análisis IA';
+                        html += `</span>`;
+                        
+                        // Confianza
+                        if (rep.confianza) {
+                            const confianzaClass = rep.confianza === 'alto' ? 'confianza-alta' : 
+                                                   rep.confianza === 'medio' ? 'confianza-media' : 'confianza-baja';
+                            html += `<span class="analisis-ia-confianza ${confianzaClass}">`;
+                            html += `Confianza: ${rep.confianza}`;
+                            html += `</span>`;
+                        }
+                        
+                        html += `<div class="analisis-ia-frases">`;
+                        rep.frases.forEach(frase => {
+                            html += `<div class="analisis-ia-frase">${frase}</div>`;
+                        });
+                        html += `</div>`;
+                        
+                        // Referencia PDF
+                        if (rep.pagina_pdf) {
+                            html += `<a href="/obras/pagina-pdf/${rep.pagina_pdf}/" target="_blank" class="btn-ver-pdf-ia">`;
+                            html += `📄 Ver Página ${rep.pagina_pdf} del PDF`;
+                            html += `</a>`;
+                        }
+                        
+                        // Acciones
+                        if (estado === 'pendiente') {
+                            html += `<div class="analisis-ia-acciones">`;
+                            html += `<button class="btn-validar-ia" onclick="validarAnalisisIA('${archivo.name}', 'representacion', '${rep.id_temporal}', 'validado', ${JSON.stringify(rep.datos_json).replace(/'/g, "&#39;")})">`;
+                            html += `✅ Validar`;
+                            html += `</button>`;
+                            html += `<button class="btn-rechazar-ia" onclick="validarAnalisisIA('${archivo.name}', 'representacion', '${rep.id_temporal}', 'rechazado', ${JSON.stringify(rep.datos_json).replace(/'/g, "&#39;")})">`;
+                            html += `❌ Rechazar`;
+                            html += `</button>`;
+                            html += `</div>`;
+                        } else {
+                            html += `<div class="analisis-ia-metadata">`;
+                            html += `Estado: ${estado}<br>`;
+                            if (validacion?.usuario_id) {
+                                html += `Validado por: ${validacion.usuario_id}<br>`;
+                            }
+                            if (validacion?.fecha_validacion) {
+                                html += `Fecha: ${new Date(validacion.fecha_validacion).toLocaleDateString('es-ES')}`;
+                            }
+                            html += `</div>`;
+                        }
+                        
+                        html += `</div>`;
+                    });
+                    
+                    html += '</div>';
+                }
+                
+                html += `</div>`;
+            }
+        }
+        
+        modalBody.innerHTML = html;
+    }
+    
+    // Cerrar modal de validación IA
+    function cerrarModalValidacionIA(event) {
+        if (event && event.target.id !== 'modal-validacion-ia') return;
+        
+        const modal = document.getElementById('modal-validacion-ia');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    }
+    
+    // Validar o rechazar análisis IA
+    async function validarAnalisisIA(archivoSintesis, tipoRegistro, idTemporal, estado, datosJson) {
+        if (!usuarioActual) {
+            alert('Debes iniciar sesión para validar análisis');
+            return;
+        }
+        
+        const comentario = prompt(`¿Añadir comentario sobre esta validación? (opcional)`);
+        
+        const exito = await guardarValidacion(
+            archivoSintesis,
+            tipoRegistro,
+            idTemporal,
+            estado,
+            datosJson,
+            comentario || ''
+        );
+        
+        if (exito) {
+            alert(`Análisis ${estado} correctamente`);
+            // Recargar modal
+            await mostrarModalValidacionIA();
+            // Actualizar contador
+            await actualizarContadorAnalisisPendientes();
+        }
+    }
+    
+    // Actualizar contador de análisis pendientes
+    async function actualizarContadorAnalisisPendientes() {
+        try {
+            const archivos = await cargarArchivosSintesis();
+            const validaciones = await cargarValidaciones();
+            
+            let totalPendientes = 0;
+            
+            for (const archivo of archivos) {
+                if (!archivo.name.endsWith('_sintesis_validacion.json')) continue;
+                
+                const sintesis = await cargarSintesisArchivo(archivo.name);
+                if (!sintesis) continue;
+                
+                const items = [
+                    ...(sintesis.representaciones || []),
+                    ...(sintesis.obras || []),
+                    ...(sintesis.lugares || [])
+                ];
+                
+                items.forEach(item => {
+                    const validacionKey = `${archivo.name}_${item.id_temporal}`;
+                    const validacion = validaciones.find(v => 
+                        `${v.archivo_sintesis}_${v.id_temporal}` === validacionKey
+                    );
+                    
+                    if (!validacion) {
+                        totalPendientes++;
+                    }
+                });
+            }
+            
+            const contador = document.getElementById('contador-analisis-pendientes');
+            if (contador) {
+                if (totalPendientes > 0) {
+                    contador.textContent = totalPendientes;
+                    contador.style.display = 'flex';
+                } else {
+                    contador.style.display = 'none';
+                }
+            }
+        } catch (error) {
+            console.error('Error actualizando contador:', error);
+        }
+    }
+    
+    // Llamar al actualizar contador cuando se carga la página
+    // Añadir esto en window.onload o después de verificar sesión
+    if (typeof window.onload === 'function') {
+        const originalOnload = window.onload;
+        window.onload = async function() {
+            await originalOnload();
+            // Actualizar contador después de cargar
+            setTimeout(() => {
+                actualizarContadorAnalisisPendientes();
+            }, 2000);
+        };
+    }
+</script>
+
+
+
+
+
+

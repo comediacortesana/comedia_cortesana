@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Security-Policy" 
           content="default-src 'self' https://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net; 
                    script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
-                   connect-src 'self' https://kyxxpoewwjixbpcezays.supabase.co wss://kyxxpoewwjixbpcezays.supabase.co;
+                   connect-src 'self' https://kyxxpoewwjixbpcezays.supabase.co wss://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net;
                    style-src 'self' 'unsafe-inline';">
     <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
     <style>
@@ -17,45 +17,62 @@
             box-sizing: border-box;
         }
         
+        /* Importar fuente académica */
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+Pro:wght@400;600;700&display=swap');
+        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
+            font-family: 'Crimson Text', 'Source Serif Pro', 'Times New Roman', serif;
+            background-color: #faf9f7;
             padding: 20px;
+            color: #2c2416;
+            line-height: 1.7;
         }
         
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #ffffff;
+            padding: 40px 50px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid #e8e6e3;
         }
         
         h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
-            font-size: 28px;
+            color: #1a1612;
+            margin-bottom: 15px;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            border-bottom: 2px solid #8b7355;
+            padding-bottom: 12px;
         }
         
         .subtitle {
-            color: #7f8c8d;
-            margin-bottom: 30px;
-            font-size: 14px;
+            color: #5a5247;
+            margin-bottom: 35px;
+            font-size: 15px;
+            font-style: italic;
+            letter-spacing: 0.3px;
         }
         
         .filters-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 5px;
-            margin-bottom: 30px;
+            background: #f7f6f4;
+            padding: 25px 30px;
+            border-radius: 3px;
+            margin-bottom: 35px;
+            border: 1px solid #e0ddd8;
         }
         
         .filters-title {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 15px;
+            color: #3d3428;
+            margin-bottom: 20px;
+            font-family: 'Crimson Text', serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 16px;
         }
         
         .filters-grid {
@@ -73,22 +90,29 @@
         .filter-group label {
             font-size: 13px;
             font-weight: 600;
-            color: #555;
-            margin-bottom: 5px;
+            color: #4a4235;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-size: 12px;
         }
         
         .filter-group input,
         .filter-group select {
-            padding: 8px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 10px 12px;
+            border: 1px solid #c9c4bb;
+            border-radius: 2px;
+            font-size: 15px;
+            font-family: 'Crimson Text', serif;
+            background: #ffffff;
+            transition: border-color 0.2s;
         }
         
         .filter-group input:focus,
         .filter-group select:focus {
             outline: none;
-            border-color: #3498db;
+            border-color: #8b7355;
+            box-shadow: 0 0 0 2px rgba(139, 115, 85, 0.1);
         }
         
         .button-group {
@@ -98,31 +122,35 @@
         }
         
         button {
-            padding: 10px 20px;
+            padding: 11px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 2px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: all 0.2s;
+            font-family: 'Crimson Text', serif;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-size: 13px;
         }
         
         .btn-primary {
-            background-color: #3498db;
-            color: white;
+            background-color: #5d4e37;
+            color: #ffffff;
         }
         
         .btn-primary:hover {
-            background-color: #2980b9;
+            background-color: #4a3f2d;
         }
         
         .btn-secondary {
-            background-color: #95a5a6;
-            color: white;
+            background-color: #8b7355;
+            color: #ffffff;
         }
         
         .btn-secondary:hover {
-            background-color: #7f8c8d;
+            background-color: #6d5a44;
         }
         
         .results-section {
@@ -133,15 +161,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #3498db;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #8b7355;
         }
         
         .results-count {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #3d3428;
+            font-family: 'Crimson Text', serif;
         }
         
         .results-table {
@@ -151,32 +180,37 @@
         }
         
         .results-table thead {
-            background-color: #34495e;
-            color: white;
+            background-color: #5d4e37;
+            color: #ffffff;
         }
         
         .results-table th {
-            padding: 12px 8px;
+            padding: 14px 12px;
             text-align: left;
             font-size: 13px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Crimson Text', serif;
         }
         
         .results-table td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #ecf0f1;
-            font-size: 13px;
+            padding: 12px 12px;
+            border-bottom: 1px solid #e8e6e3;
+            font-size: 15px;
+            font-family: 'Crimson Text', serif;
         }
         
         .results-table tbody tr:hover {
-            background-color: #f8f9fa;
+            background-color: #f7f6f4;
         }
         
         .no-results {
             text-align: center;
-            padding: 40px;
-            color: #95a5a6;
-            font-size: 16px;
+            padding: 50px;
+            color: #8b7355;
+            font-size: 17px;
+            font-style: italic;
         }
         
         .badge {
@@ -462,49 +496,183 @@
         .btn-comentarios-modal:hover {
             background: #2980b9;
         }
+        
+        /* Estilos para Validación de Análisis IA - Similar a comentarios pero con distintivo IA */
+        .analisis-ia-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .analisis-ia-item {
+            background: #f8f9fa;
+            border-left: 4px solid #9b59b6; /* Color distintivo para IA */
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .analisis-ia-item.validado {
+            border-left-color: #27ae60;
+            background: #e8f5e9;
+        }
+        
+        .analisis-ia-item.rechazado {
+            border-left-color: #e74c3c;
+            background: #ffebee;
+        }
+        
+        .analisis-ia-badge {
+            display: inline-block;
+            background: #9b59b6;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        
+        .analisis-ia-badge.validado {
+            background: #27ae60;
+        }
+        
+        .analisis-ia-badge.rechazado {
+            background: #e74c3c;
+        }
+        
+        .analisis-ia-frases {
+            margin: 10px 0;
+        }
+        
+        .analisis-ia-frase {
+            padding: 8px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .analisis-ia-acciones {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-validar-ia {
+            padding: 8px 16px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .btn-rechazar-ia {
+            padding: 8px 16px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .btn-ver-pdf-ia {
+            padding: 8px 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .analisis-ia-metadata {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .analisis-ia-confianza {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .confianza-alta {
+            background: #3498db;
+            color: white;
+        }
+        
+        .confianza-media {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .confianza-baja {
+            background: #e74c3c;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎭 Teatro Español del Siglo de Oro</h1>
-        <p class="subtitle">Filtro de obras, autores, representaciones y lugares</p>
+        <h1>Teatro Español del Siglo de Oro</h1>
+        <p class="subtitle">Catálogo de obras, autores, representaciones y lugares</p>
         
         <!-- Sección de Autenticación -->
-        <div id="auth-section" style="margin-bottom: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px;">
+        <div id="auth-section" style="margin-bottom: 25px; padding: 20px 25px; background: #f7f6f4; border-radius: 3px; border: 1px solid #e0ddd8;">
             <!-- Estado: No autenticado -->
             <div id="login-ui" style="display: none;">
-                <h3 style="margin-bottom: 10px;">🔐 Iniciar Sesión</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                    <input type="email" id="login-email" placeholder="Email" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
-                    <input type="password" id="login-password" placeholder="Contraseña" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
-                    <button onclick="handleLogin()" style="padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Entrar</button>
-                    <button onclick="handleMagicLink()" style="padding: 8px 15px; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer;">Enlace mágico</button>
-                    <button onclick="mostrarRegistro()" style="padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">Registrarse</button>
-                    <button onclick="handleResetPassword()" style="padding: 8px 15px; background: #e67e22; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">¿Olvidaste contraseña?</button>
+                <h3 style="margin-bottom: 15px; font-family: 'Crimson Text', serif; color: #3d3428; font-size: 18px; font-weight: 600;">Iniciar Sesión</h3>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                    <input type="email" id="login-email" placeholder="Email" style="padding: 10px 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
+                    <input type="password" id="login-password" placeholder="Contraseña" style="padding: 10px 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
+                    <button onclick="handleLogin()" style="padding: 11px 24px; background: #5d4e37; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Entrar</button>
+                    <button onclick="handleMagicLink()" style="padding: 11px 24px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Enlace mágico</button>
+                    <button onclick="mostrarRegistro()" style="padding: 11px 24px; background: #6d5a44; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Registrarse</button>
+                    <button onclick="handleResetPassword()" style="padding: 11px 20px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-size: 12px; font-family: 'Crimson Text', serif; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;">¿Olvidaste contraseña?</button>
                 </div>
-                <div style="margin-top: 10px;">
-                    <button onclick="reenviarConfirmacionEmail(document.getElementById('login-email').value)" style="padding: 6px 12px; background: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;" title="Reenviar email de confirmación si no lo recibiste">📧 Reenviar confirmación</button>
+                <div style="margin-top: 12px;">
+                    <button onclick="reenviarConfirmacionEmail(document.getElementById('login-email').value)" style="padding: 8px 16px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-size: 11px; font-family: 'Crimson Text', serif; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;" title="Reenviar email de confirmación si no lo recibiste">Reenviar confirmación</button>
                 </div>
                 
                 <!-- Formulario de registro (oculto por defecto) -->
-                <div id="registro-form" style="display: none; margin-top: 15px; padding: 15px; background: white; border-radius: 4px;">
-                    <h4>Nuevo Usuario</h4>
-                    <input type="text" id="registro-nombre" placeholder="Nombre completo" style="padding: 8px; width: 200px; margin-right: 10px; border-radius: 4px; border: 1px solid #ddd;">
-                    <input type="email" id="registro-email" placeholder="Email" style="padding: 8px; width: 200px; margin-right: 10px; border-radius: 4px; border: 1px solid #ddd;">
-                    <input type="password" id="registro-password" placeholder="Contraseña" style="padding: 8px; width: 200px; margin-right: 10px; border-radius: 4px; border: 1px solid #ddd;">
-                    <button onclick="handleRegistro()" style="padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;">Registrar</button>
-                    <button onclick="ocultarRegistro()" style="padding: 8px 15px; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancelar</button>
+                <div id="registro-form" style="display: none; margin-top: 20px; padding: 20px; background: white; border-radius: 3px; border: 1px solid #e0ddd8;">
+                    <h4 style="font-family: 'Crimson Text', serif; color: #3d3428; margin-bottom: 15px; font-size: 16px; font-weight: 600;">Nuevo Usuario</h4>
+                    <input type="text" id="registro-nombre" placeholder="Nombre completo" style="padding: 10px 12px; width: 200px; margin-right: 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
+                    <input type="email" id="registro-email" placeholder="Email" style="padding: 10px 12px; width: 200px; margin-right: 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
+                    <input type="password" id="registro-password" placeholder="Contraseña" style="padding: 10px 12px; width: 200px; margin-right: 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
+                    <button onclick="handleRegistro()" style="padding: 11px 24px; background: #5d4e37; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Registrar</button>
+                    <button onclick="ocultarRegistro()" style="padding: 11px 24px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Cancelar</button>
                 </div>
             </div>
             
             <!-- Estado: Autenticado -->
             <div id="user-ui" style="display: none;">
-                <span>👤 <strong id="user-name">Usuario</strong></span>
-                <button id="btn-comentarios-global" onclick="mostrarModalComentariosGlobal()" style="margin-left: 10px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; position: relative;">
-                    💬 Comentarios
-                    <span id="contador-comentarios" style="display: none; position: absolute; top: -8px; right: -8px; background: #e74c3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;">0</span>
+                <span style="font-family: 'Crimson Text', serif; color: #3d3428; font-size: 15px;"><strong id="user-name">Usuario</strong></span>
+                <button id="btn-comentarios-global" onclick="mostrarModalComentariosGlobal()" style="margin-left: 12px; padding: 10px 18px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; position: relative; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">
+                    Comentarios
+                    <span id="contador-comentarios" style="display: none; position: absolute; top: -8px; right: -8px; background: #8b4a3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;">0</span>
                 </button>
-                <button onclick="logout()" style="margin-left: 10px; padding: 8px 15px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer;">Salir</button>
+                <button id="btn-validacion-ia" onclick="mostrarModalValidacionIA()" style="margin-left: 12px; padding: 10px 18px; background: #9b59b6; color: white; border: none; border-radius: 2px; cursor: pointer; position: relative; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">
+                    Validación IA
+                    <span id="contador-analisis-pendientes" style="display: none; position: absolute; top: -8px; right: -8px; background: #8b4a3c; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center;">0</span>
+                </button>
+                <button onclick="logout()" style="margin-left: 12px; padding: 10px 18px; background: #8b4a3c; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Salir</button>
                 <!-- Botón admin se añadirá aquí dinámicamente -->
             </div>
         </div>
@@ -658,6 +826,19 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Validación de Análisis IA -->
+    <div id="modal-validacion-ia" class="modal-overlay" onclick="cerrarModalValidacionIA(event)">
+        <div class="modal-content" style="max-width: 1200px;" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>🤖 Validación de Análisis de IA</h2>
+                <button class="modal-close" onclick="cerrarModalValidacionIA()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-validacion-ia-body">
+                <!-- Contenido dinámico -->
+            </div>
+        </div>
+    </div>
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -672,30 +853,112 @@
         const SUPABASE_URL = 'https://kyxxpoewwjixbpcezays.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5eHhwb2V3d2ppeGJwY2V6YXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MjAzMDksImV4cCI6MjA3Nzk5NjMwOX0.sIw7flVHQ00r3VwrhU7tvohVzKpb7LGtXVzG43FAP10';
         
-        // Inicializar cliente Supabase con configuración de persistencia
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                persistSession: true,
-                autoRefreshToken: true,
-                detectSessionInUrl: true,
-                storage: window.localStorage
-            },
-            db: {
-                schema: 'public'
-            },
-            global: {
-                headers: {
-                    'apikey': SUPABASE_ANON_KEY
+        // Función helper para obtener el cliente de Supabase (debe estar disponible globalmente)
+        function getSupabaseClient() {
+            // Priorizar window.supabaseClient (el cliente que creamos)
+            if (window.supabaseClient && window.supabaseClient.auth) {
+                return window.supabaseClient;
+            }
+            // Si no existe, usar window.supabase (puede ser el cliente o la librería)
+            if (window.supabase) {
+                // Si tiene auth, es un cliente; si tiene createClient, es la librería
+                if (window.supabase.auth) {
+                    return window.supabase;
                 }
             }
-        });
-        
-        // Verificar que Supabase se inicializó correctamente
-        if (!supabase) {
-            console.error('❌ Error: No se pudo inicializar Supabase');
-        } else {
-            console.log('✅ Supabase inicializado correctamente');
+            // Si no hay nada disponible, retornar null
+            return null;
         }
+        
+        // Esperar a que Supabase esté disponible antes de inicializar
+        function inicializarSupabase() {
+            // Verificar que el script de Supabase se haya cargado
+            if (typeof window.supabase === 'undefined') {
+                console.warn('⚠️ Esperando a que Supabase se cargue...');
+                // Reintentar después de un breve delay
+                setTimeout(inicializarSupabase, 100);
+                return;
+            }
+            
+            // Verificar si ya existe una variable global supabase (del script CDN)
+            // Si existe, la reutilizamos; si no, creamos una nueva
+            if (typeof window.supabaseClient === 'undefined') {
+                // Inicializar cliente Supabase con configuración de persistencia
+                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+                    auth: {
+                        persistSession: true,
+                        autoRefreshToken: true,
+                        detectSessionInUrl: true,
+                        storage: window.localStorage
+                    },
+                    db: {
+                        schema: 'public'
+                    },
+                    global: {
+                        headers: {
+                            'apikey': SUPABASE_ANON_KEY
+                        }
+                    }
+                });
+                
+                // Crear alias global 'supabase' solo si no existe
+                if (typeof window.supabase !== 'object' || !window.supabase.auth) {
+                    window.supabase = window.supabaseClient;
+                }
+                
+                // Verificar que Supabase se inicializó correctamente
+                if (!window.supabaseClient) {
+                    console.error('❌ Error: No se pudo inicializar Supabase');
+                } else {
+                    console.log('✅ Supabase inicializado correctamente');
+                    // Actualizar variable global para compatibilidad
+                    // Usar window.supabase como alias si no existe ya
+                    if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
+                        window.supabase = window.supabaseClient;
+                    }
+                }
+            } else {
+                console.log('✅ Supabase ya estaba inicializado');
+                // Asegurar que la variable global esté actualizada
+                if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
+                    window.supabase = window.supabaseClient;
+                }
+            }
+            
+            // Crear getter global para 'supabase' que siempre devuelva el cliente
+            try {
+                Object.defineProperty(window, 'supabase', {
+                    get: function() { return window.supabaseClient || window.supabase; },
+                    configurable: true,
+                    enumerable: true
+                });
+            } catch (e) {
+                // Si falla, simplemente asignar directamente
+                if (!window.supabase || typeof window.supabase.createClient === 'undefined') {
+                    window.supabase = window.supabaseClient;
+                }
+            }
+        }
+        
+        // Inicializar Supabase cuando el script esté listo
+        // NOTA: inicializarSupabase() ahora se llama desde registrarAuthStateChange()
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                inicializarSupabase();
+                setTimeout(registrarAuthStateChange, 200);
+            });
+        } else {
+            // Pequeño delay para asegurar que el script CDN se haya cargado
+            setTimeout(() => {
+                inicializarSupabase();
+                setTimeout(registrarAuthStateChange, 200);
+            }, 50);
+        }
+        
+        // Variable global para compatibilidad con código existente
+        // NO declaramos 'var supabase' aquí porque el script CDN puede crear una variable global
+        // En su lugar, la asignaremos después de inicializar
+        // Usamos window.supabaseClient como fuente de verdad
         
         // Estado de autenticación
         let usuarioActual = null;
@@ -764,7 +1027,15 @@
                     setTimeout(() => reject(new Error('Timeout')), 1000)
                 );
                 
-                const sessionPromise = supabase.auth.getSession();
+                // Usar window.supabaseClient o window.supabase (el getter lo maneja)
+                const supabaseClient = window.supabaseClient || window.supabase;
+                if (!supabaseClient) {
+                    console.warn('⚠️ Supabase client no disponible aún');
+                    sesionVerificada = true;
+                    return;
+                }
+                
+                const sessionPromise = supabaseClient.auth.getSession();
                 
                 const { data: { session }, error } = await Promise.race([
                     sessionPromise,
@@ -800,7 +1071,16 @@
         // porque puede causar dead-locks. En su lugar, usamos setTimeout(..., 0) para
         // mover las llamadas fuera del callback.
         // Ver: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
-        supabase.auth.onAuthStateChange((event, session) => {
+        // Registrar listener después de que Supabase esté inicializado
+        function registrarAuthStateChange() {
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient || !supabaseClient.auth) {
+                console.warn('⚠️ Esperando a que Supabase se inicialice para registrar auth listener...');
+                setTimeout(registrarAuthStateChange, 100);
+                return;
+            }
+            
+            supabaseClient.auth.onAuthStateChange((event, session) => {
             console.log('🔄 Cambio de estado de auth:', event, session ? `Usuario: ${session.user?.email}` : 'Sin sesión');
             sesionVerificada = true;
             
@@ -840,9 +1120,16 @@
                     mostrarUILogin();
                 }
             }, 0);
-        });
+            });
+        }
         
-        console.log('👂 Listener de onAuthStateChange registrado');
+        // Llamar a registrarAuthStateChange después de inicializar Supabase
+        inicializarSupabase();
+        
+        // Registrar el listener después de un pequeño delay para asegurar que Supabase esté listo
+        setTimeout(() => {
+            registrarAuthStateChange();
+        }, 200);
         
         // Timeout de seguridad: si después de 3 segundos no hay evento INITIAL_SESSION, mostrar login
         setTimeout(() => {
@@ -867,7 +1154,14 @@
                 
                 // Intentar con timeout usando Promise.race
                 console.log('📡 Ejecutando consulta a Supabase con timeout...');
-                const consultaPromise = supabase
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    console.error('❌ Supabase client no disponible');
+                    rolUsuario = 'colaborador';
+                    esAdmin = false;
+                    return null;
+                }
+                const consultaPromise = supabaseClient
                     .from('perfiles_usuarios')
                     .select('rol, nombre_completo')
                     .eq('id', usuarioActual.id)
@@ -1102,7 +1396,7 @@
                 
                 try {
                     const { data: { session }, error } = await Promise.race([
-                        supabase.auth.getSession(),
+                        getSupabaseClient().auth.getSession(),
                         timeoutPromise
                     ]);
                     
@@ -1144,7 +1438,12 @@
             
             console.log('🔐 Intentando login con:', email);
             
-            const { data, error } = await supabase.auth.signInWithPassword({
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email.trim(),
                 password: password
             });
@@ -1181,7 +1480,12 @@
             
             console.log('📧 URL de redirección para email:', redirectUrl);
             
-            const { data, error } = await supabase.auth.signUp({
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { data, error } = await supabaseClient.auth.signUp({
                 email: email.trim(),
                 password: password,
                 options: {
@@ -1229,7 +1533,12 @@
             }
             
             try {
-                const { data, error } = await supabase.auth.resend({
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                    return;
+                }
+                const { data, error } = await supabaseClient.auth.resend({
                     type: 'signup',
                     email: email.trim()
                 });
@@ -1267,7 +1576,12 @@
             
             console.log('🔐 Intentando resetear contraseña para:', emailLimpio);
             
-            const { error } = await supabase.auth.resetPasswordForEmail(emailLimpio, {
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(emailLimpio, {
                 redirectTo: window.location.origin + window.location.pathname
             });
             
@@ -1283,7 +1597,12 @@
         
         // Magic Link (sin contraseña)
         async function loginMagicLink(email) {
-            const { error } = await supabase.auth.signInWithOtp({
+            const supabaseClient = getSupabaseClient();
+            if (!supabaseClient) {
+                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
+                return;
+            }
+            const { error } = await supabaseClient.auth.signInWithOtp({
                 email: email,
                 options: {
                     emailRedirectTo: window.location.href
@@ -1329,7 +1648,12 @@
                     setTimeout(() => reject(new Error('Timeout en logout')), 3000)
                 );
                 
-                const signOutPromise = supabase.auth.signOut();
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    console.error('Error: Supabase no está disponible');
+                    return;
+                }
+                const signOutPromise = supabaseClient.auth.signOut();
                 
                 const { error } = await Promise.race([
                     signOutPromise,
@@ -1657,9 +1981,9 @@
             if (!botonAdmin) {
                 botonAdmin = document.createElement('button');
                 botonAdmin.id = 'admin-panel-btn';
-                botonAdmin.textContent = '⚙️ Panel Admin';
+                botonAdmin.textContent = 'Panel Admin';
                 botonAdmin.onclick = mostrarPanelAdmin;
-                botonAdmin.style.cssText = 'margin-left: 10px; padding: 8px 15px; background: #9b59b6; color: white; border: none; border-radius: 4px; cursor: pointer;';
+                botonAdmin.style.cssText = 'margin-left: 12px; padding: 10px 18px; background: #6d5a44; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: "Crimson Text", serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;';
                 userUI.appendChild(botonAdmin);
                 console.log('✅ Botón admin creado y añadido');
             }
@@ -1685,9 +2009,9 @@
             if (!botonEdicion) {
                 botonEdicion = document.createElement('button');
                 botonEdicion.id = 'edicion-btn';
-                botonEdicion.textContent = '✏️ Modo Edición';
+                botonEdicion.textContent = 'Modo Edición';
                 botonEdicion.onclick = activarModoEdicion;
-                botonEdicion.style.cssText = 'margin-left: 10px; padding: 8px 15px; background: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer;';
+                botonEdicion.style.cssText = 'margin-left: 12px; padding: 10px 18px; background: #6d5a44; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: "Crimson Text", serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;';
                 userUI.appendChild(botonEdicion);
                 console.log('✅ Botón edición creado y añadido');
             }
@@ -1848,19 +2172,19 @@
             const botonEdicion = document.getElementById('edicion-btn');
             
             if (modoEdicionActivo) {
-                botonEdicion.textContent = '💾 Modo Edición ACTIVO';
-                botonEdicion.style.background = '#e74c3c';
+                botonEdicion.textContent = 'Modo Edición ACTIVO';
+                botonEdicion.style.background = '#8b4a3c';
                 alert('✅ Modo edición activado\n\nLos cambios se guardan en memoria (solo en tu navegador).\nPara persistir cambios, un administrador debe aprobarlos.');
             } else {
-                botonEdicion.textContent = '✏️ Modo Edición';
-                botonEdicion.style.background = '#27ae60';
+                botonEdicion.textContent = 'Modo Edición';
+                botonEdicion.style.background = '#6d5a44';
                 if (Object.keys(cambiosEnMemoria).length > 0) {
                     if (confirm(`Tienes ${Object.keys(cambiosEnMemoria).length} obra(s) con cambios en memoria. ¿Deseas descartarlos?`)) {
                         cambiosEnMemoria = {};
                     } else {
                         modoEdicionActivo = true;
-                        botonEdicion.textContent = '💾 Modo Edición ACTIVO';
-                        botonEdicion.style.background = '#e74c3c';
+                        botonEdicion.textContent = 'Modo Edición ACTIVO';
+                        botonEdicion.style.background = '#8b4a3c';
                         return;
                     }
                 }
@@ -2922,6 +3246,347 @@
                 texto.value = '';
                 await mostrarComentariosEnModal(obraId);
                 await actualizarContadorComentarios(); // Actualizar contador
+            }
+        }
+        
+        // ============================================================================
+        // FUNCIONES DE VALIDACIÓN DE ANÁLISIS IA
+        // ============================================================================
+        
+        // Cargar archivos de síntesis desde Supabase Storage
+        async function cargarArchivosSintesis() {
+            try {
+                // Listar archivos en el bucket 'sintesis' de Supabase Storage
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    console.error('Error: Supabase no está disponible');
+                    return;
+                }
+                const { data, error } = await supabaseClient.storage
+                    .from('sintesis')
+                    .list('', {
+                        limit: 100,
+                        offset: 0,
+                        sortBy: { column: 'created_at', order: 'desc' }
+                    });
+                
+                if (error) {
+                    console.error('Error cargando archivos de síntesis:', error);
+                    return [];
+                }
+                
+                return data || [];
+            } catch (error) {
+                console.error('Error en cargarArchivosSintesis:', error);
+                return [];
+            }
+        }
+        
+        // Cargar contenido de un archivo de síntesis
+        async function cargarSintesisArchivo(nombreArchivo) {
+            try {
+                const supabaseClient = getSupabaseClient();
+                if (!supabaseClient) {
+                    console.error('Error: Supabase no está disponible');
+                    return;
+                }
+                const { data, error } = await supabaseClient.storage
+                    .from('sintesis')
+                    .download(nombreArchivo);
+                
+                if (error) {
+                    console.error('Error cargando síntesis:', error);
+                    return null;
+                }
+                
+                const texto = await data.text();
+                return JSON.parse(texto);
+            } catch (error) {
+                console.error('Error parseando síntesis:', error);
+                return null;
+            }
+        }
+        
+        // Cargar validaciones desde Supabase
+        async function cargarValidaciones() {
+            try {
+                const { data, error } = await supabase
+                    .from('validaciones_analisis')
+                    .select('*')
+                    .order('fecha_validacion', { ascending: false });
+                
+                if (error) {
+                    console.error('Error cargando validaciones:', error);
+                    return [];
+                }
+                
+                return data || [];
+            } catch (error) {
+                console.error('Error en cargarValidaciones:', error);
+                return [];
+            }
+        }
+        
+        // Guardar validación en Supabase
+        async function guardarValidacion(archivoSintesis, tipoRegistro, idTemporal, estado, datosJson, comentario = '') {
+            try {
+                if (!usuarioActual) {
+                    alert('Debes iniciar sesión para validar análisis');
+                    return false;
+                }
+                
+                const { data, error } = await supabase
+                    .from('validaciones_analisis')
+                    .insert({
+                        archivo_sintesis: archivoSintesis,
+                        tipo_registro: tipoRegistro,
+                        id_temporal: idTemporal,
+                        estado: estado, // 'validado' o 'rechazado'
+                        usuario_id: usuarioActual.id,
+                        comentario: comentario,
+                        datos_json: datosJson,
+                        fecha_validacion: new Date().toISOString()
+                    });
+                
+                if (error) {
+                    console.error('Error guardando validación:', error);
+                    alert('Error al guardar validación: ' + error.message);
+                    return false;
+                }
+                
+                return true;
+            } catch (error) {
+                console.error('Error en guardarValidacion:', error);
+                return false;
+            }
+        }
+        
+        // Mostrar modal de validación IA
+        async function mostrarModalValidacionIA() {
+            if (!usuarioActual) {
+                alert('Debes iniciar sesión para validar análisis de IA');
+                return;
+            }
+            
+            const modal = document.getElementById('modal-validacion-ia');
+            const modalBody = document.getElementById('modal-validacion-ia-body');
+            
+            if (!modal || !modalBody) {
+                console.error('Modal de validación IA no encontrado');
+                return;
+            }
+            
+            // Mostrar loading
+            modalBody.innerHTML = '<p style="text-align: center; padding: 40px;">Cargando análisis de IA...</p>';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Cargar archivos de síntesis
+            const archivos = await cargarArchivosSintesis();
+            const validaciones = await cargarValidaciones();
+            
+            // Crear mapa de validaciones por id_temporal
+            const validacionesMap = {};
+            validaciones.forEach(v => {
+                const key = `${v.archivo_sintesis}_${v.id_temporal}`;
+                validacionesMap[key] = v;
+            });
+            
+            let html = '';
+            
+            if (archivos.length === 0) {
+                html = '<div style="text-align: center; padding: 40px;">';
+                html += '<p style="color: #7f8c8d; margin-bottom: 20px;">No hay archivos de síntesis disponibles.</p>';
+                html += '<p style="color: #7f8c8d; font-size: 14px;">Genera síntesis primero usando el script <code>generar_sintesis_validacion.py</code> y súbelos a Supabase Storage.</p>';
+                html += '</div>';
+            } else {
+                // Mostrar lista de archivos y sus análisis
+                for (const archivo of archivos) {
+                    if (!archivo.name.endsWith('_sintesis_validacion.json')) continue;
+                    
+                    const sintesis = await cargarSintesisArchivo(archivo.name);
+                    if (!sintesis) continue;
+                    
+                    html += `<div style="margin-bottom: 30px; border: 2px solid #9b59b6; border-radius: 8px; padding: 20px; background: #f8f9fa;">`;
+                    html += `<h3 style="color: #9b59b6; margin-bottom: 15px;">📄 ${archivo.name}</h3>`;
+                    html += `<p style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">`;
+                    html += `Archivo fuente: ${sintesis.metadata_archivo?.archivo_fuente || 'Desconocido'}<br>`;
+                    html += `Fecha extracción: ${sintesis.metadata_archivo?.fecha_extraccion || 'Desconocida'}<br>`;
+                    html += `Total items: ${sintesis.representaciones?.length || 0} representaciones, `;
+                    html += `${sintesis.obras?.length || 0} obras, ${sintesis.lugares?.length || 0} lugares`;
+                    html += `</p>`;
+                    
+                    // Mostrar representaciones
+                    if (sintesis.representaciones && sintesis.representaciones.length > 0) {
+                        html += `<h4 style="color: #2c3e50; margin: 20px 0 10px 0;">Representaciones (${sintesis.representaciones.length})</h4>`;
+                        html += '<div class="analisis-ia-list">';
+                        
+                        sintesis.representaciones.forEach((rep, index) => {
+                            const validacionKey = `${archivo.name}_${rep.id_temporal}`;
+                            const validacion = validacionesMap[validacionKey];
+                            const estado = validacion?.estado || 'pendiente';
+                            
+                            // Escapar comillas en datos_json para evitar problemas en HTML
+                            const datosJsonEscapado = JSON.stringify(rep.datos_json || {}).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+                            
+                            html += `<div class="analisis-ia-item ${estado}">`;
+                            html += `<span class="analisis-ia-badge ${estado}">`;
+                            html += estado === 'validado' ? '✅ Validado' : estado === 'rechazado' ? '❌ Rechazado' : '🤖 Análisis IA';
+                            html += `</span>`;
+                            
+                            // Confianza
+                            if (rep.confianza) {
+                                const confianzaClass = rep.confianza === 'alto' ? 'confianza-alta' : 
+                                                       rep.confianza === 'medio' ? 'confianza-media' : 'confianza-baja';
+                                html += `<span class="analisis-ia-confianza ${confianzaClass}">`;
+                                html += `Confianza: ${rep.confianza}`;
+                                html += `</span>`;
+                            }
+                            
+                            html += `<div class="analisis-ia-frases">`;
+                            if (rep.frases && rep.frases.length > 0) {
+                                rep.frases.forEach(frase => {
+                                    html += `<div class="analisis-ia-frase">${frase}</div>`;
+                                });
+                            } else if (rep.sintesis) {
+                                html += `<div class="analisis-ia-frase">${rep.sintesis}</div>`;
+                            }
+                            html += `</div>`;
+                            
+                            // Referencia PDF
+                            if (rep.pagina_pdf) {
+                                html += `<a href="/obras/pagina-pdf/${rep.pagina_pdf}/" target="_blank" class="btn-ver-pdf-ia" style="text-decoration: none; display: inline-block; margin-top: 10px;">`;
+                                html += `📄 Ver Página ${rep.pagina_pdf} del PDF`;
+                                html += `</a>`;
+                            }
+                            
+                            // Acciones
+                            if (estado === 'pendiente') {
+                                html += `<div class="analisis-ia-acciones">`;
+                                html += `<button class="btn-validar-ia" onclick="validarAnalisisIA('${archivo.name}', 'representacion', '${rep.id_temporal}', 'validado', '${datosJsonEscapado}')">`;
+                                html += `✅ Validar`;
+                                html += `</button>`;
+                                html += `<button class="btn-rechazar-ia" onclick="validarAnalisisIA('${archivo.name}', 'representacion', '${rep.id_temporal}', 'rechazado', '${datosJsonEscapado}')">`;
+                                html += `❌ Rechazar`;
+                                html += `</button>`;
+                                html += `</div>`;
+                            } else {
+                                html += `<div class="analisis-ia-metadata">`;
+                                html += `Estado: ${estado}<br>`;
+                                if (validacion?.usuario_id) {
+                                    html += `Validado por: ${validacion.usuario_id}<br>`;
+                                }
+                                if (validacion?.fecha_validacion) {
+                                    html += `Fecha: ${new Date(validacion.fecha_validacion).toLocaleDateString('es-ES')}`;
+                                }
+                                if (validacion?.comentario) {
+                                    html += `<br>Comentario: ${validacion.comentario}`;
+                                }
+                                html += `</div>`;
+                            }
+                            
+                            html += `</div>`;
+                        });
+                        
+                        html += '</div>';
+                    }
+                    
+                    html += `</div>`;
+                }
+            }
+            
+            modalBody.innerHTML = html;
+        }
+        
+        // Cerrar modal de validación IA
+        function cerrarModalValidacionIA(event) {
+            if (event && event.target.id !== 'modal-validacion-ia') return;
+            
+            const modal = document.getElementById('modal-validacion-ia');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Validar o rechazar análisis IA
+        async function validarAnalisisIA(archivoSintesis, tipoRegistro, idTemporal, estado, datosJsonStr) {
+            if (!usuarioActual) {
+                alert('Debes iniciar sesión para validar análisis');
+                return;
+            }
+            
+            const comentario = prompt(`¿Añadir comentario sobre esta validación? (opcional)`, '');
+            
+            // Parsear datosJson desde string
+            let datosJson;
+            try {
+                datosJson = JSON.parse(datosJsonStr.replace(/&#39;/g, "'").replace(/&quot;/g, '"'));
+            } catch (e) {
+                datosJson = {};
+            }
+            
+            const exito = await guardarValidacion(
+                archivoSintesis,
+                tipoRegistro,
+                idTemporal,
+                estado,
+                datosJson,
+                comentario || ''
+            );
+            
+            if (exito) {
+                alert(`Análisis ${estado} correctamente`);
+                // Recargar modal
+                await mostrarModalValidacionIA();
+                // Actualizar contador
+                await actualizarContadorAnalisisPendientes();
+            }
+        }
+        
+        // Actualizar contador de análisis pendientes
+        async function actualizarContadorAnalisisPendientes() {
+            try {
+                const archivos = await cargarArchivosSintesis();
+                const validaciones = await cargarValidaciones();
+                
+                let totalPendientes = 0;
+                
+                for (const archivo of archivos) {
+                    if (!archivo.name.endsWith('_sintesis_validacion.json')) continue;
+                    
+                    const sintesis = await cargarSintesisArchivo(archivo.name);
+                    if (!sintesis) continue;
+                    
+                    const items = [
+                        ...(sintesis.representaciones || []),
+                        ...(sintesis.obras || []),
+                        ...(sintesis.lugares || [])
+                    ];
+                    
+                    items.forEach(item => {
+                        const validacionKey = `${archivo.name}_${item.id_temporal}`;
+                        const validacion = validaciones.find(v => 
+                            `${v.archivo_sintesis}_${v.id_temporal}` === validacionKey
+                        );
+                        
+                        if (!validacion) {
+                            totalPendientes++;
+                        }
+                    });
+                }
+                
+                const contador = document.getElementById('contador-analisis-pendientes');
+                if (contador) {
+                    if (totalPendientes > 0) {
+                        contador.textContent = totalPendientes;
+                        contador.style.display = 'flex';
+                    } else {
+                        contador.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error actualizando contador:', error);
             }
         }
         
@@ -4704,7 +5369,12 @@
                     } catch (timeoutError) {
                         if (timeoutError.message === 'TIMEOUT') {
                             console.warn('   ⏱️ Timeout en consulta, intentando con fetch directo...');
-                            const session = await supabase.auth.getSession();
+                            const supabaseClient = getSupabaseClient();
+                            if (!supabaseClient) {
+                                console.error('Supabase client no disponible');
+                                return;
+                            }
+                            const session = await supabaseClient.auth.getSession();
                             const token = session.data?.session?.access_token;
                             if (token) {
                                 const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=*`;
@@ -4822,7 +5492,7 @@
             try {
                 const startTime = Date.now();
                 const { data, error } = await Promise.race([
-                    supabase.from('perfiles_usuarios').select('count').limit(1),
+                    getSupabaseClient().from('perfiles_usuarios').select('count').limit(1),
                     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout después de 10 segundos')), 10000))
                 ]);
                 
@@ -4937,7 +5607,12 @@
                 
                 try {
                     // Establecer la sesión usando el token del hash
-                    const { data, error } = await supabase.auth.setSession({
+                    const supabaseClient = getSupabaseClient();
+                    if (!supabaseClient) {
+                        console.error('Supabase client no disponible');
+                        return;
+                    }
+                    const { data, error } = await supabaseClient.auth.setSession({
                         access_token: accessToken,
                         refresh_token: refreshToken || ''
                     });
@@ -5005,6 +5680,11 @@
                     console.warn('⚠️ Error en verificarSesion (no crítico):', error);
                 });
             }, 500); // Delay más largo para dar tiempo a onAuthStateChange
+            
+            // Actualizar contador de análisis pendientes después de cargar
+            setTimeout(() => {
+                actualizarContadorAnalisisPendientes();
+            }, 2000);
         };
     </script>
 </body>

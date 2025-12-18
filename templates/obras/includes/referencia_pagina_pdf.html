@@ -1,0 +1,101 @@
+{% comment %}
+Componente para mostrar referencias a páginas PDF
+
+Uso:
+{% include 'obras/includes/referencia_pagina_pdf.html' with referencia=referencia_pagina_pdf %}
+
+Parámetros:
+- referencia: Dict con información de la referencia a página PDF
+  - pagina_pdf: Número de página
+  - url_pagina: URL para ver la página completa
+  - url_imagen: URL de la imagen de la página
+  - texto_referencia: Texto descriptivo
+  - tipo_referencia: 'directa', 'inferida', 'referencia_fuente'
+  - contexto: Contexto donde se encontró la referencia
+{% endcomment %}
+
+{% if referencia %}
+<div class="referencia-pagina-pdf card mb-3 border-primary">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div>
+            <i class="fas fa-file-pdf"></i>
+            <strong>Referencia al PDF Original</strong>
+        </div>
+        <span class="badge bg-light text-dark">
+            Página {{ referencia.pagina_pdf }}
+        </span>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-8">
+                <p class="mb-2">
+                    <i class="fas fa-info-circle text-primary"></i>
+                    <strong>Información encontrada en:</strong> {{ referencia.texto_referencia|default:"Página del PDF original" }}
+                </p>
+                
+                {% if referencia.tipo_referencia %}
+                <p class="mb-2 small">
+                    <span class="badge bg-secondary">
+                        {% if referencia.tipo_referencia == 'directa' %}
+                            Referencia directa
+                        {% elif referencia.tipo_referencia == 'inferida' %}
+                            Referencia inferida
+                        {% elif referencia.tipo_referencia == 'referencia_fuente' %}
+                            Referencia en fuente
+                        {% else %}
+                            {{ referencia.tipo_referencia }}
+                        {% endif %}
+                    </span>
+                </p>
+                {% endif %}
+                
+                {% if referencia.contexto %}
+                <div class="alert alert-light small mb-0">
+                    <strong>Contexto:</strong>
+                    <em>{{ referencia.contexto|truncatewords:30 }}</em>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="d-grid gap-2">
+                    <a href="{{ referencia.url_pagina|default:'#' }}" 
+                       class="btn btn-primary btn-sm"
+                       target="_blank"
+                       title="Abrir página {{ referencia.pagina_pdf }} en nueva pestaña">
+                        <i class="fas fa-external-link-alt"></i>
+                        Ver Página {{ referencia.pagina_pdf }}
+                    </a>
+                    
+                    {% if referencia.url_imagen %}
+                    <button type="button" 
+                            class="btn btn-outline-secondary btn-sm"
+                            onclick="openPdfPageModal({{ referencia.pagina_pdf }})"
+                            title="Ver página {{ referencia.pagina_pdf }} en modal">
+                        <i class="fas fa-eye"></i>
+                        Ver en Modal
+                    </button>
+                    {% endif %}
+                    
+                    <a href="{{ referencia.url_pagina|default:'#' }}" 
+                       class="btn btn-outline-info btn-sm"
+                       download
+                       title="Descargar imagen de página {{ referencia.pagina_pdf }}">
+                        <i class="fas fa-download"></i>
+                        Descargar Imagen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer bg-light small text-muted">
+        <i class="fas fa-lightbulb"></i>
+        <strong>Nota:</strong> Abre el PDF original en la página {{ referencia.pagina_pdf }} para verificar esta información directamente en la fuente.
+    </div>
+</div>
+{% endif %}
+
+
+
+
+
+
