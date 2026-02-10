@@ -1,0 +1,127 @@
+{
+  "metadata": {
+    "fuente": "Fuentes IX",
+    "total_obras": 17
+  },
+  "obras": {
+    "El Pastor Fido": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 134,
+      "contexto": "El 22 de mayo de 1687 la compañía de Agustín Manuel representó El Pastor Fido, en el Saloncillo del Buen Retiro, según Fuentes V, y en el Saloncete, según Fuentes I.",
+      "menciones": 24
+    },
+    "El Mariscal de Virón": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 134,
+      "contexto": "Según Fuentes V, la compañía de Rosendo López representó El Mariscal de Virón en Palacio el 3 de octubre de 1685, pero Fuentes I registra una representación de la misma comedia por la compañía de Manuel de Mosquera el día siguiente, 4 de octubre, también en Palacio.",
+      "menciones": 30
+    },
+    "La profetisa Casandra": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 134,
+      "contexto": "tal como pasó el 21 de septiembre del mismo año de 1685 cuando hicieron juntas La profetisa Casandra, pero ésta fue una obra de espectáculo, proyectada para festejar el cumpleaños de la Reina María Luisa de Borbón (Fuentes V, pág.",
+      "menciones": 12
+    },
+    "La garza de Portugal": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 134,
+      "contexto": "En 1680 encontramos en Fuentes I referencias a una representación palaciega de La garza de Portugal por la compañía de Jerónimo García el 12 de diciembre de 1680",
+      "menciones": 30
+    },
+    "El monstruo de los jardines": {
+      "anio_auxiliar": 1695,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 135,
+      "contexto": "En 1695 Fuentes VI ofrece datos sobre la representación el 14 de febrero de El monstruo de los jardines en el Cuarto del Rey",
+      "menciones": 12
+    },
+    "Psiquis y Cupido": {
+      "anio_auxiliar": 1679,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 139,
+      "contexto": "Psiquis y Cupido, representada el 3 de diciembre de 1679 por las compañías de Manuel Vallejo y José de Prado, según Fuentes I, con Ni amor se libra de amor, hecha por las mismas compañías el mismo día, según Fuentes V",
+      "menciones": 24
+    },
+    "Pitias y Damón": {
+      "anio_auxiliar": 1683,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 139,
+      "contexto": "Pitias y Damón, representada en palacio por Matías de Castro el 24 de febrero de 1683 (Fuentes I), no es tan fácilmente identificable con La amistad vence el rigor",
+      "menciones": 24
+    },
+    "Los tres mayores prodigios": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 139,
+      "contexto": "para el 25 de agosto de 1687, Fuentes I da noticia de una representación en el Buen Retiro de Los tres mayores prodigios por una compañía, o compañías, sin especificar",
+      "menciones": 24
+    },
+    "El alba y el sol": {
+      "anio_auxiliar": 1688,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 139,
+      "contexto": "El 6 de enero de 1688, sabemos que la compañía de Simón Aguado representó en Palacio El alba y el sol (Fuentes VI); Fuentes I da noticia de una representación en el Cuarto de la Reina de la misma comedia por la misma compañía",
+      "menciones": 24
+    },
+    "El rico hombre de Alcalá": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 134,
+      "contexto": "Se encontró una representación de la obra 'El rico hombre de Alcalá' el 12 de diciembre de 1680.",
+      "menciones": 12
+    },
+    "El príncipe prodigioso": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 135,
+      "contexto": "Se encontró una representación de la obra 'El príncipe prodigioso' el 9 de enero de 1681.",
+      "menciones": 6
+    },
+    "El alcalde de Zalamea": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 135,
+      "contexto": "Se encontró una representación de la obra 'El alcalde de Zalamea' el 9 de enero de 1681.",
+      "menciones": 6
+    },
+    "Cuando no se aguarda": {
+      "anio_auxiliar": 1695,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 135,
+      "contexto": "Se encontró una representación de la obra 'Cuando no se aguarda' el 14 de febrero de 1695.",
+      "menciones": 6
+    },
+    "Las armas de la hermosura": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 138,
+      "contexto": "Se encontró una representación de la obra 'Las armas de la hermosura' el 23 de julio de 1684.",
+      "menciones": 6
+    },
+    "El maestro de danzar": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 138,
+      "contexto": "Se encontró una representación de la obra 'El maestro de danzar' el 26 de julio de 1684.",
+      "menciones": 6
+    },
+    "El mérito es la corona": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 138,
+      "contexto": "Se encontró una representación de la obra 'El mérito es la corona' el 26 de julio de 1684.",
+      "menciones": 6
+    },
+    "Los tres mayores imperios": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": 139,
+      "contexto": "Se encontró una representación de la obra 'Los tres mayores imperios' el 25 de agosto de 1687.",
+      "menciones": 6
+    }
+  }
+}

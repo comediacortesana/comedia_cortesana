@@ -824,7 +824,6 @@
                     <select id="fuente">
                         <option value="">Todas</option>
                         <option value="Fuentes IX">FUENTES IX</option>
-                        <option value="FUENTESXI">FUENTES XI</option>
                         <option value="CATCOM">CATCOM</option>
                         <option value="AMBAS">Ambas</option>
                     </select>
@@ -833,18 +832,24 @@
                 <!-- Filtros de Autor -->
                 <div class="filter-group">
                     <label for="autor">Autor</label>
-                    <input type="text" id="autor" placeholder="Nombre del autor...">
+                    <select id="autor">
+                        <option value="">Todos</option>
+                    </select>
                 </div>
                 
                 <div class="filter-group">
                     <label for="epoca">Época</label>
-                    <input type="text" id="epoca" placeholder="Ej: Siglo de Oro">
+                    <select id="epoca">
+                        <option value="">Todas</option>
+                    </select>
                 </div>
                 
                 <!-- Filtros de Lugar -->
                 <div class="filter-group">
                     <label for="lugar">Lugar</label>
-                    <input type="text" id="lugar" placeholder="Ciudad o lugar...">
+                    <select id="lugar">
+                        <option value="">Todos</option>
+                    </select>
                 </div>
                 
                 <div class="filter-group">
@@ -865,13 +870,17 @@
                 
                 <div class="filter-group">
                     <label for="region">Región</label>
-                    <input type="text" id="region" placeholder="Región o provincia...">
+                    <select id="region">
+                        <option value="">Todas</option>
+                    </select>
                 </div>
                 
                 <!-- Filtros de Representación -->
                 <div class="filter-group">
                     <label for="compania">Compañía teatral</label>
-                    <input type="text" id="compania" placeholder="Nombre de compañía...">
+                    <select id="compania">
+                        <option value="">Todas</option>
+                    </select>
                 </div>
                 
                 <div class="filter-group">
@@ -886,7 +895,9 @@
                 
                 <div class="filter-group">
                     <label for="mecenas">Mecenas</label>
-                    <input type="text" id="mecenas" placeholder="Nombre del mecenas...">
+                    <select id="mecenas">
+                        <option value="">Todos</option>
+                    </select>
                 </div>
             </div>
             
@@ -961,6 +972,9 @@
         let datosOriginales = [];
         let datosFiltrados = [];
         let metadata = {};
+        let catalogoLugaresFuentesIX = null;
+        let catalogoRegionesFuentesIX = null;
+        let mapaAnioAuxiliarFuentesIX = null;
         
         // ============================================================================
         // CONFIGURACIÓN SUPABASE
@@ -4493,6 +4507,319 @@
             ]);
         }
 
+        function obtenerCampo(obra, ...nombres) {
+            for (const nombre of nombres) {
+                if (obra && obra[nombre] !== undefined && obra[nombre] !== null && obra[nombre] !== '') {
+                    return obra[nombre];
+                }
+            }
+            return null;
+        }
+
+        function normalizarTexto(valor) {
+            if (valor === undefined || valor === null) return '';
+            return valor.toString().trim();
+        }
+
+        function normalizarFuente(valor) {
+            const limpio = normalizarTexto(valor);
+            if (!limpio) return '';
+            const compacto = limpio.toUpperCase().replace(/\s+/g, '');
+            if (compacto === 'FUENTESXI' || compacto === 'FUENTESIX') {
+                return 'FUENTES IX';
+            }
+            return limpio;
+        }
+
+        function normalizarFuenteEnObra(obra) {
+            const campos = ['fuente', 'Fuente Principal', 'Fuente'];
+            campos.forEach((campo) => {
+                if (obra && obra[campo]) {
+                    const valorNormalizado = normalizarFuente(obra[campo]);
+                    if (valorNormalizado && valorNormalizado !== obra[campo]) {
+                        obra[campo] = valorNormalizado;
+                    }
+                }
+            });
+            return obra;
+        }
+
+        function extraerAutorNombre(obra) {
+            const autor = obtenerCampo(obra, 'autor', 'Autor', 'Autor Nombre Completo', 'Autor Nombre');
+            if (!autor) return '';
+            if (typeof autor === 'string') return normalizarTexto(autor);
+            if (typeof autor === 'object') {
+                return normalizarTexto(
+                    autor.nombre_completo ||
+                    autor.nombre ||
+                    autor['Nombre Completo'] ||
+                    autor['nombre'] ||
+                    ''
+                );
+            }
+            return '';
+        }
+
+        function extraerEpoca(obra) {
+            const autor = obtenerCampo(obra, 'autor', 'Autor');
+            if (autor && typeof autor === 'object') {
+                const epocaAutor = autor.epoca || autor['Época'] || autor['?poca'] || autor['época'];
+                if (epocaAutor) return normalizarTexto(epocaAutor);
+            }
+            return normalizarTexto(obtenerCampo(obra, 'Autor Época', 'Autor Epoca', 'Época', 'epoca'));
+        }
+
+        function extraerLugar(obra) {
+            return normalizarTexto(obtenerCampo(obra, 'lugar', 'Lugar'));
+        }
+
+        function extraerRegion(obra) {
+            return normalizarTexto(obtenerCampo(obra, 'region', 'Región', 'Region', 'Provincia'));
+        }
+
+        function extraerCompania(obra) {
+            return normalizarTexto(obtenerCampo(obra, 'compania', 'Compañía', 'Compania'));
+        }
+
+        function extraerMecenas(obra) {
+            return normalizarTexto(obtenerCampo(obra, 'mecenas', 'Mecenas'));
+        }
+
+        function extraerAnioObra(obra) {
+            const valor = obtenerCampo(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha');
+            if (!valor) return null;
+            const match = valor.toString().match(/(1[0-9]{3}|20[0-9]{2})/);
+            if (match) return parseInt(match[1], 10);
+            const parsed = parseInt(valor, 10);
+            return Number.isNaN(parsed) ? null : parsed;
+        }
+
+        function extraerAnioAuxiliar(obra) {
+            if (!mapaAnioAuxiliarFuentesIX) return null;
+            const titulo = obtenerCampo(obra, 'titulo', 'Título', 'T?tulo');
+            if (!titulo) return null;
+            const entry = mapaAnioAuxiliarFuentesIX[titulo];
+            return entry ? entry.anio_auxiliar : null;
+        }
+
+        function obtenerAnioParaFiltro(obra) {
+            return extraerAnioObra(obra) || extraerAnioAuxiliar(obra);
+        }
+
+        function actualizarSelectOpciones(selectId, valores, placeholder) {
+            const select = document.getElementById(selectId);
+            if (!select) return;
+            
+            const valorActual = select.value;
+            const opcionesUnicas = Array.from(new Set(valores.filter(Boolean)))
+                .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+            
+            select.innerHTML = '';
+            const optionPlaceholder = document.createElement('option');
+            optionPlaceholder.value = '';
+            optionPlaceholder.textContent = placeholder;
+            select.appendChild(optionPlaceholder);
+            
+            opcionesUnicas.forEach((valor) => {
+                const option = document.createElement('option');
+                option.value = valor;
+                option.textContent = valor;
+                select.appendChild(option);
+            });
+            
+            if (valorActual && opcionesUnicas.includes(valorActual)) {
+                select.value = valorActual;
+            } else {
+                select.value = '';
+            }
+        }
+
+        function actualizarOpcionesFiltros() {
+            if (!Array.isArray(datosOriginales) || datosOriginales.length === 0) return;
+            
+            const autores = [];
+            const epocas = [];
+            const lugares = [];
+            const regiones = [];
+            const companias = [];
+            const mecenas = [];
+            
+            datosOriginales.forEach((obra) => {
+                const autorNombre = extraerAutorNombre(obra);
+                const epoca = extraerEpoca(obra);
+                const lugar = extraerLugar(obra);
+                const region = extraerRegion(obra);
+                const compania = extraerCompania(obra);
+                const mecenasValor = extraerMecenas(obra);
+                
+                if (autorNombre) autores.push(autorNombre);
+                if (epoca) epocas.push(epoca);
+                if (lugar) lugares.push(lugar);
+                if (region) regiones.push(region);
+                if (compania) companias.push(compania);
+                if (mecenasValor) mecenas.push(mecenasValor);
+            });
+            
+            actualizarSelectOpciones('autor', autores, 'Todos');
+            actualizarSelectOpciones('epoca', epocas, 'Todas');
+            if (catalogoLugaresFuentesIX && catalogoLugaresFuentesIX.categorias) {
+                actualizarSelectLugaresAnidados(catalogoLugaresFuentesIX);
+            } else {
+                actualizarSelectOpciones('lugar', lugares, 'Todos');
+            }
+            if (catalogoRegionesFuentesIX && catalogoRegionesFuentesIX.ciudades) {
+                actualizarSelectRegionesAnidadas(catalogoRegionesFuentesIX);
+            } else {
+                actualizarSelectOpciones('region', regiones, 'Todas');
+            }
+            actualizarSelectOpciones('compania', companias, 'Todas');
+            actualizarSelectOpciones('mecenas', mecenas, 'Todos');
+        }
+
+        function actualizarSelectLugaresAnidados(catalogo) {
+            const select = document.getElementById('lugar');
+            if (!select) return;
+            
+            const valorActual = select.value;
+            select.innerHTML = '';
+            
+            const optionPlaceholder = document.createElement('option');
+            optionPlaceholder.value = '';
+            optionPlaceholder.textContent = 'Todos';
+            select.appendChild(optionPlaceholder);
+            
+            const categorias = catalogo.categorias || {};
+            const categoriasOrdenadas = Object.values(categorias)
+                .filter(Boolean)
+                .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es', { sensitivity: 'base' }));
+            
+            categoriasOrdenadas.forEach((categoria) => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = categoria.nombre || 'Otros';
+                
+                const lugares = Array.isArray(categoria.lugares) ? categoria.lugares : [];
+                lugares
+                    .slice()
+                    .sort((a, b) => (a.nombre || '').localeCompare(b.nombre || '', 'es', { sensitivity: 'base' }))
+                    .forEach((lugar) => {
+                        if (!lugar || !lugar.nombre) return;
+                        const option = document.createElement('option');
+                        option.value = lugar.nombre;
+                        option.textContent = lugar.ciudad ? `${lugar.nombre} (${lugar.ciudad})` : lugar.nombre;
+                        optgroup.appendChild(option);
+                    });
+                
+                if (optgroup.childNodes.length > 0) {
+                    select.appendChild(optgroup);
+                }
+            });
+            
+            if (valorActual) {
+                select.value = valorActual;
+            }
+        }
+
+        async function cargarCatalogoLugaresFuentesIX() {
+            try {
+                const response = await fetch('data/fuentesix/analisis_lugares_mecenas.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                if (data && data.metadata && data.metadata.fuente === 'Fuentes IX') {
+                    catalogoLugaresFuentesIX = data;
+                    actualizarOpcionesFiltros();
+                }
+            } catch (error) {
+                console.warn('⚠️ No se pudo cargar el catálogo de lugares Fuentes IX:', error);
+            }
+        }
+
+        async function cargarCatalogoRegionesFuentesIX() {
+            try {
+                const response = await fetch('data/fuentesix/geographic_metadata.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                if (data && data.ciudades) {
+                    catalogoRegionesFuentesIX = data;
+                    actualizarOpcionesFiltros();
+                }
+            } catch (error) {
+                console.warn('⚠️ No se pudo cargar el catálogo de regiones Fuentes IX:', error);
+            }
+        }
+
+        async function cargarAnioAuxiliarFuentesIX() {
+            try {
+                const response = await fetch('data/fuentesix/campo_auxiliar_fechas.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                if (data && data.metadata && data.metadata.fuente === 'Fuentes IX' && data.obras) {
+                    mapaAnioAuxiliarFuentesIX = data.obras;
+                }
+            } catch (error) {
+                console.warn('⚠️ No se pudo cargar el campo auxiliar de fechas Fuentes IX:', error);
+            }
+        }
+
+        function actualizarSelectRegionesAnidadas(catalogo) {
+            const select = document.getElementById('region');
+            if (!select) return;
+            
+            const valorActual = select.value;
+            select.innerHTML = '';
+            
+            const optionPlaceholder = document.createElement('option');
+            optionPlaceholder.value = '';
+            optionPlaceholder.textContent = 'Todas';
+            select.appendChild(optionPlaceholder);
+            
+            const ciudades = catalogo.ciudades || {};
+            const regionesMap = {};
+            Object.values(ciudades).forEach((ciudad) => {
+                if (!ciudad || !ciudad.region) return;
+                const region = ciudad.region;
+                if (!regionesMap[region]) {
+                    regionesMap[region] = [];
+                }
+                if (ciudad.nombre) {
+                    regionesMap[region].push(ciudad.nombre);
+                }
+            });
+            
+            Object.keys(regionesMap)
+                .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }))
+                .forEach((region) => {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = region;
+                    
+                    const opcionRegion = document.createElement('option');
+                    opcionRegion.value = `region:${region}`;
+                    opcionRegion.textContent = region;
+                    optgroup.appendChild(opcionRegion);
+                    
+                    regionesMap[region]
+                        .slice()
+                        .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }))
+                        .forEach((ciudad) => {
+                            const option = document.createElement('option');
+                            option.value = `ciudad:${ciudad}`;
+                            option.textContent = ciudad;
+                            optgroup.appendChild(option);
+                        });
+                    
+                    select.appendChild(optgroup);
+                });
+            
+            if (valorActual) {
+                select.value = valorActual;
+            }
+        }
+
         // Cargar datos desde Supabase (fuente principal) o JSON (fallback)
         async function cargarDatos() {
             const inicioTiempo = Date.now();
@@ -4611,7 +4938,7 @@
                                 obraFormateada.id = obraFormateada.ID;
                             }
                             
-                            return obraFormateada;
+                            return normalizarFuenteEnObra(obraFormateada);
                         });
                         
                         datosFiltrados = [...datosOriginales];
@@ -4688,6 +5015,11 @@
                             throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
                         }
                         
+                        datosOriginales = datosOriginales.map((obra) => normalizarFuenteEnObra(obra));
+                        if (metadata.fuentes && Array.isArray(metadata.fuentes)) {
+                            metadata.fuentes = metadata.fuentes.map(normalizarFuente).filter(Boolean);
+                        }
+                        
                         datosFiltrados = [...datosOriginales];
                         
                         console.log(`✅ ${datosOriginales.length} obras cargadas desde JSON (fallback)`);
@@ -4720,6 +5052,10 @@
                 
                 // Mostrar resultados y actualizar UI
                 if (datosCargados) {
+                    await cargarCatalogoLugaresFuentesIX();
+                    await cargarCatalogoRegionesFuentesIX();
+                    await cargarAnioAuxiliarFuentesIX();
+                    actualizarOpcionesFiltros();
                     mostrarResultados();
                     
                     // Actualizar subtítulo con info de metadata
@@ -4797,15 +5133,7 @@
         // Función para aplicar filtros
         function aplicarFiltros() {
             datosFiltrados = datosOriginales.filter(obra => {
-                // Función helper para obtener valor de campo con diferentes nombres
-                function getField(obra, ...names) {
-                    for (const name of names) {
-                        if (obra[name] !== undefined && obra[name] !== null && obra[name] !== '') {
-                            return obra[name];
-                        }
-                    }
-                    return null;
-                }
+                const getField = obtenerCampo;
                 
                 // Filtro de título
                 const titulo = document.getElementById('titulo').value.toLowerCase();
@@ -4821,50 +5149,37 @@
                     if (!obraTipo || obraTipo !== tipoObra) return false;
                 }
                 
-                // Filtro de fuente (compatibilidad con "Fuentes IX" y "FUENTESXI")
+                // Filtro de fuente (normalizado a FUENTES IX)
                 const fuente = document.getElementById('fuente').value;
                 if (fuente) {
                     const obraFuente = getField(obra, 'fuente', 'Fuente Principal', 'Fuente');
                     if (!obraFuente) return false;
                     
-                    // Normalizar para comparación (aceptar tanto "Fuentes IX" como "FUENTESXI")
-                    const obraFuenteNormalizada = obraFuente === 'Fuentes IX' || obraFuente === 'FUENTESXI' ? 'Fuentes IX' : obraFuente;
-                    const fuenteFiltroNormalizada = fuente === 'Fuentes IX' || fuente === 'FUENTESXI' ? 'Fuentes IX' : fuente;
+                    const obraFuenteNormalizada = normalizarFuente(obraFuente);
+                    const fuenteFiltroNormalizada = normalizarFuente(fuente);
                     
-                    if (obraFuenteNormalizada !== fuenteFiltroNormalizada) return false;
+                    if (!obraFuenteNormalizada || obraFuenteNormalizada !== fuenteFiltroNormalizada) return false;
                 }
                 
                 // Filtro de autor (puede ser string, objeto, null o undefined)
                 const autor = document.getElementById('autor').value.toLowerCase();
                 if (autor) {
-                    const obraAutor = getField(obra, 'Autor', 'autor');
-                    let autorNombre = '';
-                    if (obraAutor) {
-                        if (typeof obraAutor === 'string') {
-                            autorNombre = obraAutor;
-                        } else if (typeof obraAutor === 'object' && obraAutor.nombre) {
-                            autorNombre = obraAutor.nombre;
-                        }
-                    }
-                    if (!autorNombre || !autorNombre.toString().toLowerCase().includes(autor)) return false;
+                    const autorNombre = extraerAutorNombre(obra).toLowerCase();
+                    if (!autorNombre || !autorNombre.includes(autor)) return false;
                 }
                 
                 // Filtro de época
                 const epoca = document.getElementById('epoca').value.toLowerCase();
                 if (epoca) {
-                    const obraAutor = getField(obra, 'Autor', 'autor');
-                    let epocaObra = '';
-                    if (obraAutor && typeof obraAutor === 'object' && obraAutor !== null) {
-                        epocaObra = obraAutor.epoca || obraAutor['?poca'] || obraAutor['Época'] || '';
-                    }
-                    if (!epocaObra || !epocaObra.toString().toLowerCase().includes(epoca)) return false;
+                    const epocaObra = extraerEpoca(obra).toLowerCase();
+                    if (!epocaObra || !epocaObra.includes(epoca)) return false;
                 }
                 
                 // Filtro de lugar
                 const lugar = document.getElementById('lugar').value.toLowerCase();
                 if (lugar) {
-                    const obraLugar = getField(obra, 'lugar', 'Lugar');
-                    if (!obraLugar || !obraLugar.toString().toLowerCase().includes(lugar)) return false;
+                    const obraLugar = extraerLugar(obra).toLowerCase();
+                    if (!obraLugar || !obraLugar.includes(lugar)) return false;
                 }
                 
                 // Filtro de tipo de lugar
@@ -4875,33 +5190,47 @@
                 }
                 
                 // Filtro de región
-                const region = document.getElementById('region').value.toLowerCase();
-                if (region) {
-                    const obraRegion = getField(obra, 'region', 'Región', 'Región');
-                    if (!obraRegion || !obraRegion.toString().toLowerCase().includes(region)) return false;
+                const regionValue = document.getElementById('region').value;
+                if (regionValue) {
+                    const regionLower = regionValue.toLowerCase();
+                    if (regionValue.startsWith('region:')) {
+                        const regionFiltro = regionValue.slice('region:'.length).toLowerCase();
+                        const obraRegion = extraerRegion(obra).toLowerCase();
+                        if (!obraRegion || !obraRegion.includes(regionFiltro)) return false;
+                    } else if (regionValue.startsWith('ciudad:')) {
+                        const ciudadFiltro = regionValue.slice('ciudad:'.length).toLowerCase();
+                        const obraLugar = extraerLugar(obra).toLowerCase();
+                        const obraRegion = extraerRegion(obra).toLowerCase();
+                        if ((!obraLugar || !obraLugar.includes(ciudadFiltro)) && (!obraRegion || !obraRegion.includes(ciudadFiltro))) {
+                            return false;
+                        }
+                    } else {
+                        const obraRegion = extraerRegion(obra).toLowerCase();
+                        if (!obraRegion || !obraRegion.includes(regionLower)) return false;
+                    }
                 }
                 
                 // Filtro de compañía
                 const compania = document.getElementById('compania').value.toLowerCase();
                 if (compania) {
-                    const obraCompania = getField(obra, 'compania', 'Compañía', 'Compañía');
-                    if (!obraCompania || !obraCompania.toString().toLowerCase().includes(compania)) return false;
+                    const obraCompania = extraerCompania(obra).toLowerCase();
+                    if (!obraCompania || !obraCompania.includes(compania)) return false;
                 }
                 
                 // Filtro de fecha desde
                 const fechaDesde = document.getElementById('fecha_desde').value;
-                const fechaObra = getField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '';
-                if (fechaDesde && fechaObra && !isNaN(parseInt(fechaObra)) && parseInt(fechaObra) < parseInt(fechaDesde)) return false;
+                const anioObra = obtenerAnioParaFiltro(obra);
+                if (fechaDesde && anioObra && anioObra < parseInt(fechaDesde)) return false;
                 
                 // Filtro de fecha hasta
                 const fechaHasta = document.getElementById('fecha_hasta').value;
-                if (fechaHasta && fechaObra && !isNaN(parseInt(fechaObra)) && parseInt(fechaObra) > parseInt(fechaHasta)) return false;
+                if (fechaHasta && anioObra && anioObra > parseInt(fechaHasta)) return false;
                 
                 // Filtro de mecenas
                 const mecenas = document.getElementById('mecenas').value.toLowerCase();
                 if (mecenas) {
-                    const obraMecenas = getField(obra, 'mecenas', 'Mecenas');
-                    if (!obraMecenas || !obraMecenas.toString().toLowerCase().includes(mecenas)) return false;
+                    const obraMecenas = extraerMecenas(obra).toLowerCase();
+                    if (!obraMecenas || !obraMecenas.includes(mecenas)) return false;
                 }
                 
                 return true;
@@ -5001,20 +5330,20 @@
                 const titulo = getObraField(obra, 'titulo', 'Título', 'T?tulo') || 'Sin título';
                 const tipoObra = getObraField(obra, 'tipo_obra', 'Tipo de Obra') || '-';
                 let fuente = getObraField(obra, 'fuente', 'Fuente Principal', 'Fuente') || 'DESCONOCIDA';
+                fuente = normalizarFuente(fuente) || fuente;
                 const lugar = getObraField(obra, 'lugar', 'Lugar') || '';
                 const region = getObraField(obra, 'region', 'Región') || '';
                 const fecha = getObraField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '-';
                 const compania = getObraField(obra, 'compania', 'Compañía') || '';
                 
                 // Normalizar fuente para display y clase CSS
-                // Mantener "Fuentes IX" internamente pero mostrar como "FUENTES IX" (más compacto)
                 let fuenteDisplay = fuente;
                 let fuenteClass = fuente ? fuente.toLowerCase().replace(/\s+/g, '-') : 'desconocida';
                 
                 // Mapear valores de fuente para display mejorado
-                if (fuente === 'Fuentes IX' || fuente === 'FUENTESXI') {
-                    fuenteDisplay = 'FUENTES IX';  // Display más compacto y visual
-                    fuenteClass = 'fuentesxi';  // Usar la clase CSS existente
+                if (fuente === 'FUENTES IX') {
+                    fuenteDisplay = 'FUENTES IX';
+                    fuenteClass = 'fuentes-ix';
                 } else if (fuente === 'CATCOM') {
                     fuenteDisplay = 'CATCOM';
                     fuenteClass = 'catcom';
