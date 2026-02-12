@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comedias - COMEDIA26</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: #f8f6f2;
+            color: #3d3428;
+            font-family: "Crimson Text", serif;
+        }
+        #loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            font-size: 16px;
+            letter-spacing: 0.2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">Cargando vista de comedias...</div>
+    <script>
+        window.__filtrosForzados = { tipo_obra: 'comedia' };
+        window.__bloquearFiltros = ['tipo_obra'];
+        window.__ocultarFiltros = ['tipo_obra'];
+
+        fetch('index.html')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return response.text();
+            })
+            .then((html) => {
+                document.open();
+                document.write(html);
+                document.close();
+            })
+            .catch((error) => {
+                console.error('Error cargando index.html:', error);
+                const loading = document.getElementById('loading');
+                if (loading) {
+                    loading.textContent = 'No se pudo cargar la vista de comedias.';
+                }
+            });
+    </script>
+</body>
+</html>

@@ -101,6 +101,17 @@
             letter-spacing: 0.3px;
             transition: color 0.3s ease;
         }
+
+        .quick-links {
+            margin-top: 6px;
+        }
+
+        .quick-links a {
+            color: var(--subtitle-color);
+            font-size: 13px;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
         
         .filters-section {
             background: var(--filters-bg);
@@ -279,6 +290,15 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-family: 'Crimson Text', serif;
+        }
+
+        .results-table th.sortable-header {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .results-table th.sortable-header:hover {
+            background-color: rgba(255, 255, 255, 0.08);
         }
         
         .results-table td {
@@ -741,6 +761,9 @@
             <div>
                 <h1 style="margin-bottom: 0; border-bottom: none; padding-bottom: 0;">Teatro Español del Siglo de Oro</h1>
                 <p class="subtitle" style="margin-bottom: 0;">Catálogo de obras, autores, representaciones y lugares • Sincronización automática activa</p>
+                <div class="quick-links">
+                    <a href="comedia.html" id="link-comedia-toggle">Ver solo comedias</a>
+                </div>
             </div>
             <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
                 <i class="fas fa-moon" id="themeIcon"></i>
@@ -975,6 +998,8 @@
         let catalogoLugaresFuentesIX = null;
         let catalogoRegionesFuentesIX = null;
         let mapaAnioAuxiliarFuentesIX = null;
+        let ordenColumna = null;
+        let ordenDireccion = 'asc';
         
         // ============================================================================
         // CONFIGURACIÓN SUPABASE
@@ -4516,6 +4541,68 @@
             return null;
         }
 
+        function obtenerIdNormalizado(obra) {
+            const id = obtenerCampo(obra, 'id', 'ID', 'Id');
+            return id !== null && id !== undefined ? String(id) : null;
+        }
+
+        function esValorSignificativo(valor) {
+            if (valor === null || valor === undefined) return false;
+            if (typeof valor === 'string') {
+                const limpio = valor.trim().toLowerCase();
+                return limpio !== '' && limpio !== '-' && limpio !== 'no especificada' && limpio !== 'no disponible' && limpio !== 'sin datos';
+            }
+            if (Array.isArray(valor)) {
+                return valor.length > 0;
+            }
+            if (typeof valor === 'object') {
+                return Object.keys(valor).length > 0;
+            }
+            return true;
+        }
+
+        function combinarObrasConPreferencia(base, override) {
+            const resultado = { ...base };
+            Object.keys(override || {}).forEach((clave) => {
+                if (esValorSignificativo(override[clave])) {
+                    resultado[clave] = override[clave];
+                }
+            });
+            return resultado;
+        }
+
+        function combinarDatosJsonConSupabase(obrasJson, obrasSupabase) {
+            if (!Array.isArray(obrasJson) && !Array.isArray(obrasSupabase)) return [];
+            if (!Array.isArray(obrasJson)) return obrasSupabase || [];
+            if (!Array.isArray(obrasSupabase)) return obrasJson || [];
+
+            const mapaJson = new Map();
+            obrasJson.forEach((obra) => {
+                const id = obtenerIdNormalizado(obra);
+                if (id) {
+                    mapaJson.set(id, obra);
+                }
+            });
+
+            const resultados = [];
+            obrasSupabase.forEach((obra) => {
+                const id = obtenerIdNormalizado(obra);
+                if (id && mapaJson.has(id)) {
+                    const base = mapaJson.get(id);
+                    resultados.push(combinarObrasConPreferencia(base, obra));
+                    mapaJson.delete(id);
+                } else {
+                    resultados.push(obra);
+                }
+            });
+
+            mapaJson.forEach((obra) => {
+                resultados.push(obra);
+            });
+
+            return resultados;
+        }
+
         function normalizarTexto(valor) {
             if (valor === undefined || valor === null) return '';
             return valor.toString().trim();
@@ -4606,6 +4693,116 @@
             return extraerAnioObra(obra) || extraerAnioAuxiliar(obra);
         }
 
+        function obtenerRepresentacionConDatos(obra) {
+            if (!obra || !Array.isArray(obra.representaciones)) return null;
+            return obra.representaciones.find((rep) => {
+                return rep && (rep.fecha || rep.fecha_formateada || rep.lugar || rep.region);
+            }) || obra.representaciones[0] || null;
+        }
+
+        function obtenerLugarDisplay(obra) {
+            const lugarCampo = normalizarTexto(obtenerCampo(obra, 'lugar', 'Lugar'));
+            const regionCampo = normalizarTexto(obtenerCampo(obra, 'region', 'Región', 'Region', 'Provincia'));
+            if (lugarCampo || regionCampo) {
+                return normalizarTexto(`${lugarCampo}${regionCampo ? (lugarCampo ? ', ' : '') + regionCampo : ''}`) || '-';
+            }
+
+            const rep = obtenerRepresentacionConDatos(obra);
+            if (rep) {
+                const lugarRep = normalizarTexto(rep.lugar);
+                const regionRep = normalizarTexto(rep.region);
+                const combinado = normalizarTexto(`${lugarRep}${regionRep ? (lugarRep ? ', ' : '') + regionRep : ''}`);
+                if (combinado) return combinado;
+            }
+
+            return '-';
+        }
+
+        function obtenerFechaDisplay(obra) {
+            const valor = obtenerCampo(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha');
+            const fechaTexto = normalizarTexto(valor);
+            if (fechaTexto && fechaTexto.toLowerCase() !== 'no especificada') {
+                return fechaTexto;
+            }
+
+            const rep = obtenerRepresentacionConDatos(obra);
+            if (rep) {
+                const fechaRep = normalizarTexto(rep.fecha_formateada || rep.fecha);
+                if (fechaRep) return fechaRep;
+            }
+
+            const anio = obtenerAnioParaFiltro(obra);
+            return anio ? String(anio) : '-';
+        }
+
+        function obtenerValorParaOrden(obra, columna) {
+            switch (columna) {
+                case 'id':
+                    return normalizarTexto(obtenerCampo(obra, 'id', 'ID'));
+                case 'titulo':
+                    return normalizarTexto(obtenerCampo(obra, 'titulo', 'Título', 'T?tulo'));
+                case 'autor':
+                    return extraerAutorNombre(obra);
+                case 'tipo':
+                    return normalizarTexto(obtenerCampo(obra, 'tipo_obra', 'Tipo de Obra'));
+                case 'fuente':
+                    return normalizarTexto(normalizarFuente(obtenerCampo(obra, 'fuente', 'Fuente Principal', 'Fuente')));
+                case 'lugar': {
+                    return obtenerLugarDisplay(obra);
+                }
+                case 'fecha':
+                    return obtenerFechaDisplay(obra);
+                case 'compania':
+                    return extraerCompania(obra);
+                default:
+                    return '';
+            }
+        }
+
+        function obtenerIndicadorOrden(columna) {
+            if (ordenColumna !== columna) return '';
+            return ordenDireccion === 'asc' ? ' ▲' : ' ▼';
+        }
+
+        function esValorVacioOrden(valor) {
+            const limpio = normalizarTexto(valor).toLowerCase();
+            return !limpio || limpio === '-' || limpio === 'no especificada';
+        }
+
+        function ordenarDatosFiltrados(columna, direccion) {
+            if (!columna || !Array.isArray(datosFiltrados)) return;
+
+            const collator = new Intl.Collator('es', { numeric: true, sensitivity: 'base' });
+            datosFiltrados.sort((a, b) => {
+                const valorA = obtenerValorParaOrden(a, columna);
+                const valorB = obtenerValorParaOrden(b, columna);
+                const vacioA = esValorVacioOrden(valorA);
+                const vacioB = esValorVacioOrden(valorB);
+
+                if (vacioA && vacioB) return 0;
+                if (vacioA) return direccion === 'asc' ? 1 : -1;
+                if (vacioB) return direccion === 'asc' ? -1 : 1;
+
+                const comparacion = collator.compare(valorA, valorB);
+                return direccion === 'asc' ? comparacion : -comparacion;
+            });
+        }
+
+        function ordenarResultados(columna) {
+            if (!columna || !Array.isArray(datosFiltrados)) return;
+
+            if (ordenColumna === columna) {
+                ordenDireccion = ordenDireccion === 'asc' ? 'desc' : 'asc';
+            } else {
+                ordenColumna = columna;
+                ordenDireccion = 'asc';
+            }
+            
+            ordenarDatosFiltrados(ordenColumna, ordenDireccion);
+
+            mostrarResultados();
+        }
+
         function actualizarSelectOpciones(selectId, valores, placeholder) {
             const select = document.getElementById(selectId);
             if (!select) return;
@@ -4674,6 +4871,104 @@
             }
             actualizarSelectOpciones('compania', companias, 'Todas');
             actualizarSelectOpciones('mecenas', mecenas, 'Todos');
+        }
+
+        function obtenerConfigFiltrosForzados() {
+            const filtrosForzados = {};
+            const filtrosBloqueados = new Set();
+            const filtrosOcultos = new Set();
+
+            if (window.__filtrosForzados && typeof window.__filtrosForzados === 'object') {
+                Object.keys(window.__filtrosForzados).forEach((clave) => {
+                    filtrosForzados[clave] = window.__filtrosForzados[clave];
+                });
+            }
+
+            if (Array.isArray(window.__bloquearFiltros)) {
+                window.__bloquearFiltros.forEach((clave) => filtrosBloqueados.add(clave));
+            }
+
+            if (Array.isArray(window.__ocultarFiltros)) {
+                window.__ocultarFiltros.forEach((clave) => filtrosOcultos.add(clave));
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const tipoObra = params.get('tipo_obra');
+            if (tipoObra) {
+                filtrosForzados.tipo_obra = tipoObra;
+            }
+            if (params.get('lock_tipo_obra') === '1') {
+                filtrosBloqueados.add('tipo_obra');
+            }
+            if (params.get('hide_tipo_obra') === '1') {
+                filtrosOcultos.add('tipo_obra');
+            }
+
+            return { filtrosForzados, filtrosBloqueados, filtrosOcultos };
+        }
+
+        function aplicarFiltrosForzados() {
+            const { filtrosForzados, filtrosBloqueados } = obtenerConfigFiltrosForzados();
+            let aplicoFiltros = false;
+
+            Object.keys(filtrosForzados).forEach((id) => {
+                const valor = filtrosForzados[id];
+                const input = document.getElementById(id);
+                if (!input) return;
+                input.value = valor;
+                aplicoFiltros = true;
+
+                if (filtrosBloqueados.has(id)) {
+                    input.disabled = true;
+                    input.setAttribute('data-locked', 'true');
+                    const label = document.querySelector(`label[for="${id}"]`);
+                    if (label) {
+                        label.title = 'Filtro fijo';
+                    }
+                }
+            });
+
+            if (aplicoFiltros) {
+                aplicarFiltros();
+            }
+
+            return aplicoFiltros;
+        }
+
+        function ocultarFiltrosForzados() {
+            const { filtrosOcultos } = obtenerConfigFiltrosForzados();
+            if (!filtrosOcultos || filtrosOcultos.size === 0) return;
+
+            filtrosOcultos.forEach((id) => {
+                const input = document.getElementById(id);
+                if (!input) return;
+                const grupo = input.closest('.filter-group');
+                if (grupo) {
+                    grupo.style.display = 'none';
+                } else {
+                    input.style.display = 'none';
+                    const label = document.querySelector(`label[for="${id}"]`);
+                    if (label) {
+                        label.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function actualizarEnlaceVistaComedias() {
+            const link = document.getElementById('link-comedia-toggle');
+            if (!link) return;
+
+            const pathname = window.location.pathname || '';
+            const enComedias = pathname.endsWith('/comedia.html') || pathname.endsWith('comedia.html');
+
+            if (enComedias) {
+                link.href = 'index.html';
+                link.textContent = 'Ver todo tipo de obras';
+            } else {
+                link.href = 'comedia.html';
+                link.textContent = 'Ver solo comedias';
+            }
         }
 
         function actualizarSelectLugaresAnidados(catalogo) {
@@ -4824,6 +5119,10 @@
         async function cargarDatos() {
             const inicioTiempo = Date.now();
             let datosCargados = false;
+            let datosSupabase = null;
+            let metadataSupabase = null;
+            let datosJson = null;
+            let metadataJson = null;
             
             try {
                 // INTENTO 1: Cargar desde Supabase (fuente principal)
@@ -4912,7 +5211,7 @@
                         
                         // Convertir datos de Supabase al formato esperado
                         // Supabase puede tener campos como JSONB que necesitan parsearse
-                        datosOriginales = obrasSupabase.map(obra => {
+                        datosSupabase = obrasSupabase.map(obra => {
                             const obraFormateada = { ...obra };
                             
                             // Parsear campos JSONB si existen
@@ -4941,9 +5240,8 @@
                             return normalizarFuenteEnObra(obraFormateada);
                         });
                         
-                        datosFiltrados = [...datosOriginales];
-                        metadata = {
-                            total_obras: datosOriginales.length,
+                        metadataSupabase = {
+                            total_obras: datosSupabase.length,
                             fuente: 'Supabase',
                             ultima_actualizacion: new Date().toISOString()
                         };
@@ -4951,7 +5249,7 @@
                         datosCargados = true;
                         const tiempoTotal = Date.now() - inicioTiempo;
                         console.log(`✅ Datos cargados desde Supabase (fuente principal) en ${tiempoTotal}ms`);
-                        console.log(`📊 Total obras: ${datosOriginales.length}, Fuente: Supabase`);
+                        console.log(`📊 Total obras: ${datosSupabase.length}, Fuente: Supabase`);
                     } else {
                         console.warn('⚠️ Supabase no tiene datos o hubo un error');
                         throw new Error('Supabase vacío o error: Sin datos recibidos');
@@ -4977,77 +5275,92 @@
                     }
                 }
                 
-                // INTENTO 2: Cargar desde JSON (fallback/respaldo)
-                if (!datosCargados) {
-                    try {
-                        console.log('🔍 Intentando cargar datos_obras.json como fallback...');
-                        const response = await fetch('datos_obras.json');
-                        
-                        console.log('📡 Respuesta recibida:', response.status, response.statusText);
-                        
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                        }
-                        
-                        const data = await response.json();
-                        console.log('✅ JSON parseado correctamente');
-                        console.log('📊 Estructura de datos:', {
-                            tieneMetadata: !!data.metadata,
-                            tieneObras: !!data.obras,
-                            esArray: Array.isArray(data),
-                            totalObras: data.obras ? data.obras.length : (Array.isArray(data) ? data.length : 0)
-                        });
-                        
-                        // Manejar ambos formatos: {metadata, obras} o array directo
-                        if (data.metadata && data.obras) {
-                            // Formato nuevo con metadata
-                            metadata = { ...data.metadata, fuente: 'JSON (fallback)' };
-                            datosOriginales = data.obras;
-                        } else if (Array.isArray(data)) {
-                            // Formato antiguo: array directo
-                            console.warn('⚠️ JSON en formato antiguo (array directo). Se recomienda usar formato con metadata.');
-                            metadata = { 
-                                total_obras: data.length,
-                                fuente: 'JSON (fallback)'
-                            };
-                            datosOriginales = data;
-                        } else {
-                            throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
-                        }
-                        
-                        datosOriginales = datosOriginales.map((obra) => normalizarFuenteEnObra(obra));
-                        if (metadata.fuentes && Array.isArray(metadata.fuentes)) {
-                            metadata.fuentes = metadata.fuentes.map(normalizarFuente).filter(Boolean);
-                        }
-                        
-                        datosFiltrados = [...datosOriginales];
-                        
-                        console.log(`✅ ${datosOriginales.length} obras cargadas desde JSON (fallback)`);
-                        
-                        if (datosOriginales.length === 0) {
-                            throw new Error('El archivo JSON está vacío o no contiene obras');
-                        }
-                        
-                        datosCargados = true;
-                    } catch (errorJson) {
-                        console.error('❌ Error cargando datos desde JSON:', errorJson);
-                        
-                        // Crear log de error si el usuario está autenticado
-                        if (usuarioActual) {
-                            await crearLogError(
-                                'carga_datos',
-                                'Error al cargar datos desde JSON (fallback también falló)',
-                                {
-                                    error_message: errorJson.message || String(errorJson),
-                                    error_stack: errorJson.stack || null,
-                                    timestamp: new Date().toISOString(),
-                                    fallback_failed: true
-                                }
-                            );
-                        }
-                        
+                // INTENTO 2: Cargar desde JSON (fuente base / respaldo)
+                try {
+                    console.log('🔍 Intentando cargar datos_obras.json como base...');
+                    const response = await fetch('datos_obras.json');
+                    
+                    console.log('📡 Respuesta recibida:', response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('✅ JSON parseado correctamente');
+                    console.log('📊 Estructura de datos:', {
+                        tieneMetadata: !!data.metadata,
+                        tieneObras: !!data.obras,
+                        esArray: Array.isArray(data),
+                        totalObras: data.obras ? data.obras.length : (Array.isArray(data) ? data.length : 0)
+                    });
+                    
+                    // Manejar ambos formatos: {metadata, obras} o array directo
+                    if (data.metadata && data.obras) {
+                        // Formato nuevo con metadata
+                        metadataJson = { ...data.metadata, fuente: 'JSON (base)' };
+                        datosJson = data.obras;
+                    } else if (Array.isArray(data)) {
+                        // Formato antiguo: array directo
+                        console.warn('⚠️ JSON en formato antiguo (array directo). Se recomienda usar formato con metadata.');
+                        metadataJson = { 
+                            total_obras: data.length,
+                            fuente: 'JSON (base)'
+                        };
+                        datosJson = data;
+                    } else {
+                        throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
+                    }
+                    
+                    datosJson = datosJson.map((obra) => normalizarFuenteEnObra(obra));
+                    if (metadataJson.fuentes && Array.isArray(metadataJson.fuentes)) {
+                        metadataJson.fuentes = metadataJson.fuentes.map(normalizarFuente).filter(Boolean);
+                    }
+                    
+                    console.log(`✅ ${datosJson.length} obras cargadas desde JSON (base)`);
+                    
+                    if (datosJson.length === 0) {
+                        throw new Error('El archivo JSON está vacío o no contiene obras');
+                    }
+                } catch (errorJson) {
+                    console.error('❌ Error cargando datos desde JSON:', errorJson);
+                    
+                    // Crear log de error si el usuario está autenticado
+                    if (usuarioActual) {
+                        await crearLogError(
+                            'carga_datos',
+                            'Error al cargar datos desde JSON',
+                            {
+                                error_message: errorJson.message || String(errorJson),
+                                error_stack: errorJson.stack || null,
+                                timestamp: new Date().toISOString(),
+                                fallback_failed: !datosSupabase
+                            }
+                        );
+                    }
+                    
+                    if (!datosSupabase) {
                         throw new Error('No se pudieron cargar datos ni desde Supabase ni desde JSON. ' + errorJson.message);
                     }
+                }
+
+                if (datosJson) {
+                    if (datosSupabase) {
+                        datosOriginales = combinarDatosJsonConSupabase(datosJson, datosSupabase);
+                        metadata = { ...metadataJson, fuente: 'JSON + Supabase (ediciones)' };
+                    } else {
+                        datosOriginales = datosJson;
+                        metadata = metadataJson;
+                    }
+                } else if (datosSupabase) {
+                    datosOriginales = datosSupabase;
+                    metadata = metadataSupabase;
+                }
+
+                if (Array.isArray(datosOriginales)) {
+                    datosOriginales = datosOriginales.map((obra) => normalizarFuenteEnObra(obra));
+                    datosFiltrados = [...datosOriginales];
+                    datosCargados = true;
                 }
                 
                 // Mostrar resultados y actualizar UI
@@ -5056,7 +5369,11 @@
                     await cargarCatalogoRegionesFuentesIX();
                     await cargarAnioAuxiliarFuentesIX();
                     actualizarOpcionesFiltros();
-                    mostrarResultados();
+                    const aplicoFiltrosForzados = aplicarFiltrosForzados();
+                    ocultarFiltrosForzados();
+                    if (!aplicoFiltrosForzados) {
+                        mostrarResultados();
+                    }
                     
                     // Actualizar subtítulo con info de metadata
                     const fuenteTexto = metadata.fuente === 'Supabase' ? 'Supabase' : 'JSON (respaldo)';
@@ -5235,7 +5552,11 @@
                 
                 return true;
             });
-            
+
+            if (ordenColumna) {
+                ordenarDatosFiltrados(ordenColumna, ordenDireccion);
+            }
+
             mostrarResultados();
         }
         
@@ -5272,14 +5593,14 @@
             
             let html = '<table class="results-table">';
             html += '<thead><tr>';
-            html += '<th>ID</th>';
-            html += '<th>Título</th>';
-            html += '<th>Autor</th>';
-            html += '<th>Tipo</th>';
-            html += '<th>Fuente</th>';
-            html += '<th>Lugar</th>';
-            html += '<th>Fecha</th>';
-            html += '<th>Compañía</th>';
+            html += `<th class="sortable-header" onclick="ordenarResultados('id')">ID${obtenerIndicadorOrden('id')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('titulo')">Título${obtenerIndicadorOrden('titulo')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('autor')">Autor${obtenerIndicadorOrden('autor')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('tipo')">Tipo${obtenerIndicadorOrden('tipo')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('fuente')">Fuente${obtenerIndicadorOrden('fuente')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('lugar')">Lugar${obtenerIndicadorOrden('lugar')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('fecha')">Fecha${obtenerIndicadorOrden('fecha')}</th>`;
+            html += `<th class="sortable-header" onclick="ordenarResultados('compania')">Compañía${obtenerIndicadorOrden('compania')}</th>`;
             if (modoEdicionActivo) {
                 html += '<th>Editar</th>';
             }
@@ -5331,9 +5652,7 @@
                 const tipoObra = getObraField(obra, 'tipo_obra', 'Tipo de Obra') || '-';
                 let fuente = getObraField(obra, 'fuente', 'Fuente Principal', 'Fuente') || 'DESCONOCIDA';
                 fuente = normalizarFuente(fuente) || fuente;
-                const lugar = getObraField(obra, 'lugar', 'Lugar') || '';
-                const region = getObraField(obra, 'region', 'Región') || '';
-                const fecha = getObraField(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha') || '-';
+                const fecha = obtenerFechaDisplay(obra);
                 const compania = getObraField(obra, 'compania', 'Compañía') || '';
                 
                 // Normalizar fuente para display y clase CSS
@@ -5360,7 +5679,7 @@
                 html += `<td>${autorNombre}</td>`;
                 html += `<td>${tipoObra}</td>`;
                 html += `<td><span class="badge badge-${fuenteClass}">${fuenteDisplay}</span></td>`;
-                html += `<td>${lugar}${region ? (lugar ? ', ' : '') + region : ''}</td>`;
+                html += `<td>${obtenerLugarDisplay(obra)}</td>`;
                 html += `<td>${fecha}</td>`;
                 html += `<td>${compania}</td>`;
                 if (modoEdicionActivo) {
@@ -6105,6 +6424,8 @@
             console.log('🌐 URL actual:', window.location.href);
             console.log('📦 Supabase disponible:', typeof window.supabase !== 'undefined');
             console.log('💡 Para diagnosticar problemas, ejecuta: diagnosticarUsuario()');
+
+            actualizarEnlaceVistaComedias();
             
             // PRIMERO: Procesar hash de autenticación si existe (antes de mostrar login)
             await procesarHashAutenticacion();
