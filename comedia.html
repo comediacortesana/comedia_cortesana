@@ -9,17 +9,91 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            background: #f8f6f2;
-            color: #3d3428;
+            background: linear-gradient(135deg, #8b7355 0%, #5d4e37 50%, #3d3428 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: #faf9f7;
             font-family: "Crimson Text", serif;
+            position: relative;
+            overflow: hidden;
         }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Efecto de overlay con patrón sutil */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 115, 85, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(93, 78, 55, 0.3) 0%, transparent 50%),
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(250, 249, 247, 0.02) 10px,
+                    rgba(250, 249, 247, 0.02) 20px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+        
         #loading {
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             height: 100%;
-            font-size: 16px;
-            letter-spacing: 0.2px;
+            font-size: 20px;
+            letter-spacing: 1.5px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        #loading::before {
+            content: '🎭';
+            font-size: 80px;
+            display: block;
+            margin-bottom: 30px;
+            animation: float 3s ease-in-out infinite, rotate 6s linear infinite;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.4));
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        #loading::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #faf9f7, transparent);
+            margin-top: 25px;
+            animation: shimmer 2s ease-in-out infinite;
+            border-radius: 2px;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1.2); }
         }
     </style>
 </head>
@@ -41,6 +115,113 @@
                 document.open();
                 document.write(html);
                 document.close();
+                
+                // Inyectar estilos personalizados para comedia
+                setTimeout(() => {
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        /* Estilos personalizados para vista de Comedias */
+                        body {
+                            background: linear-gradient(135deg, #8b7355 0%, #5d4e37 50%, #3d3428 100%) !important;
+                            background-size: 400% 400% !important;
+                            animation: gradientShift 20s ease infinite !important;
+                        }
+                        
+                        @keyframes gradientShift {
+                            0% { background-position: 0% 50%; }
+                            50% { background-position: 100% 50%; }
+                            100% { background-position: 0% 50%; }
+                        }
+                        
+                        .container {
+                            background: rgba(250, 249, 247, 0.98) !important;
+                            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(139, 115, 85, 0.3) !important;
+                            border: 2px solid #8b7355 !important;
+                        }
+                        
+                        h1 {
+                            background: linear-gradient(135deg, #5d4e37, #8b7355, #5d4e37);
+                            -webkit-background-clip: text;
+                            -webkit-text-fill-color: transparent;
+                            background-clip: text;
+                            border-bottom: 3px solid #8b7355 !important;
+                            position: relative;
+                        }
+                        
+                        h1::before {
+                            content: '🎭';
+                            position: absolute;
+                            left: -45px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            font-size: 32px;
+                            animation: bounce 2s ease-in-out infinite;
+                        }
+                        
+                        @keyframes bounce {
+                            0%, 100% { transform: translateY(-50%) scale(1); }
+                            50% { transform: translateY(-60%) scale(1.1); }
+                        }
+                        
+                        .filters-section {
+                            background: linear-gradient(135deg, rgba(139, 115, 85, 0.15), rgba(93, 78, 55, 0.15)) !important;
+                            border: 2px solid #8b7355 !important;
+                            box-shadow: 0 4px 15px rgba(139, 115, 85, 0.2) !important;
+                        }
+                        
+                        .filters-title {
+                            color: #5d4e37 !important;
+                            border-left: 4px solid #8b7355;
+                            padding-left: 12px;
+                            text-shadow: 1px 1px 2px rgba(139, 115, 85, 0.2);
+                        }
+                        
+                        .filter-group input:focus,
+                        .filter-group select:focus {
+                            border-color: #8b7355 !important;
+                            box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.2) !important;
+                        }
+                        
+                        table thead {
+                            background: linear-gradient(135deg, #5d4e37, #4a3f2d) !important;
+                            box-shadow: 0 2px 8px rgba(93, 78, 55, 0.3);
+                        }
+                        
+                        table tbody tr:hover {
+                            background: linear-gradient(90deg, rgba(139, 115, 85, 0.1), rgba(93, 78, 55, 0.1)) !important;
+                            transform: scale(1.001);
+                            transition: all 0.2s ease;
+                        }
+                        
+                        button {
+                            background: linear-gradient(135deg, #5d4e37, #4a3f2d) !important;
+                            box-shadow: 0 4px 10px rgba(93, 78, 55, 0.3) !important;
+                            transition: all 0.3s ease !important;
+                        }
+                        
+                        button:hover {
+                            background: linear-gradient(135deg, #6d5e47, #5d4e37) !important;
+                            transform: translateY(-2px);
+                            box-shadow: 0 6px 15px rgba(93, 78, 55, 0.4) !important;
+                        }
+                        
+                        .auth-section {
+                            background: linear-gradient(135deg, rgba(139, 115, 85, 0.12), rgba(93, 78, 55, 0.12)) !important;
+                            border: 2px solid rgba(139, 115, 85, 0.3) !important;
+                        }
+                        
+                        /* Efecto de brillo en elementos interactivos */
+                        select, input[type="text"], input[type="number"] {
+                            transition: all 0.3s ease !important;
+                        }
+                        
+                        select:hover, input[type="text"]:hover, input[type="number"]:hover {
+                            border-color: #8b7355 !important;
+                            box-shadow: 0 0 8px rgba(139, 115, 85, 0.15) !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }, 100);
             })
             .catch((error) => {
                 console.error('Error cargando index.html:', error);
