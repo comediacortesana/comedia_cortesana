@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - Base de Datos DELIA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+Pro:wght@400;600;700&display=swap');
+        
+        :root {
+            --bg-color: #faf9f7;
+            --text-color: #2c2416;
+            --container-bg: #ffffff;
+            --container-border: #e8e6e3;
+            --heading-color: #1a1612;
+            --border-color: #8b7355;
+            --accent-color: #5d4e37;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --info-color: #2196f3;
+        }
+        
+        [data-theme="dark"] {
+            --bg-color: #1a1612;
+            --text-color: #e8e6e3;
+            --container-bg: #2c2416;
+            --container-border: #4a3f2d;
+            --heading-color: #faf9f7;
+            --border-color: #6d5e47;
+            --accent-color: #8b7355;
+        }
+        
+        body {
+            font-family: 'Crimson Text', 'Source Serif Pro', 'Times New Roman', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            padding: 40px 50px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border: 1px solid var(--container-border);
+        }
+        
+        h1 {
+            color: var(--heading-color);
+            margin-bottom: 10px;
+            font-size: 32px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+        
+        .subtitle {
+            color: #5a5247;
+            margin-bottom: 30px;
+            font-size: 15px;
+            font-style: italic;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .back-button:hover {
+            background: #6d5e47;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: var(--heading-color);
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .section h3 {
+            color: var(--heading-color);
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: var(--filters-bg, #f7f6f4);
+            border: 1px solid var(--filters-border, #e0ddd8);
+            border-radius: 4px;
+            padding: 20px;
+        }
+        
+        .stat-card h4 {
+            color: var(--heading-color);
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #5a5247;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table th {
+            background: var(--table-header-bg, #5d4e37);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--container-border);
+        }
+        
+        table tr:hover {
+            background: var(--table-row-hover, #f7f6f4);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0ddd8;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            transition: width 0.3s;
+        }
+        
+        .progress-warning {
+            background: var(--warning-color);
+        }
+        
+        .conclusion-box {
+            background: #f7f6f4;
+            border-left: 4px solid var(--accent-color);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .conclusion-box h3 {
+            margin-top: 0;
+            color: var(--accent-color);
+        }
+        
+        .conclusion-box ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .conclusion-box li {
+            margin-bottom: 8px;
+        }
+        
+        .copy-button {
+            background: var(--info-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .copy-button:hover {
+            background: #1976d2;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #5a5247;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">← Volver al Filtro</a>
+        
+        <h1>Estadísticas y Análisis de Datos</h1>
+        <p class="subtitle">Base de Datos DELIA - Teatro Español del Siglo de Oro</p>
+        
+        <div id="loading" class="loading">
+            <p>Cargando estadísticas...</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <!-- Estadísticas Generales -->
+            <div class="section">
+                <h2>📊 Estadísticas Generales</h2>
+                <div id="stats-general" class="stats-grid"></div>
+            </div>
+            
+            <!-- Completitud por Fuente -->
+            <div class="section">
+                <h2>📈 Completitud de Datos por Fuente</h2>
+                <div id="completitud-fuentes"></div>
+            </div>
+            
+            <!-- Análisis FUENTES IX -->
+            <div class="section">
+                <h2>🔍 Análisis Específico de FUENTES IX</h2>
+                <div id="analisis-fuentesix"></div>
+            </div>
+            
+            <!-- Conclusiones -->
+            <div class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin-bottom: 0;">💡 Conclusiones y Recomendaciones</h2>
+                    <button class="copy-button" onclick="copiarTodasConclusiones()" style="margin-top: 0;">
+                        📋 Copiar Todas las Conclusiones
+                    </button>
+                </div>
+                <div id="conclusiones"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function cargarEstadisticas() {
+            try {
+                const response = await fetch('data/fuentesix/estadisticas_datos.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const data = await response.json();
+                mostrarEstadisticas(data);
+            } catch (error) {
+                console.error('Error cargando estadísticas:', error);
+                document.getElementById('loading').innerHTML = 
+                    '<p style="color: red;">Error al cargar estadísticas. Verifica que el archivo estadisticas_datos.json existe.</p>';
+            }
+        }
+        
+        function mostrarEstadisticas(data) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            
+            mostrarEstadisticasGenerales(data.estadisticas_completitud);
+            mostrarCompletitudPorFuente(data.estadisticas_completitud);
+            mostrarAnalisisFuentesIX(data.analisis_fuentesix);
+            mostrarConclusiones(data.conclusiones);
+        }
+        
+        function mostrarEstadisticasGenerales(stats) {
+            const general = stats.estadisticas_generales;
+            const html = `
+                <div class="stat-card">
+                    <h4>Total de Obras</h4>
+                    <div class="stat-value">${general.total_obras.toLocaleString()}</div>
+                    <div class="stat-label">obras en la base de datos</div>
+                </div>
+                ${Object.entries(general.por_fuente).map(([fuente, count]) => `
+                    <div class="stat-card">
+                        <h4>${fuente}</h4>
+                        <div class="stat-value">${count.toLocaleString()}</div>
+                        <div class="stat-label">${(count / general.total_obras * 100).toFixed(1)}% del total</div>
+                    </div>
+                `).join('')}
+                <div class="stat-card">
+                    <h4>Representaciones</h4>
+                    <div class="stat-value">${general.representaciones_stats.total.toLocaleString()}</div>
+                    <div class="stat-label">representaciones documentadas</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Lugares Únicos</h4>
+                    <div class="stat-value">${general.representaciones_stats.lugares_unicos}</div>
+                    <div class="stat-label">lugares diferentes</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Compañías Únicas</h4>
+                    <div class="stat-value">${general.representaciones_stats.companias_unicos}</div>
+                    <div class="stat-label">compañías diferentes</div>
+                </div>
+            `;
+            document.getElementById('stats-general').innerHTML = html;
+        }
+        
+        function mostrarCompletitudPorFuente(stats) {
+            const html = Object.entries(stats.completitud_por_fuente).map(([fuente, data]) => {
+                const camposHtml = Object.entries(data.campos_obra).map(([key, campo]) => {
+                    const porcentaje = campo.porcentaje;
+                    const claseBarra = porcentaje < 50 ? 'progress-warning' : '';
+                    return `
+                        <tr>
+                            <td>${campo.nombre}</td>
+                            <td>${campo.completas}</td>
+                            <td>
+                                <div class="progress-bar">
+                                    <div class="progress-fill ${claseBarra}" style="width: ${porcentaje}%"></div>
+                                </div>
+                            </td>
+                            <td>${porcentaje.toFixed(1)}%</td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                return `
+                    <div class="section">
+                        <h3>${fuente} (${data.total_obras} obras)</h3>
+                        <p><strong>Representaciones:</strong> ${data.representaciones.obras_con_reps} obras tienen representaciones 
+                        (${data.representaciones.porcentaje_con_reps.toFixed(1)}%) - 
+                        Total: ${data.representaciones.total_reps} representaciones</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Campo</th>
+                                    <th>Completas</th>
+                                    <th>Completitud</th>
+                                    <th>%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${camposHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('completitud-fuentes').innerHTML = html;
+        }
+        
+        function mostrarAnalisisFuentesIX(analisis) {
+            const distribucion = analisis.distribucion_temporal;
+            const años = Object.keys(distribucion).sort((a, b) => parseInt(a) - parseInt(b));
+            const añosHtml = años.length > 0 ? `
+                <p><strong>Rango temporal:</strong> ${años[0]} - ${años[años.length - 1]}</p>
+                <p><strong>Años con más representaciones:</strong></p>
+                <ul>
+                    ${Object.entries(distribucion).sort((a, b) => b[1] - a[1]).slice(0, 10).map(([año, count]) => 
+                        `<li>${año}: ${count} representaciones</li>`
+                    ).join('')}
+                </ul>
+            ` : '<p>No hay datos temporales disponibles</p>';
+            
+            const lugaresHtml = Object.entries(analisis.lugares_mas_frecuentes).slice(0, 10).map(([lugar, count]) => 
+                `<li>${lugar}: ${count} menciones</li>`
+            ).join('');
+            
+            const companiasHtml = Object.entries(analisis.companias_mas_frecuentes).slice(0, 10).map(([compania, count]) => 
+                `<li>${compania}: ${count} menciones</li>`
+            ).join('');
+            
+            const html = `
+                <div class="stat-card">
+                    <h4>Obras sin Autor</h4>
+                    <div class="stat-value">${analisis.obras_sin_autor.total}</div>
+                    <div class="stat-label">${analisis.obras_sin_autor.porcentaje.toFixed(1)}% del total</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Obras sin Representaciones</h4>
+                    <div class="stat-value">${analisis.obras_sin_representaciones.total}</div>
+                    <div class="stat-label">${analisis.obras_sin_representaciones.porcentaje.toFixed(1)}% del total</div>
+                </div>
+                <div class="stat-card">
+                    <h4>Títulos Alternativos</h4>
+                    <div class="stat-value">${analisis.titulos_alternativos.total}</div>
+                    <div class="stat-label">${analisis.titulos_alternativos.promedio_por_obra.toFixed(1)} por obra en promedio</div>
+                </div>
+                
+                <h3>Distribución Temporal</h3>
+                ${añosHtml}
+                
+                <h3>Lugares Más Frecuentes</h3>
+                <ul>
+                    ${lugaresHtml}
+                </ul>
+                
+                <h3>Compañías Más Frecuentes</h3>
+                <ul>
+                    ${companiasHtml}
+                </ul>
+            `;
+            
+            document.getElementById('analisis-fuentesix').innerHTML = html;
+        }
+        
+        function mostrarConclusiones(conclusiones) {
+            const conclusionesHtml = conclusiones.conclusiones.map((conc, idx) => {
+                const textoLimpio = conc.contenido.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+                return `
+                <div class="conclusion-box">
+                    <h3>${conc.titulo}</h3>
+                    ${conc.contenido}
+                    <button class="copy-button" onclick="copiarTexto(this, ${idx}, 'conclusion')">📋 Copiar</button>
+                    <div style="display: none;" class="texto-copia">${conc.titulo}\n\n${textoLimpio}</div>
+                </div>
+            `;
+            }).join('');
+            
+            const recomendacionesHtml = conclusiones.recomendaciones.map((rec, idx) => {
+                const textoLimpio = rec.contenido.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+                return `
+                <div class="conclusion-box">
+                    <h3>${rec.titulo}</h3>
+                    ${rec.contenido}
+                    <button class="copy-button" onclick="copiarTexto(this, ${idx}, 'recomendacion')">📋 Copiar para búsqueda</button>
+                    <div style="display: none;" class="texto-copia">${rec.titulo}\n\n${textoLimpio}</div>
+                </div>
+            `;
+            }).join('');
+            
+            document.getElementById('conclusiones').innerHTML = `
+                <h3>Conclusiones</h3>
+                ${conclusionesHtml}
+                <h3>Recomendaciones para Investigación</h3>
+                ${recomendacionesHtml}
+            `;
+        }
+        
+        function copiarTexto(button, idx, tipo) {
+            const textoDiv = button.nextElementSibling;
+            const texto = textoDiv.textContent.trim();
+            
+            // Crear un elemento temporal para copiar
+            const textarea = document.createElement('textarea');
+            textarea.value = texto;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                const originalText = button.textContent;
+                button.textContent = '✅ Copiado!';
+                button.style.background = '#4caf50';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                // Fallback: seleccionar texto
+                textoDiv.style.display = 'block';
+                textoDiv.style.position = 'absolute';
+                textoDiv.style.left = '-9999px';
+                const range = document.createRange();
+                range.selectNode(textoDiv);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                alert('Texto seleccionado. Presiona Ctrl+C para copiar.');
+                textoDiv.style.display = 'none';
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+        
+        function copiarTodasConclusiones() {
+            const todasLasCajas = document.querySelectorAll('.conclusion-box');
+            let textoCompleto = 'CONCLUSIONES Y RECOMENDACIONES - BASE DE DATOS DELIA\n';
+            textoCompleto += '='.repeat(60) + '\n\n';
+            
+            todasLasCajas.forEach(caja => {
+                const titulo = caja.querySelector('h3').textContent;
+                const contenido = caja.textContent.replace(/📋 Copiar para búsqueda/g, '').trim();
+                textoCompleto += titulo + '\n';
+                textoCompleto += '-'.repeat(60) + '\n';
+                textoCompleto += contenido + '\n\n';
+            });
+            
+            const textarea = document.createElement('textarea');
+            textarea.value = textoCompleto;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                alert('✅ Todas las conclusiones copiadas al portapapeles');
+            } catch (err) {
+                console.error('Error al copiar:', err);
+                alert('Error al copiar. Por favor, selecciona y copia manualmente.');
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+        
+        // Cargar estadísticas al iniciar
+        cargarEstadisticas();
+    </script>
+</body>
+</html>

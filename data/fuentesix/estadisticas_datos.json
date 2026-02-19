@@ -1,0 +1,564 @@
+{
+  "fecha_generacion": "2026-02-19T12:26:15.530912",
+  "estadisticas_completitud": {
+    "fecha_analisis": "2026-02-19T12:26:15.526709",
+    "estadisticas_generales": {
+      "total_obras": 2580,
+      "por_fuente": {
+        "CATCOM": 1621,
+        "AMBAS": 103,
+        "FUENTES IX": 856
+      },
+      "campos_completitud": {},
+      "representaciones_stats": {
+        "total": 363,
+        "con_fecha": 363,
+        "con_lugar": 363,
+        "con_compania": 363,
+        "lugares_unicos": 73,
+        "companias_unicas": 91
+      }
+    },
+    "completitud_por_fuente": {
+      "CATCOM": {
+        "total_obras": 1621,
+        "campos_obra": {
+          "titulo": {
+            "nombre": "Título",
+            "completas": 1621,
+            "porcentaje": 100.0
+          },
+          "titulo_original": {
+            "nombre": "Título Original",
+            "completas": 1621,
+            "porcentaje": 100.0
+          },
+          "titulo_alternativo": {
+            "nombre": "Títulos Alternativos",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "autor": {
+            "nombre": "Autor",
+            "completas": 1621,
+            "porcentaje": 100.0
+          },
+          "tipo_obra": {
+            "nombre": "Tipo de Obra",
+            "completas": 1621,
+            "porcentaje": 100.0
+          },
+          "genero": {
+            "nombre": "Género",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "subgenero": {
+            "nombre": "Subgénero",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_creacion": {
+            "nombre": "Fecha de Creación",
+            "completas": 1,
+            "porcentaje": 0.061690314620604564
+          },
+          "tema": {
+            "nombre": "Tema",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "mecenas": {
+            "nombre": "Mecenas",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "edicion_principe": {
+            "nombre": "Edición Príncipe",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "notas_bibliograficas": {
+            "nombre": "Notas Bibliográficas",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "manuscritos_conocidos": {
+            "nombre": "Manuscritos Conocidos",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "representaciones": {
+            "nombre": "Representaciones",
+            "completas": 0,
+            "porcentaje": 0.0
+          }
+        },
+        "campos_autor": {
+          "nombre": {
+            "nombre": "Nombre",
+            "completas": 1621,
+            "porcentaje": 100.0
+          },
+          "nombre_completo": {
+            "nombre": "Nombre Completo",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_nacimiento": {
+            "nombre": "Fecha Nacimiento",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_muerte": {
+            "nombre": "Fecha Muerte",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "biografia": {
+            "nombre": "Biografía",
+            "completas": 0,
+            "porcentaje": 0.0
+          }
+        },
+        "representaciones": {
+          "obras_con_reps": 0,
+          "porcentaje_con_reps": 0.0,
+          "total_reps": 0,
+          "promedio_reps": 0.0,
+          "reps_con_fecha": 0,
+          "reps_con_lugar": 0,
+          "reps_con_compania": 0
+        }
+      },
+      "AMBAS": {
+        "total_obras": 103,
+        "campos_obra": {
+          "titulo": {
+            "nombre": "Título",
+            "completas": 103,
+            "porcentaje": 100.0
+          },
+          "titulo_original": {
+            "nombre": "Título Original",
+            "completas": 103,
+            "porcentaje": 100.0
+          },
+          "titulo_alternativo": {
+            "nombre": "Títulos Alternativos",
+            "completas": 30,
+            "porcentaje": 29.126213592233007
+          },
+          "autor": {
+            "nombre": "Autor",
+            "completas": 103,
+            "porcentaje": 100.0
+          },
+          "tipo_obra": {
+            "nombre": "Tipo de Obra",
+            "completas": 103,
+            "porcentaje": 100.0
+          },
+          "genero": {
+            "nombre": "Género",
+            "completas": 79,
+            "porcentaje": 76.69902912621359
+          },
+          "subgenero": {
+            "nombre": "Subgénero",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_creacion": {
+            "nombre": "Fecha de Creación",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "tema": {
+            "nombre": "Tema",
+            "completas": 24,
+            "porcentaje": 23.300970873786408
+          },
+          "mecenas": {
+            "nombre": "Mecenas",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "edicion_principe": {
+            "nombre": "Edición Príncipe",
+            "completas": 56,
+            "porcentaje": 54.36893203883495
+          },
+          "notas_bibliograficas": {
+            "nombre": "Notas Bibliográficas",
+            "completas": 87,
+            "porcentaje": 84.46601941747572
+          },
+          "manuscritos_conocidos": {
+            "nombre": "Manuscritos Conocidos",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "representaciones": {
+            "nombre": "Representaciones",
+            "completas": 0,
+            "porcentaje": 0.0
+          }
+        },
+        "campos_autor": {
+          "nombre": {
+            "nombre": "Nombre",
+            "completas": 103,
+            "porcentaje": 100.0
+          },
+          "nombre_completo": {
+            "nombre": "Nombre Completo",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_nacimiento": {
+            "nombre": "Fecha Nacimiento",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_muerte": {
+            "nombre": "Fecha Muerte",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "biografia": {
+            "nombre": "Biografía",
+            "completas": 0,
+            "porcentaje": 0.0
+          }
+        },
+        "representaciones": {
+          "obras_con_reps": 0,
+          "porcentaje_con_reps": 0.0,
+          "total_reps": 0,
+          "promedio_reps": 0.0,
+          "reps_con_fecha": 0,
+          "reps_con_lugar": 0,
+          "reps_con_compania": 0
+        }
+      },
+      "FUENTES IX": {
+        "total_obras": 856,
+        "campos_obra": {
+          "titulo": {
+            "nombre": "Título",
+            "completas": 856,
+            "porcentaje": 100.0
+          },
+          "titulo_original": {
+            "nombre": "Título Original",
+            "completas": 856,
+            "porcentaje": 100.0
+          },
+          "titulo_alternativo": {
+            "nombre": "Títulos Alternativos",
+            "completas": 149,
+            "porcentaje": 17.406542056074766
+          },
+          "autor": {
+            "nombre": "Autor",
+            "completas": 856,
+            "porcentaje": 100.0
+          },
+          "tipo_obra": {
+            "nombre": "Tipo de Obra",
+            "completas": 856,
+            "porcentaje": 100.0
+          },
+          "genero": {
+            "nombre": "Género",
+            "completas": 188,
+            "porcentaje": 21.962616822429908
+          },
+          "subgenero": {
+            "nombre": "Subgénero",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_creacion": {
+            "nombre": "Fecha de Creación",
+            "completas": 126,
+            "porcentaje": 14.719626168224298
+          },
+          "tema": {
+            "nombre": "Tema",
+            "completas": 47,
+            "porcentaje": 5.490654205607477
+          },
+          "mecenas": {
+            "nombre": "Mecenas",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "edicion_principe": {
+            "nombre": "Edición Príncipe",
+            "completas": 145,
+            "porcentaje": 16.9392523364486
+          },
+          "notas_bibliograficas": {
+            "nombre": "Notas Bibliográficas",
+            "completas": 215,
+            "porcentaje": 25.116822429906545
+          },
+          "manuscritos_conocidos": {
+            "nombre": "Manuscritos Conocidos",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "representaciones": {
+            "nombre": "Representaciones",
+            "completas": 131,
+            "porcentaje": 15.30373831775701
+          }
+        },
+        "campos_autor": {
+          "nombre": {
+            "nombre": "Nombre",
+            "completas": 856,
+            "porcentaje": 100.0
+          },
+          "nombre_completo": {
+            "nombre": "Nombre Completo",
+            "completas": 480,
+            "porcentaje": 56.074766355140184
+          },
+          "fecha_nacimiento": {
+            "nombre": "Fecha Nacimiento",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "fecha_muerte": {
+            "nombre": "Fecha Muerte",
+            "completas": 0,
+            "porcentaje": 0.0
+          },
+          "biografia": {
+            "nombre": "Biografía",
+            "completas": 0,
+            "porcentaje": 0.0
+          }
+        },
+        "representaciones": {
+          "obras_con_reps": 131,
+          "porcentaje_con_reps": 15.30373831775701,
+          "total_reps": 363,
+          "promedio_reps": 0.42406542056074764,
+          "reps_con_fecha": 489,
+          "reps_con_lugar": 494,
+          "reps_con_compania": 363
+        }
+      }
+    }
+  },
+  "analisis_fuentesix": {
+    "total_obras": 489,
+    "obras_sin_autor": {
+      "total": 378,
+      "porcentaje": 77.30061349693251,
+      "ejemplos": [
+        "Alcalde de Zalamea, El",
+        "Alcázar del secreto, El",
+        "Amante mudo, El",
+        "Amantes de Teruel, Los",
+        "Amazonas, Las",
+        "Amazonas de Escitia, Las",
+        "Amazonas de España, Las",
+        "Amistad vence el rigor, La",
+        "Amor hace discretos, El",
+        "Amor hace prodigios, El"
+      ]
+    },
+    "obras_sin_representaciones": {
+      "total": 357,
+      "porcentaje": 73.00613496932516,
+      "ejemplos": [
+        "Alcaide de sí mismo, El",
+        "Amazonas de Escitia, Las",
+        "Amazonas de España, Las",
+        "Amor en vizcaíno y los celos en francés, y torneos de Navarra, El",
+        "Amor hace discretos, El",
+        "Amor hace prodigios, El",
+        "Aparecido, El",
+        "Arcadia, La",
+        "Arcadia en Belén, y amor el mayor hechizo, La",
+        "Arco de paz del cielo, Santa Bárbara, El"
+      ]
+    },
+    "obras_con_referencias_cruzadas": {
+      "total": 284,
+      "ejemplos": [
+        {
+          "titulo": "Aldehuela y el gran prior de Castilla, La",
+          "referencias": [
+            "Hijo de la molinera, El"
+          ]
+        },
+        {
+          "titulo": "Amazonas de Escitia, Las",
+          "referencias": [
+            "Amazonas, Las"
+          ]
+        },
+        {
+          "titulo": "Amazonas de España, Las",
+          "referencias": [
+            "Amazonas, Las"
+          ]
+        },
+        {
+          "titulo": "Amor al uso, El",
+          "referencias": [
+            "Celos, amor y cordura"
+          ]
+        },
+        {
+          "titulo": "Amor hace discretos, El",
+          "referencias": [
+            "De una causa dos efectos",
+            "Amante mudo, El"
+          ]
+        }
+      ]
+    },
+    "titulos_alternativos": {
+      "total": 121,
+      "promedio_por_obra": 0.2474437627811861
+    },
+    "distribucion_temporal": {
+      "1622": 9,
+      "1650": 1,
+      "1651": 2,
+      "1652": 1,
+      "1656": 2,
+      "1657": 6,
+      "1658": 5,
+      "1659": 2,
+      "1660": 9,
+      "1661": 4,
+      "1662": 2,
+      "1663": 1,
+      "1665": 1,
+      "1673": 3,
+      "1674": 3,
+      "1675": 1,
+      "1676": 3,
+      "1677": 1,
+      "1678": 6,
+      "1679": 6,
+      "1680": 19,
+      "1681": 12,
+      "1682": 13,
+      "1683": 16,
+      "1684": 28,
+      "1685": 17,
+      "1686": 30,
+      "1687": 27,
+      "1688": 11,
+      "1689": 6,
+      "1690": 6,
+      "1691": 12,
+      "1692": 10,
+      "1693": 5,
+      "1694": 4,
+      "1695": 21,
+      "1696": 22,
+      "1697": 7,
+      "1698": 11,
+      "1700": 3,
+      "1701": 1,
+      "1708": 3,
+      "1709": 2
+    },
+    "lugares_mas_frecuentes": {
+      "Palacio": 102,
+      "Representación palaciega": 35,
+      "Cuarto de la Reina": 32,
+      "Corral de la Cruz": 31,
+      "Corral del Príncipe": 22,
+      "Palacio, Salón": 17,
+      "Buen Retiro, Coliseo": 11,
+      "Palacio, Salón dorado": 11,
+      "Buen Retiro, Coliseo, al pueblo": 11,
+      "Buen Retiro, Saloncete": 6,
+      "Buen Retiro": 6,
+      "Palacio, Cuarto de la Reina": 4,
+      "Eufrasia María. Palacio": 3,
+      "Representación palacíega": 3,
+      "Pardo, Cuarto de la Reina": 3,
+      "Buen Retiro, Saloncillo": 3,
+      "Representación palaciega, con el título de Pitias y Damón": 2,
+      "Corral del Principe": 2,
+      "Buen Retiro, Patinejo": 2,
+      "Palacio]": 2
+    },
+    "companias_mas_frecuentes": {
+      "Manuel de Mosquera": 37,
+      "Simón Aguado": 34,
+      "Manuel Vallejo": 34,
+      "Agustín Manuel": 25,
+      "Andrea de Salazar": 18,
+      "Juan de Cárdenas": 14,
+      "Damián Polope": 13,
+      "Rosendo López": 11,
+      "Matías de Castro": 11,
+      "Eufrasia María": 10,
+      "Carlos Vallejo": 10,
+      "Vallejo": 9,
+      "Damián Polop": 6,
+      "Jerónimo García": 5,
+      "Diego Osorio": 5,
+      "José de Prado": 5,
+      "Antonio de Escamilla": 5,
+      "[Jerónimo] Vallejo": 4,
+      "Pedro de Valdés": 4,
+      "José Garcés y Juan Bautista Chavarría": 4
+    }
+  },
+  "conclusiones": {
+    "conclusiones": [
+      {
+        "titulo": "Completitud de Datos por Fuente",
+        "contenido": "\n        <p><strong>FUENTES IX</strong> aporta 856 obras, de las cuales:</p>\n        <ul>\n            <li>131 tienen representaciones (15.3%)</li>\n            <li>Total de 363 representaciones documentadas</li>\n            <li>Promedio de 0.42 representaciones por obra</li>\n        </ul>\n        <p><strong>CATCOM</strong> tiene 1621 obras, pero menor porcentaje de representaciones documentadas.</p>\n        "
+      },
+      {
+        "titulo": "Campos con Baja Completitud en FUENTES IX",
+        "contenido": "\n            <p>Los siguientes campos tienen menos del 50% de completitud:</p>\n            <ul>\n                <li><strong>Títulos Alternativos</strong>: 17.4%</li><li><strong>Género</strong>: 22.0%</li><li><strong>Subgénero</strong>: 0.0%</li><li><strong>Fecha de Creación</strong>: 14.7%</li><li><strong>Tema</strong>: 5.5%</li><li><strong>Mecenas</strong>: 0.0%</li><li><strong>Edición Príncipe</strong>: 16.9%</li><li><strong>Notas Bibliográficas</strong>: 25.1%</li><li><strong>Manuscritos Conocidos</strong>: 0.0%</li><li><strong>Representaciones</strong>: 15.3%</li>\n            </ul>\n            "
+      },
+      {
+        "titulo": "Análisis Específico de FUENTES IX",
+        "contenido": "\n        <p>Del análisis del volumen FUENTES IX se desprende:</p>\n        <ul>\n            <li><strong>378</strong> obras sin autor identificado (77.3%)</li>\n            <li><strong>357</strong> obras sin representaciones documentadas (73.0%)</li>\n            <li><strong>284</strong> obras con referencias cruzadas a otros títulos</li>\n            <li><strong>121</strong> títulos alternativos identificados</li>\n        </ul>\n        "
+      },
+      {
+        "titulo": "Distribución Temporal de Representaciones",
+        "contenido": "\n            <p>Las representaciones documentadas en FUENTES IX abarcan desde <strong>1622</strong> hasta <strong>1709</strong>.</p>\n            <p>Picos de actividad:</p>\n            <ul>\n                <li><strong>1686</strong>: 30 representaciones</li><li><strong>1684</strong>: 28 representaciones</li><li><strong>1687</strong>: 27 representaciones</li><li><strong>1696</strong>: 22 representaciones</li><li><strong>1695</strong>: 21 representaciones</li>\n            </ul>\n            "
+      }
+    ],
+    "recomendaciones": [
+      {
+        "titulo": "Búsqueda de Autores Faltantes",
+        "contenido": "\n        <p>Para completar los autores faltantes en FUENTES IX, buscar en:</p>\n        <ul>\n            <li><strong>Catálogo de Barrera y Leirado</strong>: Referencia fundamental mencionada en el prefacio</li>\n            <li><strong>Catálogos de Fajardo, Medel del Castillo, García de la Huerta</strong>: Citados frecuentemente en FUENTES IX</li>\n            <li><strong>Biblioteca Nacional de Madrid</strong>: Catálogo de manuscritos de Julián Paz</li>\n            <li><strong>Biblioteca Municipal de Madrid</strong>: Catálogo de Carlos Cambronero (sustituido por Mercedes Agulló y Cobo)</li>\n            <li><strong>Biblioteca del Instituto del Teatro de Barcelona</strong>: Catálogo de María del Carmen Simón Palmer</li>\n        </ul>\n        "
+      },
+      {
+        "titulo": "Búsqueda de Ediciones Príncipes",
+        "contenido": "\n        <p>Para identificar ediciones príncipes mencionadas en FUENTES IX:</p>\n        <ul>\n            <li><strong>Series Diferentes y Escogidas</strong>: 48 tomos publicados entre 1652-1704</li>\n            <li><strong>Partes de dramaturgos</strong>: Verificar en colecciones de British Library, Biblioteca Nacional de Madrid</li>\n            <li><strong>Comedias sueltas</strong>: Buscar en catálogos de colecciones especializadas (Edward M. Wilson, Don W. Cruickshank)</li>\n        </ul>\n        "
+      },
+      {
+        "titulo": "Búsqueda de Manuscritos",
+        "contenido": "\n        <p>FUENTES IX menciona múltiples manuscritos conservados en:</p>\n        <ul>\n            <li><strong>B.N.M.</strong> (Biblioteca Nacional de Madrid): Sección de Manuscritos</li>\n            <li><strong>B.M.M.</strong> (Biblioteca Municipal de Madrid)</li>\n            <li><strong>B.I.T.B.</strong> (Biblioteca del Instituto del Teatro de Barcelona)</li>\n            <li><strong>B.L.</strong> (British Library): Sección de Manuscritos (catálogo de Gayangos)</li>\n            <li><strong>Archivo de la Cofradía de la Novena</strong>: Mencionado frecuentemente para música teatral</li>\n        </ul>\n        "
+      },
+      {
+        "titulo": "Volúmenes Relacionados de la Serie Fuentes",
+        "contenido": "\n        <p>FUENTES IX consolida datos de otros volúmenes de la serie:</p>\n        <ul>\n            <li><strong>Fuentes I</strong>: Representaciones palaciegas 1603-1699 (legajo 666 del Archivo del Palacio Real)</li>\n            <li><strong>Fuentes IV, V, VI, XI</strong>: Corrales de comedias 1650-1719 (Archivo Municipal de Madrid)</li>\n            <li><strong>Fuentes X</strong>: Incluye único dato relevante</li>\n            <li><strong>Fuentes XIII</strong>: Arrendos de corrales 1587-1719</li>\n        </ul>\n        <p>Estos volúmenes pueden contener información adicional no consolidada en FUENTES IX.</p>\n        "
+      },
+      {
+        "titulo": "Investigadores y Estudios Mencionados",
+        "contenido": "\n        <p>FUENTES IX cita extensamente trabajos de investigadores que pueden tener información adicional:</p>\n        <ul>\n            <li><strong>Emilio Cotarelo y Mori</strong>: Trabajos fundamentales sobre teatro español</li>\n            <li><strong>Edward M. Wilson</strong>: Estudios sobre Calderón y bibliografía</li>\n            <li><strong>María Grazia Profeti</strong>: Estudios sobre Diferentes y Pérez de Montalbán</li>\n            <li><strong>Ruth Lee Kennedy</strong>: Estudios sobre Moreto</li>\n            <li><strong>Louise Kathrin Stein</strong>: Estudios sobre música teatral</li>\n            <li><strong>Arnold G. Reichenberger</strong>: Estudios sobre Escogidas</li>\n        </ul>\n        "
+      }
+    ]
+  }
+}

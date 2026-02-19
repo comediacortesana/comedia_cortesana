@@ -1,7 +1,10 @@
 {
   "metadata": {
     "fuente": "Fuentes IX",
-    "total_obras": 17
+    "total_obras": 142,
+    "fecha_actualizacion": "2026-02-19T12:21:03.021214",
+    "obras_nuevas": 125,
+    "obras_actualizadas": 0
   },
   "obras": {
     "El Pastor Fido": {
@@ -122,6 +125,881 @@
       "pagina_pdf": 139,
       "contexto": "Se encontró una representación de la obra 'Los tres mayores imperios' el 25 de agosto de 1687.",
       "menciones": 6
+    },
+    "Alcalde de Zalamea": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de enero de 1681 - Palacio",
+      "menciones": 6
+    },
+    "Alcázar del secreto": {
+      "anio_auxiliar": 1657,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Lunes de Carnestolendas de 1657 (12 de febrero) - Buen Retiro, con el título de El palacio del silencio",
+      "menciones": 4
+    },
+    "Aldehuela y el gran prior de Castilla": {
+      "anio_auxiliar": 1678,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 18 de enero de 1678 - Palacio",
+      "menciones": 2
+    },
+    "Amante mudo": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 12 de abril de 1687 - Palacio, Salón dorado",
+      "menciones": 3
+    },
+    "Amantes de Teruel": {
+      "anio_auxiliar": 1656,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 8 de diciembre de 1656 - Uno de los dos corrales",
+      "menciones": 4
+    },
+    "Amazonas": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de junio de 1681 - Buen Retiro, con el título de Las amazonas en Escitia",
+      "menciones": 4
+    },
+    "Amistad vence el rigor": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 10 de diciembre de 1682 - Representación palaciega, con el título de Pitias y Damón",
+      "menciones": 3
+    },
+    "Amor al uso": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 28 de enero de 1680 - Palacio",
+      "menciones": 5
+    },
+    "Angel de la guarda": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 4 de enero de 1685 - Palacio",
+      "menciones": 2
+    },
+    "Armas de la hermosura": {
+      "anio_auxiliar": 1678,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 6 de noviembre de 1678 - Palacio",
+      "menciones": 2
+    },
+    "Aspides de Cleopatra": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 2 de agosto de 1686 - Palacio, Salón dorado",
+      "menciones": 3
+    },
+    "Banda y la flor": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 11 de febrero de 1680 - Palacio",
+      "menciones": 4
+    },
+    "Bárbara de los montes y mártir del cielo": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 22 de abril de 1687 - Buen Retiro, Saloncete",
+      "menciones": 2
+    },
+    "Batalla del Albis": {
+      "anio_auxiliar": 1683,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 28 de enero de 1683 - Palacio",
+      "menciones": 2
+    },
+    "Blasón de los Moncadas": {
+      "anio_auxiliar": 1656,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Anunciada 20 de enero de 1656 - Corral de la Cruz",
+      "menciones": 5
+    },
+    "Bruto de Babilonia": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 27 de mayo de 1685 - Palacio",
+      "menciones": 4
+    },
+    "Caballero": {
+      "anio_auxiliar": 1683,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de julio de 1683 - Representación palaciega",
+      "menciones": 3
+    },
+    "Caballero de Olmedo": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Lunes de Carnestolendas de 1684 (13 de febrero) - Palacio",
+      "menciones": 2
+    },
+    "Cain de Cataluña": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 25 de febrero de 1685? Eufrasia María - Eufrasia María. Palacio",
+      "menciones": 3
+    },
+    "Capitán Belisario": {
+      "anio_auxiliar": 1663,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 8 de julio de 1663 - Buen Retiro",
+      "menciones": 2
+    },
+    "Carboneros de Francia": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 29 de octubre de 1684 - Palacio",
+      "menciones": 1
+    },
+    "Cardenal Albornoz": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (6) 4-9 de mayo de 1696 - Corral del Príncipe",
+      "menciones": 1
+    },
+    "Celos en el caballo": {
+      "anio_auxiliar": 1622,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Octubre de 1622 - Cuarto de la Reina",
+      "menciones": 2
+    },
+    "Celoso extremeño": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 25 de enero de 1680 - Palacio",
+      "menciones": 2
+    },
+    "Cena del Rey Baltasar": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 18 de septiembre de 1686 - Palacio",
+      "menciones": 5
+    },
+    "Conde de Sex": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (7) 20-26 de mayo de 1686 - Buen Retiro, Coliseo, al pueblo",
+      "menciones": 2
+    },
+    "Confusión de un retrato": {
+      "anio_auxiliar": 1674,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (3) Anunciada 6, 10, 11 de diciembre de 1674 - Corral del Principe",
+      "menciones": 1
+    },
+    "Confusión por la vista": {
+      "anio_auxiliar": 1709,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de abril de 1709 - Buen Retiro, Coliseo",
+      "menciones": 2
+    },
+    "Conquista de Jerusalén": {
+      "anio_auxiliar": 1622,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (2) entre 5 de octubre de 1622 y 8 de febrero de 1623 - Cuarto de la Reina",
+      "menciones": 1
+    },
+    "Cura de Madriiejos": {
+      "anio_auxiliar": 1683,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 3 de enero de 1683 - Palacio",
+      "menciones": 1
+    },
+    "Dama capitán": {
+      "anio_auxiliar": 1661,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 20 de septiembre de 1661 - Palacio",
+      "menciones": 3
+    },
+    "Dama duende": {
+      "anio_auxiliar": 1679,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 7 de diciembre de 1679 - Buen Retiro",
+      "menciones": 6
+    },
+    "Dama y galán Aquiles": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 18 de agosto de 1680 - Representación palaciega",
+      "menciones": 6
+    },
+    "Defensor de su agravio": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 17 de noviembre de 1680 - Palacio",
+      "menciones": 6
+    },
+    "Desagravios de Cristo": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 7 de febrero de 1686 - Palacio. Salón",
+      "menciones": 4
+    },
+    "Desdén con el desdén": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Proyectada para el 8 de febrero de 1680 - Palacio",
+      "menciones": 5
+    },
+    "Desdicha de la voz": {
+      "anio_auxiliar": 1678,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 21 de agosto de 1678 - Palacio",
+      "menciones": 3
+    },
+    "Despreciada querida": {
+      "anio_auxiliar": 1622,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Octubre de 1622 - Cuarto de la Reina",
+      "menciones": 2
+    },
+    "Devoción del ángel de la guarda": {
+      "anio_auxiliar": 1657,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Entre 16 de febrero y el último día de Carnestolenrias de 1657 (5 de marzo) - Comedia nueva, proyectada para los corrales de comedias, con el título de El ángel de la guarda",
+      "menciones": 2
+    },
+    "Dicha por la desgracia": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 28 de noviembre de 1682 - Representación palacíega",
+      "menciones": 5
+    },
+    "Duquesa Rosimunda": {
+      "anio_auxiliar": 1661,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 12 de julio de 1661 - Palacio, con el título de Narciso y Eco",
+      "menciones": 5
+    },
+    "Empeños de un acaso": {
+      "anio_auxiliar": 1660,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 23 de abril de 1660 - Corral de la Cruz",
+      "menciones": 4
+    },
+    "Encanto sin encanto": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 27 de junio de 1681 - Palacio",
+      "menciones": 6
+    },
+    "Escándalo de Grecia": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (5) 18-22 de enero de 1696 - Corral del Príncipe",
+      "menciones": 1
+    },
+    "Esclava de su galán": {
+      "anio_auxiliar": 1679,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 21 de diciembre de 1679 - Buen Retiro",
+      "menciones": 4
+    },
+    "Escondido y la tapada": {
+      "anio_auxiliar": 1651,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 29 de enero de 1651 - Pardo, Cuarto de la Reina",
+      "menciones": 2
+    },
+    "Esfuerzas de Milán": {
+      "anio_auxiliar": 1650,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 25 de septiembre de 1650 - Palacio, Cuarto de la Reina",
+      "menciones": 4
+    },
+    "Estatua de Prometeo": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 22 de diciembre de 1685 - Palacio",
+      "menciones": 7
+    },
+    "Fuerza de la ley": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 22 de enero de 1682 - Representación palaciega",
+      "menciones": 2
+    },
+    "Galán fantasma": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 15 de noviembre de 1680 - Palacio",
+      "menciones": 2
+    },
+    "Garza de Portugal": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 12 de diciembre de 1680 - Representación palaciega",
+      "menciones": 2
+    },
+    "Gitanilla": {
+      "anio_auxiliar": 1657,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 10 de abril de 1657 - Palacio",
+      "menciones": 3
+    },
+    "Golfo de las sirenas": {
+      "anio_auxiliar": 1657,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 17 de enero de 1657 - Palacio de la Zarzuela",
+      "menciones": 4
+    },
+    "Gran Cenobia": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 7 de enero de 1685 - Palacio",
+      "menciones": 2
+    },
+    "Hechizado por fuerza": {
+      "anio_auxiliar": 1698,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 26 de mayo de 1698 - Toledo, Palacio de Azcca",
+      "menciones": 2
+    },
+    "Hércules de Ocaña": {
+      "anio_auxiliar": 1673,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (3) 18, 19, 20 de diciembre de 1673 - Corral de la Cruz",
+      "menciones": 3
+    },
+    "Hidalgote de Jaca": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Ensayo 19 de enero de 1686 - Ensayo para una representación con el título de El hidalgo de Jaca",
+      "menciones": 2
+    },
+    "Hijos de la fortuna": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 18 de junio de 1687 - Palacio",
+      "menciones": 2
+    },
+    "Hijos de la fortuna, Teégenes y Cariclea": {
+      "anio_auxiliar": 1659,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Carnestolendas de 1659 (23, 24 ó 25 de febrero) - Palacio, Salón",
+      "menciones": 3
+    },
+    "Honda de David": {
+      "anio_auxiliar": 1698,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 4 de junio de 1698 - Toledo, Plaza de Palacio",
+      "menciones": 2
+    },
+    "Huida de Egipto": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (2) 25, 27 de agosto de 1684 - Palacio",
+      "menciones": 5
+    },
+    "Invicto Luis de Baden y primer triunfo del Austria": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 16 de octubre de 1686 - Buen Retiro, Coliseo",
+      "menciones": 4
+    },
+    "Jenízaro de Hungría": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 25 de enero de 1682 - Representación palaciega",
+      "menciones": 1
+    },
+    "Juegos olímpicos": {
+      "anio_auxiliar": 1677,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 22 de diciembre de 1677 - Palacio",
+      "menciones": 8
+    },
+    "Laberinto de amor": {
+      "anio_auxiliar": 1658,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 8 (ó 7) de enero de 1658 - Buen Retiro",
+      "menciones": 3
+    },
+    "Laberinto de Creta": {
+      "anio_auxiliar": 1693,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 6 de enero de 1693 - Palacio",
+      "menciones": 2
+    },
+    "Labrador venturoso": {
+      "anio_auxiliar": 1622,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Octubre o noviembre de 1622, probablemente octubre - Cuarto de la Reina",
+      "menciones": 3
+    },
+    "Laurel de Apolo": {
+      "anio_auxiliar": 1678,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 4 de noviembre de 1678 - Palacio",
+      "menciones": 3
+    },
+    "Licenciado Vidriera": {
+      "anio_auxiliar": 1652,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 18 de enero de 1652 - Pardo, Cuarto de la Reina",
+      "menciones": 5
+    },
+    "Lindona de Galicia": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (12) 4-7, 9-16 de febrero de 1696 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Loco en la penitencia, y tirano más impropio": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 22 de diciembre de 1682 - Representación palaciega",
+      "menciones": 2
+    },
+    "Lucidoro aragonés": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 30 de abril de 1684 - Representación palaciega",
+      "menciones": 2
+    },
+    "Maestro de Alejandro": {
+      "anio_auxiliar": 1660,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (3) 24-26 de abril de 1660 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Maestro de danzar": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 7 de abril de 1681 - Palacio",
+      "menciones": 6
+    },
+    "Mancebo del camino": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 13 de abril de 1684 - Palacio",
+      "menciones": 3
+    },
+    "Manos blancas no ofenden": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 21 de septiembre de 1680 - Damián Polope. Palacio",
+      "menciones": 3
+    },
+    "Marido de su hermana": {
+      "anio_auxiliar": 1622,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Entre 5 de octubre de 1622 y 8 de febrero de 1623, Cristóbal de Avendaño - Simón Aguado. Representación palaciega",
+      "menciones": 1
+    },
+    "Mariscal de Virón": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 3 de octubre de 1685 - Palacio",
+      "menciones": 4
+    },
+    "Mártires de Madrid": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 21 de noviembre de 1680 - Palacio",
+      "menciones": 2
+    },
+    "Más hidalga hermosura": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 21 de junio de 1682 - Representación palaciega",
+      "menciones": 2
+    },
+    "Matachines de Prosperina": {
+      "anio_auxiliar": 1676,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 29 de febrero de 1676 - Jerónimo García y Manuel Vallejo. Palacio",
+      "menciones": 1
+    },
+    "Mayor monstruo de amor": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 21 de septiembre de 1687 - Buen Retiro, Saloncete",
+      "menciones": 1
+    },
+    "Mayor triunfo de amor": {
+      "anio_auxiliar": 1679,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 26 de julio de 1679 - Palacio, con el título de El mayor triunfo amor",
+      "menciones": 2
+    },
+    "Médícis de Florencia": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 11 de mayo de 1684 - Representación palaciega",
+      "menciones": 2
+    },
+    "Mejor par de los doce": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (3) 22-24 de abril de 1686 - Buen Retiro, Coliseo, al pueblo",
+      "menciones": 1
+    },
+    "Mentiroso en la Corte": {
+      "anio_auxiliar": 1658,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: ¿Carnestolendas? de 1658 - Representación palacíega",
+      "menciones": 2
+    },
+    "Mérito es la corona": {
+      "anio_auxiliar": 1695,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 1º de diciembre de 1695 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Monstruo de los jardines": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 23 de abril de 1684 - Representación palaciega",
+      "menciones": 4
+    },
+    "Mudable arrepentido y el ingrato agradecido": {
+      "anio_auxiliar": 1680,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Parte I, 4 de enero de 1680 - Buen Retiro, con el título de Los Mudarras",
+      "menciones": 3
+    },
+    "Mujer de Peribáñez": {
+      "anio_auxiliar": 1660,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Carnestolendes de 1660 (8, 9 ó 10 de febrero) - Representación palaciega",
+      "menciones": 6
+    },
+    "Negro del cuerpo blanco": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (6) 2-7 de mayo de 1696 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Niña de Gómez Arias": {
+      "anio_auxiliar": 1674,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: – (9) Anunciada 10-13, 23-27 de diciembre de 1674 - Corral de la Cruz",
+      "menciones": 5
+    },
+    "Niñeces del Duque de Osuna": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: – (5) 2-6 de marzo de 1696 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Niño Jesús de Santa Bárbara": {
+      "anio_auxiliar": 1660,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: – (2) 30 de abril, 2 de mayo de 1660 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Obligación de las mujeres": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: – (2) 29, 30 de octubre de 1686 - Buen Retiro, Coliseo",
+      "menciones": 2
+    },
+    "Palacio confuso": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (4) 26-28 de febrero, 1: de marzo de 1696 - Corral de la Cruz",
+      "menciones": 1
+    },
+    "Palacio de Alcina": {
+      "anio_auxiliar": 1676,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de junio de 1676 - Representación palaciega. El 29 de febrero de 1676 Diamante recibió pago por su composición",
+      "menciones": 2
+    },
+    "Palacio del silencio": {
+      "anio_auxiliar": 1687,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 31 de marzo de 1687 - Palacio, Salón dorado",
+      "menciones": 2
+    },
+    "Parecido": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de febrero de 1681 - Representación palaciega",
+      "menciones": 3
+    },
+    "Pares de Francia": {
+      "anio_auxiliar": 1659,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 6 de febrero de 1659 (proyectada para el día 4) - Palacio, Salón",
+      "menciones": 1
+    },
+    "Pastor Fido": {
+      "anio_auxiliar": 1676,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Carnestolendas de 1676 (14, 15, 16 & 17 de febrero) - Palacio",
+      "menciones": 4
+    },
+    "Plagas de Faraón": {
+      "anio_auxiliar": 1688,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 4 de enero de 1688 - Cuarto de la Reina",
+      "menciones": 2
+    },
+    "Poder de la amistad": {
+      "anio_auxiliar": 1673,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 6 de diciembre de 1673 - Corral de la Cruz",
+      "menciones": 3
+    },
+    "Poder de la amistad y venganza sin castigo": {
+      "anio_auxiliar": 1622,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (2) Octubre de 1622 - Cuarto de la Reina",
+      "menciones": 1
+    },
+    "Postrer duelo de España": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 6 de enero de 1681 - Palacio",
+      "menciones": 3
+    },
+    "Primer flor del Carmelo": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 28 de septiembre de 1684 - Palacio",
+      "menciones": 4
+    },
+    "Principe de Fez": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 27 de mayo de 1686 - Buen Retiro",
+      "menciones": 3
+    },
+    "Príncipe perseguido": {
+      "anio_auxiliar": 1685,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 14 de enero de 1685 (fecha posiblemente dudosa) - Palacio",
+      "menciones": 1
+    },
+    "Principe prodigioso": {
+      "anio_auxiliar": 1681,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 9 de enero de 1681 - Representación palaciega",
+      "menciones": 2
+    },
+    "Prodigioso": {
+      "anio_auxiliar": 1695,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (2) 25, 26 de diciembre de 1695 - Corral del Príncipe",
+      "menciones": 1
+    },
+    "Pruebas de la lealtad": {
+      "anio_auxiliar": 1662,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 19 de enero de 1662 - Buen Retiro, Salón",
+      "menciones": 4
+    },
+    "Párpura de la rosa": {
+      "anio_auxiliar": 1679,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 25 de agosto de 1679 - Palacio",
+      "menciones": 3
+    },
+    "Rayo de Andalucia": {
+      "anio_auxiliar": 1691,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Parte II, 17 de diciembre de 1691 - Cuarto de la Reina",
+      "menciones": 2
+    },
+    "Renegada de Valladolid": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: Martes de Carnestolendas de 1686 (26 de febrero) - Representación palaciega",
+      "menciones": 2
+    },
+    "Restauración de Buda": {
+      "anio_auxiliar": 1686,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (9) 2-9 de diciembre de 1686 - Buen Retiro, Coliseo, al pueblo, a veces con el título de El sitio de Buda",
+      "menciones": 1
+    },
+    "Restauración de Madrid": {
+      "anio_auxiliar": 1689,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (8) 20-27 de enero de 1689 - Corral del Príncipe",
+      "menciones": 1
+    },
+    "Rey don Pedro en Madrid": {
+      "anio_auxiliar": 1696,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (2) 16, 17 de enero de 1696 - Corral del Príncipe",
+      "menciones": 1
+    },
+    "Rey Enrique el Enfermo": {
+      "anio_auxiliar": 1684,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 24 de septiembre de 1684 - Palacio",
+      "menciones": 2
+    },
+    "Rico hombre de Alcalá": {
+      "anio_auxiliar": 1683,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 7 de enero de 1683 - Palacio",
+      "menciones": 1
+    },
+    "Sangre vence imposibles": {
+      "anio_auxiliar": 1695,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: - (11) 27-31 de diciembre de 1695, 1-6 de enero de 1696 - Corral del Príncipe",
+      "menciones": 1
+    },
+    "Secreto a voces": {
+      "anio_auxiliar": 1682,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 5 de febrero de 1682 - Representación palaciega",
+      "menciones": 6
+    },
+    "Segundo Escipión": {
+      "anio_auxiliar": 1690,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 6 de enero de 1690 - Palacio",
+      "menciones": 2
+    },
+    "Siete durmientes": {
+      "anio_auxiliar": 1651,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 15 de enero de 1651 - Pardo, Cuarto de la Reina",
+      "menciones": 2
+    },
+    "Sitio de Viena": {
+      "anio_auxiliar": 1683,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 23 de diciembre de 1683 - Palacio",
+      "menciones": 4
+    },
+    "Templo vivo de Dios": {
+      "anio_auxiliar": 1698,
+      "fuente": "Fuentes IX",
+      "pagina_pdf": null,
+      "contexto": "Primera representación: 14 de julio de 1698 (proyectada para el 26 de junio) - Palacio",
+      "menciones": 3
     }
   }
 }

@@ -1,0 +1,560 @@
+{
+  "fecha_verificacion": "2026-02-19T12:15:35.447328",
+  "archivos": [
+    {
+      "archivo": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_002_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_004_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_005_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_006_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_007_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_008_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_009_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_010_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 25,
+      "paginas": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 25
+    },
+    {
+      "archivo": "FUENTES IX 1_part_011_ALL_PAGES_texto_extraido.txt",
+      "total_paginas": 2,
+      "paginas": [
+        1,
+        2
+      ],
+      "primera_pagina": 1,
+      "ultima_pagina": 2
+    }
+  ],
+  "total_paginas": 252,
+  "continuidad": [
+    {
+      "archivo_anterior": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_002_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Brown, Robert B. Bibliografía de las comedias históricas, tradicionales y legendarias de Lope de Vega. Prólogo de Edmund de Chasca. México, 1958.\nBruerton, Courtney. «The Chronology of the comedias of",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nLISTA DE OBRAS CITADAS\n\nCabañas, Pablo. El mito de Orfeo en la literatura española. Madrid, 1948.\nCalderón de la Barca, Pedro. Autos sacramentales, alegóricos, y historiales. Dedicado"
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_002_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Alba y el sol, El\n(1) 6 de enero de 1688. Simón Aguado. Palacio (Fuentes VI); (2) antes del 30 de enero de 1688. Simón Aguado. Cuarto de la Reina (probablemente se refiere aquí a la representación del",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nAlcaide de sí mismo, El\n22 de enero de 1651. Antonio García de Prado. Pardo (Fuentes I). Comedia de Calderón impresa en El mejor de los mejores libros (Alcalá, 1651), 348-386, con el "
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_004_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "22 de diciembre de 1695. Andrea de Salazar y Carlos Vallejo. Palacio, Salón (Fuentes VI).\nSegún el documento, es de Nicolás Carnero. Salió en el Ameno jardín de comedias, de los insignes autores Don A",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nCOMEDIAS EN MADRID: 1603-1709\n\nCatalán Serrallonga y bandos de Barcelona, El\nVéase Serrallonga.\n\nCautela contra cautela\nEntre 5 de octubre de 1622 y 8 de febrero de 1623. Cristóbal de"
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_004_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_005_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Don Juan de Castro, Parte I\nVéase Mejor amigo el muerto, El.\n\nDon Lucas del Cigarral\nVéase Entre bobos anda el juego.",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nDon Luis Coello, Parte II\n(1) 3 de febrero de 1700. Carlos Vallejo. Palacio (Fuentes XI); (2) 21 de enero de 1707. Pago a José Garcés, por haber suplido las dos Partes (Fuentes XI).\nL"
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_005_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_006_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Hacer cada uno lo que debe\n\n6 de junio de 1683. Matías de Castro. Palacio (Fuentes I). \nComedia atribuida a Jerónimo Cuellar en Diferentes XLIII (Zaragoza, 1650) donde aparece con el título de Hacer c",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nComedias en Madrid: 1603-1709\n\nHacer del amor agravio\nVéase Banda y la flor, La.\n\nHacer fineza el desaire\n(1) 12 de julio de 1633. Antonio Escamilla. Buen Retiro, con el título de La "
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_006_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_007_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Luna africana, La\nVéase Mejor Luna africana, La.\n\nMacarenas, Las\nVéase Puerta de Macarena, La.",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nMaestro de Alejandro, El\n(1) - (3) 24-26 de abril de 1660. [Jerónimo] Vallejo. Corral de la Cruz\n(Fuentes IV).\nSegún el documento, es de Fernando de Zárate; y el 24 de abril de 1660\nf"
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_007_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_008_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Nuera más leal, y mejor espigadera, La\nVéase Espigas de Ruth, Las.\n\nNuestra Señora de la Aurora\n11 de septiembre de 1650. Compañía sin especificar. Palacio, Cuarto de la Reina (Fuentes I).",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nCOMEDIAS EN MADRID: 1603-1709\nComedia impresa en Escogidas XXXIV (Madrid, 1670), 282–318, donde se titula La Virgen de la Aurora y se atribuye a Moreto y Cáncer. Salió también con el "
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_008_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_009_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Véase Reina Estuarda, La.\nRenegada de Valladolid, La\n(1) 13 de febrero de 1681. Jerónimo García. Representación palaciega (Fuentes D): (2) Martes de Carnestolendas de 1686 (26 de febrero). Manuel de M",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nFuentes para la historia del teatro: IX\n\nRenegada de Vallecas, La\nMencionado en las cuentas de la representación de Psiquis y Cupido, o sea, Ni Amor se libra de amor, del 3 de diciemb"
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_009_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_010_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "(1) 14 de julio de 1698 (proyectada para el 26 de junio). Carlos Vallejo. Palacio (Fuentes VI); (2) – (3) 17, 18 de julio de 1698. Carlos Vallejo. Representaciones al Consejo y a la Villa de Madrid (F",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nCOMEDIAS EN MADRID: 1603-1709\n\nTercera de si misma: amor, ingenio y mujer, La\nVéase Amor e ingenio y mujer.\n\nTetis y Peleo\n21 de septiembre de 1684. Manuel de Mosquera, más algunas \"p"
+    },
+    {
+      "archivo_anterior": "FUENTES IX 1_part_010_ALL_PAGES_texto_extraido.txt",
+      "archivo_actual": "FUENTES IX 1_part_011_ALL_PAGES_texto_extraido.txt",
+      "ultima_pagina_anterior": 25,
+      "primera_pagina_actual": 1,
+      "continuidad_paginas": false,
+      "ultimas_lineas_anterior": "Sierra, José, 39, 50, 64, 93, 130, 147, 195.\nSigler de Huerta, Antonio, dramaturgo, 162.\nSilva, Diego de, dramaturgo, 199.\nSimón Díaz, José, 16, 25, 39, 220.\nSimón Palmer, María del Carmen, 17, 39, 51",
+      "primeras_lineas_actual": "--- PÁGINA 1 ---\nJ. E. VAREY Y N. D. SHERGOLD\n\nSloman, Albert E., 39.\nSmieja, Florian, 18, 40, 220.\nSmyth, Philip, 40.\nSoave, Valeriano, 40, 128.\nSoler, Antonio, compositor, 39, 50, 64, 93, 130, 146, "
+    }
+  ],
+  "problemas": [
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_001_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_002_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Brown, Robert B. Bibliografía de las comedias históricas, tradicionales y legendarias de Lope de Vega. Prólogo de Edmund de Chasca. México, 1958.\nBruerton, Courtney. «The Chronology of the comedias of",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nLISTA DE OBRAS CITADAS\n\nCabañas, Pablo. El mito de Orfeo en la literatura española. Madrid, 1948.\nCalderón de la Barca, Pedro. Autos sacramentales, alegóricos, y historiales. Dedicado"
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_002_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Alba y el sol, El\n(1) 6 de enero de 1688. Simón Aguado. Palacio (Fuentes VI); (2) antes del 30 de enero de 1688. Simón Aguado. Cuarto de la Reina (probablemente se refiere aquí a la representación del",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nAlcaide de sí mismo, El\n22 de enero de 1651. Antonio García de Prado. Pardo (Fuentes I). Comedia de Calderón impresa en El mejor de los mejores libros (Alcalá, 1651), 348-386, con el "
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_004_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "22 de diciembre de 1695. Andrea de Salazar y Carlos Vallejo. Palacio, Salón (Fuentes VI).\nSegún el documento, es de Nicolás Carnero. Salió en el Ameno jardín de comedias, de los insignes autores Don A",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nCOMEDIAS EN MADRID: 1603-1709\n\nCatalán Serrallonga y bandos de Barcelona, El\nVéase Serrallonga.\n\nCautela contra cautela\nEntre 5 de octubre de 1622 y 8 de febrero de 1623. Cristóbal de"
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_004_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_005_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Don Juan de Castro, Parte I\nVéase Mejor amigo el muerto, El.\n\nDon Lucas del Cigarral\nVéase Entre bobos anda el juego.",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nDon Luis Coello, Parte II\n(1) 3 de febrero de 1700. Carlos Vallejo. Palacio (Fuentes XI); (2) 21 de enero de 1707. Pago a José Garcés, por haber suplido las dos Partes (Fuentes XI).\nL"
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_005_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_006_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Hacer cada uno lo que debe\n\n6 de junio de 1683. Matías de Castro. Palacio (Fuentes I). \nComedia atribuida a Jerónimo Cuellar en Diferentes XLIII (Zaragoza, 1650) donde aparece con el título de Hacer c",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nComedias en Madrid: 1603-1709\n\nHacer del amor agravio\nVéase Banda y la flor, La.\n\nHacer fineza el desaire\n(1) 12 de julio de 1633. Antonio Escamilla. Buen Retiro, con el título de La "
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_006_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_007_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Luna africana, La\nVéase Mejor Luna africana, La.\n\nMacarenas, Las\nVéase Puerta de Macarena, La.",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nMaestro de Alejandro, El\n(1) - (3) 24-26 de abril de 1660. [Jerónimo] Vallejo. Corral de la Cruz\n(Fuentes IV).\nSegún el documento, es de Fernando de Zárate; y el 24 de abril de 1660\nf"
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_007_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_008_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Nuera más leal, y mejor espigadera, La\nVéase Espigas de Ruth, Las.\n\nNuestra Señora de la Aurora\n11 de septiembre de 1650. Compañía sin especificar. Palacio, Cuarto de la Reina (Fuentes I).",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nCOMEDIAS EN MADRID: 1603-1709\nComedia impresa en Escogidas XXXIV (Madrid, 1670), 282–318, donde se titula La Virgen de la Aurora y se atribuye a Moreto y Cáncer. Salió también con el "
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_008_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_009_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Véase Reina Estuarda, La.\nRenegada de Valladolid, La\n(1) 13 de febrero de 1681. Jerónimo García. Representación palaciega (Fuentes D): (2) Martes de Carnestolendas de 1686 (26 de febrero). Manuel de M",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nFuentes para la historia del teatro: IX\n\nRenegada de Vallecas, La\nMencionado en las cuentas de la representación de Psiquis y Cupido, o sea, Ni Amor se libra de amor, del 3 de diciemb"
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_009_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_010_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "(1) 14 de julio de 1698 (proyectada para el 26 de junio). Carlos Vallejo. Palacio (Fuentes VI); (2) – (3) 17, 18 de julio de 1698. Carlos Vallejo. Representaciones al Consejo y a la Villa de Madrid (F",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nCOMEDIAS EN MADRID: 1603-1709\n\nTercera de si misma: amor, ingenio y mujer, La\nVéase Amor e ingenio y mujer.\n\nTetis y Peleo\n21 de septiembre de 1684. Manuel de Mosquera, más algunas \"p"
+      }
+    },
+    {
+      "tipo": "discontinuidad_paginas",
+      "detalle": {
+        "archivo_anterior": "FUENTES IX 1_part_010_ALL_PAGES_texto_extraido.txt",
+        "archivo_actual": "FUENTES IX 1_part_011_ALL_PAGES_texto_extraido.txt",
+        "ultima_pagina_anterior": 25,
+        "primera_pagina_actual": 1,
+        "continuidad_paginas": false,
+        "ultimas_lineas_anterior": "Sierra, José, 39, 50, 64, 93, 130, 147, 195.\nSigler de Huerta, Antonio, dramaturgo, 162.\nSilva, Diego de, dramaturgo, 199.\nSimón Díaz, José, 16, 25, 39, 220.\nSimón Palmer, María del Carmen, 17, 39, 51",
+        "primeras_lineas_actual": "--- PÁGINA 1 ---\nJ. E. VAREY Y N. D. SHERGOLD\n\nSloman, Albert E., 39.\nSmieja, Florian, 18, 40, 220.\nSmyth, Philip, 40.\nSoave, Valeriano, 40, 128.\nSoler, Antonio, compositor, 39, 50, 64, 93, 130, 146, "
+      }
+    }
+  ]
+}

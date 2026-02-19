@@ -1,0 +1,92 @@
+{
+  "fecha_extraccion": "2026-02-19T12:15:35.460995",
+  "prefacio": {
+    "texto_completo": "En este volumen de la serie de Fuentes para la historia del teatro en España, sacamos los títulos de las obras teatrales publicados en seis tomos anteriores, Fuentes I, IV, V, VI, X y XI, los ponemos en orden alfabético y tratamos de identificar las piezas. Los datos sobre representaciones palaciegas que publicamos en Fuentes I provienen del legajo 666 del Archivo del Palacio Real. Los cuatro tomos de Fuentes IV, V, VI y XI forman un catálogo de los documentos del Archivo Municipal de Madrid que tratan de los corrales de comedias desde 1650 hasta 1719; en el tomo III sacamos a la luz los documentos de la época 1600 a 1650, pero en aquellos años no aparece en la documentación ningún título de comedia. La gran mayoría de estos documentos son del Archivo de Secretaría. También incluimos aquí el único dato referente a una representación que se encuentra en Fuentes X y que cae dentro de los límites cronológicos del presente tomo. Omitimos las escasas referencias a comedias en Fuentes II, nuestra edición del manuscrito titulado Genealogía, origen y noticias de los comediantes de España, porque estos datos no se refieren a representaciones de las obras mencionadas.\n\nEl punto de partida para cualquier trabajo sobre la identificación de títulos de obras teatrales es todavía, después de más de un siglo, el catálogo de Cayetano Alberto de la Barrera y Leirado. A pesar de sus lagunas y erratas, y a pesar de todos los trabajos de investigadores posteriores, la obra de Barrera no ha sido superada hasta ahora. En este tomo citamos también con frecuencia los catálogos de obras teatrales que debemos a Fajardo, a Medel del Castillo, a García de la Huerta y a Arteaga. Finalmente, nos apoyamos en los trabajos de los investigadores de generaciones pasadas, sobre todo en los de Emilio Cotarelo y Mori, así como en los de nuestros contemporáneos, a los cuales hacemos referencia en el apartado correspondiente de nuestra Introducción. Este trabajo es, hasta cierto punto, un mosaico bibliográ",
+    "volumenes_fuente": [
+      "I",
+      "II",
+      "IV",
+      "X"
+    ],
+    "periodo_cubierto": {
+      "inicio": "1600",
+      "fin": "1650"
+    },
+    "archivos_principales": [
+      "Palacio Real, el Archivo Municipal, y la Biblioteca Nacional; en Inglaterra, la British Library, y las bibliotecas de la Universidad de Londres y de Westfield College",
+      "Palacio Real",
+      "Secretaría"
+    ]
+  },
+  "introduccion": {
+    "metodologia": {
+      "orden": "alfabético",
+      "fuentes_documentales": [
+        "Palacio Real sean más fiables que el certificado notarial",
+        "Palacio Real, y los tomos IV-VI y X-XI son un catálogo de los documentos del Archivo de Secretaría de la Municipalidad de Madrid, y abarcan los años 1650 a 1719"
+      ],
+      "normas_citacion": "Fecha, compañía, lugar, referencia a Fuentes"
+    },
+    "problemas_mencionados": [
+      "Discrepancias entre fuentes",
+      "Títulos alternativos",
+      "Confusión entre ensayo y representación",
+      "Pagos tardíos causan confusión",
+      "Concepto ambiguo de 'comedia nueva'"
+    ],
+    "lugares_palaciegos": [
+      "Alcázar",
+      "Buen Retiro",
+      "Coliseo",
+      "Cuarto de la Reina",
+      "Cuarto del Rey",
+      "Patinejo",
+      "Saloncete",
+      "Saloncillo",
+      "Salón"
+    ]
+  },
+  "abreviaturas": {
+    "AIEM": "Anales del Instituto de Estudios Madrileños",
+    "BAE": "Biblioteca de Autores Españoles",
+    "BBMP": "Boletín de la Biblioteca de Menéndez Pelayo",
+    "BFE": "Boletín de Filología Española",
+    "BH": "Bulletin Hispanique",
+    "BHS": "Bulletin of Hispanic Studies",
+    "BRAE": "Boletín de la Real Academia Española",
+    "CB": "Cuadernos Bibliográficos",
+    "HR": "Hispanic Review",
+    "LD": "Letras de Deusto",
+    "MLN": "Modern Language Notes",
+    "MLQ": "Modern Language Quarterly",
+    "MLR": "Modern Language Review",
+    "NBAE": "Nueva Biblioteca de Autores Españoles",
+    "PMLA": "Publications of the Modern Language Association",
+    "PQ": "Philological Quarterly",
+    "PSA": "Papeles de Son Armadans",
+    "RAAM": "Revista de Archivos, Bibliotecas y Museos",
+    "RCEH": "Revista Canadiense de Estudios Hispánicos",
+    "RF": "Romanische Forschungen",
+    "RFH": "Revista de Filología Hispánica",
+    "RR": "Romanic Review"
+  },
+  "referencias_fuentes": [
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "X",
+    "XI",
+    "XIII"
+  ],
+  "catalogos_bibliograficos": [
+    "Arteaga",
+    "Barrera",
+    "Cotarelo",
+    "Fajardo",
+    "García de la Huerta",
+    "Medel"
+  ]
+}

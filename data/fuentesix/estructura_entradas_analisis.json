@@ -1,0 +1,286 @@
+{
+  "fecha_analisis": "2026-02-19T12:16:28.327733",
+  "estadisticas": {
+    "total_obras": 489,
+    "total_representaciones": 365,
+    "total_lugares": 73,
+    "total_companias": 92,
+    "total_mecenas": 2,
+    "lugares": [
+      "Agustín Manuel y Damián Polope. Representación palaciega",
+      "Antonio Ruiz y José Garcés. Buen Retiro, Coliseo",
+      "Ayuntamiento, al Consejo Real",
+      "Buen Retiro",
+      "Buen Retiro, Coliseo",
+      "Buen Retiro, Coliseo, al pueblo",
+      "Buen Retiro, Coliseo, al pueblo, a veces con el título de El sitio de Buda",
+      "Buen Retiro, Coliseo, al pueblo, con el título de Alcina",
+      "Buen Retiro, Coliseo, con el título de El Rey Baltasar",
+      "Buen Retiro, Cuarto de la Reina",
+      "Buen Retiro, Patinejo",
+      "Buen Retiro, Saloncete",
+      "Buen Retiro, Saloncillo",
+      "Buen Retiro, Salón",
+      "Buen Retiro, Soloncete",
+      "Buen Retiro, con el título de El palacio del silencio",
+      "Buen Retiro, con el título de Las amazonas en Escitia",
+      "Buen Retiro, con el título de Los Mudarras",
+      "Buen Retiro. Coliseo",
+      "Comedia nueva, proyectada para los corrales de comedias, con el título de El ángel de la guarda",
+      "Corral de la Cruz",
+      "Corral de la Cruz, el día 2 con el título de Dar la vida por su dama",
+      "Corral del Principe",
+      "Corral del Príncipe",
+      "Corral del Príncipe, con el título de El garrote más bien dado",
+      "Corral del Príncipe, con el título de Namur",
+      "Corral del Príncipe, el 18 con el título de Vespetiano",
+      "Cuarto de la Reina",
+      "Cuarto de la Reina, con el título de El Albis",
+      "Cuarto de la Reina, con el título de El caballero Olmedo",
+      "Damián Polop. Cuarto de la Reina",
+      "Damián Polope. Palacio",
+      "Ensayo para una representación con el título de El hidalgo de Jaca",
+      "Eufrasia María. Palacio",
+      "Eufrasia María. Palacio, con el título de Los Tellos",
+      "Jerónimo García y Manuel Vallejo. Palacio",
+      "Jerónimo García. Representación palaciega",
+      "Manuel de Mosquera. Palacio",
+      "Manuel de Mosquera. Palacio, Salón",
+      "Manuel de Mosquera. Palacio, Salón dorado",
+      "Palacio",
+      "Palacio de la Zarzuela",
+      "Palacio,",
+      "Palacio, Cuarto de la Reina",
+      "Palacio, Cuarto del Rey, o Salón",
+      "Palacio, Saloncete",
+      "Palacio, Salón",
+      "Palacio, Salón dorado",
+      "Palacio, con el título de Amar y dar tiempo al tiempo",
+      "Palacio, con el título de El mayor triunfo amor"
+    ],
+    "companias": [
+      "11 de febrero de 1685",
+      "12 de mayo de 1680",
+      "13 de enero de 1692",
+      "15 de enero de 1692",
+      "18 de febrero de 1685",
+      "19 de mayo de 1680",
+      "29 de agosto de 1684",
+      "3 de mayo de 1684",
+      "3 de septiembre de 1684",
+      "Agustín Manuel",
+      "Agustín Manuel de Castilla",
+      "Agustín Manuel y Antonio Escamilla",
+      "Agustín Manuel y Damián Polope",
+      "Agustín Manuel y Damián Polope y Valdés",
+      "Agustín Manuel y Damián Polope, con «sobresalientes»",
+      "Agustín Manuel y Simón Aguado",
+      "Alonso de Olmedo",
+      "Andrea de Salazar",
+      "Andrea de Salazar, viuda de Damián Polope",
+      "Antonio Escamilla y Matías de Castro",
+      "Antonio Garcia de Prado",
+      "Antonio García de Prado",
+      "Antonio Ruiz y José Garcés",
+      "Antonio de Escamilla",
+      "Antonio de Escamilla y Agustín Manuel",
+      "Antonio de Escamilla y Sebastián de Prado",
+      "Buen Retiro, Coliseo, representaciones al pueblo con el título de Icaro (Fuentes XI); (6) 1º de mayo de 1708",
+      "Carlos Vallejo",
+      "Carlos Vallejo y Andrea de Salazar",
+      "Compañía sin especificar",
+      "Compañía sin especificar, pero probablemente la de Damián Polop o de Agustín Manuel de Castilla, o las dos trabajando en colaboración",
+      "Compañía sin especificar, probablemente la de Sebastián de Prado o la de Diego Osorio",
+      "Cristóbal de Avendaño",
+      "Cuarto de la Reina (Fuentes I); (2) 2 de febrero de 1682, con el título de La mentirosa verdad",
+      "Cárdenas",
+      "Damián Polop",
+      "Damián Polope",
+      "Damián Polope y Agustín Manuel",
+      "Diego Osorio",
+      "Diego Osorio y la compañía de Rosa, o por lo menos sus actrices",
+      "Diego de Osorio",
+      "El 19 de abril de 1690 se habla de ensayos",
+      "Eufrasia María",
+      "Francisca Bezón",
+      "Francisca Bezón y Manuel Vallejo",
+      "Francisco García",
+      "Isabel de Castro",
+      "Jerónimo García",
+      "Jerónimo García, Representación palacieg a, con el título de Manos blancas (Fuentes V); (2) - (3) 25, 26 de enero de 1689, Agustín Manuel Cortés de la Cruz (Fuentes V); (4) 30 de marzo de 1693",
+      "José Garcés y Juan Bautista Chavarría"
+    ]
+  },
+  "patrones_identificados": {
+    "titulo": "Línea separada terminando con ', El/La/Los/Las'",
+    "representacion": "(n) fecha. compañía. lugar (Fuentes X)",
+    "referencia_cruzada": "Véase...",
+    "informacion_bibliografica": "Párrafo continuo después de representaciones"
+  },
+  "ejemplos": [
+    {
+      "titulo": "Alcaide de sí mismo, El",
+      "autor": "Calderón impresa en El mejor de los mejores libros",
+      "representaciones": [],
+      "referencias_cruzadas": [],
+      "titulos_alternativos": [
+        "de La guarda de sí mismo",
+        "El guardarse a sí mismo, en Doce comedias las más grandiosas"
+      ],
+      "archivo": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "total_representaciones": 0
+    },
+    {
+      "titulo": "Alcalde de Zalamea, El",
+      "autor": null,
+      "representaciones": [
+        {
+          "numero": "1",
+          "fecha": "9 de enero de 1681",
+          "compania": "Jerónimo García",
+          "lugar": "Palacio",
+          "fuente": "V"
+        },
+        {
+          "numero": "2",
+          "fecha": "23 de enero de 1681",
+          "compania": "Jerónimo García",
+          "lugar": "Representación palaciega",
+          "fuente": "V"
+        },
+        {
+          "numero": "3",
+          "fecha": "12 de octubre de 1687",
+          "compania": "Simón Aguado",
+          "lugar": "Buen Retiro, Saloncete",
+          "fuente": "I"
+        },
+        {
+          "numero": "5",
+          "fecha": "21 de enero de 1688",
+          "compania": "Simón Aguado",
+          "lugar": "Palacio",
+          "fuente": "VI"
+        },
+        {
+          "numero": "7",
+          "fecha": "10 de febrero de 1692",
+          "compania": "Damián Polop",
+          "lugar": "Cuarto de la Reina",
+          "fuente": "I"
+        },
+        {
+          "numero": "8",
+          "fecha": "- (11) 10-13 de mayo de 1696",
+          "compania": "Vallejo",
+          "lugar": "Corral del Príncipe, con el título de El garrote más bien dado",
+          "fuente": "VI"
+        }
+      ],
+      "referencias_cruzadas": [],
+      "titulos_alternativos": [
+        "El garrote más bien dado); (5) 21 de enero de 1688",
+        "El garrote más bien dado (Fuentes VI)"
+      ],
+      "archivo": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "total_representaciones": 6
+    },
+    {
+      "titulo": "Alcázar del secreto, El",
+      "autor": null,
+      "representaciones": [
+        {
+          "numero": "1",
+          "fecha": "Lunes de Carnestolendas de 1657 (12 de febrero)",
+          "compania": "Diego Osorio",
+          "lugar": "Buen Retiro, con el título de El palacio del silencio",
+          "fuente": "IV"
+        },
+        {
+          "numero": "2",
+          "fecha": "- (5) Anunciada 23-26 de mayo de 1657",
+          "compania": "Diego Osorio",
+          "lugar": "Corral del Príncipe",
+          "fuente": "IV"
+        },
+        {
+          "numero": "6",
+          "fecha": "18 de enero de 1681",
+          "compania": "Manuel Vallejo y algunos miembros de la compañía de Jerónimo García",
+          "lugar": "Palacio",
+          "fuente": "V"
+        },
+        {
+          "numero": "7",
+          "fecha": "6 de enero de 1695",
+          "compania": "Agustín Manuel",
+          "lugar": "Palacio, Salón",
+          "fuente": "VI"
+        }
+      ],
+      "referencias_cruzadas": [],
+      "titulos_alternativos": [
+        "El palacio del silencio (Fuentes IV); (2) - (5) Anunciada 23-26 de mayo de 1657"
+      ],
+      "archivo": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "total_representaciones": 4
+    },
+    {
+      "titulo": "Aldehuela y el gran prior de Castilla, La",
+      "autor": "Diamante",
+      "representaciones": [
+        {
+          "numero": "1",
+          "fecha": "18 de enero de 1678",
+          "compania": "Agustín Manuel y Antonio Escamilla",
+          "lugar": "Palacio",
+          "fuente": "V"
+        },
+        {
+          "numero": "2",
+          "fecha": "8 de mayo de 1687",
+          "compania": "Agustín Manuel y Simón Aguado",
+          "lugar": "Buen Retiro, Coliseo",
+          "fuente": "V"
+        }
+      ],
+      "referencias_cruzadas": [
+        "Hijo de la molinera, El"
+      ],
+      "titulos_alternativos": [],
+      "archivo": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "total_representaciones": 2
+    },
+    {
+      "titulo": "Amante mudo, El",
+      "autor": null,
+      "representaciones": [
+        {
+          "numero": "1",
+          "fecha": "12 de abril de 1687",
+          "compania": "Simón Aguado",
+          "lugar": "Palacio, Salón dorado",
+          "fuente": "I"
+        },
+        {
+          "numero": "2",
+          "fecha": "3 de septiembre de 1687",
+          "compania": "Simón Aguado",
+          "lugar": "Palacio, Salón dorado",
+          "fuente": "I"
+        },
+        {
+          "numero": "3",
+          "fecha": "27 de diciembre de 1691",
+          "compania": "Damián Polop",
+          "lugar": "Cuarto de la Reina",
+          "fuente": "I"
+        }
+      ],
+      "referencias_cruzadas": [],
+      "titulos_alternativos": [],
+      "archivo": "FUENTES IX 1_part_003_ALL_PAGES_texto_extraido.txt",
+      "total_representaciones": 3
+    }
+  ]
+}
