@@ -119,35 +119,112 @@ def import_catcom_data():
                 print(f"  Creada obra: {obra.titulo_limpio}")
             
             # Procesar representaciones
+            # Primero intentar cargar representaciones extraídas
+            representaciones_extraidas = {}
+            extraidas_file = Path(__file__).parent.parent / 'data' / 'CATCOM' / 'representaciones_extraidas.json'
+            if extraidas_file.exists():
+                try:
+                    with open(extraidas_file, 'r', encoding='utf-8') as f:
+                        extraidas_data = json.load(f)
+                    # Crear índice por título de obra
+                    for rep in extraidas_data.get('representaciones', []):
+                        rep_titulo = rep.get('obra_titulo', '').lower().strip()
+                        if rep_titulo not in representaciones_extraidas:
+                            representaciones_extraidas[rep_titulo] = []
+                        representaciones_extraidas[rep_titulo].append(rep)
+                except Exception as e:
+                    print(f"  ⚠️ No se pudieron cargar representaciones extraídas: {e}")
+            
             if 'performances' in obra_data:
-                for perf_data in obra_data['performances']:
+                titulo_lower = titulo_limpio.lower()
+                reps_extraidas = representaciones_extraidas.get(titulo_lower, [])
+                
+                for idx, perf_data in enumerate(obra_data['performances']):
                     lugar_nombre = perf_data.get('lugar', '')
-                    if lugar_nombre:
-                        # Crear o obtener lugar
-                        if lugar_nombre not in lugares_dict:
-                            lugar_obj, created = Lugar.objects.get_or_create(
-                                nombre=lugar_nombre,
-                                defaults={
-                                    'pais': 'España',
-                                    'tipo_lugar': 'otro',
-                                    'notas_historicas': 'Importado desde CATCOM'
-                                }
-                            )
-                            lugares_dict[lugar_nombre] = lugar_obj
-                            if created:
-                                print(f"  Creado lugar: {lugar_obj.nombre}")
-                        else:
-                            lugar_obj = lugares_dict[lugar_nombre]
-                        
-                        # Crear representación
-                        Representacion.objects.get_or_create(
-                            obra=obra,
-                            fecha='',
-                            lugar=lugar_obj,
-                            tipo_lugar=perf_data.get('espacio', ''),
-                            observaciones=perf_data.get('noticia', ''),
-                            fuente='CATCOM'
+                    if not lugar_nombre:
+                        continue
+                    
+                    # Buscar representación extraída correspondiente (por índice o por lugar)
+                    rep_extraida = None
+                    if idx < len(reps_extraidas):
+                        rep_extraida = reps_extraidas[idx]
+                    else:
+                        # Buscar por lugar
+                        lugar_limpio = lugar_nombre.split('(')[0].strip().lower()
+                        for rep in reps_extraidas:
+                            if lugar_limpio in rep.get('lugar_nombre', '').lower():
+                                rep_extraida = rep
+                                break
+                    
+                    # Crear o obtener lugar
+                    lugar_final = rep_extraida.get('lugar_nombre', lugar_nombre) if rep_extraida else lugar_nombre
+                    if lugar_final not in lugares_dict:
+                        lugar_obj, created = Lugar.objects.get_or_create(
+                            nombre=lugar_final,
+                            defaults={
+                                'pais': 'España',
+                                'region': rep_extraida.get('lugar_region', '') if rep_extraida else '',
+                                'tipo_lugar': rep_extraida.get('lugar_tipo', 'otro') if rep_extraida else 'otro',
+                                'notas_historicas': 'Importado desde CATCOM'
+                            }
                         )
+                        lugares_dict[lugar_final] = lugar_obj
+                        if created:
+                            print(f"  Creado lugar: {lugar_obj.nombre}")
+                    else:
+                        lugar_obj = lugares_dict[lugar_final]
+                    
+                    # Extraer fecha y compañía
+                    fecha_str = ''
+                    fecha_formateada = None
+                    compania = ''
+                    
+                    if rep_extraida:
+                        fecha_str = rep_extraida.get('fecha', '')
+                        fecha_formateada_str = rep_extraida.get('fecha_formateada', '')
+                        if fecha_formateada_str:
+                            try:
+                                fecha_formateada = datetime.strptime(fecha_formateada_str, '%Y-%m-%d').date()
+                            except:
+                                pass
+                        compania = rep_extraida.get('compañia', '')
+                    
+                    # Si no hay fecha extraída, intentar extraer del texto
+                    if not fecha_str:
+                        noticia = perf_data.get('noticia', '')
+                        # Buscar patrón básico de fecha
+                        import re
+                        fecha_match = re.search(r'(\d{1,2}\s+de\s+\w+\s+de\s+\d{4})', noticia, re.IGNORECASE)
+                        if fecha_match:
+                            fecha_str = fecha_match.group(1)
+                    
+                    # Si no hay compañía extraída, intentar extraer del texto
+                    if not compania:
+                        noticia = perf_data.get('noticia', '')
+                        compania_match = re.search(r'compañía\s+de\s+([^\.]+?)(?:\.|,|$)', noticia, re.IGNORECASE)
+                        if compania_match:
+                            compania = compania_match.group(1).strip()
+                    
+                    # Determinar tipo de lugar
+                    tipo_lugar = perf_data.get('espacio', '')
+                    if rep_extraida and rep_extraida.get('lugar_tipo'):
+                        tipo_lugar = rep_extraida.get('lugar_tipo')
+                    elif not tipo_lugar or tipo_lugar == 'Ø':
+                        tipo_lugar = ''
+                    
+                    # Crear representación
+                    Representacion.objects.get_or_create(
+                        obra=obra,
+                        fecha=fecha_str,
+                        lugar=lugar_obj,
+                        defaults={
+                            'fecha_formateada': fecha_formateada,
+                            'tipo_lugar': tipo_lugar,
+                            'compañia': compania,
+                            'observaciones': perf_data.get('noticia', ''),
+                            'fuente': 'CATCOM'
+                        }
+                    )
             
             # Procesar referencias bibliográficas
             if 'bibliography' in obra_data:

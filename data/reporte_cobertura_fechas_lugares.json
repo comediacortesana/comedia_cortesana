@@ -1,0 +1,44 @@
+{
+  "fecha_generacion": "2026-02-19T11:40:59.277866",
+  "datos_obras": {
+    "total_obras": 2100,
+    "obras_con_representaciones": 0,
+    "total_representaciones": 0,
+    "representaciones_con_fecha": 0,
+    "representaciones_con_fecha_formateada": 0,
+    "representaciones_con_lugar": 0,
+    "representaciones_con_region": 0,
+    "representaciones_con_compania": 0,
+    "por_fuente": {
+      "DESCONOCIDA": {
+        "total_obras": 2100,
+        "obras_con_representaciones": 0,
+        "total_representaciones": 0,
+        "representaciones_con_fecha": 0,
+        "representaciones_con_lugar": 0
+      }
+    },
+    "obras_sin_fecha": [],
+    "obras_sin_lugar": []
+  },
+  "representaciones_normalizadas": {
+    "total_representaciones": 4114,
+    "con_fecha": 3937,
+    "con_fecha_formateada": 3937,
+    "con_lugar": 4070,
+    "con_region": 1908,
+    "con_compania": 2888,
+    "por_fuente": {
+      "FUENTESIX": {
+        "total": 76,
+        "con_fecha": 38,
+        "con_lugar": 32
+      },
+      "CATCOM": {
+        "total": 4038,
+        "con_fecha": 3899,
+        "con_lugar": 4038
+      }
+    }
+  }
+}

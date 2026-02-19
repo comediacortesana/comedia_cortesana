@@ -4690,7 +4690,36 @@
         }
 
         function obtenerAnioParaFiltro(obra) {
-            return extraerAnioObra(obra) || extraerAnioAuxiliar(obra);
+            // Primero intentar desde fecha_creacion de la obra
+            const anioObra = extraerAnioObra(obra);
+            if (anioObra) return anioObra;
+            
+            // Si no hay fecha de creación, buscar en representaciones
+            const rep = obtenerRepresentacionConDatos(obra);
+            if (rep) {
+                // Intentar extraer año de fecha_formateada
+                const fechaFormateada = rep.fecha_formateada;
+                if (fechaFormateada && fechaFormateada.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    const año = parseInt(fechaFormateada.substring(0, 4), 10);
+                    if (!isNaN(año) && año >= 1500 && año <= 2000) {
+                        return año;
+                    }
+                }
+                // Intentar extraer año de fecha original
+                const fecha = rep.fecha;
+                if (fecha) {
+                    const match = fecha.toString().match(/(1[0-9]{3}|20[0-9]{2})/);
+                    if (match) {
+                        const año = parseInt(match[1], 10);
+                        if (!isNaN(año) && año >= 1500 && año <= 2000) {
+                            return año;
+                        }
+                    }
+                }
+            }
+            
+            // Como último recurso, usar año auxiliar de FUENTESIX
+            return extraerAnioAuxiliar(obra);
         }
 
         function obtenerRepresentacionConDatos(obra) {
@@ -4719,18 +4748,36 @@
         }
 
         function obtenerFechaDisplay(obra) {
+            // Primero buscar fecha de creación de la obra
             const valor = obtenerCampo(obra, 'fecha_creacion', 'Fecha de Creación', 'fecha', 'Fecha');
             const fechaTexto = normalizarTexto(valor);
-            if (fechaTexto && fechaTexto.toLowerCase() !== 'no especificada') {
+            if (fechaTexto && fechaTexto.toLowerCase() !== 'no especificada' && fechaTexto.toLowerCase() !== 'null') {
                 return fechaTexto;
             }
 
+            // Buscar en representaciones
             const rep = obtenerRepresentacionConDatos(obra);
             if (rep) {
-                const fechaRep = normalizarTexto(rep.fecha_formateada || rep.fecha);
-                if (fechaRep) return fechaRep;
+                // Priorizar fecha original (más legible)
+                const fechaRep = normalizarTexto(rep.fecha);
+                if (fechaRep && fechaRep.length > 0) {
+                    return fechaRep;
+                }
+                // Si no hay fecha original, usar fecha formateada
+                const fechaFormateada = normalizarTexto(rep.fecha_formateada);
+                if (fechaFormateada && fechaFormateada.length > 0) {
+                    // Formatear fecha ISO a formato más legible si es necesario
+                    if (fechaFormateada.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                        const [año, mes, dia] = fechaFormateada.split('-');
+                        const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 
+                                      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+                        return `${dia} de ${meses[parseInt(mes) - 1]} de ${año}`;
+                    }
+                    return fechaFormateada;
+                }
             }
 
+            // Como último recurso, usar año auxiliar
             const anio = obtenerAnioParaFiltro(obra);
             return anio ? String(anio) : '-';
         }

@@ -217,28 +217,47 @@ def exportar_obras_a_json(max_obras=None):
         if i % 10 == 0:
             print(f"  📝 Procesadas {i}/{total_obras} obras...")
     
-    # Guardar archivo
-    output_path = os.path.join(
+    # Guardar archivo en filtro_basico
+    output_path_filtro = os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
         'filtro_basico',
         'datos_obras.json'
     )
     
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    os.makedirs(os.path.dirname(output_path_filtro), exist_ok=True)
     
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path_filtro, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    
+    # También guardar en raíz para index.html
+    output_path_root = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+        'datos_obras.json'
+    )
+    
+    with open(output_path_root, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     
     print(f"\n✅ Exportación completada!")
-    print(f"📁 Archivo guardado en: {output_path}")
-    print(f"📦 Tamaño: {os.path.getsize(output_path) / 1024:.2f} KB")
+    print(f"📁 Archivo guardado en:")
+    print(f"   - {output_path_filtro}")
+    print(f"   - {output_path_root}")
+    print(f"📦 Tamaño: {os.path.getsize(output_path_filtro) / 1024:.2f} KB")
+    print(f"\n📊 Estadísticas:")
+    print(f"   - Total obras: {total_obras}")
+    total_reps = sum(len(obra.get('representaciones', [])) for obra in data['obras'])
+    print(f"   - Total representaciones: {total_reps}")
+    reps_con_fecha = sum(1 for obra in data['obras'] 
+                        for rep in obra.get('representaciones', []) 
+                        if rep.get('fecha_formateada'))
+    print(f"   - Representaciones con fecha: {reps_con_fecha}")
     print(f"\n🚀 Siguiente paso:")
     print(f"   cd filtro_basico")
     print(f"   git add datos_obras.json")
     print(f"   git commit -m 'Actualizar datos con {total_obras} obras'")
     print(f"   git push")
     
-    return output_path
+    return output_path_filtro
 
 
 def estadisticas_basicas():
