@@ -5164,7 +5164,7 @@
             }
         }
 
-        // Cargar datos desde Supabase (fuente principal) o JSON (fallback)
+        // Cargar datos desde JSON (respaldo) primero, Supabase como fallback
         async function cargarDatos() {
             const inicioTiempo = Date.now();
             let datosCargados = false;
@@ -5174,7 +5174,74 @@
             let metadataJson = null;
             
             try {
-                // INTENTO 1: Cargar desde Supabase (fuente principal)
+                // INTENTO 1: Cargar desde JSON (respaldo)
+                try {
+                    console.log('🔍 Intentando cargar datos_obras.json como base...');
+                    const response = await fetch('datos_obras.json');
+                    
+                    console.log('📡 Respuesta recibida:', response.status, response.statusText);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    console.log('✅ JSON parseado correctamente');
+                    console.log('📊 Estructura de datos:', {
+                        tieneMetadata: !!data.metadata,
+                        tieneObras: !!data.obras,
+                        esArray: Array.isArray(data),
+                        totalObras: data.obras ? data.obras.length : (Array.isArray(data) ? data.length : 0)
+                    });
+                    
+                    // Manejar ambos formatos: {metadata, obras} o array directo
+                    if (data.metadata && data.obras) {
+                        // Formato nuevo con metadata
+                        metadataJson = { ...data.metadata, fuente: 'JSON (respaldo)' };
+                        datosJson = data.obras;
+                    } else if (Array.isArray(data)) {
+                        // Formato antiguo: array directo
+                        console.warn('⚠️ JSON en formato antiguo (array directo). Se recomienda usar formato con metadata.');
+                        metadataJson = { 
+                            total_obras: data.length,
+                            fuente: 'JSON (respaldo)'
+                        };
+                        datosJson = data;
+                    } else {
+                        throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
+                    }
+                    
+                    datosJson = datosJson.map((obra) => normalizarFuenteEnObra(obra));
+                    if (metadataJson.fuentes && Array.isArray(metadataJson.fuentes)) {
+                        metadataJson.fuentes = metadataJson.fuentes.map(normalizarFuente).filter(Boolean);
+                    }
+                    
+                    console.log(`✅ ${datosJson.length} obras cargadas desde JSON (respaldo)`);
+                    
+                    if (datosJson.length === 0) {
+                        throw new Error('El archivo JSON está vacío o no contiene obras');
+                    }
+                } catch (errorJson) {
+                    console.error('❌ Error cargando datos desde JSON:', errorJson);
+                    console.warn('⚠️ Intentando Supabase como fallback...');
+                    
+                    // Crear log de error si el usuario está autenticado
+                    if (usuarioActual) {
+                        await crearLogError(
+                            'carga_datos',
+                            'Error al cargar datos desde JSON',
+                            {
+                                error_message: errorJson.message || String(errorJson),
+                                error_stack: errorJson.stack || null,
+                                timestamp: new Date().toISOString(),
+                                intento_fallback_supabase: true
+                            }
+                        );
+                    }
+                }
+                
+                // INTENTO 2: Cargar desde Supabase (fallback si JSON falló)
+                if (!datosJson && window.supabaseClient) {
                 try {
                     console.log('🔍 Intentando cargar datos desde Supabase...');
                     console.log('⏱️ Inicio carga:', new Date().toISOString());
@@ -5306,7 +5373,7 @@
                 } catch (errorSupabase) {
                     const tiempoError = Date.now() - inicioTiempo;
                     console.error(`❌ Error cargando desde Supabase después de ${tiempoError}ms:`, errorSupabase);
-                    console.warn('⚠️ Intentando JSON como fallback...');
+                    console.warn('⚠️ Supabase no disponible o falló.');
                     
                     // Crear log de error si el usuario está autenticado
                     if (usuarioActual) {
@@ -5323,74 +5390,10 @@
                         );
                     }
                 }
+                }
                 
-                // INTENTO 2: Cargar desde JSON (fuente base / respaldo)
-                try {
-                    console.log('🔍 Intentando cargar datos_obras.json como base...');
-                    const response = await fetch('datos_obras.json');
-                    
-                    console.log('📡 Respuesta recibida:', response.status, response.statusText);
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    
-                    const data = await response.json();
-                    console.log('✅ JSON parseado correctamente');
-                    console.log('📊 Estructura de datos:', {
-                        tieneMetadata: !!data.metadata,
-                        tieneObras: !!data.obras,
-                        esArray: Array.isArray(data),
-                        totalObras: data.obras ? data.obras.length : (Array.isArray(data) ? data.length : 0)
-                    });
-                    
-                    // Manejar ambos formatos: {metadata, obras} o array directo
-                    if (data.metadata && data.obras) {
-                        // Formato nuevo con metadata
-                        metadataJson = { ...data.metadata, fuente: 'JSON (base)' };
-                        datosJson = data.obras;
-                    } else if (Array.isArray(data)) {
-                        // Formato antiguo: array directo
-                        console.warn('⚠️ JSON en formato antiguo (array directo). Se recomienda usar formato con metadata.');
-                        metadataJson = { 
-                            total_obras: data.length,
-                            fuente: 'JSON (base)'
-                        };
-                        datosJson = data;
-                    } else {
-                        throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
-                    }
-                    
-                    datosJson = datosJson.map((obra) => normalizarFuenteEnObra(obra));
-                    if (metadataJson.fuentes && Array.isArray(metadataJson.fuentes)) {
-                        metadataJson.fuentes = metadataJson.fuentes.map(normalizarFuente).filter(Boolean);
-                    }
-                    
-                    console.log(`✅ ${datosJson.length} obras cargadas desde JSON (base)`);
-                    
-                    if (datosJson.length === 0) {
-                        throw new Error('El archivo JSON está vacío o no contiene obras');
-                    }
-                } catch (errorJson) {
-                    console.error('❌ Error cargando datos desde JSON:', errorJson);
-                    
-                    // Crear log de error si el usuario está autenticado
-                    if (usuarioActual) {
-                        await crearLogError(
-                            'carga_datos',
-                            'Error al cargar datos desde JSON',
-                            {
-                                error_message: errorJson.message || String(errorJson),
-                                error_stack: errorJson.stack || null,
-                                timestamp: new Date().toISOString(),
-                                fallback_failed: !datosSupabase
-                            }
-                        );
-                    }
-                    
-                    if (!datosSupabase) {
-                        throw new Error('No se pudieron cargar datos ni desde Supabase ni desde JSON. ' + errorJson.message);
-                    }
+                if (!datosJson && !datosSupabase) {
+                    throw new Error('No se pudieron cargar datos ni desde JSON ni desde Supabase.');
                 }
 
                 if (datosJson) {
@@ -5425,14 +5428,14 @@
                     }
                     
                     // Actualizar subtítulo con info de metadata
-                    const fuenteTexto = metadata.fuente === 'Supabase' ? 'Supabase' : 'JSON (respaldo)';
+                    const fuenteTexto = metadata.fuente === 'Supabase' ? 'Supabase (respaldo)' : 'JSON';
                     const totalObras = metadata.total_obras || datosOriginales.length;
                     document.querySelector('.subtitle').textContent = 
                         `Filtro de obras, autores, representaciones y lugares - ${totalObras} obras en la base de datos (${fuenteTexto})`;
                     
-                    // Mostrar notificación si se usó fallback
-                    if (metadata.fuente === 'JSON (fallback)') {
-                        console.warn('⚠️ Se está usando JSON como fuente de datos. Considera sincronizar con Supabase.');
+                    // Mostrar notificación si se usó Supabase porque falló JSON
+                    if (metadata.fuente === 'Supabase') {
+                        console.warn('⚠️ Se está usando Supabase como fuente (JSON no disponible o falló).');
                     }
                 } else {
                     // Si no se cargaron datos, mostrar error
