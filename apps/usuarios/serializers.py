@@ -95,33 +95,20 @@ class LoginSerializer(serializers.Serializer):
         password = attrs.get('password')
         
         if login_field and password:
-            # Buscar usuario por email primero, luego por username
-            try:
-                try:
-                    usuario = Usuario.objects.get(email=login_field)
-                except Usuario.DoesNotExist:
-                    try:
-                        usuario = Usuario.objects.get(username=login_field)
-                    except Usuario.DoesNotExist:
-                        raise serializers.ValidationError('Credenciales inválidas.')
-                
-                user = authenticate(
-                    request=self.context.get('request'),
-                    username=usuario.username,
-                    password=password
-                )
-                
-                if not user:
-                    raise serializers.ValidationError('Credenciales inválidas.')
-                
-                if not user.is_active:
-                    raise serializers.ValidationError('La cuenta está desactivada.')
-                
-                attrs['user'] = user
-                return attrs
-                
-            except Usuario.DoesNotExist:
+            user = authenticate(
+                request=self.context.get('request'),
+                username=login_field.strip(),
+                password=password
+            )
+
+            if not user:
                 raise serializers.ValidationError('Credenciales inválidas.')
+            
+            if not user.is_active:
+                raise serializers.ValidationError('La cuenta está desactivada.')
+            
+            attrs['user'] = user
+            return attrs
         else:
             raise serializers.ValidationError('Debe proporcionar usuario/email y contraseña.')
 

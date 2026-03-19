@@ -19,16 +19,27 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http import JsonResponse
+from django.http import FileResponse, Http404, HttpResponse
 from django.views.decorators.http import require_http_methods
+from pathlib import Path
+from django.shortcuts import render
 
 @require_http_methods(["GET"])
 def home_view(request):
     """Vista de inicio que muestra información del proyecto"""
     # Obtener comentarios recientes
     from apps.obras.models import ComentarioUsuario
+    from apps.obras.models import Obra
+    from apps.autores.models import Autor
+    from apps.lugares.models import Lugar
+    from apps.representaciones.models import Representacion
     comentarios_recientes = ComentarioUsuario.objects.filter(
         es_publico=True
     ).select_related('usuario').prefetch_related('obras_seleccionadas').order_by('-fecha_creacion')[:5]
+    total_obras = Obra.objects.count()
+    total_autores = Autor.objects.count()
+    total_lugares = Lugar.objects.count()
+    total_representaciones = Representacion.objects.count()
     
     # Información del usuario autenticado - MINIMALISTA
     user_info = ""
@@ -577,19 +588,19 @@ def home_view(request):
             <!-- ESTADÍSTICAS COMPACTAS -->
             <div class="stats">
                 <div class="stat-item">
-                    <span class="stat-number">2,038</span>
+                    <span class="stat-number">{total_obras}</span>
                     <div class="stat-label">Obras</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">54</span>
+                    <span class="stat-number">{total_autores}</span>
                     <div class="stat-label">Autores</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">273</span>
+                    <span class="stat-number">{total_lugares}</span>
                     <div class="stat-label">Lugares</div>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-number">6,175</span>
+                    <span class="stat-number">{total_representaciones}</span>
                     <div class="stat-label">Representaciones</div>
                 </div>
             </div>
@@ -657,8 +668,13 @@ def home_view(request):
     from django.http import HttpResponse
     return HttpResponse(html_content)
 
+@require_http_methods(["GET"])
+def index_django_view(request):
+    """Vista principal con la UI equivalente a tu index de GitHub Pages."""
+    return render(request, "obras/index_django.html")
+
 urlpatterns = [
-    path("", home_view, name="home"),
+    path("", index_django_view, name="home"),
     path("admin/", admin.site.urls),
     path("usuarios/", include("apps.usuarios.urls")),
     path("obras/", include("apps.obras.urls")),
@@ -667,6 +683,57 @@ urlpatterns = [
     path("api/", include("apps.lugares.urls")),
     path("api/", include("apps.autores.urls")),
     path("api/", include("apps.bibliografia.urls")),
+]
+
+# ---- Compatibilidad UI GitHub Pages en Django ----
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+@require_http_methods(["GET"])
+def github_pages_index_view(request):
+    """Sirve el index estático original usado en GitHub Pages."""
+    file_path = BASE_DIR / "index.html"
+    if not file_path.exists():
+        raise Http404("index.html no encontrado")
+    return FileResponse(file_path.open("rb"), content_type="text/html; charset=utf-8")
+
+
+@require_http_methods(["GET"])
+def github_pages_datos_obras_view(request):
+    """Sirve el respaldo JSON principal para el frontend estático."""
+    file_path = BASE_DIR / "datos_obras.json"
+    if not file_path.exists():
+        raise Http404("datos_obras.json no encontrado")
+    return FileResponse(file_path.open("rb"), content_type="application/json; charset=utf-8")
+
+
+@require_http_methods(["GET"])
+def github_pages_data_files_view(request, subpath):
+    """
+    Sirve archivos bajo data/ para mantener funcionalidad del index estático.
+    """
+    base_data_dir = (BASE_DIR / "data").resolve()
+    target = (base_data_dir / subpath).resolve()
+    if base_data_dir not in target.parents and target != base_data_dir:
+        raise Http404("Ruta inválida")
+    if not target.exists() or not target.is_file():
+        raise Http404("Archivo no encontrado")
+    content_type = "application/json; charset=utf-8" if target.suffix == ".json" else "text/plain; charset=utf-8"
+    return FileResponse(target.open("rb"), content_type=content_type)
+
+
+@require_http_methods(["GET"])
+def favicon_view(request):
+    """Evita 404 de favicon cuando no hay icono configurado."""
+    return HttpResponse(status=204)
+
+
+# Mantener rutas legacy accesibles sin ser la portada principal
+urlpatterns += [
+    path("legacy/index/", github_pages_index_view, name="legacy_index"),
+    path("datos_obras.json", github_pages_datos_obras_view, name="datos_obras_json"),
+    path("data/<path:subpath>", github_pages_data_files_view, name="data_files"),
+    path("favicon.ico", favicon_view, name="favicon"),
 ]
 
 # Servir archivos estáticos y media en desarrollo

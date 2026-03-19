@@ -17,6 +17,9 @@ urlpatterns = [
     path('api/perfil/', views.api_perfil, name='api_perfil'),
     path('api/cambio-password/', views.api_cambio_password, name='api_cambio_password'),
     path('api/sesiones/', views.api_sesiones, name='api_sesiones'),
+    path('api/login-session/', views.api_login_session, name='api_login_session'),
+    path('api/logout-session/', views.api_logout_session, name='api_logout_session'),
+    path('api/session-user/', views.api_session_user, name='api_session_user'),
 ]
 
 

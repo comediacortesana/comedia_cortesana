@@ -14,20 +14,24 @@ class UsuarioBackend(ModelBackend):
         """
         Autentica un usuario usando username o email
         """
-        if username is None or password is None:
+        identifier = username or kwargs.get("username") or kwargs.get("email")
+        if identifier is None or password is None:
             return None
         
         try:
-            # Buscar usuario por username o email
-            user = User.objects.get(
-                Q(username=username) | Q(email=username)
-            )
+            # Buscar usuario por username o email (case-insensitive)
+            user = User.objects.filter(
+                Q(username__iexact=identifier) | Q(email__iexact=identifier)
+            ).first()
+            if user is None:
+                User().set_password(password)
+                return None
             
             # Verificar contraseña
             if user.check_password(password) and self.user_can_authenticate(user):
                 return user
                 
-        except User.DoesNotExist:
+        except Exception:
             # Ejecutar el hash de contraseña para evitar timing attacks
             User().set_password(password)
             

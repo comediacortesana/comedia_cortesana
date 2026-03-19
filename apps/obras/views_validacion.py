@@ -19,6 +19,27 @@ from apps.lugares.models import Lugar
 
 
 @login_required
+@require_http_methods(["GET"])
+def archivos_sintesis_api(request):
+    """
+    API JSON para listar archivos *_sintesis_validacion.json disponibles.
+    Usado por el modal de Validación IA del frontend estilo index.html.
+    """
+    sintesis_dir = os.path.join(settings.BASE_DIR, 'data', 'fuentesix')
+    archivos = []
+
+    if os.path.exists(sintesis_dir):
+        for archivo in os.listdir(sintesis_dir):
+            if not archivo.endswith('_sintesis_validacion.json'):
+                continue
+            archivos.append({"name": archivo})
+
+    # Ordenar por nombre (si quieres, luego lo ajustamos por fecha de metadata)
+    archivos.sort(key=lambda x: x["name"], reverse=True)
+    return JsonResponse({"success": True, "archivos_sintesis": archivos})
+
+
+@login_required
 def validacion_analisis_list(request):
     """
     Lista todos los archivos de síntesis disponibles para validación

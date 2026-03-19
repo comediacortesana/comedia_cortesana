@@ -2,9 +2,19 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+from django.utils import timezone
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Obra, Manuscrito, PaginaPDF, TemaLiterario, ObraTema, ComentarioUsuario
+from .models import (
+    Obra,
+    Manuscrito,
+    PaginaPDF,
+    TemaLiterario,
+    ObraTema,
+    ComentarioUsuario,
+    PropuestaCambioObra,
+    VotoPropuestaCambioObra,
+)
 from .serializers import ObraSerializer, ManuscritoSerializer, TemaLiterarioSerializer, ObraTemaSerializer
 from django.db.models import Q
 
@@ -2236,6 +2246,194 @@ def get_obra_comments(request, obra_id):
         })
 
 
+# ============================================================================
+# Endpoints equivalentes al frontend index.html (comentarios estilo Supabase)
+# ============================================================================
+
+
+@require_http_methods(["GET"])
+def index_comentarios_obra(request, obra_id):
+    """Listado de comentarios de una obra (formato compatible con el index JS)."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    obra = get_object_or_404(Obra, id=obra_id)
+
+    comentarios = (
+        ComentarioUsuario.objects.filter(obras_seleccionadas=obra)
+        .select_related("usuario")
+        .order_by("-fecha_creacion")
+        .distinct()
+    )
+
+    payload = []
+    for c in comentarios:
+        avatar_url = None
+        if getattr(c.usuario, "avatar", None):
+            try:
+                avatar_url = c.usuario.avatar.url
+            except Exception:
+                avatar_url = None
+
+        payload.append(
+            {
+                "id": c.id,
+                "created_at": c.fecha_creacion.isoformat(),
+                "contenido": c.comentario,
+                "tipo": c.tipo,
+                "obra_id": obra.id,
+                "filtros_busqueda": c.filtros_busqueda,
+                "perfiles_usuarios": {
+                    "nombre_completo": c.usuario.get_full_name() or c.usuario.username,
+                    "avatar_url": avatar_url,
+                },
+                "visto_por_admin": c.visto_por_admin,
+                "visto_at": c.visto_at.isoformat() if c.visto_at else None,
+                "visto_por": c.visto_por.username if c.visto_por else None,
+                "obra": {"titulo": obra.titulo},
+            }
+        )
+
+    return JsonResponse({"success": True, "comentarios": payload})
+
+
+@require_http_methods(["GET"])
+def index_comentarios_global(request):
+    """Listado global de comentarios (formato compatible con el index JS)."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    comentarios = ComentarioUsuario.objects.select_related("usuario").order_by("-fecha_creacion").distinct()
+
+    payload = []
+    for c in comentarios:
+        avatar_url = None
+        if getattr(c.usuario, "avatar", None):
+            try:
+                avatar_url = c.usuario.avatar.url
+            except Exception:
+                avatar_url = None
+
+        # El index crea 1 comentario por 1 obra, pero dejamos tolerancia por si hay varias.
+        obras = list(c.obras_seleccionadas.all()[:1])
+        if obras:
+            obra = obras[0]
+            obra_obj = {"id": obra.id, "titulo": obra.titulo}
+        else:
+            obra_obj = None
+
+        payload.append(
+            {
+                "id": c.id,
+                "created_at": c.fecha_creacion.isoformat(),
+                "contenido": c.comentario,
+                "tipo": c.tipo,
+                "obra_id": obra_obj["id"] if obra_obj else None,
+                "filtros_busqueda": c.filtros_busqueda,
+                "perfiles_usuarios": {
+                    "nombre_completo": c.usuario.get_full_name() or c.usuario.username,
+                    "avatar_url": avatar_url,
+                },
+                "visto_por_admin": c.visto_por_admin,
+                "visto_at": c.visto_at.isoformat() if c.visto_at else None,
+                "visto_por": c.visto_por.username if c.visto_por else None,
+                "obra": obra_obj,
+            }
+        )
+
+    return JsonResponse({"success": True, "comentarios": payload})
+
+
+@require_http_methods(["POST"])
+def index_crear_comentario(request):
+    """Creación de comentario (obra o general) desde el index JS."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    import json
+    try:
+        data = json.loads(request.body or "{}")
+    except Exception:
+        data = {}
+
+    obra_id = data.get("obra_id", None)
+    contenido = (data.get("contenido") or "").strip()
+    tipo = (data.get("tipo") or "comentario").strip()
+    filtros_busqueda = data.get("filtros_busqueda", None)
+
+    if not contenido:
+        return JsonResponse({"success": False, "error": "El comentario es obligatorio"}, status=400)
+
+    # El modelo ComentarioUsuario requiere catalogo. Para comentarios generales, usamos un default.
+    catalogo = "fuentesxi"
+    obra = None
+    if obra_id is not None and obra_id != "" and obra_id != "null":
+        obra = get_object_or_404(Obra, id=obra_id)
+        catalogo = "fuentesxi" if obra.fuente_principal == "FUENTESXI" else "catcom"
+
+    # titulo es obligatorio en el modelo: lo derivamos del tipo para mantener compatibilidad.
+    titulo = "Comentario general" if tipo == "comentario_general" else "Comentario"
+
+    c = ComentarioUsuario.objects.create(
+        usuario=request.user,
+        catalogo=catalogo,
+        titulo=titulo,
+        comentario=contenido,
+        es_publico=False,
+        etiqueta_ia=False,
+        tipo=tipo,
+        visto_por_admin=False,
+        visto_at=None,
+        visto_por=None,
+        filtros_busqueda=filtros_busqueda,
+    )
+
+    if obra is not None:
+        c.obras_seleccionadas.add(obra)
+
+    return JsonResponse({"success": True, "comentario_id": c.id})
+
+
+@require_http_methods(["GET"])
+def index_comentarios_count_unseen(request):
+    """Cuenta comentarios pendientes (visto_por_admin=False) para el admin."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+    if not request.user.is_superuser and not request.user.is_staff:
+        return JsonResponse({"success": True, "count": 0})
+
+    count = ComentarioUsuario.objects.filter(visto_por_admin=False).count()
+    return JsonResponse({"success": True, "count": count})
+
+
+@require_http_methods(["POST"])
+def index_comentario_marcar_visto(request, comentario_id):
+    """Marca un comentario como visto por admin."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+    if not request.user.is_superuser and not request.user.is_staff:
+        return JsonResponse({"success": False, "error": "No autorizado"}, status=403)
+
+    comentario = get_object_or_404(ComentarioUsuario, id=comentario_id)
+    comentario.visto_por_admin = True
+    comentario.visto_at = timezone.now()
+    comentario.visto_por = request.user
+    # Para mantener coherencia con el uso existente del modelo:
+    comentario.es_publico = True
+    comentario.save(update_fields=["visto_por_admin", "visto_at", "visto_por", "es_publico"])
+
+    return JsonResponse({"success": True})
+
+
+@require_http_methods(["GET"])
+def index_comentario_filtros(request, comentario_id):
+    """Devuelve filtros_busqueda guardados en un comentario."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    comentario = get_object_or_404(ComentarioUsuario, id=comentario_id)
+    return JsonResponse({"success": True, "filtros_busqueda": comentario.filtros_busqueda})
+
 @require_http_methods(["POST"])
 def delete_comment(request, comentario_id):
     """Vista para eliminar un comentario"""
@@ -2270,6 +2468,237 @@ def delete_comment(request, comentario_id):
             'success': False,
             'error': f'Error al eliminar el comentario: {str(e)}'
         })
+
+
+def _to_python_field_value(obra, campo, valor):
+    """Convierte strings de propuestas al tipo esperado del campo."""
+    if campo in {"actos", "versos", "pagina_pdf"}:
+        if valor in ("", None):
+            return None
+        return int(valor)
+    if campo == "musica_conservada":
+        if isinstance(valor, bool):
+            return valor
+        return str(valor).strip().lower() in {"true", "1", "si", "sí", "yes"}
+    return valor
+
+
+def _apply_propuesta_a_obra(propuesta):
+    """Aplica el valor de una propuesta aprobada sobre Obra/Autor."""
+    obra = propuesta.obra
+    campo = propuesta.campo
+    valor = propuesta.valor_nuevo
+
+    if campo.startswith("autor."):
+        from apps.autores.models import Autor
+
+        subcampo = campo.split(".", 1)[1]
+        if obra.autor is None:
+            obra.autor = Autor.objects.create(nombre="Anónimo")
+            obra.save(update_fields=["autor"])
+        if hasattr(obra.autor, subcampo):
+            setattr(obra.autor, subcampo, valor)
+            obra.autor.save()
+            return
+        raise ValueError(f"Campo de autor no soportado: {campo}")
+
+    if not hasattr(obra, campo):
+        raise ValueError(f"Campo no soportado: {campo}")
+
+    setattr(obra, campo, _to_python_field_value(obra, campo, valor))
+    obra.save()
+
+
+@require_http_methods(["POST"])
+def crear_propuesta_cambio_obra(request):
+    """Crea propuesta de cambio (pendiente) para una obra."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    try:
+        import json
+
+        data = json.loads(request.body or "{}")
+        obra_id = data.get("obra_id")
+        campo = (data.get("campo") or "").strip()
+        valor_anterior = data.get("valor_anterior")
+        valor_nuevo = data.get("valor_nuevo")
+        comentario = (data.get("comentario") or "").strip()
+
+        if not obra_id or not campo:
+            return JsonResponse({"success": False, "error": "Faltan obra_id o campo"}, status=400)
+
+        obra = get_object_or_404(Obra, id=obra_id)
+        propuesta = PropuestaCambioObra.objects.create(
+            obra=obra,
+            campo=campo,
+            valor_anterior="" if valor_anterior is None else str(valor_anterior),
+            valor_nuevo="" if valor_nuevo is None else str(valor_nuevo),
+            comentario=comentario,
+            propuesta_por=request.user,
+            estado="pendiente",
+        )
+        return JsonResponse({"success": True, "propuesta_id": propuesta.id})
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=400)
+
+
+@require_http_methods(["GET"])
+def listar_propuestas_obra(request, obra_id):
+    """Lista propuestas y votos para una obra."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    propuestas = (
+        PropuestaCambioObra.objects.filter(obra_id=obra_id)
+        .select_related("propuesta_por", "resuelta_por")
+        .prefetch_related("votos__usuario")
+        .order_by("-fecha_creacion")
+    )
+
+    payload = []
+    for p in propuestas:
+        votos = []
+        favor = 0
+        contra = 0
+        for v in p.votos.all():
+            if v.voto == "a_favor":
+                favor += 1
+            elif v.voto == "en_contra":
+                contra += 1
+            votos.append(
+                {
+                    "id": v.id,
+                    "usuario": v.usuario.username,
+                    "voto": v.voto,
+                    "comentario": v.comentario,
+                    "fecha_creacion": v.fecha_creacion.isoformat(),
+                }
+            )
+        payload.append(
+            {
+                "id": p.id,
+                "campo": p.campo,
+                "valor_anterior": p.valor_anterior,
+                "valor_nuevo": p.valor_nuevo,
+                "comentario": p.comentario,
+                "estado": p.estado,
+                "propuesta_por": p.propuesta_por.username,
+                "resuelta_por": p.resuelta_por.username if p.resuelta_por else None,
+                "fecha_creacion": p.fecha_creacion.isoformat(),
+                "fecha_resolucion": p.fecha_resolucion.isoformat() if p.fecha_resolucion else None,
+                "votos": votos,
+                "conteo": {"a_favor": favor, "en_contra": contra},
+            }
+        )
+
+    return JsonResponse({"success": True, "propuestas": payload})
+
+
+@require_http_methods(["GET"])
+def listar_propuestas_pendientes_usuario(request):
+    """Lista propuestas pendientes del usuario (para estado en memoria del frontend index)."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    propuestas = (
+        PropuestaCambioObra.objects.filter(
+            propuesta_por=request.user,
+            estado="pendiente",
+        )
+        .select_related("obra")
+        .order_by("-fecha_creacion")
+    )
+
+    payload = [
+        {
+            "id": p.id,
+            "obra_id": p.obra_id,
+            "campo": p.campo,
+            "valor_anterior": p.valor_anterior,
+            "valor_nuevo": p.valor_nuevo,
+        }
+        for p in propuestas
+    ]
+
+    return JsonResponse({"success": True, "propuestas": payload})
+
+
+@require_http_methods(["POST"])
+def votar_propuesta_obra(request, propuesta_id):
+    """Añade/actualiza voto-comentario sobre propuesta."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    try:
+        import json
+
+        data = json.loads(request.body or "{}")
+        voto = (data.get("voto") or "").strip()
+        comentario = (data.get("comentario") or "").strip()
+        if voto not in {"a_favor", "en_contra"}:
+            return JsonResponse({"success": False, "error": "Voto inválido"}, status=400)
+
+        propuesta = get_object_or_404(PropuestaCambioObra, id=propuesta_id)
+        if propuesta.estado != "pendiente":
+            return JsonResponse({"success": False, "error": "La propuesta ya fue resuelta"}, status=400)
+
+        voto_obj, _ = VotoPropuestaCambioObra.objects.update_or_create(
+            propuesta=propuesta,
+            usuario=request.user,
+            defaults={"voto": voto, "comentario": comentario},
+        )
+        return JsonResponse({"success": True, "voto_id": voto_obj.id})
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=400)
+
+
+@require_http_methods(["POST"])
+def resolver_propuesta_obra(request, propuesta_id):
+    """Aprobar/rechazar propuesta. Solo superusuario puede aprobar definitivo."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+
+    try:
+        import json
+
+        data = json.loads(request.body or "{}")
+        accion = (data.get("accion") or "").strip()  # aprobar | rechazar
+        comentario = (data.get("comentario") or "").strip()
+        propuesta = get_object_or_404(PropuestaCambioObra, id=propuesta_id)
+
+        if propuesta.estado != "pendiente":
+            return JsonResponse({"success": False, "error": "La propuesta ya fue resuelta"}, status=400)
+
+        if accion == "aprobar":
+            if not request.user.is_superuser:
+                return JsonResponse({"success": False, "error": "Solo superusuario puede aprobar definitivamente"}, status=403)
+            _apply_propuesta_a_obra(propuesta)
+            propuesta.estado = "aprobada_superuser"
+        elif accion == "rechazar":
+            if not request.user.is_superuser:
+                return JsonResponse({"success": False, "error": "Solo superusuario puede rechazar"}, status=403)
+            propuesta.estado = "rechazada"
+        else:
+            return JsonResponse({"success": False, "error": "Acción inválida"}, status=400)
+
+        if comentario:
+            VotoPropuestaCambioObra.objects.update_or_create(
+                propuesta=propuesta,
+                usuario=request.user,
+                defaults={
+                    "voto": "a_favor" if accion == "aprobar" else "en_contra",
+                    "comentario": comentario,
+                },
+            )
+
+        propuesta.resuelta_por = request.user
+        propuesta.fecha_resolucion = timezone.now()
+        propuesta.save(update_fields=["estado", "resuelta_por", "fecha_resolucion"])
+
+        return JsonResponse({"success": True, "estado": propuesta.estado})
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)}, status=400)
 
 
 @require_http_methods(["GET"])

@@ -2,18 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.decorators import method_decorator
+from django.views.generic import TemplateView
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
+import json
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
-import json
 
 from .models import Usuario, PerfilUsuario, SesionUsuario
 from .serializers import (
@@ -38,36 +38,23 @@ class LoginView(TemplateView):
         password = request.POST.get('password')
         
         if login_field and password:
-            try:
-                # Intentar buscar por email primero, luego por username
-                try:
-                    usuario = Usuario.objects.get(email=login_field)
-                except Usuario.DoesNotExist:
-                    try:
-                        usuario = Usuario.objects.get(username=login_field)
-                    except Usuario.DoesNotExist:
-                        messages.error(request, 'Credenciales inválidas.')
-                        return render(request, self.template_name)
+            user = authenticate(
+                request=request,
+                username=login_field.strip(),
+                password=password
+            )
+            
+            if user and user.is_active:
+                login(request, user)
                 
-                user = authenticate(
-                    request=request,
-                    username=usuario.username,
-                    password=password
-                )
+                # Registrar sesión
+                self._registrar_sesion(request, user)
                 
-                if user and user.is_active:
-                    login(request, user)
-                    
-                    # Registrar sesión
-                    self._registrar_sesion(request, user)
-                    
-                    # Redirigir según el parámetro next
-                    next_url = request.GET.get('next', 'home')
-                    return redirect(next_url)
-                else:
-                    messages.error(request, 'Credenciales inválidas o cuenta desactivada.')
-            except Exception as e:
-                messages.error(request, 'Error en el proceso de autenticación.')
+                # Redirigir según el parámetro next
+                next_url = request.GET.get('next', 'home')
+                return redirect(next_url)
+            else:
+                messages.error(request, 'Credenciales inválidas o cuenta desactivada.')
         else:
             messages.error(request, 'Debe proporcionar usuario/email y contraseña.')
         
@@ -291,3 +278,74 @@ def api_sesiones(request):
             'activa': sesion.activa,
         })
     return Response(data)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def api_login_session(request):
+    """
+    Login por sesión Django para el frontend (UI estilo index.html).
+    Acepta `login_field` (username o email) y `password`.
+    """
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        payload = request.POST
+
+    login_field = (payload.get("login_field") or "").strip()
+    password = payload.get("password") or ""
+    if not login_field or not password:
+        return JsonResponse({"ok": False, "error": "Faltan credenciales"}, status=400)
+
+    user = authenticate(request=request, username=login_field, password=password)
+    if not user or not user.is_active:
+        return JsonResponse({"ok": False, "error": "Credenciales inválidas"}, status=401)
+
+    login(request, user)
+
+    return JsonResponse({
+        "ok": True,
+        "usuario": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "nombre": user.get_full_name() or user.username,
+            "is_admin": user.is_superuser,
+            "is_staff": user.is_staff,
+        }
+    })
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def api_logout_session(request):
+    """Logout por sesión Django para el frontend (UI estilo index.html)."""
+    if request.user.is_authenticated:
+        SesionUsuario.objects.filter(
+            usuario=request.user,
+            activa=True,
+        ).update(activa=False)
+    logout(request)
+    return JsonResponse({"ok": True})
+
+
+@require_http_methods(["GET"])
+def api_session_user(request):
+    """Devuelve el usuario autenticado por sesión Django (UI estilo index.html)."""
+    if not request.user.is_authenticated:
+        return JsonResponse({"authenticated": False})
+
+    user = request.user
+    return JsonResponse({
+        "authenticated": True,
+        "usuario": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "nombre": user.get_full_name() or user.username,
+            "is_admin": user.is_superuser,
+            "is_staff": user.is_staff,
+        }
+    })
+
+

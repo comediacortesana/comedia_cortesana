@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import Obra, Manuscrito, PaginaPDF, TemaLiterario, ObraTema, ComentarioUsuario
+from .models import (
+    Obra,
+    Manuscrito,
+    PaginaPDF,
+    TemaLiterario,
+    ObraTema,
+    ComentarioUsuario,
+    PropuestaCambioObra,
+    VotoPropuestaCambioObra,
+)
 
 
 @admin.register(Obra)
@@ -200,3 +209,28 @@ class ComentarioUsuarioAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(PropuestaCambioObra)
+class PropuestaCambioObraAdmin(admin.ModelAdmin):
+    list_display = [
+        "id",
+        "obra",
+        "campo",
+        "estado",
+        "propuesta_por",
+        "resuelta_por",
+        "fecha_creacion",
+        "fecha_resolucion",
+    ]
+    list_filter = ["estado", "fecha_creacion", "fecha_resolucion"]
+    search_fields = ["obra__titulo_limpio", "campo", "propuesta_por__username", "comentario"]
+    readonly_fields = ["fecha_creacion", "fecha_resolucion"]
+
+
+@admin.register(VotoPropuestaCambioObra)
+class VotoPropuestaCambioObraAdmin(admin.ModelAdmin):
+    list_display = ["id", "propuesta", "usuario", "voto", "fecha_creacion"]
+    list_filter = ["voto", "fecha_creacion"]
+    search_fields = ["usuario__username", "comentario", "propuesta__obra__titulo_limpio"]
+    readonly_fields = ["fecha_creacion"]

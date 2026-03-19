@@ -27,9 +27,23 @@ urlpatterns = [
     path('<int:obra_id>/comentario/', views.save_obra_comment, name='save_obra_comment'),
     path('<int:obra_id>/comentarios/', views.get_obra_comments, name='get_obra_comments'),
     path('comentario/<int:comentario_id>/eliminar/', views.delete_comment, name='delete_comment'),
+
+    # Comentarios estilo index.html (paridad con Supabase)
+    path('comentarios-index/', views.index_crear_comentario, name='index_crear_comentario'),
+    path('comentarios-index/global/', views.index_comentarios_global, name='index_comentarios_global'),
+    path('comentarios-index/count-unseen/', views.index_comentarios_count_unseen, name='index_comentarios_count_unseen'),
+    path('comentarios-index/obra/<int:obra_id>/', views.index_comentarios_obra, name='index_comentarios_obra'),
+    path('comentarios-index/<int:comentario_id>/visto/', views.index_comentario_marcar_visto, name='index_comentario_marcar_visto'),
+    path('comentarios-index/<int:comentario_id>/filtros/', views.index_comentario_filtros, name='index_comentario_filtros'),
     # Exportar comentarios
     path('comentarios/exportar-ia/', views.exportar_comentarios_ia, name='exportar_comentarios_ia'),
     path('comentarios/exportar-todos/', views.exportar_todos_comentarios, name='exportar_todos_comentarios'),
+    # Propuestas de edición de obras (flujo validado)
+    path('propuestas/', views.crear_propuesta_cambio_obra, name='crear_propuesta_cambio_obra'),
+    path('propuestas/pendientes-usuario/', views.listar_propuestas_pendientes_usuario, name='listar_propuestas_pendientes_usuario'),
+    path('propuestas/obra/<int:obra_id>/', views.listar_propuestas_obra, name='listar_propuestas_obra'),
+    path('propuestas/<int:propuesta_id>/votar/', views.votar_propuesta_obra, name='votar_propuesta_obra'),
+    path('propuestas/<int:propuesta_id>/resolver/', views.resolver_propuesta_obra, name='resolver_propuesta_obra'),
     # Rutas existentes (mantenidas para compatibilidad)
     path('catalogos/', views.catalogos_view, name='catalogos'),
     path('catalogos/<str:catalogo_id>/', views.catalogo_detalle_view, name='catalogo_detalle'),
@@ -45,6 +59,7 @@ urlpatterns = [
     # Rutas de validación de análisis de IA
     path('validacion-analisis/', views_validacion.validacion_analisis_list, name='validacion_analisis_list'),
     path('validacion-analisis/<str:nombre_archivo>/', views_validacion.validacion_analisis_detail, name='validacion_analisis_detail'),
+    path('validacion-analisis/api/archivos-sintesis/', views_validacion.archivos_sintesis_api, name='archivos_sintesis_api'),
     path('validacion-analisis/validar-item/', views_validacion.validar_item, name='validar_item'),
     path('validacion-analisis/validar-lote/', views_validacion.validar_lote, name='validar_lote'),
 ]

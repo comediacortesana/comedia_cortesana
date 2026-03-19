@@ -384,6 +384,37 @@ class ComentarioUsuario(models.Model):
         help_text="Marcar para exportar y usar con IA en análisis de catálogos"
     )
 
+    # Extensión para mantener paridad con el frontend estilo index.html
+    # (comentarios pendientes/vistos por admin, tipo y filtros guardados).
+    tipo = models.CharField(
+        max_length=50,
+        default="comentario",
+        blank=True,
+        help_text="Tipo de comentario (p.ej. comentario / comentario_general)"
+    )
+    visto_por_admin = models.BooleanField(
+        default=False,
+        help_text="Indica si el admin ya ha revisado el comentario"
+    )
+    visto_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Fecha en que el admin marcó el comentario como visto"
+    )
+    visto_por = models.ForeignKey(
+        "usuarios.Usuario",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="comentarios_vistos_admin",
+        help_text="Admin que marcó el comentario como visto"
+    )
+    filtros_busqueda = models.JSONField(
+        null=True,
+        blank=True,
+        help_text="JSON con filtros de búsqueda guardados desde el frontend"
+    )
+
     class Meta:
         app_label = 'obras'
         verbose_name = "Comentario de Usuario"
@@ -430,3 +461,80 @@ class ComentarioUsuario(models.Model):
         texto += "\n" + "="*50 + "\n\n"
         
         return texto
+
+
+class PropuestaCambioObra(models.Model):
+    """Propuesta de edición sobre un campo de Obra."""
+
+    ESTADO_CHOICES = [
+        ("pendiente", "Pendiente"),
+        ("aprobada_superuser", "Aprobada por superusuario"),
+        ("rechazada", "Rechazada"),
+    ]
+
+    obra = models.ForeignKey(
+        Obra,
+        on_delete=models.CASCADE,
+        related_name="propuestas_cambio",
+    )
+    campo = models.CharField(max_length=100)
+    valor_anterior = models.TextField(blank=True, default="")
+    valor_nuevo = models.TextField(blank=True, default="")
+    comentario = models.TextField(blank=True, default="")
+    estado = models.CharField(max_length=30, choices=ESTADO_CHOICES, default="pendiente")
+    propuesta_por = models.ForeignKey(
+        "usuarios.Usuario",
+        on_delete=models.CASCADE,
+        related_name="propuestas_creadas",
+    )
+    resuelta_por = models.ForeignKey(
+        "usuarios.Usuario",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="propuestas_resueltas",
+    )
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_resolucion = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        app_label = "obras"
+        verbose_name = "Propuesta de cambio de obra"
+        verbose_name_plural = "Propuestas de cambio de obra"
+        ordering = ["-fecha_creacion"]
+
+    def __str__(self):
+        return f"Obra {self.obra_id} - {self.campo} ({self.estado})"
+
+
+class VotoPropuestaCambioObra(models.Model):
+    """Voto/comentario sobre propuesta de cambio de obra."""
+
+    VOTO_CHOICES = [
+        ("a_favor", "A favor"),
+        ("en_contra", "En contra"),
+    ]
+
+    propuesta = models.ForeignKey(
+        PropuestaCambioObra,
+        on_delete=models.CASCADE,
+        related_name="votos",
+    )
+    usuario = models.ForeignKey(
+        "usuarios.Usuario",
+        on_delete=models.CASCADE,
+        related_name="votos_propuesta_obra",
+    )
+    voto = models.CharField(max_length=20, choices=VOTO_CHOICES)
+    comentario = models.TextField(blank=True, default="")
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        app_label = "obras"
+        verbose_name = "Voto de propuesta de cambio"
+        verbose_name_plural = "Votos de propuesta de cambio"
+        ordering = ["-fecha_creacion"]
+        unique_together = ["propuesta", "usuario"]
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.propuesta_id} ({self.voto})"
