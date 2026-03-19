@@ -23,6 +23,7 @@ from django.http import FileResponse, Http404, HttpResponse
 from django.views.decorators.http import require_http_methods
 from pathlib import Path
 from django.shortcuts import render
+import mimetypes
 
 @require_http_methods(["GET"])
 def home_view(request):
@@ -692,9 +693,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 @require_http_methods(["GET"])
 def github_pages_index_view(request):
     """Sirve el index estático original usado en GitHub Pages."""
-    file_path = BASE_DIR / "index.html"
+    # Prioridad: el frontend archivado dentro del repo (Django-only).
+    file_path = BASE_DIR / "frontend" / "github-pages" / "index.html"
     if not file_path.exists():
-        raise Http404("index.html no encontrado")
+        # Fallback por compatibilidad con setups antiguos
+        file_path = BASE_DIR / "index.html"
+    if not file_path.exists():
+        raise Http404("index.html legacy no encontrado")
     return FileResponse(file_path.open("rb"), content_type="text/html; charset=utf-8")
 
 
@@ -728,12 +733,50 @@ def favicon_view(request):
     return HttpResponse(status=204)
 
 
+@require_http_methods(["GET"])
+def github_pages_legacy_file_view(request, subpath):
+    """
+    Sirve archivos del frontend legacy bajo /legacy/.
+
+    - Si subpath empieza por `data/`, lo mapea a `BASE_DIR/data/...` (repo root).
+    - Si no, lo mapea a `BASE_DIR/frontend/github-pages/...`.
+    """
+    # Normalizar subpath y evitar path traversal
+    subpath = str(subpath or "").lstrip("/")
+    if ".." in subpath.split("/"):
+        raise Http404("Ruta inválida")
+
+    if subpath.startswith("data/"):
+        target = (BASE_DIR / "data" / subpath[len("data/") :]).resolve()
+        root = (BASE_DIR / "data").resolve()
+    else:
+        target = (BASE_DIR / "frontend" / "github-pages" / subpath).resolve()
+        root = (BASE_DIR / "frontend" / "github-pages").resolve()
+
+    if root not in target.parents and target != root:
+        raise Http404("Ruta inválida")
+    if not target.exists() or not target.is_file():
+        raise Http404("Archivo legacy no encontrado")
+
+    content_type, _ = mimetypes.guess_type(str(target))
+    if not content_type:
+        content_type = "application/octet-stream"
+    return FileResponse(target.open("rb"), content_type=content_type)
+
+
 # Mantener rutas legacy accesibles sin ser la portada principal
 urlpatterns += [
-    path("legacy/index/", github_pages_index_view, name="legacy_index"),
-    path("datos_obras.json", github_pages_datos_obras_view, name="datos_obras_json"),
-    path("data/<path:subpath>", github_pages_data_files_view, name="data_files"),
-    path("favicon.ico", favicon_view, name="favicon"),
+    # Portada antigua
+    path("legacy/", github_pages_index_view, name="legacy_index_root"),
+    path("legacy/index.html", github_pages_index_view, name="legacy_index"),
+
+    # Ficheros referenciados de forma relativa desde `frontend/github-pages/index.html`
+    path("legacy/datos_obras.json", github_pages_datos_obras_view, name="legacy_datos_obras_json"),
+    path("legacy/data/<path:subpath>", github_pages_data_files_view, name="legacy_data_files"),
+    path("legacy/favicon.ico", favicon_view, name="legacy_favicon"),
+
+    # Catch-all para otros HTML/JS/CSS dentro de frontend/github-pages
+    path("legacy/<path:subpath>", github_pages_legacy_file_view, name="legacy_file"),
 ]
 
 # Servir archivos estáticos y media en desarrollo
