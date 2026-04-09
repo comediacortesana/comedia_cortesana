@@ -722,11 +722,8 @@ def home_view(request):
 
 @require_http_methods(["GET"])
 def index_django_view(request):
-    """Sirve el index.html raíz (compartido con GitHub Pages)."""
-    index_path = Path(__file__).resolve().parent.parent / "index.html"
-    if not index_path.exists():
-        raise Http404("index.html no encontrado en la raíz del proyecto")
-    return FileResponse(index_path.open("rb"), content_type="text/html; charset=utf-8")
+    """Sirve el frontend principal desde la plantilla Django."""
+    return render(request, "obras/index_django.html")
 
 urlpatterns = [
     path("", index_django_view, name="home"),
