@@ -27,11 +27,24 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-2ddnz5p#!!#0^^d%@o$ed
 DEBUG = config("DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS = [host.strip() for host in config("ALLOWED_HOSTS", default="localhost,127.0.0.1").split(",") if host.strip()]
+
+import os as _os_hosts
+_azure_hostname = _os_hosts.environ.get("WEBSITE_HOSTNAME", "")
+if _azure_hostname:
+    if _azure_hostname not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(_azure_hostname)
+    ALLOWED_HOSTS.append(".azurewebsites.net")
+    ALLOWED_HOSTS.append("*")
+
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in config("CSRF_TRUSTED_ORIGINS", default="http://localhost:8000,http://127.0.0.1:8000").split(",")
     if origin.strip()
 ]
+if _azure_hostname:
+    _azure_origin = f"https://{_azure_hostname}"
+    if _azure_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_azure_origin)
 
 
 # Application definition
