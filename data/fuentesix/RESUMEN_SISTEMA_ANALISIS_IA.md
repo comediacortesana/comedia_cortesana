@@ -111,7 +111,7 @@ analisis = analisis_ia.crear_analisis_registro(
 
 ### 3. Guardar en DB
 ```python
-# Guardar análisis en Supabase
+# Guardar análisis en la base de datos
 guardar_analisis_ia(analisis)
 ```
 

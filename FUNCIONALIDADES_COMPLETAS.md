@@ -28,8 +28,8 @@ Sistema web para gestión y consulta de obras del Teatro Español del Siglo de O
 ## 📊 CONSULTA Y FILTRADO DE DATOS
 
 ### Carga de Datos
-- ✅ Carga automática desde Supabase (fuente principal)
-- ✅ Fallback automático a JSON local si Supabase falla
+- ✅ Carga automática desde la base de datos Django/PostgreSQL (fuente principal)
+- ✅ Fallback automático a JSON local si la base de datos falla
 - ✅ Carga paginada para grandes volúmenes (1000 obras por página)
 - ✅ Timeout y reintentos automáticos en caso de error
 - ✅ Indicador visual del estado de carga
@@ -139,7 +139,7 @@ Sistema web para gestión y consulta de obras del Teatro Español del Siglo de O
 ## ⚠️ SISTEMA DE LOGS DE ERRORES
 
 ### Registro Automático
-- ✅ Registro automático cuando falla la carga desde Supabase
+- ✅ Registro automático cuando falla la carga desde la base de datos
 - ✅ Registro cuando falla el fallback a JSON
 - ✅ Registro de errores no manejados
 - ✅ Información capturada: usuario, hora, tipo de error, mensaje, detalles técnicos
@@ -192,14 +192,12 @@ Sistema web para gestión y consulta de obras del Teatro Español del Siglo de O
 
 ## 🔄 SINCRONIZACIÓN Y BACKUP
 
-### Sincronización con Supabase
-- ✅ Carga automática desde Supabase al iniciar
+### Sincronización con la Base de Datos
+- ✅ Carga automática desde la base de datos al iniciar
 - ✅ Scripts Python para sincronización manual
-- ✅ Backup automático a JSON local si Supabase falla
+- ✅ Backup automático a JSON local si la base de datos falla
 
 ### Scripts Disponibles
-- ✅ `sync_to_supabase.py` - Sincronizar JSON → Supabase
-- ✅ `backup_from_supabase.py` - Backup Supabase → JSON
 - ✅ `sync_to_sheets.py` - Sincronizar con Google Sheets
 - ✅ `diagnosticar_carga_datos.py` - Diagnosticar problemas de carga
 
@@ -281,7 +279,7 @@ Sistema web para gestión y consulta de obras del Teatro Español del Siglo de O
 
 ### Información Visible
 - ✅ Total de obras en la base de datos
-- ✅ Fuente de datos actual (Supabase o JSON)
+- ✅ Fuente de datos actual (base de datos o JSON)
 - ✅ Última actualización de datos
 - ✅ Contador de resultados filtrados
 - ✅ Contador de comentarios pendientes (admin)
@@ -294,7 +292,7 @@ Sistema web para gestión y consulta de obras del Teatro Español del Siglo de O
 ### Funciones de Diagnóstico
 - ✅ `diagnosticarUsuario()` - Diagnóstico completo del usuario
 - ✅ Logs detallados en consola del navegador
-- ✅ Verificación de estado de Supabase
+- ✅ Verificación de estado de la base de datos
 - ✅ Pruebas de conectividad
 
 ### Scripts de Mantenimiento
@@ -308,7 +306,6 @@ Sistema web para gestión y consulta de obras del Teatro Español del Siglo de O
 
 ### Guías Disponibles
 - ✅ README completo del sistema
-- ✅ Guía paso a paso de Supabase
 - ✅ Guía de configuración de Google Sheets
 - ✅ Documentación de scripts Python
 - ✅ FAQ y solución de problemas

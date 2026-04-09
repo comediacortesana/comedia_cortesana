@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
-    <!-- Content Security Policy: Permitir conexiones a Supabase -->
-    <meta http-equiv="Content-Security-Policy" 
-          content="default-src 'self' https://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net; 
-                   script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; 
-                   connect-src 'self' https://kyxxpoewwjixbpcezays.supabase.co wss://kyxxpoewwjixbpcezays.supabase.co https://cdn.jsdelivr.net;
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' https://cdn.jsdelivr.net;
+                   script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+                   connect-src 'self' https://cdn.jsdelivr.net;
                    style-src 'self' 'unsafe-inline';">
     <title>Filtro de Obras - Teatro Español del Siglo de Oro</title>
     <style>
@@ -783,12 +782,7 @@
                     <input type="text" id="login-email" placeholder="Usuario o email" style="padding: 10px 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
                     <input type="password" id="login-password" placeholder="Contraseña" style="padding: 10px 12px; border-radius: 2px; border: 1px solid #c9c4bb; font-family: 'Crimson Text', serif; font-size: 15px;">
                     <button onclick="handleLogin()" style="padding: 11px 24px; background: #5d4e37; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Entrar</button>
-                    <button onclick="handleMagicLink()" style="padding: 11px 24px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Enlace mágico</button>
                     <button onclick="mostrarRegistro()" style="padding: 11px 24px; background: #6d5a44; color: white; border: none; border-radius: 2px; cursor: pointer; font-family: 'Crimson Text', serif; text-transform: uppercase; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;">Registrarse</button>
-                    <button onclick="handleResetPassword()" style="padding: 11px 20px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-size: 12px; font-family: 'Crimson Text', serif; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;">¿Olvidaste contraseña?</button>
-                </div>
-                <div style="margin-top: 12px;">
-                    <button onclick="reenviarConfirmacionEmail(document.getElementById('login-email').value)" style="padding: 8px 16px; background: #8b7355; color: white; border: none; border-radius: 2px; cursor: pointer; font-size: 11px; font-family: 'Crimson Text', serif; text-transform: uppercase; font-weight: 600; letter-spacing: 0.3px;" title="Reenviar email de confirmación si no lo recibiste">Reenviar confirmación</button>
                 </div>
                 
                 <!-- Formulario de registro (oculto por defecto) -->
@@ -944,7 +938,7 @@
             
             <div id="results-container">
                 <div style="text-align: center; padding: 40px; color: #3498db; font-size: 16px;">
-                    ⏳ Cargando datos desde Supabase...
+                    ⏳ Cargando datos...
                 </div>
             </div>
         </div>
@@ -991,8 +985,6 @@
             </div>
         </div>
     </div>
-    <!-- Supabase Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // Variables globales
         let datosOriginales = [];
@@ -1003,521 +995,25 @@
         let mapaAnioAuxiliarFuentesIX = null;
         let ordenColumna = null;
         let ordenDireccion = 'asc';
-        
-        // ============================================================================
-        // CONFIGURACIÓN SUPABASE
-        // ============================================================================
-        const SUPABASE_URL = 'https://kyxxpoewwjixbpcezays.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5eHhwb2V3d2ppeGJwY2V6YXlzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI0MjAzMDksImV4cCI6MjA3Nzk5NjMwOX0.sIw7flVHQ00r3VwrhU7tvohVzKpb7LGtXVzG43FAP10';
-        
-        // Función helper para obtener el cliente de Supabase (debe estar disponible globalmente)
-        function getSupabaseClient() {
-            // Priorizar window.supabaseClient (el cliente que creamos)
-            if (window.supabaseClient && window.supabaseClient.auth) {
-                return window.supabaseClient;
-            }
-            // Si no existe, usar window.supabase (puede ser el cliente o la librería)
-            if (window.supabase) {
-                // Si tiene auth, es un cliente; si tiene createClient, es la librería
-                if (window.supabase.auth) {
-                    return window.supabase;
-                }
-            }
-            // Si no hay nada disponible, retornar null
-            return null;
-        }
-        
-        // Esperar a que Supabase esté disponible antes de inicializar
-        function inicializarSupabase() {
-            // Verificar que el script de Supabase se haya cargado
-            if (typeof window.supabase === 'undefined') {
-                console.warn('⚠️ Esperando a que Supabase se cargue...');
-                // Reintentar después de un breve delay
-                setTimeout(inicializarSupabase, 100);
-                return;
-            }
-            
-            // Verificar si ya existe una variable global supabase (del script CDN)
-            // Si existe, la reutilizamos; si no, creamos una nueva
-            if (typeof window.supabaseClient === 'undefined') {
-                // Inicializar cliente Supabase con configuración de persistencia
-                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                    auth: {
-                        persistSession: true,
-                        autoRefreshToken: true,
-                        detectSessionInUrl: true,
-                        storage: window.localStorage
-                    },
-                    db: {
-                        schema: 'public'
-                    },
-                    global: {
-                        headers: {
-                            'apikey': SUPABASE_ANON_KEY
-                        }
-                    }
-                });
-                
-                // Crear alias global 'supabase' solo si no existe
-                if (typeof window.supabase !== 'object' || !window.supabase.auth) {
-                    window.supabase = window.supabaseClient;
-                }
-                
-                // Verificar que Supabase se inicializó correctamente
-                if (!window.supabaseClient) {
-                    console.error('❌ Error: No se pudo inicializar Supabase');
-                } else {
-                    console.log('✅ Supabase inicializado correctamente');
-                    // Actualizar variable global para compatibilidad
-                    // Usar window.supabase como alias si no existe ya
-                    if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
-                        window.supabase = window.supabaseClient;
-                    }
-                }
-            } else {
-                console.log('✅ Supabase ya estaba inicializado');
-                // Asegurar que la variable global esté actualizada
-                if (typeof window.supabase === 'undefined' || typeof window.supabase.createClient === 'undefined') {
-                    window.supabase = window.supabaseClient;
-                }
-            }
-            
-            // Crear getter global para 'supabase' que siempre devuelva el cliente
-            try {
-                Object.defineProperty(window, 'supabase', {
-                    get: function() { return window.supabaseClient || window.supabase; },
-                    configurable: true,
-                    enumerable: true
-                });
-            } catch (e) {
-                // Si falla, simplemente asignar directamente
-                if (!window.supabase || typeof window.supabase.createClient === 'undefined') {
-                    window.supabase = window.supabaseClient;
-                }
-            }
-        }
-        
-        // Inicializar Supabase cuando el script esté listo (solo si NO usamos sesión Django)
-        // NOTA: inicializarSupabase() ahora se llama desde registrarAuthStateChange()
-        if (!usarAuthDjangoLocal()) {
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', () => {
-                    inicializarSupabase();
-                    setTimeout(registrarAuthStateChange, 200);
-                });
-            } else {
-                // Pequeño delay para asegurar que el script CDN se haya cargado
-                setTimeout(() => {
-                    inicializarSupabase();
-                    setTimeout(registrarAuthStateChange, 200);
-                }, 50);
-            }
-        }
-        
-        // Variable global para compatibilidad con código existente
-        // NO declaramos 'var supabase' aquí porque el script CDN puede crear una variable global
-        // En su lugar, la asignaremos después de inicializar
-        // Usamos window.supabaseClient como fuente de verdad
-        
+
         // Estado de autenticación
         let usuarioActual = null;
         let esAdmin = false;
         let rolUsuario = null; // 'colaborador', 'editor', 'admin' o null
-        let logoutExplicito = false; // Bandera para saber si el usuario hizo logout explícitamente
-        let modoEdicionActivo = false; // Controla si el modo edición está activo
-        let cambiosEnMemoria = {}; // Almacena cambios en memoria: { obraId: { campo: nuevoValor } }
-        
-        // IMPORTANTE: Registrar onAuthStateChange INMEDIATAMENTE después de inicializar Supabase
-        // Esto asegura que capture el evento INITIAL_SESSION
-        let sesionVerificada = false;
-        
-        // Forzar verificación inicial de sesión después de registrar el listener
-        setTimeout(async () => {
-            // Si estamos usando sesión Django, no necesitamos restaurar sesión desde localStorage de Supabase.
-            if (usarAuthDjangoLocal()) {
-                return;
-            }
-            try {
-                console.log('🔍 Forzando verificación inicial de sesión...');
-                
-                // Primero verificar localStorage directamente como fallback
-                // PERO solo si no hubo logout explícito (guardado en sessionStorage)
-                const logoutExplicitoGuardado = sessionStorage.getItem('logout_explicito');
-                if (logoutExplicitoGuardado === 'true') {
-                    console.log('🚫 Logout explícito detectado, no restaurando sesión de localStorage');
-                    sessionStorage.removeItem('logout_explicito'); // Limpiar después de usar
-                    mostrarUILogin();
-                    sesionVerificada = true;
-                    return;
-                }
-                
-                // Supabase guarda la sesión con una clave específica
-                const supabaseKeys = Object.keys(localStorage).filter(key => 
-                    key.startsWith('sb-') && key.includes('auth-token')
-                );
-                
-                console.log('🔑 Claves de Supabase en localStorage:', supabaseKeys);
-                
-                if (supabaseKeys.length > 0) {
-                    const storageKey = supabaseKeys[0];
-                    const storedSession = localStorage.getItem(storageKey);
-                    
-                    if (storedSession) {
-                        try {
-                            const sessionData = JSON.parse(storedSession);
-                            console.log('📦 Sesión encontrada en localStorage');
-                            
-                            // Verificar si la sesión tiene los datos necesarios
-                            if (sessionData && (sessionData.access_token || sessionData.session)) {
-                                const session = sessionData.session || sessionData;
-                                
-                                if (session.user) {
-                                    console.log('✅ Usando sesión de localStorage:', session.user.email);
-                                    usuarioActual = session.user;
-                                    await mostrarUIUsuario();
-                                    sesionVerificada = true;
-                                    return;
-                                }
-                            }
-                        } catch (e) {
-                            console.warn('⚠️ Error parseando sesión de localStorage:', e);
-                        }
-                    }
-                }
-                
-                // Si no hay en localStorage, intentar getSession con timeout
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout')), 1000)
-                );
-                
-                // Usar window.supabaseClient o window.supabase (el getter lo maneja)
-                const supabaseClient = window.supabaseClient || window.supabase;
-                if (!supabaseClient) {
-                    console.warn('⚠️ Supabase client no disponible aún');
-                    sesionVerificada = true;
-                    return;
-                }
-                
-                const sessionPromise = supabaseClient.auth.getSession();
-                
-                const { data: { session }, error } = await Promise.race([
-                    sessionPromise,
-                    timeoutPromise
-                ]).catch(err => {
-                    console.warn('⚠️ Timeout en verificación forzada:', err.message);
-                    return { data: { session: null }, error: err };
-                });
-                
-                if (error) {
-                    console.warn('⚠️ Error obteniendo sesión inicial:', error.message || error);
-                    mostrarUILogin();
-                    sesionVerificada = true;
-                } else if (session) {
-                    console.log('✅ Sesión encontrada al forzar verificación:', session.user.email);
-                    usuarioActual = session.user;
-                    await mostrarUIUsuario();
-                    sesionVerificada = true;
-                } else {
-                    console.log('❌ No hay sesión al forzar verificación');
-                    mostrarUILogin();
-                    sesionVerificada = true;
-                }
-            } catch (err) {
-                console.error('❌ Error forzando verificación:', err);
-                mostrarUILogin();
-                sesionVerificada = true;
-            }
-        }, 100);
-        
-        // IMPORTANTE: Según la documentación oficial de Supabase, NO debemos usar await
-        // ni llamar a otros métodos de Supabase dentro del callback de onAuthStateChange
-        // porque puede causar dead-locks. En su lugar, usamos setTimeout(..., 0) para
-        // mover las llamadas fuera del callback.
-        // Ver: https://supabase.com/docs/reference/javascript/auth-onauthstatechange
-        // Registrar listener después de que Supabase esté inicializado
-        function registrarAuthStateChange() {
-            const supabaseClient = getSupabaseClient();
-            if (!supabaseClient || !supabaseClient.auth) {
-                console.warn('⚠️ Esperando a que Supabase se inicialice para registrar auth listener...');
-                setTimeout(registrarAuthStateChange, 100);
-                return;
-            }
-            
-            supabaseClient.auth.onAuthStateChange((event, session) => {
-            console.log('🔄 Cambio de estado de auth:', event, session ? `Usuario: ${session.user?.email}` : 'Sin sesión');
-            sesionVerificada = true;
-            
-            // Usar setTimeout(..., 0) para evitar dead-lock según recomendación oficial
-            setTimeout(async () => {
-                try {
-                    if (event === 'SIGNED_IN' && session) {
-                        console.log('✅ Usuario inició sesión:', session.user.email);
-                        usuarioActual = session.user;
-                        await mostrarUIUsuario();
-                    } else if (event === 'SIGNED_OUT') {
-                        console.log('👋 Usuario cerró sesión');
-                        usuarioActual = null;
-                        esAdmin = false;
-                        mostrarUILogin();
-                    } else if (event === 'TOKEN_REFRESHED' && session) {
-                        console.log('🔄 Token refrescado');
-                        usuarioActual = session.user;
-                        await mostrarUIUsuario();
-                    } else if (event === 'USER_UPDATED' && session) {
-                        console.log('👤 Usuario actualizado');
-                        usuarioActual = session.user;
-                        await mostrarUIUsuario();
-                    } else if (event === 'INITIAL_SESSION') {
-                        console.log('📋 Sesión inicial detectada');
-                        if (session) {
-                            console.log('✅ Hay sesión guardada:', session.user.email);
-                            usuarioActual = session.user;
-                            await mostrarUIUsuario();
-                        } else {
-                            console.log('❌ No hay sesión guardada');
-                            mostrarUILogin();
-                        }
-                    }
-                } catch (error) {
-                    console.error('❌ Error en onAuthStateChange:', error);
-                    mostrarUILogin();
-                }
-            }, 0);
-            });
-        }
-        
-        // Llamar a registrarAuthStateChange después de inicializar Supabase
-        inicializarSupabase();
-        
-        // Registrar el listener después de un pequeño delay para asegurar que Supabase esté listo
-        setTimeout(() => {
-            registrarAuthStateChange();
-        }, 200);
-        
-        // Timeout de seguridad: si después de 3 segundos no hay evento INITIAL_SESSION, mostrar login
-        setTimeout(() => {
-            if (!sesionVerificada && !usuarioActual) {
-                console.warn('⚠️ No se recibió INITIAL_SESSION después de 3 segundos, mostrando login por defecto');
-                mostrarUILogin();
-            }
-        }, 3000);
+        let modoEdicionActivo = false;
+        let cambiosEnMemoria = {};
         
         // Obtener rol del usuario actual
         async function obtenerRolUsuario() {
             if (!usuarioActual) {
-                console.log('❌ No hay usuario actual');
                 rolUsuario = null;
                 esAdmin = false;
                 return null;
             }
-
-            // En local (Django sesión), el rol viene del backend Django.
-            if (usarAuthDjangoLocal()) {
-                const isAdminLocal = usuarioActual.is_admin === true || usuarioActual.is_superuser === true;
-                rolUsuario = isAdminLocal ? 'admin' : 'colaborador';
-                esAdmin = isAdminLocal;
-                return rolUsuario;
-            }
-            
-            try {
-                console.log('🔍 Obteniendo rol para usuario:', usuarioActual.id);
-                console.log('🔍 Email del usuario:', usuarioActual.email);
-                
-                // Intentar con timeout usando Promise.race
-                console.log('📡 Ejecutando consulta a Supabase con timeout...');
-                const supabaseClient = getSupabaseClient();
-                if (!supabaseClient) {
-                    console.error('❌ Supabase client no disponible');
-                    rolUsuario = 'colaborador';
-                    esAdmin = false;
-                    return null;
-                }
-                const consultaPromise = supabaseClient
-                    .from('perfiles_usuarios')
-                    .select('rol, nombre_completo')
-                    .eq('id', usuarioActual.id)
-                    .maybeSingle();
-                
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('TIMEOUT: Consulta tardó más de 8 segundos')), 8000)
-                );
-                
-                let resultado;
-                try {
-                    resultado = await Promise.race([consultaPromise, timeoutPromise]);
-                } catch (timeoutError) {
-                    if (timeoutError.message.includes('TIMEOUT')) {
-                        console.warn('⏱️ Timeout en consulta Supabase, intentando con fetch directo...');
-                        // Intentar con fetch directo como alternativa
-                        return await obtenerRolConFetchDirecto();
-                    }
-                    throw timeoutError;
-                }
-                
-                const { data, error } = resultado;
-                
-                console.log('📡 Respuesta de Supabase recibida');
-                console.log('📡 Data:', data);
-                console.log('📡 Error:', error);
-                
-                if (error) {
-                    console.error('❌ Detalles del error:', {
-                        code: error.code,
-                        message: error.message,
-                        details: error.details,
-                        hint: error.hint
-                    });
-                }
-                
-                if (error) {
-                    console.error('❌ Error obteniendo rol:', error);
-                    console.error('   Código:', error.code);
-                    console.error('   Mensaje:', error.message);
-                    console.error('   Detalles:', error.details);
-                    console.error('   Hint:', error.hint);
-                    
-                    // Si el error es que no existe, crear el perfil
-                    if (error.code === 'PGRST116' || error.message.includes('No rows') || error.message.includes('0 rows')) {
-                        console.log('📝 Perfil no existe, creando...');
-                        await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
-                        // Intentar de nuevo después de crear
-                        const { data: newData, error: newError } = await supabase
-                            .from('perfiles_usuarios')
-                            .select('rol')
-                            .eq('id', usuarioActual.id)
-                            .maybeSingle();
-                        
-                        console.log('📡 Segunda consulta después de crear:', { newData, newError });
-                        
-                        if (newError) {
-                            console.error('❌ Error después de crear perfil:', newError);
-                            rolUsuario = 'colaborador'; // Valor por defecto
-                            esAdmin = false;
-                        } else {
-                            rolUsuario = newData ? (newData.rol || 'colaborador') : 'colaborador';
-                            esAdmin = rolUsuario === 'admin';
-                            console.log('✅ Rol obtenido después de crear perfil:', rolUsuario);
-                        }
-                    } else {
-                        console.error('❌ Error desconocido, usando valor por defecto');
-                        rolUsuario = 'colaborador'; // Valor por defecto en caso de error desconocido
-                        esAdmin = false;
-                    }
-                    console.log('🔐 Rol final después de error:', rolUsuario);
-                    return rolUsuario;
-                }
-                
-                console.log('📊 Datos del perfil recibidos:', data);
-                console.log('📊 Tipo de data:', typeof data);
-                console.log('📊 Data es null?', data === null);
-                console.log('📊 Data es undefined?', data === undefined);
-                
-                if (!data || data === null) {
-                    // No existe perfil, crearlo
-                    console.log('📝 No se encontró perfil (data es null/undefined), creando...');
-                    const creado = await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
-                    if (creado) {
-                        // Intentar obtener de nuevo
-                        const { data: retryData, error: retryError } = await supabase
-                            .from('perfiles_usuarios')
-                            .select('rol')
-                            .eq('id', usuarioActual.id)
-                            .maybeSingle();
-                        
-                        if (retryError) {
-                            console.error('❌ Error en reintento:', retryError);
-                            rolUsuario = 'colaborador';
-                        } else {
-                            rolUsuario = retryData ? (retryData.rol || 'colaborador') : 'colaborador';
-                        }
-                    } else {
-                        rolUsuario = 'colaborador'; // Valor por defecto
-                    }
-                    esAdmin = false;
-                } else {
-                    // Perfil existe, usar su rol
-                    console.log('✅ Perfil encontrado, rol:', data.rol);
-                    rolUsuario = data.rol || 'colaborador';
-                    esAdmin = rolUsuario === 'admin';
-                    console.log('✅ Rol asignado:', rolUsuario, 'Es admin?', esAdmin);
-                }
-                
-                console.log('✅ Rol final obtenido:', rolUsuario, 'Es admin?', esAdmin);
-                return rolUsuario;
-            } catch (error) {
-                console.error('❌ Error en obtenerRolUsuario:', error);
-                console.error('   Stack:', error.stack);
-                rolUsuario = 'colaborador'; // Valor por defecto en caso de error
-                esAdmin = false;
-                return rolUsuario;
-            }
-        }
-        
-        // Función alternativa usando fetch directo cuando el cliente de Supabase falla
-        async function obtenerRolConFetchDirecto() {
-            console.log('🌐 Usando fetch directo para obtener rol...');
-            console.log('🌐 Usuario ID:', usuarioActual ? usuarioActual.id : 'null');
-            
-            try {
-                // Hacer consulta directa a la API REST de Supabase (sin token, solo con apikey)
-                // Las políticas RLS permiten lectura pública, así que no necesitamos token
-                const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=rol,nombre_completo`;
-                
-                console.log('📡 URL de consulta:', url);
-                console.log('📡 Ejecutando fetch sin token (solo con apikey)...');
-                
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                console.log('📡 Respuesta fetch recibida:', response.status, response.statusText);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ Error en fetch:', response.status, errorText);
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
-                }
-                
-                const data = await response.json();
-                console.log('📡 Datos recibidos via fetch:', data);
-                
-                if (!data || data.length === 0) {
-                    console.log('📝 No se encontró perfil, creando...');
-                    await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
-                    rolUsuario = 'colaborador';
-                    esAdmin = false;
-                } else {
-                    const perfil = data[0];
-                    rolUsuario = perfil.rol || 'colaborador';
-                    esAdmin = rolUsuario === 'admin';
-                    console.log('✅ Rol obtenido via fetch:', rolUsuario);
-                    console.log('✅ Es admin?', esAdmin);
-                    
-                    // Actualizar UI inmediatamente
-                    mostrarInfoPermisos();
-                    if (esAdmin) {
-                        mostrarBotonAdmin();
-                    } else {
-                        ocultarBotonAdmin();
-                    }
-                    if (puedeEditar()) {
-                        mostrarBotonEdicion();
-                    } else {
-                        ocultarBotonEdicion();
-                    }
-                }
-                
-                return rolUsuario;
-            } catch (error) {
-                console.error('❌ Error en obtenerRolConFetchDirecto:', error);
-                rolUsuario = 'colaborador';
-                esAdmin = false;
-                return rolUsuario;
-            }
+            const isAdminLocal = usuarioActual.is_admin === true || usuarioActual.is_superuser === true;
+            rolUsuario = isAdminLocal ? 'admin' : 'colaborador';
+            esAdmin = isAdminLocal;
+            return rolUsuario;
         }
         
         // Verificar si el usuario es admin (mantener compatibilidad)
@@ -1539,113 +1035,49 @@
         // ============================================================================
         // FUNCIONES DE AUTENTICACIÓN
         // ============================================================================
-        function usarAuthDjangoLocal() {
-            // Esta UI se sirve desde Django y usa sesión Django como única fuente.
-            return true;
-        }
-        
-        // Verificar sesión al cargar (solo como fallback, onAuthStateChange es el principal)
-        async function verificarSesion() {
-            // Si ya hay un usuario actual (establecido por onAuthStateChange), no hacer nada
-            if (usuarioActual) {
-                console.log('✅ Ya hay usuario actual, saltando verificarSesion');
-                return;
-            }
-            
-            try {
-                if (usarAuthDjangoLocal()) {
-                    const response = await fetch('/usuarios/api/session-user/', { credentials: 'same-origin' });
-                    const data = await response.json();
-                    if (data.authenticated && data.usuario) {
-                        usuarioActual = {
-                            id: data.usuario.id,
-                            email: data.usuario.email,
-                            is_admin: data.usuario.is_admin === true,
-                            is_staff: data.usuario.is_staff === true,
-                            user_metadata: { nombre_completo: data.usuario.nombre || data.usuario.username }
-                        };
-                        rolUsuario = data.usuario.is_admin ? 'admin' : 'colaborador';
-                        esAdmin = data.usuario.is_admin === true;
-                        await mostrarUIUsuario();
-                    } else {
-                        mostrarUILogin();
-                    }
-                    return;
-                }
 
-                console.log('🔐 Verificando sesión (fallback)...');
-                
-                // Verificar que supabase esté disponible
-                if (!supabase || !supabase.auth) {
-                    console.error('❌ Supabase no está disponible');
-                    if (!usuarioActual) {
-                        mostrarUILogin();
-                    }
-                    return;
-                }
-                
-                // Intentar getSession con timeout muy corto (1 segundo)
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout')), 1000)
-                );
-                
-                try {
-                    const { data: { session }, error } = await Promise.race([
-                        getSupabaseClient().auth.getSession(),
-                        timeoutPromise
-                    ]);
-                    
-                    if (error) {
-                        console.warn('⚠️ Error obteniendo sesión:', error.message);
-                        return;
-                    }
-                    
-                    if (session && !usuarioActual) {
-                        console.log('✅ Sesión encontrada (fallback):', session.user.email);
-                        usuarioActual = session.user;
-                        await mostrarUIUsuario();
-                    } else if (!session && !usuarioActual) {
-                        console.log('❌ No hay sesión activa');
-                        mostrarUILogin();
-                    }
-                } catch (timeoutError) {
-                    console.warn('⚠️ getSession timeout (normal, onAuthStateChange manejará la sesión)');
-                    // No hacer nada, onAuthStateChange ya habrá manejado la sesión
-                }
-            } catch (error) {
-                console.error('❌ Error en verificarSesion:', error);
-                if (!usuarioActual) {
+        // Verificar sesión Django al cargar
+        async function verificarSesion() {
+            if (usuarioActual) return;
+            try {
+                const response = await fetch('/usuarios/api/session-user/', { credentials: 'same-origin' });
+                const data = await response.json();
+                if (data.authenticated && data.usuario) {
+                    usuarioActual = {
+                        id: data.usuario.id,
+                        email: data.usuario.email,
+                        is_admin: data.usuario.is_admin === true,
+                        is_staff: data.usuario.is_staff === true,
+                        user_metadata: { nombre_completo: data.usuario.nombre || data.usuario.username }
+                    };
+                    rolUsuario = data.usuario.is_admin ? 'admin' : 'colaborador';
+                    esAdmin = data.usuario.is_admin === true;
+                    await mostrarUIUsuario();
+                } else {
                     mostrarUILogin();
                 }
+            } catch (error) {
+                console.error('Error en verificarSesion:', error);
+                mostrarUILogin();
             }
         }
         
-        // Escuchar cambios de autenticación (método principal y más confiable)
-        // NOTA: El listener ya está registrado arriba, esta sección es solo para referencia
-        
-        // Login con email/password
+        // Login con usuario/email y password
         async function login(email, password) {
-            // Validar que los campos no estén vacíos
             if (!email || !password) {
                 alert('Por favor ingresa usuario/email y contraseña');
                 return false;
             }
-            
-            console.log('🔐 Intentando login con:', email);
-
-            if (usarAuthDjangoLocal()) {
+            try {
                 const response = await fetch('/usuarios/api/login-session/', {
                     method: 'POST',
                     credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        login_field: email.trim(),
-                        password: password
-                    })
+                    body: JSON.stringify({ login_field: email.trim(), password: password })
                 });
                 const data = await response.json();
                 if (!response.ok || !data.ok) {
-                    alert('❌ Credenciales incorrectas.');
+                    alert('Credenciales incorrectas.');
                     return false;
                 }
                 usuarioActual = {
@@ -1659,468 +1091,79 @@
                 esAdmin = data.usuario.is_admin === true;
                 await mostrarUIUsuario();
                 return true;
-            }
-            
-            const supabaseClient = getSupabaseClient();
-            if (!supabaseClient) {
-                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
-                return;
-            }
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email.trim(),
-                password: password
-            });
-            
-            if (error) {
-                console.error('Error de login:', error);
-                console.error('Detalles del error:', {
-                    message: error.message,
-                    status: error.status,
-                    name: error.name
-                });
-                
-                // Mensajes de error más específicos
-                if (error.message.includes('Invalid login credentials')) {
-                    alert('❌ Credenciales incorrectas.\n\nVerifica:\n- Que el email sea correcto\n- Que la contraseña sea la correcta\n- Que hayas confirmado tu email\n\nSi olvidaste la contraseña, usa "Enlace mágico" o regístrate de nuevo.');
-                } else {
-                    alert('Error: ' + error.message);
-                }
+            } catch (error) {
+                console.error('Error en login:', error);
+                alert('Error al iniciar sesión. Intenta de nuevo.');
                 return false;
             }
-            
-            console.log('✅ Login exitoso:', data.user);
-            usuarioActual = data.user;
-            mostrarUIUsuario();
-            return true;
         }
         
-        // Registro
+        // Registro con Django
         async function registro(email, password, nombreCompleto) {
-            // URL de redirección: usar producción si está en GitHub Pages, sino usar local
-            const redirectUrl = window.location.hostname === 'comediacortesana.github.io' 
-                ? 'https://comediacortesana.github.io/comedia_cortesana/'
-                : window.location.href;
-            
-            console.log('📧 URL de redirección para email:', redirectUrl);
-            
-            const supabaseClient = getSupabaseClient();
-            if (!supabaseClient) {
-                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
-                return;
-            }
-            const { data, error } = await supabaseClient.auth.signUp({
-                email: email.trim(),
-                password: password,
-                options: {
-                    data: {
-                        nombre_completo: nombreCompleto
-                    },
-                    emailRedirectTo: redirectUrl
-                }
-            });
-            
-            if (error) {
-                console.error('Error de registro:', error);
-                alert('Error: ' + error.message);
-                return false;
-            }
-            
-            console.log('📧 Registro exitoso:', {
-                user: data.user,
-                session: data.session,
-                needsConfirmation: !data.session
-            });
-            
-            // El perfil se crea automáticamente con el trigger de Supabase
-            // Si el usuario está confirmado inmediatamente, iniciar sesión
-            if (data.user && data.session) {
-                // Usuario confirmado automáticamente (email confirmation deshabilitado)
-                usuarioActual = data.user;
-                await mostrarUIUsuario();
-                alert('✅ ¡Registro exitoso! Ya puedes usar la aplicación.');
-            } else if (data.user && !data.session) {
-                // Usuario necesita confirmar email
-                alert('✅ ¡Registro exitoso!\n\n📧 Revisa tu email (' + email + ') para confirmar tu cuenta.\n\nSi no recibes el email:\n1. Revisa la carpeta de spam\n2. Usa el botón "Reenviar confirmación" en la pantalla de login\n3. O verifica la configuración de email en Supabase');
-            } else {
-                alert('⚠️ Registro completado pero hay un problema. Por favor, intenta iniciar sesión.');
-            }
-            
-            return true;
-        }
-        
-        // Reenviar email de confirmación
-        async function reenviarConfirmacionEmail(email) {
-            if (!email) {
-                email = prompt('Ingresa tu email para reenviar la confirmación:');
-                if (!email) return false;
-            }
-            
             try {
-                const supabaseClient = getSupabaseClient();
-                if (!supabaseClient) {
-                    alert('Error: Supabase no está disponible. Por favor, recarga la página.');
-                    return;
-                }
-                const { data, error } = await supabaseClient.auth.resend({
-                    type: 'signup',
-                    email: email.trim()
+                const response = await fetch('/usuarios/api/registro/', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email.trim(),
+                        username: email.trim().split('@')[0],
+                        password: password,
+                        first_name: nombreCompleto.split(' ')[0] || '',
+                        last_name: nombreCompleto.split(' ').slice(1).join(' ') || ''
+                    })
                 });
-                
-                if (error) {
-                    console.error('Error reenviando confirmación:', error);
-                    alert('Error: ' + error.message);
+                const data = await response.json();
+                if (!response.ok) {
+                    const errMsg = typeof data === 'object' ? Object.values(data).flat().join('\n') : String(data);
+                    alert('Error en registro: ' + errMsg);
                     return false;
                 }
-                
-                alert('✅ Email de confirmación reenviado a ' + email + '\n\nRevisa tu bandeja de entrada y la carpeta de spam.');
+                alert('Registro exitoso. Ya puedes iniciar sesion.');
+                ocultarRegistro();
                 return true;
             } catch (error) {
-                console.error('Error en reenviarConfirmacionEmail:', error);
-                alert('Error al reenviar el email. Por favor, intenta de nuevo.');
+                console.error('Error en registro:', error);
+                alert('Error al registrar. Intenta de nuevo.');
                 return false;
             }
         }
-        
-        // Resetear contraseña
+
+        // Resetear contraseña (contactar administrador)
         async function resetPassword(email) {
-            if (!email) {
-                alert('Ingresa tu email');
-                return false;
-            }
-            
-            // Validar formato de email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const emailLimpio = email.trim();
-            
-            if (!emailRegex.test(emailLimpio)) {
-                alert('❌ Por favor ingresa un email válido (ejemplo: usuario@ejemplo.com)');
-                return false;
-            }
-            
-            console.log('🔐 Intentando resetear contraseña para:', emailLimpio);
-            
-            const supabaseClient = getSupabaseClient();
-            if (!supabaseClient) {
-                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
-                return;
-            }
-            const { error } = await supabaseClient.auth.resetPasswordForEmail(emailLimpio, {
-                redirectTo: window.location.origin + window.location.pathname
-            });
-            
-            if (error) {
-                console.error('Error reseteando contraseña:', error);
-                alert('Error: ' + error.message);
-                return false;
-            }
-            
-            alert('✅ Revisa tu email (' + emailLimpio + ') para el enlace de restablecimiento de contraseña');
-            return true;
+            alert('Para restablecer tu contraseña, contacta al administrador del sistema.');
+            return false;
         }
-        
-        // Magic Link (sin contraseña)
-        async function loginMagicLink(email) {
-            const supabaseClient = getSupabaseClient();
-            if (!supabaseClient) {
-                alert('Error: Supabase no está disponible. Por favor, recarga la página.');
-                return;
-            }
-            const { error } = await supabaseClient.auth.signInWithOtp({
-                email: email,
-                options: {
-                    emailRedirectTo: window.location.href
-                }
-            });
-            
-            if (error) {
-                console.error('Error:', error);
-                alert('Error: ' + error.message);
-                return false;
-            }
-            
-            alert('¡Revisa tu email para el enlace de acceso!');
-            return true;
-        }
-        
+
         // Logout
         async function logout() {
-            console.log('🚪 Cerrando sesión...');
-            logoutExplicito = true; // Marcar que el usuario hizo logout explícitamente
-            sessionStorage.setItem('logout_explicito', 'true'); // Guardar en sessionStorage para que persista al recargar
-            
             try {
-                if (usarAuthDjangoLocal()) {
-                    await fetch('/usuarios/api/logout-session/', {
-                        method: 'POST',
-                        credentials: 'same-origin'
-                    });
-                    usuarioActual = null;
-                    esAdmin = false;
-                    rolUsuario = null;
-                    modoEdicionActivo = false;
-                    cambiosEnMemoria = {};
-                    mostrarUILogin();
-                    return;
-                }
+                await fetch('/usuarios/api/logout-session/', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+            } catch (e) {
+                console.error('Error en logout:', e);
+            }
+            usuarioActual = null;
+            esAdmin = false;
+            rolUsuario = null;
+            modoEdicionActivo = false;
+            cambiosEnMemoria = {};
+            mostrarUILogin();
+        }
 
-                // Limpiar localStorage primero para evitar que se restaure la sesión
-                const supabaseKeys = Object.keys(localStorage).filter(key => 
-                    key.startsWith('sb-') && key.includes('auth-token')
-                );
-                
-                console.log('🗑️ Limpiando claves de localStorage:', supabaseKeys);
-                supabaseKeys.forEach(key => {
-                    localStorage.removeItem(key);
-                });
-                
-                // También limpiar otras posibles claves de Supabase
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('sb-')) {
-                        localStorage.removeItem(key);
-                    }
-                });
-                
-                // Añadir timeout para evitar que se cuelgue
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Timeout en logout')), 3000)
-                );
-                
-                const supabaseClient = getSupabaseClient();
-                if (!supabaseClient) {
-                    console.error('Error: Supabase no está disponible');
-                    return;
-                }
-                const signOutPromise = supabaseClient.auth.signOut();
-                
-                const { error } = await Promise.race([
-                    signOutPromise,
-                    timeoutPromise
-                ]).catch(err => {
-                    console.warn('⚠️ Timeout en logout:', err.message);
-                    // Aunque haya timeout, ya limpiamos localStorage
-                    return { error: null };
-                });
-                
-                if (error) {
-                    console.error('❌ Error al cerrar sesión:', error);
-                    // Ya limpiamos localStorage, así que continuar
-                } else {
-                    console.log('✅ Sesión cerrada exitosamente');
-                }
-                
-                // Siempre forzar el logout localmente
-                usuarioActual = null;
-                esAdmin = false;
-                rolUsuario = null;
-                modoEdicionActivo = false;
-                cambiosEnMemoria = {}; // Limpiar cambios en memoria al cerrar sesión
-                mostrarUILogin();
-                
-                // Verificar que se limpió
-                const remainingKeys = Object.keys(localStorage).filter(key => 
-                    key.startsWith('sb-') && key.includes('auth-token')
-                );
-                if (remainingKeys.length > 0) {
-                    console.warn('⚠️ Aún quedan claves de Supabase en localStorage:', remainingKeys);
-                    // Limpiarlas de nuevo
-                    remainingKeys.forEach(key => localStorage.removeItem(key));
-                }
-                
-            } catch (error) {
-                console.error('❌ Error en logout:', error);
-                // Forzar logout localmente incluso si hay error
-                usuarioActual = null;
-                esAdmin = false;
-                rolUsuario = null;
-                modoEdicionActivo = false;
-                cambiosEnMemoria = {}; // Limpiar cambios en memoria al cerrar sesión
-                
-                // Limpiar localStorage de todas formas
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('sb-')) {
-                        localStorage.removeItem(key);
-                    }
-                });
-                
-                mostrarUILogin();
-                alert('Sesión cerrada. Si hay problemas, recarga la página.');
-            }
-        }
-        
-        // Crear perfil de usuario
-        async function crearPerfilUsuario(userId, nombreCompleto) {
-            console.log('📝 Creando perfil para usuario:', userId, nombreCompleto);
-            try {
-                const { data, error } = await supabase
-                    .from('perfiles_usuarios')
-                    .insert({
-                        id: userId,
-                        nombre_completo: nombreCompleto || 'Usuario',
-                        rol: 'colaborador'
-                    })
-                    .select()
-                    .single();
-                
-                if (error) {
-                    if (error.code === '23505') {
-                        // Ya existe, no es un error
-                        console.log('ℹ️ Perfil ya existe');
-                        return true;
-                    } else {
-                        console.error('❌ Error creando perfil:', error);
-                        console.error('   Código:', error.code);
-                        console.error('   Mensaje:', error.message);
-                        console.error('   Detalles:', error.details);
-                        return false;
-                    }
-                }
-                
-                console.log('✅ Perfil creado exitosamente:', data);
-                return true;
-            } catch (error) {
-                console.error('❌ Excepción creando perfil:', error);
-                return false;
-            }
-        }
-        
         // Cargar perfil de usuario
         async function cargarPerfilUsuario() {
-            if (!usuarioActual) {
-                console.log('⚠️ No hay usuario actual para cargar perfil');
-                return;
-            }
-
-            // En modo Django puro, no usamos Supabase para cargar perfil:
-            // el nombre ya viene en la respuesta de /usuarios/api/session-user/.
-            if (usarAuthDjangoLocal()) {
-                const userNameElement = document.getElementById('user-name');
-                const nombreCompleto =
-                    usuarioActual?.user_metadata?.nombre_completo ||
-                    usuarioActual?.email ||
-                    usuarioActual?.username ||
-                    'Usuario';
-                if (userNameElement) {
-                    userNameElement.textContent = nombreCompleto;
-                }
-                return;
-            }
-            
-            try {
-                console.log('📋 Cargando perfil para usuario:', usuarioActual.id, usuarioActual.email);
-                
-                // Intentar con timeout usando Promise.race
-                const consultaPromise = supabase
-                    .from('perfiles_usuarios')
-                    .select('nombre_completo, rol')
-                    .eq('id', usuarioActual.id)
-                    .maybeSingle();
-                
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('TIMEOUT')), 5000)
-                );
-                
-                let resultado;
-                try {
-                    resultado = await Promise.race([consultaPromise, timeoutPromise]);
-                } catch (timeoutError) {
-                    if (timeoutError.message === 'TIMEOUT') {
-                        console.warn('⏱️ Timeout en cargarPerfilUsuario, usando fetch directo...');
-                        // Usar fetch directo como alternativa (sin token primero, ya que las políticas RLS permiten lectura pública)
-                        const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=nombre_completo,rol`;
-                        console.log('📡 URL fetch cargarPerfilUsuario:', url);
-                        console.log('📡 Intentando fetch sin token (solo con apikey)...');
-                        
-                        const response = await fetch(url, {
-                            headers: {
-                                'apikey': SUPABASE_ANON_KEY,
-                                'Content-Type': 'application/json'
-                            }
-                        });
-                        
-                        console.log('📡 Respuesta fetch cargarPerfilUsuario:', response.status, response.statusText);
-                        
-                        if (response.ok) {
-                            const fetchData = await response.json();
-                            console.log('📡 Datos recibidos cargarPerfilUsuario:', fetchData);
-                            resultado = { 
-                                data: fetchData && fetchData.length > 0 ? fetchData[0] : null, 
-                                error: null 
-                            };
-                            console.log('✅ Perfil cargado via fetch directo');
-                        } else {
-                            const errorText = await response.text();
-                            console.error('❌ Error en fetch cargarPerfilUsuario:', response.status, errorText);
-                            resultado = { data: null, error: { message: `HTTP ${response.status}: ${errorText}` } };
-                        }
-                    } else {
-                        throw timeoutError;
-                    }
-                }
-                
-                const { data, error } = resultado;
-                
-                const userNameElement = document.getElementById('user-name');
-                
-                if (error) {
-                    console.error('❌ Error cargando perfil:', error);
-                    // Si no existe perfil, usar email como fallback
-                    if (userNameElement) {
-                        userNameElement.textContent = usuarioActual.email || 'Usuario';
-                    }
-                    return;
-                }
-                
-                if (data && data.nombre_completo) {
-                    console.log('✅ Perfil encontrado:', data.nombre_completo);
-                    
-                    // Si el nombre_completo parece ser un email mal escrito, usar el email correcto
-                    const nombreCompleto = data.nombre_completo.trim();
-                    const emailCorrecto = usuarioActual.email;
-                    
-                    // Verificar si nombre_completo parece ser un email (contiene @)
-                    // y si es diferente del email correcto, usar el email correcto
-                    if (nombreCompleto.includes('@') && nombreCompleto !== emailCorrecto) {
-                        console.log('⚠️ Nombre completo parece ser un email incorrecto, usando email correcto');
-                        if (userNameElement) {
-                            userNameElement.textContent = emailCorrecto;
-                        }
-                        // Opcional: actualizar el nombre_completo en Supabase con el email correcto
-                        await supabase
-                            .from('perfiles_usuarios')
-                            .update({ nombre_completo: emailCorrecto })
-                            .eq('id', usuarioActual.id);
-                    } else {
-                        // Usar el nombre completo normalmente
-                        if (userNameElement) {
-                            userNameElement.textContent = nombreCompleto;
-                        }
-                    }
-                } else {
-                    // Si no hay perfil o no tiene nombre, usar email
-                    console.log('⚠️ No hay nombre completo, usando email');
-                    if (userNameElement) {
-                        userNameElement.textContent = usuarioActual.email || 'Usuario';
-                    }
-                    // Intentar crear perfil si no existe
-                    if (!data) {
-                        console.log('📝 Creando perfil nuevo...');
-                        await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
-                    } else if (data && !data.nombre_completo) {
-                        // Si existe perfil pero sin nombre_completo, actualizarlo
-                        console.log('📝 Actualizando nombre_completo vacío...');
-                        await supabase
-                            .from('perfiles_usuarios')
-                            .update({ nombre_completo: usuarioActual.email })
-                            .eq('id', usuarioActual.id);
-                    }
-                }
-            } catch (error) {
-                console.error('❌ Error en cargarPerfilUsuario:', error);
-                // Fallback: usar email
-                const userNameElement = document.getElementById('user-name');
-                if (userNameElement) {
-                    userNameElement.textContent = usuarioActual.email || 'Usuario';
-                }
+            if (!usuarioActual) return;
+            const userNameElement = document.getElementById('user-name');
+            const nombreCompleto =
+                usuarioActual?.user_metadata?.nombre_completo ||
+                usuarioActual?.email ||
+                usuarioActual?.username ||
+                'Usuario';
+            if (userNameElement) {
+                userNameElement.textContent = nombreCompleto;
             }
         }
         
@@ -2195,7 +1238,7 @@
                 // Mostrar información de permisos
                 mostrarInfoPermisos();
                 
-                // Cargar cambios pendientes desde Supabase
+                // Cargar cambios pendientes
                 await cargarCambiosPendientes();
                 
                 // Actualizar contador de comentarios
@@ -2616,55 +1659,40 @@
             }
         }
         
-        // Ver resumen de cambios en memoria y Supabase
+        // Ver resumen de cambios pendientes del usuario
         async function verCambiosEnMemoria() {
             if (!usuarioActual) {
                 alert('Debes estar autenticado para ver cambios');
                 return;
             }
-            
             try {
-                // Cargar cambios pendientes desde Supabase
-                const { data: cambiosSupabase, error } = await supabase
-                    .from('cambios_pendientes')
-                    .select('*')
-                    .eq('usuario_id', usuarioActual.id)
-                    .eq('estado', 'pendiente')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('Error cargando cambios:', error);
-                    alert('Error al cargar cambios desde la base de datos');
+                const response = await fetch('/obras/propuestas/pendientes-usuario/', { credentials: 'same-origin' });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    alert('Error al cargar cambios');
                     return;
                 }
-                
-                if (!cambiosSupabase || cambiosSupabase.length === 0) {
+                const cambios = data.propuestas || [];
+                if (cambios.length === 0) {
                     alert('No tienes cambios pendientes');
                     return;
                 }
-                
-                // Agrupar por obra
                 const cambiosPorObra = {};
-                cambiosSupabase.forEach(cambio => {
-                    if (!cambiosPorObra[cambio.obra_id]) {
-                        cambiosPorObra[cambio.obra_id] = [];
-                    }
-                    cambiosPorObra[cambio.obra_id].push(cambio);
+                cambios.forEach(c => {
+                    if (!cambiosPorObra[c.obra_id]) cambiosPorObra[c.obra_id] = [];
+                    cambiosPorObra[c.obra_id].push(c);
                 });
-                
-                let mensaje = `📝 Tus cambios pendientes (${cambiosSupabase.length} cambio(s)):\n\n`;
+                let mensaje = `Tus cambios pendientes (${cambios.length}):\n\n`;
                 Object.keys(cambiosPorObra).forEach(obraId => {
                     const obra = datosOriginales.find(o => String(o.id) === String(obraId));
-                    const titulo = obra ? (obra.titulo || obra.Título || 'Sin título') : `ID: ${obraId}`;
-                    mensaje += `\n📖 ${titulo}:\n`;
-                    cambiosPorObra[obraId].forEach(cambio => {
-                        mensaje += `  • ${cambio.campo}: "${cambio.valor_anterior || '(vacío)'}" → "${cambio.valor_nuevo}"\n`;
+                    const titulo = obra ? (obra.titulo || 'Sin titulo') : `ID: ${obraId}`;
+                    mensaje += `\n${titulo}:\n`;
+                    cambiosPorObra[obraId].forEach(c => {
+                        mensaje += `  - ${c.campo}: "${c.valor_anterior || '(vacio)'}" -> "${c.valor_nuevo}"\n`;
                     });
                 });
-                
-                mensaje += '\n💡 Nota: Estos cambios están pendientes de aprobación por un administrador.';
+                mensaje += '\nEstos cambios estan pendientes de aprobacion por un administrador.';
                 alert(mensaje);
-                
             } catch (error) {
                 console.error('Error en verCambiosEnMemoria:', error);
                 alert('Error al cargar cambios');
@@ -2740,15 +1768,6 @@
                 return;
             }
             registro(email, password, nombre);
-        }
-        
-        function handleMagicLink() {
-            const email = document.getElementById('login-email').value;
-            if (!email) {
-                alert('Ingresa tu email');
-                return;
-            }
-            loginMagicLink(email);
         }
         
         function handleResetPassword() {
@@ -3544,7 +2563,7 @@
             if (archivos.length === 0) {
                 html = '<div style="text-align: center; padding: 40px;">';
                 html += '<p style="color: #7f8c8d; margin-bottom: 20px;">No hay archivos de síntesis disponibles.</p>';
-                html += '<p style="color: #7f8c8d; font-size: 14px;">Genera síntesis primero usando el script <code>generar_sintesis_validacion.py</code> y súbelos a Supabase Storage.</p>';
+                html += '<p style="color: #7f8c8d; font-size: 14px;">Genera sintesis primero usando el script <code>generar_sintesis_validacion.py</code>.</p>';
                 html += '</div>';
             } else {
                 // Mostrar lista de archivos y sus análisis
@@ -3741,135 +2760,18 @@
         // SISTEMA DE LOGS DE ERRORES
         // ============================================================================
         
-        // Crear log de error en Supabase
+        // Log de error (solo consola)
         async function crearLogError(tipoError, mensaje, detalles = {}) {
-            // Solo crear logs si el usuario está autenticado
-            if (!usuarioActual) {
-                console.warn('⚠️ No se puede crear log de error: usuario no autenticado');
-                return;
-            }
-
-            // En modo Django puro no usamos Supabase para logs.
-            if (usarAuthDjangoLocal()) {
-                return;
-            }
-            
-            try {
-                const logData = {
-                    tipo_error: tipoError,
-                    mensaje: mensaje,
-                    detalles: detalles,
-                    usuario_id: usuarioActual.id,
-                    usuario_email: usuarioActual.email || null,
-                    url: window.location.href,
-                    user_agent: navigator.userAgent
-                };
-                
-                const { data, error } = await supabase
-                    .from('logs_errores')
-                    .insert(logData)
-                    .select()
-                    .single();
-                
-                if (error) {
-                    console.error('❌ Error creando log de error:', error);
-                    // No mostrar alert al usuario, solo log en consola
-                } else {
-                    console.log('✅ Log de error creado:', data.id);
-                }
-            } catch (err) {
-                console.error('❌ Excepción al crear log de error:', err);
-                // No interrumpir el flujo de la aplicación
-            }
+            console.error('Error:', tipoError, mensaje, detalles);
         }
-        
-        // Cargar logs de errores (solo para admins)
+
+        // Cargar logs de errores (no implementado)
         async function cargarLogsErrores() {
-            if (!esAdmin) {
-                return [];
-            }
-
-            // En modo Django puro no usamos Supabase para logs.
-            if (usarAuthDjangoLocal()) {
-                return [];
-            }
-            
-            try {
-                const { data: logsData, error } = await supabase
-                    .from('logs_errores')
-                    .select('*')
-                    .order('created_at', { ascending: false })
-                    .limit(100);
-                
-                if (error) {
-                    console.error('Error cargando logs de errores:', error);
-                    return [];
-                }
-                
-                // Cargar perfiles de usuarios por separado
-                if (logsData && logsData.length > 0) {
-                    const userIds = [...new Set(logsData.map(log => log.usuario_id).filter(Boolean))];
-                    if (userIds.length > 0) {
-                        const { data: perfilesData } = await supabase
-                            .from('perfiles_usuarios')
-                            .select('id, nombre_completo')
-                            .in('id', userIds);
-                        
-                        // Crear un mapa de perfiles por usuario_id
-                        const perfilesMap = {};
-                        if (perfilesData) {
-                            perfilesData.forEach(perfil => {
-                                perfilesMap[perfil.id] = perfil;
-                            });
-                        }
-                        
-                        // Combinar logs con perfiles
-                        const logsConPerfiles = logsData.map(log => ({
-                            ...log,
-                            usuario_nombre: perfilesMap[log.usuario_id]?.nombre_completo || null
-                        }));
-                        
-                        return logsConPerfiles;
-                    }
-                }
-                
-                return logsData || [];
-            } catch (err) {
-                console.error('Excepción al cargar logs de errores:', err);
-                return [];
-            }
+            return [];
         }
-        
-        // Marcar log de error como visto por admin
+
+        // Marcar log de error como visto (no-op)
         async function marcarLogErrorVisto(logId) {
-            if (!esAdmin) {
-                alert('Solo los administradores pueden marcar logs como vistos');
-                return;
-            }
-            
-            try {
-                const { data, error } = await supabase
-                    .from('logs_errores')
-                    .update({
-                        visto_por_admin: true,
-                        visto_at: new Date().toISOString(),
-                        visto_por: usuarioActual.id
-                    })
-                    .eq('id', logId)
-                    .select()
-                    .single();
-                
-                if (error) {
-                    console.error('Error marcando log como visto:', error);
-                    alert('Error: ' + error.message);
-                    return;
-                }
-                
-                return data;
-            } catch (err) {
-                console.error('Excepción al marcar log como visto:', err);
-                alert('Error al marcar log como visto');
-            }
         }
         
         // ============================================================================
@@ -3878,91 +2780,40 @@
         
         // Cargar todos los usuarios (solo para admins)
         async function cargarTodosUsuarios() {
-            if (!esAdmin) {
-                alert('Solo los administradores pueden acceder a esta función');
-                return [];
-            }
-            
+            if (!esAdmin) return [];
             try {
-                const { data, error } = await supabase
-                    .from('perfiles_usuarios')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                if (error) {
-                    console.error('Error cargando usuarios:', error);
-                    return [];
-                }
-                
-                return data || [];
+                const response = await fetch('/usuarios/api/admin/usuarios/', { credentials: 'same-origin' });
+                const data = await response.json();
+                if (!response.ok || !data.success) return [];
+                return data.usuarios || [];
             } catch (error) {
                 console.error('Error en cargarTodosUsuarios:', error);
                 return [];
             }
         }
-        
-        // Obtener email del usuario desde auth (necesitamos hacer una query separada)
-        async function obtenerEmailUsuario(userId) {
-            try {
-                // Intentar obtener desde auth.users usando una función de Supabase
-                // Por ahora, retornamos el ID como fallback
-                return userId.substring(0, 8) + '...';
-            } catch (error) {
-                return 'N/A';
-            }
-        }
-        
+
         // Cambiar rol de usuario
         async function cambiarRolUsuario(userId, nuevoRol) {
             if (!esAdmin) {
                 alert('Solo los administradores pueden cambiar roles');
                 return false;
             }
-            
             if (!['colaborador', 'editor', 'admin'].includes(nuevoRol)) {
-                alert('Rol inválido. Roles válidos: colaborador, editor, admin');
+                alert('Rol invalido');
                 return false;
             }
-            
             try {
-                console.log('🔐 Cambiando rol de usuario:', userId, 'a:', nuevoRol);
-                
-                // Primero verificar que el usuario existe
-                const { data: usuarioExistente, error: errorVerificacion } = await supabase
-                    .from('perfiles_usuarios')
-                    .select('id, rol')
-                    .eq('id', userId)
-                    .maybeSingle();
-                
-                if (errorVerificacion) {
-                    console.error('Error verificando usuario:', errorVerificacion);
-                    throw errorVerificacion;
-                }
-                
-                if (!usuarioExistente) {
-                    throw new Error('Usuario no encontrado en perfiles_usuarios');
-                }
-                
-                console.log('✅ Usuario encontrado, rol actual:', usuarioExistente.rol);
-                
-                // Actualizar el rol
-                const { data, error } = await supabase
-                    .from('perfiles_usuarios')
-                    .update({ rol: nuevoRol })
-                    .eq('id', userId)
-                    .select();
-                
-                if (error) {
-                    console.error('Error cambiando rol:', error);
-                    console.error('Código de error:', error.code);
-                    console.error('Mensaje:', error.message);
-                    console.error('Detalles:', error.details);
-                    console.error('Hint:', error.hint);
-                    alert('Error: ' + error.message);
+                const response = await fetch(`/usuarios/api/admin/usuarios/${userId}/rol/`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rol: nuevoRol })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    alert('Error: ' + (data.error || 'No se pudo cambiar el rol'));
                     return false;
                 }
-                
-                console.log('✅ Rol cambiado exitosamente:', data);
                 return true;
             } catch (error) {
                 console.error('Error en cambiarRolUsuario:', error);
@@ -4022,13 +2873,13 @@
                 html += '<tbody>';
                 
                 usuarios.forEach(usuario => {
-                    const nombre = usuario.nombre_completo || 'Sin nombre';
+                    const nombre = usuario.nombre || usuario.username || 'Sin nombre';
                     const rolActual = usuario.rol || 'colaborador';
                     const userId = usuario.id;
-                    
+
                     html += '<tr>';
-                    html += `<td style="font-size: 11px; font-family: monospace;">${userId.substring(0, 8)}...</td>`;
-                    html += `<td>${escapeHtml(nombre)}</td>`;
+                    html += `<td style="font-size: 11px; font-family: monospace;">${userId}</td>`;
+                    html += `<td>${escapeHtml(nombre)} (${escapeHtml(usuario.username || '')})</td>`;
                     html += `<td><span class="badge badge-${rolActual}">${rolActual}</span></td>`;
                     html += '<td>';
                     html += `<select id="rol-select-${userId}" onchange="aplicarCambioRol('${userId}', this.value)" style="padding: 5px; border-radius: 3px; border: 1px solid #ddd;">`;
@@ -4161,52 +3012,9 @@
             await cargarLogsErroresAdmin();
         }
         
-        // Ver detalles de un log
+        // Ver detalles de un log (no-op sin sistema de logs)
         async function verDetallesLog(logId) {
-            try {
-                const { data, error } = await supabase
-                    .from('logs_errores')
-                    .select('*')
-                    .eq('id', logId)
-                    .single();
-                
-                if (error) {
-                    alert('Error al cargar detalles del log: ' + error.message);
-                    return;
-                }
-                
-                const detalles = JSON.stringify(data.detalles || {}, null, 2);
-                const fecha = new Date(data.created_at).toLocaleString('es-ES');
-                
-                const html = `
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 5px; max-width: 600px; margin: 20px auto;">
-                        <h3 style="margin-top: 0;">Detalles del Error</h3>
-                        <p><strong>Fecha/Hora:</strong> ${fecha}</p>
-                        <p><strong>Usuario:</strong> ${escapeHtml(data.usuario_email || 'N/A')}</p>
-                        <p><strong>Tipo:</strong> ${escapeHtml(data.tipo_error || 'N/A')}</p>
-                        <p><strong>Mensaje:</strong> ${escapeHtml(data.mensaje || 'N/A')}</p>
-                        <p><strong>URL:</strong> ${escapeHtml(data.url || 'N/A')}</p>
-                        <p><strong>Detalles técnicos:</strong></p>
-                        <pre style="background: white; padding: 10px; border-radius: 3px; overflow-x: auto; font-size: 11px;">${escapeHtml(detalles)}</pre>
-                        <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 8px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer;">Cerrar</button>
-                    </div>
-                `;
-                
-                // Crear modal temporal para mostrar detalles
-                const modalDetalles = document.createElement('div');
-                modalDetalles.className = 'modal-overlay';
-                modalDetalles.style.display = 'block';
-                modalDetalles.innerHTML = html;
-                modalDetalles.onclick = function(e) {
-                    if (e.target === modalDetalles) {
-                        modalDetalles.remove();
-                    }
-                };
-                document.body.appendChild(modalDetalles);
-            } catch (err) {
-                console.error('Error al ver detalles del log:', err);
-                alert('Error al cargar detalles del log');
-            }
+            alert('Sistema de logs no disponible.');
         }
         
         // Cerrar modal de admin
@@ -4218,291 +3026,100 @@
             }
         }
         
-        // Cargar cambios pendientes para admin
+        // Cargar cambios pendientes para admin (Django API)
         async function cargarCambiosPendientesAdmin() {
             if (!esAdmin) return;
-            
+            const container = document.getElementById('cambios-pendientes-container');
+            if (!container) return;
             try {
-                // Obtener cambios pendientes y luego cargar perfiles por separado
-                // porque usuario_id referencia a auth.users, no directamente a perfiles_usuarios
-                const { data: cambios, error } = await supabase
-                    .from('cambios_pendientes')
-                    .select('*')
-                    .eq('estado', 'pendiente')
-                    .order('created_at', { ascending: false });
-                
-                // Si hay cambios, cargar los perfiles de usuarios por separado
-                if (cambios && cambios.length > 0) {
-                    const userIds = [...new Set(cambios.map(c => c.usuario_id))];
-                    const { data: perfiles } = await supabase
-                        .from('perfiles_usuarios')
-                        .select('id, nombre_completo, rol')
-                        .in('id', userIds);
-                    
-                    // Agregar información del perfil a cada cambio
-                    cambios.forEach(cambio => {
-                        const perfil = perfiles?.find(p => p.id === cambio.usuario_id);
-                        cambio.perfil_usuario = perfil || { nombre_completo: 'Usuario desconocido', rol: 'colaborador' };
-                    });
-                }
-                
-                if (error) {
-                    // Si la tabla no existe (PGRST205), mostrar mensaje informativo
-                    if (error.code === 'PGRST205') {
-                        document.getElementById('cambios-pendientes-container').innerHTML = 
-                            '<p style="color: #666; padding: 20px; text-align: center;">' +
-                            'ℹ️ La tabla <code>cambios_pendientes</code> no existe aún.<br>' +
-                            'Ejecuta <code>supabase_cambios_pendientes.sql</code> en Supabase para crearla.' +
-                            '</p>';
-                        return;
-                    }
-                    console.error('Error cargando cambios pendientes:', error);
-                    document.getElementById('cambios-pendientes-container').innerHTML = 
-                        '<p style="color: red;">Error al cargar cambios pendientes</p>';
+                const response = await fetch('/obras/propuestas/admin/pendientes/', { credentials: 'same-origin' });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    container.innerHTML = '<p style="color: red;">Error al cargar cambios pendientes</p>';
                     return;
                 }
-                
-                const container = document.getElementById('cambios-pendientes-container');
-                
-                if (!cambios || cambios.length === 0) {
-                    container.innerHTML = '<p style="color: #666;">✅ No hay cambios pendientes de aprobación</p>';
+                const cambios = data.propuestas || [];
+                if (cambios.length === 0) {
+                    container.innerHTML = '<p style="color: #666;">No hay cambios pendientes de aprobacion</p>';
                     return;
                 }
-                
-                // Agrupar por obra
                 const cambiosPorObra = {};
-                cambios.forEach(cambio => {
-                    if (!cambiosPorObra[cambio.obra_id]) {
-                        cambiosPorObra[cambio.obra_id] = [];
-                    }
-                    cambiosPorObra[cambio.obra_id].push(cambio);
+                cambios.forEach(c => {
+                    if (!cambiosPorObra[c.obra_id]) cambiosPorObra[c.obra_id] = [];
+                    cambiosPorObra[c.obra_id].push(c);
                 });
-                
                 let html = `<p style="margin-bottom: 15px;"><strong>Total: ${cambios.length} cambio(s) pendiente(s) en ${Object.keys(cambiosPorObra).length} obra(s)</strong></p>`;
-                
                 Object.keys(cambiosPorObra).forEach(obraId => {
                     const obra = datosOriginales.find(o => String(o.id) === String(obraId));
-                    const titulo = obra ? (obra.titulo || obra.Título || 'Sin título') : `ID: ${obraId}`;
+                    const titulo = obra ? (obra.titulo || 'Sin titulo') : (cambiosPorObra[obraId][0].obra_titulo || `ID: ${obraId}`);
                     const cambiosObra = cambiosPorObra[obraId];
-                    
                     html += '<div style="background: #fff9c4; padding: 15px; border-radius: 5px; margin-bottom: 15px; border-left: 4px solid #fbc02d;">';
-                    html += `<h4 style="margin-top: 0;">📖 ${escapeHtml(titulo)} (ID: ${obraId})</h4>`;
-                    
+                    html += `<h4 style="margin-top: 0;">${escapeHtml(titulo)} (ID: ${obraId})</h4>`;
                     cambiosObra.forEach(cambio => {
-                        const usuarioNombre = cambio.perfil_usuario?.nombre_completo || 'Usuario';
-                        const fecha = new Date(cambio.created_at).toLocaleDateString('es-ES', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        });
-                        
+                        const fecha = cambio.fecha_creacion ? new Date(cambio.fecha_creacion).toLocaleDateString('es-ES', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
                         html += '<div style="background: white; padding: 10px; border-radius: 3px; margin-bottom: 10px;">';
                         html += `<p style="margin: 5px 0;"><strong>Campo:</strong> ${escapeHtml(cambio.campo)}</p>`;
-                        html += `<p style="margin: 5px 0;"><strong>Valor anterior:</strong> <span style="color: #e74c3c;">${escapeHtml(cambio.valor_anterior || '(vacío)')}</span></p>`;
+                        html += `<p style="margin: 5px 0;"><strong>Valor anterior:</strong> <span style="color: #e74c3c;">${escapeHtml(cambio.valor_anterior || '(vacio)')}</span></p>`;
                         html += `<p style="margin: 5px 0;"><strong>Valor nuevo:</strong> <span style="color: #27ae60;">${escapeHtml(cambio.valor_nuevo)}</span></p>`;
-                        html += `<p style="margin: 5px 0; font-size: 12px; color: #666;">Por: ${escapeHtml(usuarioNombre)} | ${fecha}</p>`;
+                        html += `<p style="margin: 5px 0; font-size: 12px; color: #666;">Por: ${escapeHtml(cambio.propuesta_por_nombre || cambio.propuesta_por || 'Usuario')} | ${fecha}</p>`;
                         html += `<div style="margin-top: 10px;">`;
-                        html += `<button onclick="aprobarCambio('${cambio.id}')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">✅ Aprobar</button>`;
-                        html += `<button onclick="rechazarCambio('${cambio.id}')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">❌ Rechazar</button>`;
+                        html += `<button onclick="aprobarCambio('${cambio.id}')" style="padding: 6px 12px; background: #27ae60; color: white; border: none; border-radius: 3px; cursor: pointer; margin-right: 5px;">Aprobar</button>`;
+                        html += `<button onclick="rechazarCambio('${cambio.id}')" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer;">Rechazar</button>`;
                         html += `</div>`;
                         html += '</div>';
                     });
-                    
                     html += '</div>';
                 });
-                
                 container.innerHTML = html;
-                
             } catch (error) {
                 console.error('Error en cargarCambiosPendientesAdmin:', error);
-                document.getElementById('cambios-pendientes-container').innerHTML = 
-                    '<p style="color: red;">Error al cargar cambios pendientes</p>';
+                container.innerHTML = '<p style="color: red;">Error al cargar cambios pendientes</p>';
             }
         }
-        
-        // Aprobar cambio
+
+        // Aprobar cambio (Django API)
         async function aprobarCambio(cambioId) {
-            if (!esAdmin) {
-                alert('Solo los administradores pueden aprobar cambios');
-                return;
-            }
-            
-            if (!confirm('¿Aprobar este cambio? Se aplicará permanentemente a la base de datos.')) {
-                return;
-            }
-            
+            if (!esAdmin) return;
+            if (!confirm('Aprobar este cambio? Se aplicara permanentemente.')) return;
             try {
-                // 1. Obtener el cambio pendiente
-                const { data: cambioData, error: errorCambio } = await supabase
-                    .from('cambios_pendientes')
-                    .select('*')
-                    .eq('id', cambioId)
-                    .single();
-                
-                if (errorCambio || !cambioData) {
-                    console.error('Error obteniendo cambio:', errorCambio);
-                    alert('Error al obtener el cambio: ' + (errorCambio?.message || 'No encontrado'));
+                const response = await fetch(`/obras/propuestas/${cambioId}/resolver/`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'aprobar' })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    alert('Error: ' + (data.error || 'No se pudo aprobar'));
                     return;
                 }
-                
-                const cambio = cambioData;
-                console.log('📋 Cambio a aprobar:', cambio);
-                
-                // 2. Aplicar el cambio a la tabla obras en Supabase
-                // Manejar campos anidados (ej: "autor.nombre_completo")
-                let updateData = {};
-                if (cambio.campo.includes('.')) {
-                    // Campo anidado - necesitamos obtener la obra actual y actualizar el objeto
-                    const { data: obraActual, error: errorObra } = await supabase
-                        .from('obras')
-                        .select('*')
-                        .eq('id', cambio.obra_id)
-                        .single();
-                    
-                    if (errorObra || !obraActual) {
-                        console.error('Error obteniendo obra:', errorObra);
-                        alert('Error al obtener la obra: ' + (errorObra?.message || 'No encontrada'));
-                        return;
-                    }
-                    
-                    // Actualizar campo anidado
-                    const partes = cambio.campo.split('.');
-                    const campoRaiz = partes[0];
-                    const campoAnidado = partes.slice(1).join('.');
-                    
-                    // Asegurar que el objeto raíz existe
-                    if (!obraActual[campoRaiz] || typeof obraActual[campoRaiz] !== 'object') {
-                        obraActual[campoRaiz] = {};
-                    }
-                    
-                    // Establecer el valor anidado
-                    const partesAnidadas = campoAnidado.split('.');
-                    let obj = obraActual[campoRaiz];
-                    for (let i = 0; i < partesAnidadas.length - 1; i++) {
-                        if (!obj[partesAnidadas[i]] || typeof obj[partesAnidadas[i]] !== 'object') {
-                            obj[partesAnidadas[i]] = {};
-                        }
-                        obj = obj[partesAnidadas[i]];
-                    }
-                    obj[partesAnidadas[partesAnidadas.length - 1]] = cambio.valor_nuevo;
-                    
-                    updateData[campoRaiz] = obraActual[campoRaiz];
-                } else {
-                    // Campo simple
-                    updateData[cambio.campo] = cambio.valor_nuevo;
-                }
-                
-                // Actualizar la obra en Supabase
-                const { error: errorUpdate } = await supabase
-                    .from('obras')
-                    .update(updateData)
-                    .eq('id', cambio.obra_id);
-                
-                if (errorUpdate) {
-                    console.error('Error actualizando obra:', errorUpdate);
-                    alert('Error al aplicar el cambio a la base de datos: ' + errorUpdate.message);
-                    return;
-                }
-                
-                console.log('✅ Obra actualizada en Supabase');
-                
-                // 3. Actualizar la visualización local inmediatamente
-                const obraIdStr = String(cambio.obra_id);
-                const obraFiltrada = datosFiltrados.find(o => {
-                    const id = o.id || o.ID || o.Id;
-                    return String(id) === obraIdStr;
-                });
-                const obraOriginal = datosOriginales.find(o => {
-                    const id = o.id || o.ID || o.Id;
-                    return String(id) === obraIdStr;
-                });
-                
-                if (obraFiltrada && obraOriginal) {
-                    // Aplicar el cambio usando la función establecerValorCampo
-                    establecerValorCampo(obraFiltrada, cambio.campo, cambio.valor_nuevo);
-                    establecerValorCampo(obraOriginal, cambio.campo, cambio.valor_nuevo);
-                    
-                    // Limpiar de cambios en memoria si existe
-                    if (cambiosEnMemoria[obraIdStr] && cambiosEnMemoria[obraIdStr][cambio.campo]) {
-                        delete cambiosEnMemoria[obraIdStr][cambio.campo];
-                        if (Object.keys(cambiosEnMemoria[obraIdStr]).length === 0) {
-                            delete cambiosEnMemoria[obraIdStr];
-                        }
-                    }
-                    
-                    console.log('✅ Visualización local actualizada');
-                }
-                
-                // 4. Marcar el cambio como aprobado en cambios_pendientes
-                const { data, error } = await supabase
-                    .from('cambios_pendientes')
-                    .update({
-                        estado: 'aprobado',
-                        revisado_por: usuarioActual.id,
-                        revisado_at: new Date().toISOString()
-                    })
-                    .eq('id', cambioId)
-                    .select()
-                    .single();
-                
-                if (error) {
-                    console.error('Error marcando cambio como aprobado:', error);
-                    // No fallar aquí, el cambio ya se aplicó
-                }
-                
-                console.log('✅ Cambio aprobado y aplicado:', data);
-                
-                // 5. Actualizar la visualización
                 mostrarResultados();
-                
-                // 6. Recargar cambios pendientes
                 await cargarCambiosPendientesAdmin();
-                
-                alert('✅ Cambio aprobado y aplicado exitosamente\n\nEl cambio ya está visible en la aplicación.');
-                
+                alert('Cambio aprobado y aplicado.');
             } catch (error) {
                 console.error('Error en aprobarCambio:', error);
-                alert('Error al aprobar el cambio: ' + error.message);
+                alert('Error al aprobar el cambio');
             }
         }
-        
-        // Rechazar cambio
+
+        // Rechazar cambio (Django API)
         async function rechazarCambio(cambioId) {
-            if (!esAdmin) {
-                alert('Solo los administradores pueden rechazar cambios');
-                return;
-            }
-            
-            if (!confirm('¿Rechazar este cambio? Se marcará como rechazado.')) {
-                return;
-            }
-            
+            if (!esAdmin) return;
+            if (!confirm('Rechazar este cambio?')) return;
             try {
-                const { data, error } = await supabase
-                    .from('cambios_pendientes')
-                    .update({
-                        estado: 'rechazado',
-                        revisado_por: usuarioActual.id,
-                        revisado_at: new Date().toISOString()
-                    })
-                    .eq('id', cambioId)
-                    .select()
-                    .single();
-                
-                if (error) {
-                    console.error('Error rechazando cambio:', error);
-                    alert('Error al rechazar el cambio: ' + error.message);
+                const response = await fetch(`/obras/propuestas/${cambioId}/resolver/`, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'rechazar' })
+                });
+                const data = await response.json();
+                if (!response.ok || !data.success) {
+                    alert('Error: ' + (data.error || 'No se pudo rechazar'));
                     return;
                 }
-                
-                console.log('❌ Cambio rechazado:', data);
-                alert('❌ Cambio rechazado');
-                
-                // Recargar cambios pendientes
                 await cargarCambiosPendientesAdmin();
-                
+                alert('Cambio rechazado.');
             } catch (error) {
                 console.error('Error en rechazarCambio:', error);
                 alert('Error al rechazar el cambio');
@@ -4574,10 +3191,10 @@
             return resultado;
         }
 
-        function combinarDatosJsonConSupabase(obrasJson, obrasSupabase) {
-            if (!Array.isArray(obrasJson) && !Array.isArray(obrasSupabase)) return [];
-            if (!Array.isArray(obrasJson)) return obrasSupabase || [];
-            if (!Array.isArray(obrasSupabase)) return obrasJson || [];
+        function combinarDatosJsonConApi(obrasJson, obrasApi) {
+            if (!Array.isArray(obrasJson) && !Array.isArray(obrasApi)) return [];
+            if (!Array.isArray(obrasJson)) return obrasApi || [];
+            if (!Array.isArray(obrasApi)) return obrasJson || [];
 
             const mapaJson = new Map();
             obrasJson.forEach((obra) => {
@@ -4588,7 +3205,7 @@
             });
 
             const resultados = [];
-            obrasSupabase.forEach((obra) => {
+            obrasApi.forEach((obra) => {
                 const id = obtenerIdNormalizado(obra);
                 if (id && mapaJson.has(id)) {
                     const base = mapaJson.get(id);
@@ -5169,8 +3786,8 @@
         async function cargarDatos() {
             const inicioTiempo = Date.now();
             let datosCargados = false;
-            let datosSupabase = null;
-            let metadataSupabase = null;
+            let datosApi = null;
+            let metadataApi = null;
             let datosJson = null;
             let metadataJson = null;
             
@@ -5200,7 +3817,7 @@
                         }
                     }
 
-                    datosSupabase = obrasDjango.map((obra) => {
+                    datosApi = obrasDjango.map((obra) => {
                         const obraFormateada = {
                             ...obra,
                             fuente: obra.fuente_principal || obra.fuente || '',
@@ -5209,17 +3826,17 @@
                         };
                         return normalizarFuenteEnObra(obraFormateada);
                     });
-                    metadataSupabase = {
-                        total_obras: datosSupabase.length,
+                    metadataApi = {
+                        total_obras: datosApi.length,
                         fuente: 'SQLite (Django API)',
                         ultima_actualizacion: new Date().toISOString()
                     };
 
-                    if (!datosSupabase.length) {
+                    if (!datosApi.length) {
                         throw new Error('La base de datos respondió vacío');
                     }
 
-                    console.log(`✅ ${datosSupabase.length} obras cargadas desde Django API`);
+                    console.log(`✅ ${datosApi.length} obras cargadas desde Django API`);
                 } catch (errorJson) {
                     console.error('❌ Error cargando datos desde Django API:', errorJson);
                     console.warn('⚠️ Intentando JSON como respaldo...');
@@ -5240,7 +3857,7 @@
                 }
                 
                 // INTENTO 2: Cargar desde JSON (respaldo si la BD falla)
-                if (!datosSupabase) {
+                if (!datosApi) {
                 try {
                     console.log('🔍 Intentando cargar datos_obras.json como respaldo...');
                     const response = await fetch('datos_obras.json');
@@ -5274,9 +3891,9 @@
                     }
 
                     console.log(`✅ ${datosJson.length} obras cargadas desde JSON (respaldo)`);
-                } catch (errorSupabase) {
+                } catch (errorJson2) {
                     const tiempoError = Date.now() - inicioTiempo;
-                    console.error(`❌ Error cargando desde JSON de respaldo después de ${tiempoError}ms:`, errorSupabase);
+                    console.error(`❌ Error cargando desde JSON de respaldo después de ${tiempoError}ms:`, errorJson2);
                     console.warn('⚠️ JSON de respaldo no disponible o falló.');
                     
                     // Crear log de error si el usuario está autenticado
@@ -5285,8 +3902,8 @@
                             'carga_datos',
                             'Error al cargar datos desde JSON de respaldo',
                             {
-                                error_message: errorSupabase.message || String(errorSupabase),
-                                error_stack: errorSupabase.stack || null,
+                                error_message: errorJson2.message || String(errorJson2),
+                                error_stack: errorJson2.stack || null,
                                 tiempo_ms: tiempoError,
                                 timestamp: new Date().toISOString(),
                                 intento_fallback: true
@@ -5296,21 +3913,21 @@
                 }
                 }
                 
-                if (!datosJson && !datosSupabase) {
-                    throw new Error('No se pudieron cargar datos ni desde JSON ni desde Supabase.');
+                if (!datosJson && !datosApi) {
+                    throw new Error('No se pudieron cargar datos ni desde la API ni desde JSON.');
                 }
 
                 if (datosJson) {
-                    if (datosSupabase) {
-                        datosOriginales = combinarDatosJsonConSupabase(datosJson, datosSupabase);
-                        metadata = { ...metadataJson, fuente: 'JSON + Supabase (ediciones)' };
+                    if (datosApi) {
+                        datosOriginales = combinarDatosJsonConApi(datosJson, datosApi);
+                        metadata = { ...metadataJson, fuente: 'JSON + API (ediciones)' };
                     } else {
                         datosOriginales = datosJson;
                         metadata = metadataJson;
                     }
-                } else if (datosSupabase) {
-                    datosOriginales = datosSupabase;
-                    metadata = metadataSupabase;
+                } else if (datosApi) {
+                    datosOriginales = datosApi;
+                    metadata = metadataApi;
                 }
 
                 if (Array.isArray(datosOriginales)) {
@@ -6058,218 +4675,18 @@
             alert(`✅ CSV exportado con ${datosFiltrados.length} obras.\n\n💡 Ahora puedes:\n1. Subir a Google Sheets\n2. Editar colaborativamente\n3. Descargar como CSV\n4. Re-importar a Django`);
         }
         
-        // Función de diagnóstico (ejecutar desde consola: diagnosticarUsuario())
+        // Funcion de diagnostico (ejecutar desde consola: diagnosticarUsuario())
         window.diagnosticarUsuario = async function() {
-            console.log('🔍 === DIAGNÓSTICO DE USUARIO ===');
+            console.log('=== DIAGNOSTICO DE USUARIO ===');
             console.log('1. Usuario actual:', usuarioActual ? usuarioActual.email : 'null');
             console.log('2. Rol usuario:', rolUsuario);
             console.log('3. Es admin:', esAdmin);
             console.log('4. Puede editar:', puedeEditar());
-            
-            if (usuarioActual) {
-                console.log('5. Verificando perfil en Supabase...');
-                console.log('   - Usuario ID:', usuarioActual.id);
-                console.log('   - Usuario Email:', usuarioActual.email);
-                try {
-                    console.log('   - Ejecutando consulta con timeout...');
-                    const consultaPromise = supabase
-                        .from('perfiles_usuarios')
-                        .select('*')
-                        .eq('id', usuarioActual.id)
-                        .maybeSingle();
-                    
-                    const timeoutPromise = new Promise((_, reject) => 
-                        setTimeout(() => reject(new Error('TIMEOUT')), 8000)
-                    );
-                    
-                    let resultado;
-                    try {
-                        resultado = await Promise.race([consultaPromise, timeoutPromise]);
-                    } catch (timeoutError) {
-                        if (timeoutError.message === 'TIMEOUT') {
-                            console.warn('   ⏱️ Timeout en consulta, intentando con fetch directo...');
-                            const supabaseClient = getSupabaseClient();
-                            if (!supabaseClient) {
-                                console.error('Supabase client no disponible');
-                                return;
-                            }
-                            const session = await supabaseClient.auth.getSession();
-                            const token = session.data?.session?.access_token;
-                            if (token) {
-                                const url = `${SUPABASE_URL}/rest/v1/perfiles_usuarios?id=eq.${usuarioActual.id}&select=*`;
-                                const response = await fetch(url, {
-                                    headers: {
-                                        'apikey': SUPABASE_ANON_KEY,
-                                        'Authorization': `Bearer ${token}`,
-                                        'Content-Type': 'application/json'
-                                    }
-                                });
-                                const fetchData = await response.json();
-                                resultado = { data: fetchData && fetchData.length > 0 ? fetchData[0] : null, error: null };
-                                console.log('   ✅ Datos obtenidos via fetch directo');
-                            } else {
-                                throw new Error('No hay token de sesión');
-                            }
-                        } else {
-                            throw timeoutError;
-                        }
-                    }
-                    
-                    const { data, error } = resultado;
-                    
-                    console.log('   - Consulta completada');
-                    console.log('   - Respuesta completa:', { data, error });
-                    
-                    if (error) {
-                        console.error('❌ Error:', error);
-                        console.error('   Código:', error.code);
-                        console.error('   Mensaje:', error.message);
-                        console.error('   Detalles:', error.details);
-                    } else if (data) {
-                        console.log('✅ Perfil encontrado:', data);
-                        console.log('   - Nombre:', data.nombre_completo);
-                        console.log('   - Rol:', data.rol);
-                        console.log('   - Rol debería ser:', data.rol === 'admin' ? 'ADMIN ✅' : data.rol);
-                    } else {
-                        console.log('⚠️ No se encontró perfil (data es null)');
-                        console.log('💡 Intentando crear perfil...');
-                        const creado = await crearPerfilUsuario(usuarioActual.id, usuarioActual.email);
-                        if (creado) {
-                            console.log('✅ Perfil creado, recargando rol...');
-                            const nuevoRol = await obtenerRolUsuario();
-                            console.log('✅ Rol después de crear:', nuevoRol);
-                            console.log('✅ Variable rolUsuario:', rolUsuario);
-                        }
-                    }
-                } catch (err) {
-                    console.error('❌ Excepción:', err);
-                    console.error('   Stack:', err.stack);
-                }
-            }
-            
-            console.log('6. Elementos UI:');
-            console.log('   - login-ui:', document.getElementById('login-ui') ? '✅' : '❌');
-            console.log('   - user-ui:', document.getElementById('user-ui') ? '✅' : '❌');
-            console.log('   - user-name:', document.getElementById('user-name') ? '✅' : '❌');
-            console.log('   - admin-panel-btn:', document.getElementById('admin-panel-btn') ? '✅' : '❌');
-            console.log('   - edicion-btn:', document.getElementById('edicion-btn') ? '✅' : '❌');
-            
-            console.log('7. Estado de visualización:');
-            const userUI = document.getElementById('user-ui');
-            const loginUI = document.getElementById('login-ui');
-            console.log('   - user-ui display:', userUI ? userUI.style.display : 'N/A');
-            console.log('   - login-ui display:', loginUI ? loginUI.style.display : 'N/A');
-            
-            console.log('8. Forzando actualización de UI...');
-            if (usuarioActual) {
-                console.log('   - Forzando recarga de rol...');
-                const nuevoRol = await obtenerRolUsuario();
-                console.log('   - Rol después de forzar:', nuevoRol);
-                console.log('   - Variable rolUsuario:', rolUsuario);
-                console.log('   - Variable esAdmin:', esAdmin);
-                
-                mostrarInfoPermisos();
-                
-                if (esAdmin) {
-                    console.log('   - Mostrando botón admin');
-                    mostrarBotonAdmin();
-                } else {
-                    console.log('   - Ocultando botón admin');
-                    ocultarBotonAdmin();
-                }
-                
-                if (puedeEditar()) {
-                    console.log('   - Mostrando botón edición');
-                    mostrarBotonEdicion();
-                } else {
-                    console.log('   - Ocultando botón edición');
-                    ocultarBotonEdicion();
-                }
-            }
-            
-            console.log('🔍 === FIN DIAGNÓSTICO ===');
-            console.log('💡 Si aún no ves botones:');
-            console.log('   1. Verifica que el rol está como "admin" en Supabase');
-            console.log('   2. Cierra sesión y vuelve a iniciar sesión');
-            console.log('   3. Ejecuta: recargarRol()');
-        };
-        
-        // Función para probar conexión con Supabase
-        window.probarSupabase = async function() {
-            console.log('🧪 === PRUEBA DE CONEXIÓN SUPABASE ===');
-            console.log('1. Verificando cliente Supabase...');
-            console.log('   - Supabase existe?', typeof supabase !== 'undefined');
-            console.log('   - Supabase URL:', SUPABASE_URL);
-            console.log('   - Supabase Key existe?', !!SUPABASE_ANON_KEY);
-            
-            if (!supabase) {
-                console.error('❌ Cliente Supabase no está inicializado');
-                return;
-            }
-            
-            console.log('2. Probando consulta simple...');
-            try {
-                const startTime = Date.now();
-                const { data, error } = await Promise.race([
-                    getSupabaseClient().from('perfiles_usuarios').select('count').limit(1),
-                    new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout después de 10 segundos')), 10000))
-                ]);
-                
-                const elapsed = Date.now() - startTime;
-                console.log(`✅ Consulta completada en ${elapsed}ms`);
-                console.log('   - Data:', data);
-                console.log('   - Error:', error);
-                
-                if (error) {
-                    console.error('❌ Error en consulta:', error);
-                    console.error('   Código:', error.code);
-                    console.error('   Mensaje:', error.message);
-                    console.error('   Detalles:', error.details);
-                    console.error('   Hint:', error.hint);
-                }
-            } catch (err) {
-                console.error('❌ Error o timeout:', err);
-            }
-            
-            console.log('3. Probando consulta con tu ID...');
-            if (usuarioActual) {
-                try {
-                    const startTime = Date.now();
-                    const { data, error } = await Promise.race([
-                        supabase
-                            .from('perfiles_usuarios')
-                            .select('*')
-                            .eq('id', usuarioActual.id)
-                            .maybeSingle(),
-                        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 10000))
-                    ]);
-                    
-                    const elapsed = Date.now() - startTime;
-                    console.log(`✅ Consulta completada en ${elapsed}ms`);
-                    console.log('   - Data:', data);
-                    console.log('   - Error:', error);
-                    
-                    if (data) {
-                        console.log('✅ Perfil encontrado!');
-                        console.log('   - Rol:', data.rol);
-                        console.log('   - Nombre:', data.nombre_completo);
-                        
-                        // Actualizar variables
-                        rolUsuario = data.rol || 'colaborador';
-                        esAdmin = rolUsuario === 'admin';
-                        console.log('✅ Variables actualizadas:', { rolUsuario, esAdmin });
-                        
-                        // Actualizar UI
-                        mostrarInfoPermisos();
-                        if (esAdmin) mostrarBotonAdmin();
-                        if (puedeEditar()) mostrarBotonEdicion();
-                    }
-                } catch (err) {
-                    console.error('❌ Error o timeout:', err);
-                }
-            }
-            
-            console.log('🧪 === FIN PRUEBA ===');
+            console.log('5. Elementos UI:');
+            console.log('   - login-ui:', document.getElementById('login-ui') ? 'OK' : 'NO');
+            console.log('   - user-ui:', document.getElementById('user-ui') ? 'OK' : 'NO');
+            console.log('   - admin-panel-btn:', document.getElementById('admin-panel-btn') ? 'OK' : 'NO');
+            console.log('=== FIN DIAGNOSTICO ===');
         };
         
         // Función para forzar recarga del rol (ejecutar desde consola: recargarRol())
@@ -6306,108 +4723,23 @@
             console.log('✅ UI actualizada');
         };
         
-        // Cargar datos iniciales
-        // Procesar parámetros de autenticación del hash de la URL
-        // Esto maneja cuando Supabase redirige después de confirmar email o magic link
-        async function procesarHashAutenticacion() {
-            const hash = window.location.hash;
-            if (!hash) return;
-
-            // En modo Django puro no manejamos hash de Supabase.
-            if (usarAuthDjangoLocal()) {
-                return;
-            }
-            
-            console.log('🔍 Hash detectado en URL:', hash.substring(0, 100) + (hash.length > 100 ? '...' : ''));
-            
-            // Extraer parámetros del hash
-            const hashParams = new URLSearchParams(hash.substring(1)); // Remover el #
-            const accessToken = hashParams.get('access_token');
-            const refreshToken = hashParams.get('refresh_token');
-            const type = hashParams.get('type'); // 'signup', 'recovery', 'magiclink', etc.
-            
-            if (accessToken) {
-                console.log('🔑 Token de acceso detectado en URL, tipo:', type);
-                
-                try {
-                    // Establecer la sesión usando el token del hash
-                    const supabaseClient = getSupabaseClient();
-                    if (!supabaseClient) {
-                        console.error('Supabase client no disponible');
-                        return;
-                    }
-                    const { data, error } = await supabaseClient.auth.setSession({
-                        access_token: accessToken,
-                        refresh_token: refreshToken || ''
-                    });
-                    
-                    if (error) {
-                        console.error('❌ Error estableciendo sesión desde hash:', error);
-                        alert('Error al procesar la confirmación de cuenta. Por favor, intenta iniciar sesión manualmente.');
-                        // Limpiar el hash para evitar intentos repetidos
-                        window.history.replaceState(null, '', window.location.pathname);
-                        return;
-                    }
-                    
-                    if (data.session) {
-                        console.log('✅ Sesión establecida desde hash:', data.session.user.email);
-                        usuarioActual = data.session.user;
-                        
-                        // Mostrar mensaje según el tipo
-                        if (type === 'signup') {
-                            alert('✅ Cuenta confirmada exitosamente. ¡Bienvenido!');
-                        } else if (type === 'recovery') {
-                            alert('✅ Enlace de recuperación procesado. Puedes cambiar tu contraseña.');
-                        } else if (type === 'magiclink') {
-                            alert('✅ Sesión iniciada exitosamente.');
-                        }
-                        
-                        // Limpiar el hash de la URL
-                        window.history.replaceState(null, '', window.location.pathname);
-                        
-                        // Mostrar UI de usuario
-                        await mostrarUIUsuario();
-                    }
-                } catch (error) {
-                    console.error('❌ Error procesando hash de autenticación:', error);
-                    alert('Error al procesar la confirmación. Por favor, intenta iniciar sesión manualmente.');
-                    // Limpiar el hash
-                    window.history.replaceState(null, '', window.location.pathname);
-                }
-            } else {
-                // Si hay hash pero no tiene access_token, puede ser otro tipo de parámetro
-                console.log('ℹ️ Hash sin access_token, ignorando');
-            }
-        }
-        
         window.onload = async function() {
-            console.log('🚀 Iniciando aplicación...');
-            console.log('🌐 URL actual:', window.location.href);
-            console.log('📦 Supabase disponible:', typeof window.supabase !== 'undefined');
-            console.log('💡 Para diagnosticar problemas, ejecuta: diagnosticarUsuario()');
+            console.log('Iniciando aplicacion...');
 
             actualizarEnlaceVistaComedias();
-            
-            // PRIMERO: Procesar hash de autenticación si existe (antes de mostrar login)
-            await procesarHashAutenticacion();
-            
-            // Mostrar login por defecto inmediatamente (se actualizará si hay sesión o si procesarHashAutenticacion estableció una)
-            if (!usuarioActual) {
-                mostrarUILogin();
-            }
-            
-            // Cargar datos inmediatamente (no depende de la sesión)
+
+            // Mostrar login por defecto
+            mostrarUILogin();
+
+            // Cargar datos (no depende de sesion)
             cargarDatos();
-            
-            // Verificar sesión después de un pequeño delay (solo como fallback)
-            // onAuthStateChange se ejecutará automáticamente y manejará la sesión
-            setTimeout(() => {
-                verificarSesion().catch(error => {
-                    console.warn('⚠️ Error en verificarSesion (no crítico):', error);
-                });
-            }, 500); // Delay más largo para dar tiempo a onAuthStateChange
-            
-            // Actualizar contador de análisis pendientes después de cargar
+
+            // Verificar sesion Django
+            verificarSesion().catch(error => {
+                console.warn('Error en verificarSesion:', error);
+            });
+
+            // Actualizar contador de analisis pendientes
             setTimeout(() => {
                 actualizarContadorAnalisisPendientes();
             }, 2000);

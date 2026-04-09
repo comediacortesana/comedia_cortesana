@@ -145,7 +145,7 @@ CREATE TABLE auditoria_datos_fuentes_ix (
 1. ✅ Sistema de versionado documentado
 2. ✅ Scripts de integración creados
 3. ⏳ Actualizar modelos Django con campos de versionado
-4. ⏳ Crear tabla de auditoría en Supabase
+4. ⏳ Crear tabla de auditoría en la base de datos
 5. ⏳ Procesar archivos restantes (part_002, part_003, etc.)
 6. ⏳ Integrar datos con versionado completo
 

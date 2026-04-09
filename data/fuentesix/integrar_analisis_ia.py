@@ -3,7 +3,7 @@
 Script para integrar análisis de IA a la base de datos
 
 Toma los datos extraídos y sus análisis, y los guarda en la tabla
-analisis_ia_fuentes_ix de Supabase.
+analisis_ia_fuentes_ix de la base de datos.
 """
 
 import json

@@ -47,34 +47,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-## 3) Migrar estructura + datos desde Supabase
-
-Requisitos:
-- `pg_dump`, `pg_restore`, `psql` instalados.
-- URL PostgreSQL de Supabase (origen).
-- URL PostgreSQL de PostgreSQL local o Azure (destino).
-
-Ejecutar:
-
-```bash
-SOURCE_DB_URL="postgresql://usuario:pass@host:5432/postgres?sslmode=require" \
-TARGET_DB_URL="postgresql://usuario:pass@host:5432/comedias_db?sslmode=prefer" \
-./scripts/migrate_supabase_to_postgres.sh
-```
-
-Notas:
-- El script exporta y restaura en formato custom de PostgreSQL.
-- Luego ejecuta `python manage.py migrate` para consolidar esquema bajo migraciones Django.
-- Si quieres mover solo tablas concretas:
-
-```bash
-TABLES="autores lugares obras representaciones" \
-SOURCE_DB_URL="postgresql://..." \
-TARGET_DB_URL="postgresql://..." \
-./scripts/migrate_supabase_to_postgres.sh
-```
-
-## 4) Verificar Django Admin
+## 3) Verificar Django Admin
 
 ```bash
 python manage.py runserver
@@ -85,7 +58,7 @@ Verificar en `http://127.0.0.1:8000/admin/`:
 - CRUD en `Obra`, `Representacion`, `Lugar`, `Autor`.
 - Relacion FK consistente (obras con autor, representaciones con obra/lugar).
 
-## 5) Preparar Azure App Service (Python)
+## 4) Preparar Azure App Service (Python)
 
 El proyecto ya incluye `Procfile`:
 
@@ -109,7 +82,7 @@ Variables de entorno minimas en App Service:
 - `CSRF_COOKIE_SECURE=True`
 - `SECURE_SSL_REDIRECT=True`
 
-## 6) Despliegue manual con GitHub Desktop
+## 5) Despliegue manual con GitHub Desktop
 
 1. Confirmar cambios locales y test rapido:
    - `python manage.py check`
@@ -126,7 +99,7 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 ```
 
-## 7) Checklist de salida a produccion
+## 6) Checklist de salida a produccion
 
 - `manage.py check` sin errores criticos.
 - Migraciones aplicadas.

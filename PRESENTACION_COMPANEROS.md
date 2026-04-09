@@ -40,5 +40,5 @@ Estamos abiertos a sugerencias y mejoras. Si necesitas acceso con permisos espec
 
 ---
 
-*Sistema desarrollado con tecnologías web modernas (Supabase, GitHub Pages) siguiendo estándares académicos de gestión de datos.*
+*Sistema desarrollado con tecnologías web modernas (Django, PostgreSQL, Azure) siguiendo estándares académicos de gestión de datos.*
 

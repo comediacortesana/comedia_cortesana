@@ -2247,7 +2247,7 @@ def get_obra_comments(request, obra_id):
 
 
 # ============================================================================
-# Endpoints equivalentes al frontend index.html (comentarios estilo Supabase)
+# Endpoints de comentarios para el frontend index.html
 # ============================================================================
 
 
@@ -2591,6 +2591,36 @@ def listar_propuestas_obra(request, obra_id):
                 "conteo": {"a_favor": favor, "en_contra": contra},
             }
         )
+
+    return JsonResponse({"success": True, "propuestas": payload})
+
+
+@require_http_methods(["GET"])
+def listar_todas_propuestas_pendientes(request):
+    """Lista todas las propuestas pendientes (solo superusuario, para panel admin)."""
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return JsonResponse({"success": False, "error": "No autorizado"}, status=403)
+
+    propuestas = (
+        PropuestaCambioObra.objects.filter(estado="pendiente")
+        .select_related("obra", "propuesta_por")
+        .order_by("-fecha_creacion")
+    )
+
+    payload = [
+        {
+            "id": p.id,
+            "obra_id": p.obra_id,
+            "obra_titulo": p.obra.titulo if p.obra else "",
+            "campo": p.campo,
+            "valor_anterior": p.valor_anterior,
+            "valor_nuevo": p.valor_nuevo,
+            "propuesta_por": p.propuesta_por.username if p.propuesta_por else "",
+            "propuesta_por_nombre": (p.propuesta_por.get_full_name() or p.propuesta_por.username) if p.propuesta_por else "",
+            "fecha_creacion": p.fecha_creacion.isoformat() if p.fecha_creacion else None,
+        }
+        for p in propuestas
+    ]
 
     return JsonResponse({"success": True, "propuestas": payload})
 

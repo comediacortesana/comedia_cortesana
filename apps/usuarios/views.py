@@ -349,3 +349,62 @@ def api_session_user(request):
     })
 
 
+@require_http_methods(["GET"])
+def api_admin_listar_usuarios(request):
+    """Lista todos los usuarios (solo superusuario)."""
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return JsonResponse({"success": False, "error": "No autorizado"}, status=403)
+
+    usuarios = Usuario.objects.all().order_by("username")
+    data = [
+        {
+            "id": u.id,
+            "username": u.username,
+            "email": u.email,
+            "nombre": u.get_full_name() or u.username,
+            "is_superuser": u.is_superuser,
+            "is_staff": u.is_staff,
+            "is_active": u.is_active,
+            "fecha_registro": u.fecha_registro.isoformat() if u.fecha_registro else None,
+            "rol": "admin" if u.is_superuser else ("editor" if u.is_staff else "colaborador"),
+        }
+        for u in usuarios
+    ]
+    return JsonResponse({"success": True, "usuarios": data})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def api_admin_cambiar_rol(request, user_id):
+    """Cambia el rol de un usuario (solo superusuario)."""
+    if not request.user.is_authenticated or not request.user.is_superuser:
+        return JsonResponse({"success": False, "error": "No autorizado"}, status=403)
+
+    try:
+        payload = json.loads(request.body.decode("utf-8"))
+    except Exception:
+        payload = request.POST
+
+    rol = (payload.get("rol") or "").strip()
+    if rol not in ("admin", "editor", "colaborador"):
+        return JsonResponse({"success": False, "error": "Rol inválido"}, status=400)
+
+    try:
+        usuario = Usuario.objects.get(id=user_id)
+    except Usuario.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Usuario no encontrado"}, status=404)
+
+    if rol == "admin":
+        usuario.is_superuser = True
+        usuario.is_staff = True
+    elif rol == "editor":
+        usuario.is_superuser = False
+        usuario.is_staff = True
+    else:
+        usuario.is_superuser = False
+        usuario.is_staff = False
+
+    usuario.save(update_fields=["is_superuser", "is_staff"])
+    return JsonResponse({"success": True, "rol": rol})
+
+

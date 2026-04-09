@@ -38,15 +38,7 @@ npx http-server -p 8000
 
 ## Nota Importante
 
-⚠️ **Supabase funciona igual**: El servidor local solo sirve los archivos HTML/JS/CSS. Las llamadas a Supabase funcionan igual que en producción porque usan la URL pública de Supabase.
-
-## Configuración de Supabase para Desarrollo Local
-
-Si quieres probar autenticación localmente, asegúrate de agregar `http://localhost:8000` a las URLs de redirección en Supabase:
-
-1. Ve a Supabase Dashboard → Authentication → URL Configuration
-2. Agrega `http://localhost:8000` a "Redirect URLs"
-3. Opcionalmente, cambia "Site URL" a `http://localhost:8000` mientras desarrollas
+⚠️ **Django**: Para desarrollo local con el backend Django completo, usa `python manage.py runserver` que levanta el servidor de desarrollo en `http://127.0.0.1:8000/`.
 
 ## Detener el Servidor
 

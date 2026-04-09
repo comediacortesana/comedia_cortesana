@@ -20,6 +20,9 @@ urlpatterns = [
     path('api/login-session/', views.api_login_session, name='api_login_session'),
     path('api/logout-session/', views.api_logout_session, name='api_logout_session'),
     path('api/session-user/', views.api_session_user, name='api_session_user'),
+    # Admin API
+    path('api/admin/usuarios/', views.api_admin_listar_usuarios, name='api_admin_listar_usuarios'),
+    path('api/admin/usuarios/<int:user_id>/rol/', views.api_admin_cambiar_rol, name='api_admin_cambiar_rol'),
 ]
 
 

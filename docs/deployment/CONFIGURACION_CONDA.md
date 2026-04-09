@@ -30,7 +30,7 @@ conda activate delia
 
 ```bash
 python --version  # Debería mostrar Python 3.11.x
-pip list | grep supabase  # Debería mostrar supabase instalado
+pip list | grep django  # Debería mostrar django instalado
 ```
 
 ## 📋 Comandos Útiles
@@ -89,13 +89,13 @@ conda activate delia
 
 # Ejecutar scripts
 python scripts/corregir_fuente_fuentesxi.py --dry-run
-python scripts/sync_to_supabase.py --file datos_obras.json
 python scripts/diagnosticar_carga_datos.py --url https://comediacortesana.github.io/comedia_cortesana/
 ```
 
 ## 📦 Dependencias Principales
 
-- **supabase**: Cliente para interactuar con Supabase
+- **django**: Framework web principal
+- **psycopg2**: Conector PostgreSQL para Django
 - **selenium**: Para pruebas automatizadas y scraping
 - **webdriver-manager**: Gestión automática de ChromeDriver
 - **google-api-python-client**: API de Google Sheets

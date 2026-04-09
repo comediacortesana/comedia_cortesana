@@ -87,7 +87,7 @@
 
 5. **Integración a DB**:
    - Actualizar modelos Django con campos de versionado
-   - Crear tabla de auditoría en Supabase
+   - Crear tabla de auditoría en la base de datos
    - Ejecutar integración real
 
 ---

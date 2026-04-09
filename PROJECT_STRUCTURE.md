@@ -7,9 +7,7 @@ Reorganizacion aplicada con enfoque seguro:
 - `templates/`: plantillas Django.
 - `static/`: estaticos para Django.
 - `scripts/`: utilidades de importacion/exportacion/migracion.
-- `sql/supabase/`: scripts SQL historicos y operativos de Supabase.
 - `docs/deployment/`: guias de despliegue y entorno local.
-- `docs/supabase/`: documentacion funcional/operativa de Supabase.
 - `frontend/github-pages/`: copia organizada de la version estatica (GitHub Pages).
 
 ## Notas de compatibilidad

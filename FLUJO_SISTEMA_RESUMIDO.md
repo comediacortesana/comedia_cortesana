@@ -8,14 +8,14 @@ Un catálogo digital de obras de teatro del Siglo de Oro español donde diferent
 
 ## 🗄️ ¿Dónde están los datos?
 
-### **Supabase = Base de datos principal** 🏛️
+### **Django + PostgreSQL = Base de datos principal** 🏛️
 - **Todas las obras** están guardadas aquí
-- Es como un "almacén digital" en la nube
+- Es como un "almacén digital" en la nube (Azure)
 - Cuando alguien hace un cambio, se guarda aquí inmediatamente
 
 ### **JSON local = Respaldo** 💾
 - Es una copia de seguridad en tu computadora
-- Si Supabase falla, puedes usar este archivo
+- Si la base de datos falla, puedes usar este archivo
 - Se puede actualizar manualmente cuando quieras
 
 ---
@@ -51,7 +51,7 @@ Editor → Hace clic en "Editar" → Escribe nuevo valor → Confirma
 
 ### **2. ¿Qué pasa con ese cambio?**
 ```
-Cambio → Se guarda en Supabase (tabla "cambios_pendientes")
+Cambio → Se guarda en la base de datos (tabla "cambios_pendientes")
        → Aparece en la lista de "Cambios Pendientes" del Admin
        → El editor ve su cambio aplicado temporalmente
 ```
@@ -65,7 +65,7 @@ Admin → Ve lista de cambios pendientes
 
 ### **4. Si Admin aprueba**
 ```
-Aprobación → Cambio se aplica a la tabla "obras" en Supabase
+Aprobación → Cambio se aplica a la tabla "obras" en la base de datos
             → Todos los usuarios ven el cambio actualizado
             → El cambio queda guardado permanentemente
 ```
@@ -89,14 +89,14 @@ Rechazo → El cambio se elimina de "cambios_pendientes"
          │
          ▼
 ┌─────────────────┐      ┌──────────────┐
-│  ¿Hay datos en  │ ────▶│   Supabase   │ ← Base de datos principal
-│   Supabase?     │      │   (Nube)     │
+│  ¿Hay datos en  │ ────▶│  PostgreSQL  │ ← Base de datos principal
+│   la BD?        │      │   (Azure)    │
 └────────┬────────┘      └──────────────┘
          │ Sí ✅
          ▼
 ┌─────────────────┐
 │ Carga desde     │
-│ Supabase        │
+│ la base de datos│
 └────────┬────────┘
          │
          ▼
@@ -105,7 +105,7 @@ Rechazo → El cambio se elimina de "cambios_pendientes"
 │ en pantalla     │
 └─────────────────┘
 
-Si Supabase falla:
+Si la base de datos falla:
          │
          ▼
 ┌─────────────────┐      ┌──────────────┐
@@ -119,14 +119,14 @@ Si Supabase falla:
 ## 🔐 Seguridad y Permisos
 
 ### **¿Cómo sabe el sistema quién es quién?**
-- Cada usuario tiene un **perfil** en Supabase
+- Cada usuario tiene un **perfil** en la base de datos
 - El perfil tiene un **rol**: `lector`, `editor`, o `admin`
 - El sistema verifica el rol antes de permitir acciones
 
 ### **¿Dónde se guardan los permisos?**
 ```
-Supabase → Tabla "perfiles_usuarios"
-         → Campos: usuario_id, rol
+Base de datos → Tabla "perfiles_usuarios"
+              → Campos: usuario_id, rol
 ```
 
 ---
@@ -146,7 +146,7 @@ Supabase → Tabla "perfiles_usuarios"
 5. **Editor escribe**: "A Dios por razón de estado" (corrige "razon" → "razón")
 
 6. **Editor confirma** → 
-   - Cambio se guarda en `cambios_pendientes` (Supabase)
+   - Cambio se guarda en `cambios_pendientes` (base de datos)
    - Aparece notificación: "Cambio pendiente de aprobación"
    - El editor ve su cambio aplicado (solo en su pantalla)
 
@@ -155,7 +155,7 @@ Supabase → Tabla "perfiles_usuarios"
 8. **Admin revisa cambios** → Ve el cambio del título con comentario del editor
 
 9. **Admin aprueba** → 
-   - Cambio se aplica a la tabla `obras` (Supabase)
+   - Cambio se aplica a la tabla `obras` (base de datos)
    - Todos los usuarios ahora ven "A Dios por razón de estado"
    - El cambio queda guardado permanentemente
 
@@ -166,8 +166,6 @@ Supabase → Tabla "perfiles_usuarios"
 ## 🛠️ Herramientas Adicionales
 
 ### **Scripts de Python** (para administradores técnicos)
-- `sync_to_supabase.py` → Sincroniza JSON → Supabase
-- `backup_from_supabase.py` → Hace backup Supabase → JSON
 - `sync_to_sheets.py` → Sincroniza con Google Sheets
 
 ---
@@ -175,32 +173,29 @@ Supabase → Tabla "perfiles_usuarios"
 ## 🎯 Resumen Ultra-Rápido
 
 ```
-1. Datos principales → Supabase (nube)
+1. Datos principales → Django + PostgreSQL (Azure)
 2. Respaldo → JSON local
 3. Usuarios → Ver, Editar, o Administrar según su rol
 4. Cambios de editores → Necesitan aprobación
 5. Cambios de admin → Se aplican inmediatamente
-6. Todo se guarda en Supabase → Persiste para siempre
+6. Todo se guarda en la base de datos → Persiste para siempre
 ```
 
 ---
 
 ## ❓ Preguntas Frecuentes
 
-**P: ¿Qué pasa si Supabase se cae?**
+**P: ¿Qué pasa si la base de datos se cae?**
 R: El sistema automáticamente carga desde el JSON local (respaldo)
 
 **P: ¿Los cambios se pierden si recargo la página?**
-R: No, si están aprobados están guardados en Supabase permanentemente
+R: No, si están aprobados están guardados en la base de datos permanentemente
 
 **P: ¿Puedo editar sin ser admin?**
 R: Sí, como editor puedes editar, pero tus cambios necesitan aprobación
 
 **P: ¿Dónde se guardan los comentarios?**
-R: En Supabase, en la tabla `comentarios`, vinculados a cada obra
-
-**P: ¿Cómo hago backup?**
-R: Ejecuta: `python scripts/backup_from_supabase.py`
+R: En la base de datos, en la tabla `comentarios`, vinculados a cada obra
 
 ---
 
@@ -209,7 +204,7 @@ R: Ejecuta: `python scripts/backup_from_supabase.py`
 - `index.html` → Interfaz web (lo que ven los usuarios)
 - `datos_obras.json` → Respaldo local de obras
 - `scripts/` → Herramientas de sincronización y backup
-- Supabase Dashboard → Base de datos y configuración
+- Django Admin → Base de datos y configuración
 
 ---
 

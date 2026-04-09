@@ -28,7 +28,7 @@ urlpatterns = [
     path('<int:obra_id>/comentarios/', views.get_obra_comments, name='get_obra_comments'),
     path('comentario/<int:comentario_id>/eliminar/', views.delete_comment, name='delete_comment'),
 
-    # Comentarios estilo index.html (paridad con Supabase)
+    # Comentarios del frontend index.html
     path('comentarios-index/', views.index_crear_comentario, name='index_crear_comentario'),
     path('comentarios-index/global/', views.index_comentarios_global, name='index_comentarios_global'),
     path('comentarios-index/count-unseen/', views.index_comentarios_count_unseen, name='index_comentarios_count_unseen'),
@@ -40,6 +40,7 @@ urlpatterns = [
     path('comentarios/exportar-todos/', views.exportar_todos_comentarios, name='exportar_todos_comentarios'),
     # Propuestas de edición de obras (flujo validado)
     path('propuestas/', views.crear_propuesta_cambio_obra, name='crear_propuesta_cambio_obra'),
+    path('propuestas/admin/pendientes/', views.listar_todas_propuestas_pendientes, name='listar_todas_propuestas_pendientes'),
     path('propuestas/pendientes-usuario/', views.listar_propuestas_pendientes_usuario, name='listar_propuestas_pendientes_usuario'),
     path('propuestas/obra/<int:obra_id>/', views.listar_propuestas_obra, name='listar_propuestas_obra'),
     path('propuestas/<int:propuesta_id>/votar/', views.votar_propuesta_obra, name='votar_propuesta_obra'),
