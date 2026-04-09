@@ -5242,219 +5242,154 @@
             }
         }
 
-        // Cargar datos desde Django/SQLite primero, JSON como fallback
+        function detectarEntorno() {
+            const proto = window.location.protocol;
+            const host = window.location.hostname;
+            if (proto === 'file:') return 'static';
+            if (host.includes('github.io')) return 'github-pages';
+            if (host === 'localhost' || host === '127.0.0.1') return 'django-local';
+            return 'django-remote';
+        }
+
         async function cargarDatos() {
             const inicioTiempo = Date.now();
             let datosCargados = false;
-            let datosSupabase = null;
-            let metadataSupabase = null;
-            let datosJson = null;
-            let metadataJson = null;
+            const entorno = detectarEntorno();
+            console.log(`🌐 Entorno detectado: ${entorno}`);
             
             try {
-                // INTENTO 1: Cargar desde Django API (SQLite/PostgreSQL)
-                try {
-                    console.log('🔍 Intentando cargar datos desde Django API (BD local)...');
+                // INTENTO 1: Django API (solo si estamos en un servidor Django)
+                if (entorno.startsWith('django')) {
+                    try {
+                        console.log('🔍 Cargando datos desde Django API (/api/datos-obras/)...');
+                        const response = await timeoutPromise(
+                            fetch('/api/datos-obras/', { credentials: 'same-origin' }),
+                            15000,
+                            'Timeout cargando desde Django API'
+                        );
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-                    let pageUrl = '/api/obras/?ordering=id&page=1';
-                    const obrasDjango = [];
-
-                    while (pageUrl) {
-                        const response = await fetch(pageUrl, { credentials: 'same-origin' });
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                        }
-                        const payload = await response.json();
-
-                        if (Array.isArray(payload)) {
-                            obrasDjango.push(...payload);
-                            pageUrl = null;
-                        } else if (payload && Array.isArray(payload.results)) {
-                            obrasDjango.push(...payload.results);
-                            pageUrl = payload.next || null;
+                        const data = await response.json();
+                        if (data && data.obras && data.obras.length > 0) {
+                            datosOriginales = data.obras.map(normalizarFuenteEnObra);
+                            datosFiltrados = [...datosOriginales];
+                            metadata = data.metadata || {};
+                            metadata.fuente = 'Django DB';
+                            datosCargados = true;
+                            console.log(`✅ ${datosOriginales.length} obras desde Django API`);
                         } else {
-                            throw new Error('Formato inesperado en respuesta de /api/obras/');
+                            throw new Error('Django API respondió vacío');
                         }
+                    } catch (errDjango) {
+                        console.warn('⚠️ Django API falló:', errDjango.message);
                     }
+                }
 
-                    datosSupabase = obrasDjango.map((obra) => {
-                        const obraFormateada = {
-                            ...obra,
-                            fuente: obra.fuente_principal || obra.fuente || '',
-                            fecha_creacion: obra.fecha_creacion_estimada || obra.fecha_creacion || '',
-                            representaciones: Array.isArray(obra.representaciones) ? obra.representaciones : [],
-                        };
-                        return normalizarFuenteEnObra(obraFormateada);
-                    });
-                    metadataSupabase = {
-                        total_obras: datosSupabase.length,
-                        fuente: 'SQLite (Django API)',
-                        ultima_actualizacion: new Date().toISOString()
-                    };
+                // INTENTO 2: Supabase (GitHub Pages o fallback Django)
+                if (!datosCargados && typeof supabase !== 'undefined') {
+                    try {
+                        console.log('🔍 Intentando cargar datos desde Supabase...');
+                        let todasLasObras = [];
+                        let offset = 0;
+                        const pageSize = 1000;
+                        let hayMasDatos = true;
 
-                    if (!datosSupabase.length) {
-                        throw new Error('La base de datos respondió vacío');
-                    }
-
-                    console.log(`✅ ${datosSupabase.length} obras cargadas desde Django API`);
-                } catch (errorJson) {
-                    console.error('❌ Error cargando datos desde Django API:', errorJson);
-                    console.warn('⚠️ Intentando JSON como respaldo...');
-                    
-                    // Crear log de error si el usuario está autenticado
-                    if (usuarioActual) {
-                        await crearLogError(
-                            'carga_datos',
-                            'Error al cargar datos desde Django API',
-                            {
-                                error_message: errorJson.message || String(errorJson),
-                                error_stack: errorJson.stack || null,
-                                timestamp: new Date().toISOString(),
-                                intento_fallback_json: true
+                        while (hayMasDatos) {
+                            const { data: obrasPage, error } = await timeoutPromise(
+                                supabase.from('obras').select('*').order('id', { ascending: true }).range(offset, offset + pageSize - 1),
+                                30000,
+                                `Timeout Supabase página ${Math.floor(offset / pageSize) + 1}`
+                            );
+                            if (error) throw error;
+                            if (obrasPage && obrasPage.length > 0) {
+                                todasLasObras = todasLasObras.concat(obrasPage);
+                                offset += pageSize;
+                                if (obrasPage.length < pageSize) hayMasDatos = false;
+                            } else {
+                                hayMasDatos = false;
                             }
-                        );
+                        }
+
+                        if (todasLasObras.length > 0) {
+                            datosOriginales = todasLasObras.map(obra => {
+                                const f = { ...obra };
+                                if (obra.autor && typeof obra.autor === 'string') {
+                                    try { f.autor = JSON.parse(obra.autor); } catch (e) {}
+                                }
+                                if (obra.representaciones && typeof obra.representaciones === 'string') {
+                                    try { f.representaciones = JSON.parse(obra.representaciones); } catch (e) { f.representaciones = []; }
+                                }
+                                if (f.ID && !f.id) f.id = f.ID;
+                                return normalizarFuenteEnObra(f);
+                            });
+                            datosFiltrados = [...datosOriginales];
+                            metadata = { total_obras: datosOriginales.length, fuente: 'Supabase' };
+                            datosCargados = true;
+                            console.log(`✅ ${datosOriginales.length} obras desde Supabase`);
+                        }
+                    } catch (errSupa) {
+                        console.warn('⚠️ Supabase falló:', errSupa.message);
                     }
                 }
-                
-                // INTENTO 2: Cargar desde JSON (respaldo si la BD falla)
-                if (!datosSupabase) {
-                try {
-                    console.log('🔍 Intentando cargar datos_obras.json como respaldo...');
-                    const response = await fetch('datos_obras.json');
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
+                // INTENTO 3: JSON estático (fallback universal)
+                if (!datosCargados) {
+                    try {
+                        console.log('🔍 Cargando datos_obras.json como respaldo...');
+                        const response = await fetch('datos_obras.json');
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
-                    const data = await response.json();
+                        const data = await response.json();
+                        if (data.metadata && data.obras) {
+                            metadata = { ...data.metadata, fuente: 'JSON (respaldo)' };
+                            datosOriginales = data.obras;
+                        } else if (Array.isArray(data)) {
+                            metadata = { total_obras: data.length, fuente: 'JSON (respaldo)' };
+                            datosOriginales = data;
+                        } else {
+                            throw new Error('Formato JSON no reconocido');
+                        }
 
-                    if (data.metadata && data.obras) {
-                        metadataJson = { ...data.metadata, fuente: 'JSON (respaldo)' };
-                        datosJson = data.obras;
-                    } else if (Array.isArray(data)) {
-                        metadataJson = {
-                            total_obras: data.length,
-                            fuente: 'JSON (respaldo)'
-                        };
-                        datosJson = data;
-                    } else {
-                        throw new Error('Formato de JSON no reconocido. Se espera {metadata: {}, obras: []} o []');
-                    }
-
-                    datosJson = datosJson.map((obra) => normalizarFuenteEnObra(obra));
-                    if (metadataJson.fuentes && Array.isArray(metadataJson.fuentes)) {
-                        metadataJson.fuentes = metadataJson.fuentes.map(normalizarFuente).filter(Boolean);
-                    }
-
-                    if (!datosJson.length) {
-                        throw new Error('El archivo JSON está vacío o no contiene obras');
-                    }
-
-                    console.log(`✅ ${datosJson.length} obras cargadas desde JSON (respaldo)`);
-                } catch (errorSupabase) {
-                    const tiempoError = Date.now() - inicioTiempo;
-                    console.error(`❌ Error cargando desde JSON de respaldo después de ${tiempoError}ms:`, errorSupabase);
-                    console.warn('⚠️ JSON de respaldo no disponible o falló.');
-                    
-                    // Crear log de error si el usuario está autenticado
-                    if (usuarioActual) {
-                        await crearLogError(
-                            'carga_datos',
-                            'Error al cargar datos desde JSON de respaldo',
-                            {
-                                error_message: errorSupabase.message || String(errorSupabase),
-                                error_stack: errorSupabase.stack || null,
-                                tiempo_ms: tiempoError,
-                                timestamp: new Date().toISOString(),
-                                intento_fallback: true
-                            }
-                        );
+                        datosOriginales = datosOriginales.map(normalizarFuenteEnObra);
+                        if (metadata.fuentes && Array.isArray(metadata.fuentes)) {
+                            metadata.fuentes = metadata.fuentes.map(normalizarFuente).filter(Boolean);
+                        }
+                        datosFiltrados = [...datosOriginales];
+                        datosCargados = datosOriginales.length > 0;
+                        console.log(`✅ ${datosOriginales.length} obras desde JSON`);
+                    } catch (errJson) {
+                        console.error('❌ JSON también falló:', errJson.message);
                     }
                 }
-                }
-                
-                if (!datosJson && !datosSupabase) {
-                    throw new Error('No se pudieron cargar datos ni desde JSON ni desde Supabase.');
-                }
 
-                if (datosJson) {
-                    if (datosSupabase) {
-                        datosOriginales = combinarDatosJsonConSupabase(datosJson, datosSupabase);
-                        metadata = { ...metadataJson, fuente: 'JSON + Supabase (ediciones)' };
-                    } else {
-                        datosOriginales = datosJson;
-                        metadata = metadataJson;
-                    }
-                } else if (datosSupabase) {
-                    datosOriginales = datosSupabase;
-                    metadata = metadataSupabase;
-                }
-
-                if (Array.isArray(datosOriginales)) {
-                    datosOriginales = datosOriginales.map((obra) => normalizarFuenteEnObra(obra));
-                    datosFiltrados = [...datosOriginales];
-                    datosCargados = true;
+                if (!datosCargados) {
+                    throw new Error('No se pudieron cargar datos desde ninguna fuente.');
                 }
                 
                 // Mostrar resultados y actualizar UI
-                if (datosCargados) {
-                    await cargarCatalogoLugaresFuentesIX();
-                    await cargarCatalogoRegionesFuentesIX();
-                    await cargarAnioAuxiliarFuentesIX();
-                    actualizarOpcionesFiltros();
-                    const aplicoFiltrosForzados = aplicarFiltrosForzados();
-                    ocultarFiltrosForzados();
-                    if (!aplicoFiltrosForzados) {
-                        mostrarResultados();
-                    }
-                    
-                    // Actualizar subtítulo con info de metadata
-                    const fuenteTexto = metadata.fuente === 'SQLite (Django API)' ? 'SQLite (principal)' : 'JSON (respaldo)';
-                    const totalObras = metadata.total_obras || datosOriginales.length;
-                    document.querySelector('.subtitle').textContent = 
-                        `Filtro de obras, autores, representaciones y lugares - ${totalObras} obras en la base de datos (${fuenteTexto})`;
-                    
-                    // Mostrar notificación si se usó JSON por fallback
-                    if (metadata.fuente === 'JSON (respaldo)') {
-                        console.warn('⚠️ Se está usando JSON como respaldo (la BD no respondió).');
-                    }
-                } else {
-                    // Si no se cargaron datos, mostrar error
-                    console.error('❌ No se pudieron cargar datos');
-                    const errorHtml = `
-                        <div style="background: #ffebee; color: #c62828; padding: 20px; border-radius: 4px; margin: 10px 0; border-left: 4px solid #c62828;">
-                            <h3 style="margin-top: 0;">⚠️ Error cargando datos</h3>
-                            <p><strong>No se pudieron cargar datos ni desde la base de datos Django ni desde JSON.</strong></p>
-                            <p><strong>Acciones sugeridas:</strong></p>
-                            <ul style="margin: 10px 0; padding-left: 20px;">
-                                <li>Verifica que Django esté funcionando y la base de datos responda</li>
-                                <li>Verifica que el archivo <code>datos_obras.json</code> existe como respaldo</li>
-                                <li>Abre la consola del navegador (F12) para ver más detalles</li>
-                                <li>Verifica que el formato del JSON es correcto: <code>{metadata: {}, obras: []}</code></li>
-                            </ul>
-                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
-                                URL intentada: <code>${window.location.href}datos_obras.json</code>
-                            </p>
-                        </div>
-                    `;
-                    document.getElementById('results-container').innerHTML = errorHtml;
+                await cargarCatalogoLugaresFuentesIX();
+                await cargarCatalogoRegionesFuentesIX();
+                await cargarAnioAuxiliarFuentesIX();
+                actualizarOpcionesFiltros();
+                const aplicoFiltrosForzados = aplicarFiltrosForzados();
+                ocultarFiltrosForzados();
+                if (!aplicoFiltrosForzados) {
+                    mostrarResultados();
                 }
-            } catch (error) {
-                // Este catch captura errores no manejados
-                console.error('❌ Error no manejado en cargarDatos:', error);
                 
-                // Crear log de error si el usuario está autenticado
+                const totalObras = metadata.total_obras || datosOriginales.length;
+                const fuenteTexto = metadata.fuente || 'Desconocida';
+                document.querySelector('.subtitle').textContent = 
+                    `Filtro de obras, autores, representaciones y lugares - ${totalObras} obras (${fuenteTexto})`;
+                
+            } catch (error) {
+                console.error('❌ Error en cargarDatos:', error);
+                
                 if (usuarioActual) {
-                    await crearLogError(
-                        'carga_datos',
-                        'Error no manejado al cargar datos',
-                        {
-                            error_message: error.message || String(error),
-                            error_stack: error.stack || null,
-                            timestamp: new Date().toISOString(),
-                            error_type: 'unhandled_exception'
-                        }
-                    );
+                    await crearLogError('carga_datos', 'Error al cargar datos', {
+                        error_message: error.message || String(error),
+                        timestamp: new Date().toISOString(),
+                    });
                 }
                 
                 const errorHtml = `

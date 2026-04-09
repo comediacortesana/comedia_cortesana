@@ -99,10 +99,15 @@ WSGI_APPLICATION = "teatro_espanol.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DB_ENGINE = config("DB_ENGINE", default="django.db.backends.sqlite3")
 if DB_ENGINE == "django.db.backends.sqlite3":
+    import os as _os
+    _sqlite_path = BASE_DIR / "db.sqlite3"
+    # Azure App Service: /home persiste entre reinicios y despliegues
+    if _os.environ.get("WEBSITE_SITE_NAME"):
+        _sqlite_path = "/home/db.sqlite3"
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": _sqlite_path,
         }
     }
 else:
@@ -120,6 +125,11 @@ else:
             },
         }
     }
+
+# GitHub API settings (para publicar datos_obras.json al repo)
+GITHUB_TOKEN = config("GITHUB_TOKEN", default="")
+GITHUB_REPO = config("GITHUB_REPO", default="")
+GITHUB_BRANCH = config("GITHUB_BRANCH", default="main")
 
 
 # Password validation

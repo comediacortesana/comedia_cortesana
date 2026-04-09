@@ -2795,3 +2795,37 @@ def exportar_todos_comentarios(request):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     return response
+
+
+# ===========================================================================
+# Publicar datos en GitHub
+# ===========================================================================
+
+@require_http_methods(["POST"])
+def publicar_github_view(request):
+    """Ejecuta publicar_github y devuelve el resultado como JSON.
+
+    Solo accesible para usuarios staff o superuser.
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({"success": False, "error": "No autenticado"}, status=401)
+    if not (request.user.is_staff or request.user.is_superuser):
+        return JsonResponse({"success": False, "error": "Solo para administradores"}, status=403)
+
+    import io
+    from django.core.management import call_command
+
+    out = io.StringIO()
+    err = io.StringIO()
+    try:
+        call_command("publicar_github", stdout=out, stderr=err)
+        return JsonResponse({
+            "success": True,
+            "message": out.getvalue().strip(),
+        })
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e),
+            "details": err.getvalue().strip(),
+        }, status=500)

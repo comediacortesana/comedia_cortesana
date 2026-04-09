@@ -25,6 +25,8 @@ from pathlib import Path
 from django.shortcuts import render
 import mimetypes
 
+from apps.obras.views_api_json import datos_obras_api
+
 @require_http_methods(["GET"])
 def home_view(request):
     """Vista de inicio que muestra información del proyecto"""
@@ -150,6 +152,54 @@ def home_view(request):
             </div>
         """
     
+    # Botón de publicar en GitHub (solo para staff/superuser)
+    publish_github_html = ""
+    if request.user.is_authenticated and (request.user.is_staff or request.user.is_superuser):
+        publish_github_html = """
+                <div style="margin-top: 15px;">
+                    <button id="btn-publicar-github" class="admin-btn"
+                            style="background: #27ae60; cursor: pointer; border: none; font-family: inherit;"
+                            onclick="publicarEnGitHub()">
+                        Publicar en GitHub
+                    </button>
+                    <div id="publicar-resultado"
+                         style="margin-top: 10px; font-size: 0.85rem; color: var(--text-medium); display: none;">
+                    </div>
+                </div>
+                <script>
+                async function publicarEnGitHub() {
+                    const btn = document.getElementById("btn-publicar-github");
+                    const res = document.getElementById("publicar-resultado");
+                    btn.disabled = true;
+                    btn.textContent = "Publicando...";
+                    res.style.display = "block";
+                    res.textContent = "Exportando y subiendo datos a GitHub...";
+                    try {
+                        const cookies = document.cookie.split(";").map(c => c.trim());
+                        const csrf = (cookies.find(c => c.startsWith("csrftoken=")) || "=").split("=")[1];
+                        const resp = await fetch("/obras/publicar-github/", {
+                            method: "POST",
+                            headers: {"X-CSRFToken": csrf},
+                            credentials: "same-origin",
+                        });
+                        const data = await resp.json();
+                        if (data.success) {
+                            res.style.color = "#27ae60";
+                            res.textContent = data.message || "Publicado correctamente.";
+                        } else {
+                            res.style.color = "#c0392b";
+                            res.textContent = "Error: " + (data.error || "Desconocido");
+                        }
+                    } catch (e) {
+                        res.style.color = "#c0392b";
+                        res.textContent = "Error de red: " + e.message;
+                    }
+                    btn.disabled = false;
+                    btn.textContent = "Publicar en GitHub";
+                }
+                </script>
+        """
+
     html_content = f"""
     <!DOCTYPE html>
     <html lang="es">
@@ -636,6 +686,7 @@ def home_view(request):
             <div class="admin-section">
                 <h2 class="nav-title">Administración</h2>
                 <a href="/admin/" class="admin-btn">Panel de Administración</a>
+                {publish_github_html}
                 <div class="credentials">
                     <div class="credentials-title">Credenciales:</div>
                     <div class="credentials-list">
@@ -671,8 +722,11 @@ def home_view(request):
 
 @require_http_methods(["GET"])
 def index_django_view(request):
-    """Vista principal con la UI equivalente a tu index de GitHub Pages."""
-    return render(request, "obras/index_django.html")
+    """Sirve el index.html raíz (compartido con GitHub Pages)."""
+    index_path = Path(__file__).resolve().parent.parent / "index.html"
+    if not index_path.exists():
+        raise Http404("index.html no encontrado en la raíz del proyecto")
+    return FileResponse(index_path.open("rb"), content_type="text/html; charset=utf-8")
 
 urlpatterns = [
     path("", index_django_view, name="home"),
@@ -684,6 +738,7 @@ urlpatterns = [
     path("api/", include("apps.lugares.urls")),
     path("api/", include("apps.autores.urls")),
     path("api/", include("apps.bibliografia.urls")),
+    path("api/datos-obras/", datos_obras_api, name="datos_obras_api"),
 ]
 
 # ---- Compatibilidad UI GitHub Pages en Django ----
@@ -764,18 +819,24 @@ def github_pages_legacy_file_view(request, subpath):
     return FileResponse(target.open("rb"), content_type=content_type)
 
 
+# Rutas para servir archivos estáticos del frontend (index.html los referencia)
+urlpatterns += [
+    path("datos_obras.json", github_pages_datos_obras_view, name="datos_obras_json"),
+    path("data/<path:subpath>", github_pages_data_files_view, name="data_files"),
+    path("comedia.html", lambda request: FileResponse(
+        (BASE_DIR / "comedia.html").open("rb"),
+        content_type="text/html; charset=utf-8"
+    ), name="comedia_html"),
+    path("favicon.ico", favicon_view, name="favicon"),
+]
+
 # Mantener rutas legacy accesibles sin ser la portada principal
 urlpatterns += [
-    # Portada antigua
     path("legacy/", github_pages_index_view, name="legacy_index_root"),
     path("legacy/index.html", github_pages_index_view, name="legacy_index"),
-
-    # Ficheros referenciados de forma relativa desde `frontend/github-pages/index.html`
     path("legacy/datos_obras.json", github_pages_datos_obras_view, name="legacy_datos_obras_json"),
     path("legacy/data/<path:subpath>", github_pages_data_files_view, name="legacy_data_files"),
     path("legacy/favicon.ico", favicon_view, name="legacy_favicon"),
-
-    # Catch-all para otros HTML/JS/CSS dentro de frontend/github-pages
     path("legacy/<path:subpath>", github_pages_legacy_file_view, name="legacy_file"),
 ]
 

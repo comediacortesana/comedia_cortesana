@@ -44,6 +44,8 @@ urlpatterns = [
     path('propuestas/obra/<int:obra_id>/', views.listar_propuestas_obra, name='listar_propuestas_obra'),
     path('propuestas/<int:propuesta_id>/votar/', views.votar_propuesta_obra, name='votar_propuesta_obra'),
     path('propuestas/<int:propuesta_id>/resolver/', views.resolver_propuesta_obra, name='resolver_propuesta_obra'),
+    # Publicar datos en GitHub
+    path('publicar-github/', views.publicar_github_view, name='publicar_github'),
     # Rutas existentes (mantenidas para compatibilidad)
     path('catalogos/', views.catalogos_view, name='catalogos'),
     path('catalogos/<str:catalogo_id>/', views.catalogo_detalle_view, name='catalogo_detalle'),
